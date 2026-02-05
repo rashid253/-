@@ -461,7 +461,7 @@ body {
   padding: 0 25px;
 }
 
-/* FIXED: Product Card with Consistent Image Size */
+/* FIXED: Product Card with Consistent Image Size - NO CROPPING */
 .product-card {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
@@ -480,22 +480,26 @@ body {
 
 .product-image-container {
   width: 100%;
-  height: 160px; /* FIXED HEIGHT */
+  height: 160px;
   position: relative;
   overflow: hidden;
   background: linear-gradient(45deg, #f8fafc, #f1f5f9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .product-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* FIXED: Ensures consistent image display */
-  object-position: center;
+  object-fit: contain; /* CHANGED: contain instead of cover */
   transition: var(--transition);
+  padding: 15px;
+  background: white;
 }
 
 .product-card:hover .product-image {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .product-badges {
@@ -523,8 +527,8 @@ body {
 }
 
 .product-title {
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 15px; /* Reduced font size */
+  font-weight: 700; /* Reduced boldness */
   color: var(--dark-color);
   margin-bottom: 10px;
   line-height: 1.4;
@@ -552,7 +556,7 @@ body {
 .discount-price {
   color: #ef4444;
   font-weight: 900;
-  font-size: 20px;
+  font-size: 18px; /* Reduced font size */
 }
 
 .product-actions {
@@ -567,7 +571,7 @@ body {
   border: none;
   border-radius: var(--border-radius-xs);
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700; /* Reduced boldness */
   cursor: pointer;
   transition: var(--transition);
   text-transform: uppercase;
@@ -618,11 +622,12 @@ body {
 
 .products-header h1 {
   color: white;
-  font-size: 32px;
-  font-weight: 900;
+  font-size: 28px; /* Reduced font size */
+  font-weight: 800; /* Reduced boldness */
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
+  margin-top: 20px; /* Added margin for back button */
 }
 
 .products-header p {
@@ -683,11 +688,12 @@ body {
 
 .cart-header h1 {
   color: white;
-  font-size: 32px;
-  font-weight: 900;
+  font-size: 28px; /* Reduced font size */
+  font-weight: 800; /* Reduced boldness */
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
+  margin-top: 20px; /* Added margin for back button */
 }
 
 .cart-header p {
@@ -710,10 +716,10 @@ body {
 }
 
 .cart-empty h3 {
-  font-size: 28px;
+  font-size: 24px; /* Reduced font size */
   color: var(--dark-color);
   margin-bottom: 15px;
-  font-weight: 900;
+  font-weight: 800; /* Reduced boldness */
 }
 
 .cart-empty p {
@@ -729,7 +735,7 @@ body {
   border: none;
   border-radius: var(--border-radius-md);
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 700; /* Reduced boldness */
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--shadow-md);
@@ -758,6 +764,7 @@ body {
   box-shadow: var(--shadow-md);
   transition: var(--transition);
   border: 1px solid #f1f5f9;
+  position: relative;
 }
 
 .cart-item:hover {
@@ -769,19 +776,21 @@ body {
   width: 90px;
   height: 90px;
   border-radius: var(--border-radius-md);
-  object-fit: cover;
+  object-fit: contain; /* CHANGED: contain instead of cover */
   background: linear-gradient(45deg, #f8fafc, #f1f5f9);
   flex-shrink: 0;
+  padding: 10px;
 }
 
 .cart-item-details {
   flex: 1;
-  min-width: 0; /* Prevents overflow */
+  min-width: 0;
+  padding-right: 20px; /* Added padding for delete button */
 }
 
 .cart-item-title {
-  font-size: 17px;
-  font-weight: 800;
+  font-size: 16px; /* Reduced font size */
+  font-weight: 700; /* Reduced boldness */
   color: var(--dark-color);
   margin-bottom: 10px;
   line-height: 1.4;
@@ -790,7 +799,7 @@ body {
 .cart-item-price {
   color: #ef4444;
   font-weight: 900;
-  font-size: 20px;
+  font-size: 18px; /* Reduced font size */
   margin-bottom: 15px;
 }
 
@@ -798,6 +807,7 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
+  flex-wrap: wrap;
 }
 
 .quantity-control {
@@ -808,6 +818,7 @@ body {
   padding: 8px;
   border-radius: var(--border-radius-md);
   border: 1px solid #e2e8f0;
+  flex-shrink: 0;
 }
 
 .quantity-btn {
@@ -848,12 +859,14 @@ body {
   border-radius: var(--border-radius-xs);
   padding: 10px 20px;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: 700; /* Reduced boldness */
   cursor: pointer;
   transition: var(--transition);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .remove-btn:hover {
@@ -872,8 +885,8 @@ body {
 }
 
 .cart-summary h3 {
-  font-size: 20px;
-  font-weight: 900;
+  font-size: 18px; /* Reduced font size */
+  font-weight: 800; /* Reduced boldness */
   color: var(--dark-color);
   margin-bottom: 25px;
   padding-bottom: 20px;
@@ -897,7 +910,7 @@ body {
 }
 
 .summary-total {
-  font-size: 28px;
+  font-size: 24px; /* Reduced font size */
   font-weight: 900;
   color: var(--dark-color);
   margin-top: 20px;
@@ -912,8 +925,8 @@ body {
   color: white;
   border: none;
   border-radius: var(--border-radius-lg);
-  font-size: 19px;
-  font-weight: 900;
+  font-size: 18px; /* Reduced font size */
+  font-weight: 800; /* Reduced boldness */
   cursor: pointer;
   transition: var(--transition);
   margin-top: 35px;
@@ -960,11 +973,12 @@ body {
 
 .about-header h1 {
   color: white;
-  font-size: 32px;
-  font-weight: 900;
+  font-size: 28px; /* Reduced font size */
+  font-weight: 800; /* Reduced boldness */
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
+  margin-top: 20px; /* Added margin for back button */
 }
 
 .about-content {
@@ -980,7 +994,8 @@ body {
   line-height: 1.8;
   color: #475569;
   margin-bottom: 25px;
-  font-size: 16px;
+  font-size: 15px; /* Reduced font size */
+  font-weight: 400; /* Reduced boldness */
 }
 
 .about-content p:last-child {
@@ -997,8 +1012,8 @@ body {
 }
 
 .business-hours h3 {
-  font-size: 20px;
-  font-weight: 900;
+  font-size: 18px; /* Reduced font size */
+  font-weight: 800; /* Reduced boldness */
   color: var(--dark-color);
   margin-bottom: 25px;
   display: flex;
@@ -1029,13 +1044,13 @@ body {
 }
 
 .day-name {
-  font-weight: 700;
+  font-weight: 600; /* Reduced boldness */
   color: #475569;
   font-size: 15px;
 }
 
 .day-time {
-  font-weight: 900;
+  font-weight: 800; /* Reduced boldness */
   color: var(--dark-color);
   font-size: 15px;
 }
@@ -1047,9 +1062,9 @@ body {
   border-radius: 20px;
 }
 
-/* Contact Page - FIXED EMAIL AND PADDING */
+/* Contact Page */
 #contactPage {
-  padding-bottom: 120px; /* EXTRA PADDING FOR FOOTER */
+  padding-bottom: 120px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
@@ -1063,11 +1078,12 @@ body {
 
 .contact-header h1 {
   color: white;
-  font-size: 32px;
-  font-weight: 900;
+  font-size: 28px; /* Reduced font size */
+  font-weight: 800; /* Reduced boldness */
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
+  margin-top: 20px; /* Added margin for back button */
 }
 
 .contact-header p {
@@ -1086,7 +1102,6 @@ body {
   border: 1px solid #f1f5f9;
 }
 
-/* FIXED: Contact Item with Text Overflow */
 .contact-item {
   display: flex;
   align-items: center;
@@ -1147,7 +1162,7 @@ body {
 
 .contact-details {
   flex: 1;
-  min-width: 0; /* CRITICAL FIX: Prevents text overflow */
+  min-width: 0;
   overflow: hidden;
 }
 
@@ -1161,21 +1176,20 @@ body {
 }
 
 .contact-value {
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 15px; /* Reduced font size */
+  font-weight: 700; /* Reduced boldness */
   color: var(--dark-color);
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis; /* Truncates long text with ellipsis */
+  text-overflow: ellipsis;
   max-width: 100%;
   display: block;
 }
 
-/* Special handling for email to prevent icon shrink */
 .contact-item.email-item .contact-value {
-  font-size: 15px; /* Slightly smaller for email */
-  white-space: normal; /* Allow wrapping for email */
-  word-break: break-word; /* Break long emails */
+  font-size: 14px;
+  white-space: normal;
+  word-break: break-word;
   line-height: 1.4;
 }
 
@@ -1189,8 +1203,8 @@ body {
 }
 
 .social-links h3 {
-  font-size: 20px;
-  font-weight: 900;
+  font-size: 18px; /* Reduced font size */
+  font-weight: 800; /* Reduced boldness */
   color: var(--dark-color);
   margin-bottom: 25px;
   display: flex;
@@ -1313,7 +1327,7 @@ body {
   transform: translateX(100%);
 }
 
-/* Back Button */
+/* Back Button - FIXED POSITION */
 .back-btn {
   position: absolute;
   top: 20px;
@@ -1339,11 +1353,29 @@ body {
   transform: translateX(-5px) rotate(-10deg);
 }
 
-/* Footer Fix - Added padding to prevent hiding */
+/* Footer Fix */
 .page-footer-spacer {
   height: 30px;
   width: 100%;
   clear: both;
+}
+
+/* Cart Badge */
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--danger-gradient);
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
 /* Modal Styles */
@@ -1486,6 +1518,16 @@ body {
   
   .product-image-container {
     height: 180px;
+  }
+  
+  .cart-item-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .remove-btn {
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -1850,6 +1892,7 @@ img {
     <div class="nav-item" onclick="navigateTo('cartPage')">
       <div class="nav-icon">
         <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
       </div>
       <div class="nav-label">Cart</div>
     </div>
@@ -1882,16 +1925,16 @@ img {
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal('productModal')">×</button>
     
-    <div class="product-image-container">
+    <div class="product-image-container" style="background:white;">
       <img src="" id="modalImage" class="product-image" loading="lazy">
     </div>
     <div style="padding:30px;">
-      <h2 id="modalTitle" style="font-size:26px;font-weight:900;color:var(--dark-color);margin-bottom:15px;line-height:1.3;"></h2>
-      <p id="modalDescription" style="color:#64748b;line-height:1.8;margin-bottom:25px;font-size:16px;"></p>
-      <div id="modalPrice" style="font-size:32px;font-weight:900;color:#10b981;margin-bottom:30px;"></div>
+      <h2 id="modalTitle" style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:15px;line-height:1.3;"></h2>
+      <p id="modalDescription" style="color:#64748b;line-height:1.8;margin-bottom:25px;font-size:15px;"></p>
+      <div id="modalPrice" style="font-size:28px;font-weight:900;color:#10b981;margin-bottom:30px;"></div>
       
       <div id="directCheckoutSection" style="display:none; margin-top: 30px; padding-top: 30px; border-top: 2px solid #f1f5f9;">
-        <h3 style="font-size:20px;font-weight:900;color:var(--dark-color);margin-bottom:20px;display:flex;align-items:center;gap:10px;">
+        <h3 style="font-size:18px;font-weight:800;color:var(--dark-color);margin-bottom:20px;display:flex;align-items:center;gap:10px;">
           <i class="fas fa-credit-card"></i> Checkout Now
         </h3>
         
@@ -1901,7 +1944,7 @@ img {
               <i class="fab fa-whatsapp"></i>
             </div>
             <div style="flex:1;">
-              <div style="font-weight:900;color:var(--dark-color);font-size:16px;">WhatsApp Order</div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">WhatsApp Order</div>
               <div style="font-size:13px;color:#64748b;line-height:1.4;">Confirm order via WhatsApp chat</div>
             </div>
           </div>
@@ -1911,7 +1954,7 @@ img {
               <i class="fas fa-truck"></i>
             </div>
             <div style="flex:1;">
-              <div style="font-weight:900;color:var(--dark-color);font-size:16px;">Cash on Delivery</div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">Cash on Delivery</div>
               <div style="font-size:13px;color:#64748b;line-height:1.4;">Pay when product arrives</div>
             </div>
           </div>
@@ -1921,22 +1964,22 @@ img {
               <i class="fas fa-qrcode"></i>
             </div>
             <div style="flex:1;">
-              <div style="font-weight:900;color:var(--dark-color);font-size:16px;">JazzCash / EasyPaisa</div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">JazzCash / EasyPaisa</div>
               <div style="font-size:13px;color:#64748b;line-height:1.4;">Pay via QR Code or Number</div>
             </div>
           </div>
         </div>
         
-        <button onclick="checkoutBuyNow()" style="width:100%;padding:20px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:18px;font-weight:900;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
+        <button onclick="checkoutBuyNow()" style="width:100%;padding:20px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:17px;font-weight:800;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
           <i class="fas fa-bolt"></i> Complete Purchase
         </button>
       </div>
       
       <div style="display:flex;gap:15px;margin-top:30px;">
-        <button onclick="showDirectCheckout()" style="flex:1;padding:20px;border:none;border-radius:var(--border-radius-md);font-size:17px;font-weight:900;cursor:pointer;background:var(--primary-gradient);color:white;transition:var(--transition);box-shadow:var(--shadow-md);">
+        <button onclick="showDirectCheckout()" style="flex:1;padding:20px;border:none;border-radius:var(--border-radius-md);font-size:16px;font-weight:800;cursor:pointer;background:var(--primary-gradient);color:white;transition:var(--transition);box-shadow:var(--shadow-md);">
           <i class="fas fa-shopping-cart"></i> Buy Now
         </button>
-        <button onclick="addToCartFromModal()" style="flex:1;padding:20px;border:none;border-radius:var(--border-radius-md);font-size:17px;font-weight:900;cursor:pointer;background:var(--secondary-gradient);color:white;transition:var(--transition);box-shadow:var(--shadow-md);">
+        <button onclick="addToCartFromModal()" style="flex:1;padding:20px;border:none;border-radius:var(--border-radius-md);font-size:16px;font-weight:800;cursor:pointer;background:var(--secondary-gradient);color:white;transition:var(--transition);box-shadow:var(--shadow-md);">
           <i class="fas fa-plus"></i> Add to Cart
         </button>
       </div>
@@ -1950,7 +1993,7 @@ img {
     <button class="close-btn" onclick="closeModal('checkoutModal')">×</button>
     
     <div style="padding:30px;">
-      <h2 style="font-size:28px;font-weight:900;color:var(--dark-color);margin-bottom:25px;display:flex;align-items:center;gap:12px;">
+      <h2 style="font-size:24px;font-weight:800;color:var(--dark-color);margin-bottom:25px;display:flex;align-items:center;gap:12px;">
         <i class="fas fa-shopping-bag"></i> Checkout
       </h2>
       
@@ -1959,7 +2002,7 @@ img {
       </div>
       
       <div style="margin:25px 0;">
-        <h3 style="font-size:20px;font-weight:900;color:var(--dark-color);margin-bottom:20px;display:flex;align-items:center;gap:12px;">
+        <h3 style="font-size:18px;font-weight:800;color:var(--dark-color);margin-bottom:20px;display:flex;align-items:center;gap:12px;">
           <i class="fas fa-credit-card"></i> Payment Method
         </h3>
         <div class="payment-options" style="display:flex;flex-direction:column;gap:15px;">
@@ -1968,7 +2011,7 @@ img {
               <i class="fab fa-whatsapp"></i>
             </div>
             <div style="flex:1;">
-              <div style="font-weight:900;color:var(--dark-color);font-size:16px;">WhatsApp Order</div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">WhatsApp Order</div>
               <div style="font-size:13px;color:#64748b;line-height:1.4;">Confirm order via WhatsApp chat</div>
             </div>
           </div>
@@ -1978,7 +2021,7 @@ img {
               <i class="fas fa-truck"></i>
             </div>
             <div style="flex:1;">
-              <div style="font-weight:900;color:var(--dark-color);font-size:16px;">Cash on Delivery</div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">Cash on Delivery</div>
               <div style="font-size:13px;color:#64748b;line-height:1.4;">Pay when product arrives</div>
             </div>
           </div>
@@ -1988,7 +2031,7 @@ img {
               <i class="fas fa-qrcode"></i>
             </div>
             <div style="flex:1;">
-              <div style="font-weight:900;color:var(--dark-color);font-size:16px;">JazzCash / EasyPaisa</div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">JazzCash / EasyPaisa</div>
               <div style="font-size:13px;color:#64748b;line-height:1.4;">Pay via QR Code or Number</div>
             </div>
           </div>
@@ -1997,20 +2040,20 @@ img {
       
       <div style="background:#f8fafc;padding:25px;border-radius:var(--border-radius-md);margin:30px 0;border:1px solid #e2e8f0;">
         <div style="display:flex;justify-content:space-between;margin-bottom:15px;align-items:center;">
-          <span style="color:#64748b;font-size:16px;">Subtotal</span>
-          <span style="font-weight:900;color:var(--dark-color);font-size:18px;">PKR <span id="checkoutSubtotal">0</span></span>
+          <span style="color:#64748b;font-size:15px;">Subtotal</span>
+          <span style="font-weight:800;color:var(--dark-color);font-size:17px;">PKR <span id="checkoutSubtotal">0</span></span>
         </div>
         <div style="display:flex;justify-content:space-between;margin-bottom:15px;align-items:center;">
-          <span style="color:#64748b;font-size:16px;">Shipping</span>
-          <span style="font-weight:900;color:var(--dark-color);font-size:18px;">PKR 0</span>
+          <span style="color:#64748b;font-size:15px;">Shipping</span>
+          <span style="font-weight:800;color:var(--dark-color);font-size:17px;">PKR 0</span>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:20px;padding-top:20px;border-top:2px solid #e2e8f0;align-items:center;">
-          <span style="font-size:22px;font-weight:900;color:var(--dark-color);">Total</span>
-          <span style="font-size:32px;font-weight:900;color:#10b981;">PKR <span id="checkoutTotal">0</span></span>
+          <span style="font-size:20px;font-weight:800;color:var(--dark-color);">Total</span>
+          <span style="font-size:28px;font-weight:900;color:#10b981;">PKR <span id="checkoutTotal">0</span></span>
         </div>
       </div>
       
-      <button onclick="proceedToPayment()" style="width:100%;padding:22px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:20px;font-weight:900;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
+      <button onclick="proceedToPayment()" style="width:100%;padding:22px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:18px;font-weight:800;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
         <i class="fas fa-lock"></i> Proceed to Payment
       </button>
     </div>
@@ -2023,7 +2066,7 @@ img {
     <button class="close-btn" onclick="closeModal('paymentDetailsModal')">×</button>
     
     <div style="padding:30px;">
-      <h2 style="font-size:28px;font-weight:900;color:var(--dark-color);margin-bottom:25px;display:flex;align-items:center;gap:12px;" id="paymentMethodTitle">
+      <h2 style="font-size:24px;font-weight:800;color:var(--dark-color);margin-bottom:25px;display:flex;align-items:center;gap:12px;" id="paymentMethodTitle">
         <i class="fas fa-qrcode"></i> Payment Details
       </h2>
       
@@ -2031,7 +2074,7 @@ img {
         <!-- Payment details will be loaded here -->
       </div>
       
-      <button onclick="confirmPayment()" style="width:100%;padding:22px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:20px;font-weight:900;cursor:pointer;transition:var(--transition);margin-top:30px;box-shadow:var(--shadow-lg);">
+      <button onclick="confirmPayment()" style="width:100%;padding:22px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:18px;font-weight:800;cursor:pointer;transition:var(--transition);margin-top:30px;box-shadow:var(--shadow-lg);">
         <i class="fas fa-check-circle"></i> Confirm Payment
       </button>
     </div>
@@ -2040,7 +2083,6 @@ img {
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-// [KEEP ALL JAVASCRIPT CODE EXACTLY AS IN PREVIOUS VERSION - ALL FUNCTIONALITY REMAINS THE SAME]
 // Global variables
 let card = {};
 let currentProduct = null;
@@ -2156,7 +2198,7 @@ async function renderApp() {
   document.getElementById('name').textContent = card.name || "";
   document.getElementById('business').textContent = card.businessName || "";
   
-  // Set contact info - FIXED: Add email-item class for email
+  // Set contact info
   document.getElementById('contactPhone').textContent = card.phone || "Not available";
   document.getElementById('contactEmail').textContent = card.email || "Not available";
   document.getElementById('contactAddress').textContent = card.address || "Not available";
@@ -2199,7 +2241,7 @@ function loadProductsPage() {
   });
 }
 
-// Create product card element - FIXED: Consistent image size
+// Create product card element - FIXED: Images resized, not cropped
 function createProductCard(product, index, fullWidth = false) {
   const price = product.discountPrice || product.originalPrice;
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
@@ -2282,14 +2324,15 @@ function loadCartPage() {
   
   cart.forEach((item, index) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    total += price;
+    const itemTotal = price * (item.quantity || 1);
+    total += itemTotal;
     
     html += `
       <div class="cart-item">
         <img src="${item.image || ''}" class="cart-item-img" loading="lazy" onerror="this.style.display='none'">
         <div class="cart-item-details">
           <div class="cart-item-title">${item.title || 'Product'}</div>
-          <div class="cart-item-price">PKR ${price.toFixed(2)}</div>
+          <div class="cart-item-price">PKR ${itemTotal.toFixed(2)}</div>
           <div class="cart-item-actions">
             <div class="quantity-control">
               <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
@@ -2395,7 +2438,7 @@ function loadAboutPage() {
   }
 }
 
-// Load contact page - FIXED: Added email-item class
+// Load contact page
 function loadContactPage() {
   const socialGrid = document.getElementById('socialGrid');
   const socialMedia = card.socialMedia || {};
@@ -2433,6 +2476,7 @@ function loadContactPage() {
 function updateCartCount() {
   const count = cart.length;
   document.getElementById('cartCountMini').textContent = count;
+  document.getElementById('cartBadge').textContent = count;
   
   // Update cart page if active
   if(currentPage === 'cartPage') {
@@ -2498,7 +2542,7 @@ function showProductModal(productIndex) {
   
   if(originalPrice) {
     document.getElementById('modalPrice').innerHTML = `
-      <span style="text-decoration:line-through;color:#94a3b8;font-size:20px;margin-right:15px;">PKR ${originalPrice}</span>
+      <span style="text-decoration:line-through;color:#94a3b8;font-size:18px;margin-right:15px;">PKR ${originalPrice}</span>
       <span>PKR ${price}</span>
     `;
   } else {
@@ -2601,15 +2645,16 @@ function openCheckoutModal() {
   
   cart.forEach((item, index) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    subtotal += price * (item.quantity || 1);
+    const itemTotal = price * (item.quantity || 1);
+    subtotal += itemTotal;
     
     checkoutItems.innerHTML += `
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding:15px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;">
         <div>
-          <div style="font-weight:900;color:var(--dark-color);margin-bottom:5px;">${item.title || 'Product'}</div>
+          <div style="font-weight:800;color:var(--dark-color);margin-bottom:5px;">${item.title || 'Product'}</div>
           <div style="font-size:13px;color:#64748b;">Qty: ${item.quantity || 1}</div>
         </div>
-        <div style="font-weight:900;color:var(--dark-color);font-size:18px;">PKR ${(price * (item.quantity || 1)).toFixed(2)}</div>
+        <div style="font-weight:800;color:var(--dark-color);font-size:17px;">PKR ${itemTotal.toFixed(2)}</div>
       </div>
     `;
   });
@@ -2668,8 +2713,8 @@ function showPaymentDetailsModal(context) {
     paymentDetailsContent.innerHTML = `
       <div style="text-align:center;">
         <div style="margin-bottom:25px;">
-          <div style="font-size:17px;color:#64748b;margin-bottom:15px;">Send <strong style="color:#10b981;font-size:24px;">PKR ${price}</strong> to:</div>
-          <div style="font-size:32px;font-weight:900;color:#FF6B00;margin:20px 0;background:rgba(255,107,0,0.1);padding:20px;border-radius:16px;letter-spacing:1px;">
+          <div style="font-size:16px;color:#64748b;margin-bottom:15px;">Send <strong style="color:#10b981;font-size:22px;">PKR ${price}</strong> to:</div>
+          <div style="font-size:28px;font-weight:900;color:#FF6B00;margin:20px 0;background:rgba(255,107,0,0.1);padding:20px;border-radius:16px;letter-spacing:1px;">
             ${card.payments.jazzcash.number || ''}
           </div>
         </div>
@@ -2682,7 +2727,7 @@ function showPaymentDetailsModal(context) {
         ` : ''}
         
         <div style="background:#f0f9ff;padding:20px;border-radius:16px;margin-top:25px;border-left:4px solid #3b82f6;">
-          <div style="font-size:15px;color:#64748b;margin-bottom:12px;font-weight:900;">Instructions:</div>
+          <div style="font-size:15px;color:#64748b;margin-bottom:12px;font-weight:800;">Instructions:</div>
           <ol style="text-align:left;padding-left:25px;margin:15px 0;color:#475569;line-height:1.8;">
             <li style="margin-bottom:10px;">Complete payment using the QR code or number above</li>
             <li style="margin-bottom:10px;">Take screenshot of payment confirmation</li>
@@ -2702,8 +2747,8 @@ function showPaymentDetailsModal(context) {
     paymentDetailsContent.innerHTML = `
       <div style="text-align:center;">
         <div style="margin-bottom:25px;">
-          <div style="font-size:17px;color:#64748b;margin-bottom:15px;">Send <strong style="color:#10b981;font-size:24px;">PKR ${total.toFixed(2)}</strong> to:</div>
-          <div style="font-size:32px;font-weight:900;color:#FF6B00;margin:20px 0;background:rgba(255,107,0,0.1);padding:20px;border-radius:16px;letter-spacing:1px;">
+          <div style="font-size:16px;color:#64748b;margin-bottom:15px;">Send <strong style="color:#10b981;font-size:22px;">PKR ${total.toFixed(2)}</strong> to:</div>
+          <div style="font-size:28px;font-weight:900;color:#FF6B00;margin:20px 0;background:rgba(255,107,0,0.1);padding:20px;border-radius:16px;letter-spacing:1px;">
             ${card.payments.jazzcash.number || ''}
           </div>
         </div>
@@ -2716,7 +2761,7 @@ function showPaymentDetailsModal(context) {
         ` : ''}
         
         <div style="background:#f0f9ff;padding:20px;border-radius:16px;margin-top:25px;border-left:4px solid #3b82f6;">
-          <div style="font-size:15px;color:#64748b;margin-bottom:12px;font-weight:900;">Instructions:</div>
+          <div style="font-size:15px;color:#64748b;margin-bottom:12px;font-weight:800;">Instructions:</div>
           <ol style="text-align:left;padding-left:25px;margin:15px 0;color:#475569;line-height:1.8;">
             <li style="margin-bottom:10px;">Complete payment using the QR code or number above</li>
             <li style="margin-bottom:10px;">Take screenshot of payment confirmation</li>
