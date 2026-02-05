@@ -1,0 +1,2379 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Digital Business App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<style>
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --whatsapp-gradient: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --dark-color: #0f172a;
+  --light-color: #f8fafc;
+  --glass-bg: rgba(255, 255, 255, 0.95);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+  --shadow-sm: 0 4px 15px rgba(0,0,0,0.08);
+  --border-radius-lg: 24px;
+  --border-radius-md: 16px;
+  --border-radius-sm: 12px;
+  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--primary-gradient);
+  min-height: 100vh;
+  color: var(--dark-color);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* App Container */
+.app-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--light-color);
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0,0,0,0.3);
+}
+
+/* Page Transitions */
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--light-color);
+  transform: translateX(100%);
+  opacity: 0;
+  transition: var(--transition);
+  z-index: 1;
+}
+
+.page.active {
+  transform: translateX(0);
+  opacity: 1;
+  z-index: 2;
+}
+
+.page.slide-out {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+/* Loading Screen */
+#loadingScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-gradient);
+  z-index: 100;
+}
+
+.loader {
+  width: 80px;
+  height: 80px;
+  border: 4px solid rgba(255,255,255,0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 30px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#loadingScreen h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+#loadingScreen p {
+  color: rgba(255,255,255,0.9);
+  font-size: 16px;
+  text-align: center;
+  max-width: 300px;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 480px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 10px;
+  z-index: 1000;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.08);
+  border-radius: 30px 30px 0 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  flex: 1;
+  min-width: 60px;
+}
+
+.nav-item.active {
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateY(-5px);
+}
+
+.nav-item.active .nav-icon {
+  background: var(--primary-gradient);
+  transform: scale(1.1);
+}
+
+.nav-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  background: #cbd5e1;
+  transition: var(--transition);
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  transition: var(--transition);
+}
+
+.nav-item.active .nav-label {
+  color: #667eea;
+  font-weight: 700;
+}
+
+/* Home Page */
+#homePage {
+  padding-bottom: 100px;
+}
+
+.app-header {
+  background: var(--primary-gradient);
+  padding: 40px 20px 120px;
+  border-radius: 0 0 40px 40px;
+  margin: -20px -20px 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.header-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 Z"/></svg>');
+  background-size: cover;
+}
+
+.welcome-text {
+  color: white;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.welcome-text h1 {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.welcome-text p {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: -60px;
+  position: relative;
+  z-index: 2;
+}
+
+.action-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: var(--shadow-sm);
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.action-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+  margin: 0 auto 15px;
+}
+
+.action-card:nth-child(1) .action-icon { background: var(--whatsapp-gradient); }
+.action-card:nth-child(2) .action-icon { background: var(--secondary-gradient); }
+.action-card:nth-child(3) .action-icon { background: var(--success-gradient); }
+.action-card:nth-child(4) .action-icon { background: var(--warning-gradient); }
+
+.action-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 8px;
+}
+
+.action-card p {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* Profile Section */
+.profile-section {
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 30px;
+  margin: 30px 0;
+  box-shadow: var(--shadow-md);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--primary-gradient);
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 20px;
+}
+
+.profile-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.verified-badge {
+  color: #667eea;
+  font-size: 18px;
+}
+
+.profile-business {
+  font-size: 16px;
+  color: #764ba2;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Products Grid */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 40px 0 20px;
+}
+
+.section-header h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.see-all {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.product-card {
+  background: white;
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.product-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  background: linear-gradient(45deg, #f8fafc, #f1f5f9);
+}
+
+.product-content {
+  padding: 16px;
+}
+
+.product-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #94a3b8;
+  font-size: 14px;
+}
+
+.discount-price {
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.product-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.badge {
+  background: var(--danger-gradient);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Products Page */
+#productsPage {
+  padding-bottom: 100px;
+}
+
+.products-header {
+  background: var(--primary-gradient);
+  padding: 40px 20px;
+  margin: -20px -20px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.products-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="20" cy="20" r="5" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="8" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="80" r="6" fill="rgba(255,255,255,0.1)"/></svg>');
+}
+
+.products-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.products-header p {
+  color: rgba(255,255,255,0.9);
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.products-search {
+  position: relative;
+  margin: 20px 0;
+}
+
+.products-search input {
+  width: 100%;
+  padding: 16px 50px 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--border-radius-md);
+  font-size: 16px;
+  background: white;
+  color: var(--dark-color);
+  transition: var(--transition);
+}
+
+.products-search input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.products-search i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 20px;
+}
+
+/* Cart Page */
+#cartPage {
+  padding-bottom: 100px;
+}
+
+.cart-header {
+  background: var(--primary-gradient);
+  padding: 40px 20px;
+  margin: -20px -20px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cart-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.cart-empty i {
+  font-size: 80px;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+
+.cart-empty h3 {
+  font-size: 24px;
+  color: var(--dark-color);
+  margin-bottom: 10px;
+}
+
+.cart-empty p {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cart-item {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.cart-item:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.cart-item-img {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--border-radius-sm);
+  object-fit: cover;
+  background: linear-gradient(45deg, #f8fafc, #f1f5f9);
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 8px;
+}
+
+.cart-item-price {
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.cart-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  color: var(--dark-color);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.quantity-btn:hover {
+  border-color: #667eea;
+  background: #f8fafc;
+}
+
+.quantity {
+  font-weight: 600;
+  color: var(--dark-color);
+  min-width: 30px;
+  text-align: center;
+}
+
+.remove-btn {
+  background: var(--danger-gradient);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.remove-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.cart-summary {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: 24px;
+  margin-top: 30px;
+  box-shadow: var(--shadow-sm);
+}
+
+.cart-summary h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #475569;
+}
+
+.summary-total {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px solid #f1f5f9;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 20px;
+  background: var(--success-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  margin-top: 30px;
+  box-shadow: var(--shadow-md);
+}
+
+.checkout-btn:hover {
+  opacity: 0.95;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* About Page */
+#aboutPage {
+  padding-bottom: 100px;
+}
+
+.about-header {
+  background: var(--primary-gradient);
+  padding: 40px 20px;
+  margin: -20px -20px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.about-content {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 30px;
+}
+
+.about-content p {
+  line-height: 1.8;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+.business-hours {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 30px;
+}
+
+.business-hours h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hour-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+}
+
+.hour-item:hover {
+  background: #f1f5f9;
+}
+
+.day-name {
+  font-weight: 500;
+  color: #475569;
+}
+
+.day-time {
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.day-time.closed {
+  color: #ef4444;
+}
+
+/* Contact Page */
+#contactPage {
+  padding-bottom: 100px;
+}
+
+.contact-header {
+  background: var(--primary-gradient);
+  padding: 40px 20px;
+  margin: -20px -20px 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.contact-info {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 30px;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.contact-item:hover {
+  background: #f1f5f9;
+  transform: translateX(5px);
+}
+
+.contact-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+}
+
+.contact-item:nth-child(1) .contact-icon { background: var(--success-gradient); }
+.contact-item:nth-child(2) .contact-icon { background: var(--whatsapp-gradient); }
+.contact-item:nth-child(3) .contact-icon { background: var(--secondary-gradient); }
+.contact-item:nth-child(4) .contact-icon { background: var(--warning-gradient); }
+
+.contact-details {
+  flex: 1;
+}
+
+.contact-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.contact-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+.social-links {
+  background: white;
+  border-radius: var(--border-radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.social-links h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.social-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-sm);
+  transition: var(--transition);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.social-link:hover {
+  background: #f1f5f9;
+  transform: translateY(-5px);
+}
+
+.social-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+
+.social-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+/* Floating Action Button */
+.fab-container {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.fab {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--whatsapp-gradient);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+  border: none;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 15px 40px rgba(37, 211, 102, 0.4);
+}
+
+/* Back Button */
+.back-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  z-index: 10;
+}
+
+.back-btn:hover {
+  background: rgba(255,255,255,0.3);
+  transform: translateX(-3px);
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.1);
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+  z-index: 10;
+}
+
+.close-btn:hover {
+  background: rgba(0,0,0,0.2);
+  transform: rotate(90deg);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.animate-in {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.animate-slide {
+  animation: slideInRight 0.6s ease forwards;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .app-container {
+    max-width: 100%;
+  }
+  
+  .page {
+    padding: 15px;
+  }
+  
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .social-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .nav-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+  
+  .nav-label {
+    font-size: 10px;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+</style>
+</head>
+
+<body>
+<div class="app-container">
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="page active">
+    <div class="loader"></div>
+    <h1>Digital Business App</h1>
+    <p>Loading your premium business experience...</p>
+  </div>
+
+  <!-- Home Page -->
+  <div id="homePage" class="page">
+    <div class="app-header">
+      <div class="header-overlay"></div>
+      <div class="welcome-text animate-in">
+        <h1 id="businessHeader">Welcome</h1>
+        <p>Premium business at your fingertips</p>
+      </div>
+      
+      <div class="quick-actions">
+        <div class="action-card" onclick="navigateTo('productsPage')">
+          <div class="action-icon">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+          <h3>Shop Now</h3>
+          <p>Browse products & offers</p>
+        </div>
+        
+        <div class="action-card" onclick="openCartModal()">
+          <div class="action-icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <h3>My Cart</h3>
+          <p><span id="cartCountMini">0</span> items</p>
+        </div>
+        
+        <div class="action-card" onclick="openWhatsAppChat('greeting')">
+          <div class="action-icon">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <h3>Live Chat</h3>
+          <p>Instant support</p>
+        </div>
+        
+        <div class="action-card" onclick="navigateTo('contactPage')">
+          <div class="action-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h3>Location</h3>
+          <p>Find us</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-section animate-slide">
+      <img src="" id="photo" class="profile-avatar">
+      <div class="profile-name">
+        <span id="name">Loading...</span>
+        <i class="fas fa-badge-check verified-badge"></i>
+      </div>
+      <div class="profile-business" id="business"></div>
+    </div>
+
+    <div class="section-header">
+      <h2><i class="fas fa-gift"></i> Featured Products</h2>
+      <div class="see-all" onclick="navigateTo('productsPage')">
+        See All <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+    
+    <div class="products-grid" id="featuredProducts">
+      <!-- Featured products will be loaded here -->
+    </div>
+
+    <div class="section-header">
+      <h2><i class="fas fa-bolt"></i> Special Offers</h2>
+    </div>
+    
+    <div class="products-grid" id="specialOffers">
+      <!-- Special offers will be loaded here -->
+    </div>
+  </div>
+
+  <!-- Products Page -->
+  <div id="productsPage" class="page">
+    <button class="back-btn" onclick="navigateTo('homePage')">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="products-header">
+      <h1>Products & Offers</h1>
+      <p>Discover our premium collection</p>
+    </div>
+    
+    <div class="products-search">
+      <input type="text" id="productsSearch" placeholder="Search products..." onkeyup="filterProducts()">
+      <i class="fas fa-search"></i>
+    </div>
+    
+    <div class="products-grid" id="allProducts">
+      <!-- All products will be loaded here -->
+    </div>
+  </div>
+
+  <!-- Cart Page -->
+  <div id="cartPage" class="page">
+    <button class="back-btn" onclick="navigateTo('homePage')">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="cart-header">
+      <h1>My Cart</h1>
+      <p id="cartItemsCount">0 items</p>
+    </div>
+    
+    <div id="cartContent">
+      <!-- Cart content will be loaded here -->
+    </div>
+  </div>
+
+  <!-- About Page -->
+  <div id="aboutPage" class="page">
+    <button class="back-btn" onclick="navigateTo('homePage')">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="about-header">
+      <h1>About Business</h1>
+    </div>
+    
+    <div class="about-content" id="aboutContent">
+      <!-- About content will be loaded here -->
+    </div>
+    
+    <div class="business-hours">
+      <h3><i class="fas fa-clock"></i> Business Hours</h3>
+      <div class="hours-list" id="businessHours">
+        <!-- Business hours will be loaded here -->
+      </div>
+    </div>
+    
+    <div class="business-hours">
+      <h3><i class="fas fa-calendar-times"></i> Holidays</h3>
+      <div class="hours-list" id="holidaysList">
+        <!-- Holidays will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Page -->
+  <div id="contactPage" class="page">
+    <button class="back-btn" onclick="navigateTo('homePage')">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="contact-header">
+      <h1>Contact Us</h1>
+      <p>Get in touch anytime</p>
+    </div>
+    
+    <div class="contact-info">
+      <div class="contact-item" onclick="makeCall()">
+        <div class="contact-icon">
+          <i class="fas fa-phone"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">Call Us</div>
+          <div class="contact-value" id="contactPhone">Loading...</div>
+        </div>
+      </div>
+      
+      <div class="contact-item" onclick="openWhatsAppChat('greeting')">
+        <div class="contact-icon">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">WhatsApp</div>
+          <div class="contact-value" id="contactWhatsApp">Chat Now</div>
+        </div>
+      </div>
+      
+      <div class="contact-item" onclick="sendEmail()">
+        <div class="contact-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">Email</div>
+          <div class="contact-value" id="contactEmail">Loading...</div>
+        </div>
+      </div>
+      
+      <div class="contact-item" onclick="openMap()">
+        <div class="contact-icon">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">Address</div>
+          <div class="contact-value" id="contactAddress">Loading...</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="social-links">
+      <h3><i class="fas fa-share-alt"></i> Follow Us</h3>
+      <div class="social-grid" id="socialGrid">
+        <!-- Social links will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="navigateTo('homePage')">
+      <div class="nav-icon">
+        <i class="fas fa-home"></i>
+      </div>
+      <div class="nav-label">Home</div>
+    </div>
+    
+    <div class="nav-item" onclick="navigateTo('productsPage')">
+      <div class="nav-icon">
+        <i class="fas fa-shopping-bag"></i>
+      </div>
+      <div class="nav-label">Products</div>
+    </div>
+    
+    <div class="nav-item" onclick="navigateTo('cartPage')">
+      <div class="nav-icon">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <div class="nav-label">Cart</div>
+    </div>
+    
+    <div class="nav-item" onclick="navigateTo('aboutPage')">
+      <div class="nav-icon">
+        <i class="fas fa-info-circle"></i>
+      </div>
+      <div class="nav-label">About</div>
+    </div>
+    
+    <div class="nav-item" onclick="navigateTo('contactPage')">
+      <div class="nav-icon">
+        <i class="fas fa-phone"></i>
+      </div>
+      <div class="nav-label">Contact</div>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <div class="fab-container">
+    <button class="fab" onclick="openWhatsAppChat('greeting')">
+      <i class="fab fa-whatsapp"></i>
+    </button>
+  </div>
+</div>
+
+<!-- Product Detail Modal -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('productModal')">×</button>
+    
+    <img src="" id="modalImage" class="product-image">
+    <div style="padding:24px;">
+      <h2 id="modalTitle" style="font-size:24px;font-weight:700;color:#0f172a;margin-bottom:12px;"></h2>
+      <p id="modalDescription" style="color:#64748b;line-height:1.6;margin-bottom:20px;"></p>
+      <div id="modalPrice" style="font-size:28px;font-weight:700;color:#10b981;margin-bottom:24px;"></div>
+      
+      <div id="directCheckoutSection" style="display:none; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
+        <h3 style="font-size:18px;font-weight:600;color:#0f172a;margin-bottom:15px;">Checkout Now</h3>
+        
+        <div class="payment-options" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+          <div class="payment-option" onclick="selectBuyNowPayment('whatsapp')" id="whatsappBuyNowOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:var(--transition);">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#25D366;">
+              <i class="fab fa-whatsapp"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#0f172a;">WhatsApp Order</div>
+              <div style="font-size:12px;color:#64748b;">Confirm order via WhatsApp chat</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectBuyNowPayment('cod')" id="codBuyNowOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:var(--transition);">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#10b981;">
+              <i class="fas fa-truck"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#0f172a;">Cash on Delivery</div>
+              <div style="font-size:12px;color:#64748b;">Pay when product arrives</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectBuyNowPayment('jazzcash')" id="jazzcashBuyNowOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:var(--transition);">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#FF6B00;">
+              <i class="fas fa-qrcode"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#0f172a;">JazzCash / EasyPaisa</div>
+              <div style="font-size:12px;color:#64748b;">Pay via QR Code or Number</div>
+            </div>
+          </div>
+        </div>
+        
+        <button onclick="checkoutBuyNow()" style="width:100%;padding:16px;background:var(--success-gradient);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:var(--transition);">
+          <i class="fas fa-bolt"></i> Complete Purchase
+        </button>
+      </div>
+      
+      <div style="display:flex;gap:12px;margin-top:24px;">
+        <button onclick="showDirectCheckout()" style="flex:1;padding:16px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;background:var(--primary-gradient);color:white;transition:var(--transition);">
+          🛒 Buy Now
+        </button>
+        <button onclick="addToCartFromModal()" style="flex:1;padding:16px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;background:var(--secondary-gradient);color:white;transition:var(--transition);">
+          ➕ Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('checkoutModal')">×</button>
+    
+    <div style="padding:24px;">
+      <h2 style="font-size:24px;font-weight:700;color:#0f172a;margin-bottom:20px;">Checkout</h2>
+      
+      <div id="checkoutItems" style="margin-bottom:24px;">
+        <!-- Checkout items will be loaded here -->
+      </div>
+      
+      <div style="margin:20px 0;">
+        <h3 style="font-size:18px;font-weight:600;color:#0f172a;margin-bottom:15px;">Payment Method</h3>
+        <div class="payment-options" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="payment-option" onclick="selectCheckoutPayment('whatsapp')" id="whatsappCheckoutOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:var(--transition);">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#25D366;">
+              <i class="fab fa-whatsapp"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#0f172a;">WhatsApp Order</div>
+              <div style="font-size:12px;color:#64748b;">Confirm order via WhatsApp chat</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectCheckoutPayment('cod')" id="codCheckoutOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:var(--transition);">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#10b981;">
+              <i class="fas fa-truck"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#0f172a;">Cash on Delivery</div>
+              <div style="font-size:12px;color:#64748b;">Pay when product arrives</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectCheckoutPayment('jazzcash')" id="jazzcashCheckoutOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:var(--transition);">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#FF6B00;">
+              <i class="fas fa-qrcode"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#0f172a;">JazzCash / EasyPaisa</div>
+              <div style="font-size:12px;color:#64748b;">Pay via QR Code or Number</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="background:#f8fafc;padding:20px;border-radius:12px;margin:20px 0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span style="color:#64748b;">Subtotal</span>
+          <span style="font-weight:600;color:#0f172a;">PKR <span id="checkoutSubtotal">0</span></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span style="color:#64748b;">Shipping</span>
+          <span style="font-weight:600;color:#0f172a;">PKR 0</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;padding-top:10px;border-top:2px solid #e2e8f0;">
+          <span style="font-size:18px;font-weight:700;color:#0f172a;">Total</span>
+          <span style="font-size:24px;font-weight:700;color:#10b981;">PKR <span id="checkoutTotal">0</span></span>
+        </div>
+      </div>
+      
+      <button onclick="proceedToPayment()" style="width:100%;padding:20px;background:var(--success-gradient);color:white;border:none;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-md);">
+        <i class="fas fa-lock"></i> Proceed to Payment
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Payment Details Modal -->
+<div class="modal-overlay" id="paymentDetailsModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('paymentDetailsModal')">×</button>
+    
+    <div style="padding:24px;">
+      <h2 style="font-size:24px;font-weight:700;color:#0f172a;margin-bottom:20px;" id="paymentMethodTitle"></h2>
+      
+      <div id="paymentDetailsContent">
+        <!-- Payment details will be loaded here -->
+      </div>
+      
+      <button onclick="confirmPayment()" style="width:100%;padding:20px;background:var(--success-gradient);color:white;border:none;border-radius:12px;font-size:18px;font-weight:700;cursor:pointer;transition:var(--transition);margin-top:20px;">
+        <i class="fas fa-check-circle"></i> Confirm Payment
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+// Global variables
+let card = {};
+let currentProduct = null;
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let buyNowPaymentMethod = 'whatsapp';
+let checkoutPaymentMethod = 'whatsapp';
+let currentPage = 'loadingScreen';
+let cartUpdateCallbacks = [];
+
+// Initialize Supabase
+const supa = supabase.createClient(
+  "https://dfvnefbxgayxqgjjgtrr.supabase.co",
+  "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
+);
+
+// Load card data
+document.addEventListener("DOMContentLoaded", async () => {
+  const id = new URLSearchParams(location.search).get("id") || localStorage.getItem("lastCardId");
+  if(!id) {
+    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+    return;
+  }
+
+  // Show loading for 2 seconds for premium feel
+  setTimeout(async () => {
+    const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
+    if(error || !data) {
+      document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+      return;
+    }
+
+    card = JSON.parse(data.data);
+    await renderApp();
+    navigateTo('homePage');
+    updateCartCount();
+    
+    // Add animations
+    document.querySelectorAll('.animate-in').forEach(el => {
+      el.style.animationDelay = `${Math.random() * 0.5}s`;
+    });
+    
+  }, 2000);
+});
+
+// Navigation functions
+function navigateTo(pageId) {
+  if(currentPage === pageId) return;
+  
+  const oldPage = document.getElementById(currentPage);
+  const newPage = document.getElementById(pageId);
+  
+  if(oldPage) {
+    oldPage.classList.remove('active');
+    oldPage.classList.add('slide-out');
+  }
+  
+  setTimeout(() => {
+    if(oldPage) oldPage.classList.remove('slide-out');
+    newPage.classList.add('active');
+    currentPage = pageId;
+    
+    // Update nav active state
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    const navMap = {
+      'homePage': 0,
+      'productsPage': 1,
+      'cartPage': 2,
+      'aboutPage': 3,
+      'contactPage': 4
+    };
+    
+    if(navMap[pageId] !== undefined) {
+      document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
+    }
+    
+    // Load page specific content
+    switch(pageId) {
+      case 'homePage':
+        loadHomePage();
+        break;
+      case 'productsPage':
+        loadProductsPage();
+        break;
+      case 'cartPage':
+        loadCartPage();
+        break;
+      case 'aboutPage':
+        loadAboutPage();
+        break;
+      case 'contactPage':
+        loadContactPage();
+        break;
+    }
+  }, 300);
+}
+
+// Render the complete app
+async function renderApp() {
+  // Set business name
+  document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
+  
+  // Load profile image
+  const photo = document.getElementById('photo');
+  if(card.profileImage) {
+    photo.src = card.profileImage;
+  } else {
+    photo.style.display = 'none';
+  }
+  
+  // Set basic info
+  document.getElementById('name').textContent = card.name || "";
+  document.getElementById('business').textContent = card.businessName || "";
+  
+  // Set contact info
+  document.getElementById('contactPhone').textContent = card.phone || "Not available";
+  document.getElementById('contactEmail').textContent = card.email || "Not available";
+  document.getElementById('contactAddress').textContent = card.address || "Not available";
+  
+  // Load home page content
+  loadHomePage();
+}
+
+// Load home page
+function loadHomePage() {
+  // Load featured products (first 4)
+  const featuredProducts = document.getElementById('featuredProducts');
+  const specialOffers = document.getElementById('specialOffers');
+  const products = card.products || [];
+  
+  featuredProducts.innerHTML = '';
+  specialOffers.innerHTML = '';
+  
+  products.slice(0, 4).forEach((product, index) => {
+    featuredProducts.appendChild(createProductCard(product, index));
+  });
+  
+  // Load special offers (products with badges)
+  const specialProducts = products.filter(p => p.badges && p.badges.length > 0).slice(0, 4);
+  specialProducts.forEach((product, index) => {
+    const originalIndex = products.findIndex(p => p.title === product.title);
+    specialOffers.appendChild(createProductCard(product, originalIndex));
+  });
+}
+
+// Load products page
+function loadProductsPage() {
+  const allProducts = document.getElementById('allProducts');
+  const products = card.products || [];
+  
+  allProducts.innerHTML = '';
+  
+  products.forEach((product, index) => {
+    allProducts.appendChild(createProductCard(product, index, true));
+  });
+}
+
+// Create product card element
+function createProductCard(product, index, fullWidth = false) {
+  const price = product.discountPrice || product.originalPrice;
+  const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
+  
+  const card = document.createElement('div');
+  card.className = 'product-card';
+  card.style.animationDelay = `${index * 0.1}s`;
+  card.style.animation = 'fadeIn 0.6s ease forwards';
+  card.style.opacity = '0';
+  
+  card.innerHTML = `
+    <img src="${product.image || ''}" class="product-image" onerror="this.style.display='none'">
+    <div class="product-content">
+      <div class="product-title">${product.title || 'Product'}</div>
+      <div class="product-price">
+        ${originalPrice ? `<span class="original-price">PKR ${originalPrice}</span>` : ''}
+        ${price ? `<span class="discount-price">PKR ${price}</span>` : ''}
+      </div>
+      ${product.badges && product.badges.length > 0 ? `
+        <div class="product-badges">
+          ${product.badges.slice(0, 2).map(badge => `<span class="badge">${badge}</span>`).join('')}
+        </div>
+      ` : ''}
+    </div>
+  `;
+  
+  card.onclick = () => showProductModal(index);
+  
+  return card;
+}
+
+// Filter products
+function filterProducts() {
+  const searchTerm = document.getElementById('productsSearch').value.toLowerCase();
+  const products = card.products || [];
+  const allProducts = document.getElementById('allProducts');
+  
+  allProducts.innerHTML = '';
+  
+  const filteredProducts = products.filter(product => 
+    product.title?.toLowerCase().includes(searchTerm) ||
+    product.desc?.toLowerCase().includes(searchTerm) ||
+    (product.badges && product.badges.some(badge => badge.toLowerCase().includes(searchTerm)))
+  );
+  
+  filteredProducts.forEach((product, index) => {
+    const originalIndex = products.findIndex(p => p.title === product.title);
+    allProducts.appendChild(createProductCard(product, originalIndex, true));
+  });
+}
+
+// Load cart page
+function loadCartPage() {
+  const cartContent = document.getElementById('cartContent');
+  const cartItemsCount = document.getElementById('cartItemsCount');
+  
+  if(cart.length === 0) {
+    cartContent.innerHTML = `
+      <div class="cart-empty">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>Your cart is empty</h3>
+        <p>Add some products to get started</p>
+        <button onclick="navigateTo('productsPage')" style="padding:16px 32px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;transition:var(--transition);">
+          Browse Products
+        </button>
+      </div>
+    `;
+    cartItemsCount.textContent = '0 items';
+    return;
+  }
+  
+  let html = '<div class="cart-items">';
+  let total = 0;
+  
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    total += price;
+    
+    html += `
+      <div class="cart-item">
+        <img src="${item.image || ''}" class="cart-item-img" onerror="this.style.display='none'">
+        <div class="cart-item-details">
+          <div class="cart-item-title">${item.title || 'Product'}</div>
+          <div class="cart-item-price">PKR ${price.toFixed(2)}</div>
+          <div class="cart-item-actions">
+            <div class="quantity-control">
+              <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+              <span class="quantity">1</span>
+              <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+            </div>
+            <button class="remove-btn" onclick="removeFromCart(${index})">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  
+  html += `
+    <div class="cart-summary">
+      <h3>Order Summary</h3>
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>PKR ${total.toFixed(2)}</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span>PKR 0</span>
+      </div>
+      <div class="summary-row summary-total">
+        <span>Total</span>
+        <span>PKR ${total.toFixed(2)}</span>
+      </div>
+      <button class="checkout-btn" onclick="openCheckoutModal()">
+        <i class="fas fa-lock"></i> Proceed to Checkout
+      </button>
+    </div>
+  `;
+  
+  cartContent.innerHTML = html;
+  cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
+}
+
+// Load about page
+function loadAboutPage() {
+  const aboutContent = document.getElementById('aboutContent');
+  const businessHours = document.getElementById('businessHours');
+  const holidaysList = document.getElementById('holidaysList');
+  
+  // About content
+  aboutContent.innerHTML = `
+    <p>${card.business?.about || 'No information available'}</p>
+  `;
+  
+  // Business hours
+  if(card.businessHours && card.businessHours.length > 0) {
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    businessHours.innerHTML = '';
+    
+    card.businessHours.forEach((day, index) => {
+      if(day) {
+        const hourItem = document.createElement('div');
+        hourItem.className = 'hour-item';
+        
+        if(!day.open || day.status === 'closed') {
+          hourItem.innerHTML = `
+            <span class="day-name">${days[index]}</span>
+            <span class="day-time closed">Closed</span>
+          `;
+        } else {
+          hourItem.innerHTML = `
+            <span class="day-name">${days[index]}</span>
+            <span class="day-time">${day.start || ''} - ${day.end || ''}</span>
+          `;
+        }
+        
+        businessHours.appendChild(hourItem);
+      }
+    });
+  }
+  
+  // Holidays
+  if(card.holidays && card.holidays.length > 0) {
+    holidaysList.innerHTML = '';
+    
+    card.holidays.forEach(holiday => {
+      if(holiday.name && holiday.date) {
+        const date = new Date(holiday.date);
+        const formattedDate = date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+        
+        const holidayItem = document.createElement('div');
+        holidayItem.className = 'hour-item';
+        holidayItem.innerHTML = `
+          <span class="day-name">${holiday.name}</span>
+          <span class="day-time">${formattedDate}</span>
+        `;
+        holidaysList.appendChild(holidayItem);
+      }
+    });
+  }
+}
+
+// Load contact page
+function loadContactPage() {
+  const socialGrid = document.getElementById('socialGrid');
+  const socialMedia = card.socialMedia || {};
+  
+  socialGrid.innerHTML = '';
+  
+  const socialPlatforms = [
+    { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Facebook', color: '#1877F2' },
+    { key: 'instagram', icon: 'fab fa-instagram', label: 'Instagram', color: '#E4405F' },
+    { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', color: '#1DA1F2' },
+    { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', color: '#0A66C2' },
+    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', color: '#FF0000' },
+    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', color: '#000000' }
+  ];
+  
+  socialPlatforms.forEach(platform => {
+    const url = socialMedia[platform.key];
+    if(url && url.trim()) {
+      const socialLink = document.createElement('a');
+      socialLink.className = 'social-link';
+      socialLink.href = url.includes('://') ? url : `https://${url}`;
+      socialLink.target = '_blank';
+      socialLink.innerHTML = `
+        <div class="social-icon" style="background:${platform.color};">
+          <i class="${platform.icon}"></i>
+        </div>
+        <div class="social-label">${platform.label}</div>
+      `;
+      socialGrid.appendChild(socialLink);
+    }
+  });
+}
+
+// Cart functions
+function updateCartCount() {
+  const count = cart.length;
+  document.getElementById('cartCountMini').textContent = count;
+  
+  // Update cart page if active
+  if(currentPage === 'cartPage') {
+    loadCartPage();
+  }
+}
+
+function addToCart(productIndex) {
+  const products = card.products || [];
+  const product = products[productIndex];
+  
+  if(product) {
+    const existingIndex = cart.findIndex(item => 
+      item.title === product.title && 
+      item.discountPrice === product.discountPrice
+    );
+    
+    if(existingIndex === -1) {
+      cart.push({
+        ...product,
+        index: productIndex,
+        quantity: 1
+      });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      showNotification('Product added to cart!');
+    } else {
+      showNotification('Product already in cart!');
+    }
+  }
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+}
+
+function updateQuantity(index, change) {
+  if(cart[index]) {
+    cart[index].quantity = Math.max(1, (cart[index].quantity || 1) + change);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    loadCartPage();
+  }
+}
+
+// Product modal functions
+function showProductModal(productIndex) {
+  const products = card.products || [];
+  currentProduct = products[productIndex];
+  
+  if(!currentProduct) return;
+  
+  const price = currentProduct.discountPrice || currentProduct.originalPrice;
+  const originalPrice = currentProduct.originalPrice && currentProduct.discountPrice ? currentProduct.originalPrice : null;
+  
+  document.getElementById('modalImage').src = currentProduct.image || '';
+  document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
+  document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
+  
+  if(originalPrice) {
+    document.getElementById('modalPrice').innerHTML = `
+      <span style="text-decoration:line-through;color:#94a3b8;font-size:18px;margin-right:10px;">PKR ${originalPrice}</span>
+      <span>PKR ${price}</span>
+    `;
+  } else {
+    document.getElementById('modalPrice').textContent = price ? `PKR ${price}` : 'Price not available';
+  }
+  
+  document.getElementById('directCheckoutSection').style.display = 'none';
+  selectBuyNowPayment('whatsapp');
+  
+  openModal('productModal');
+}
+
+function showDirectCheckout() {
+  document.getElementById('directCheckoutSection').style.display = 'block';
+}
+
+function addToCartFromModal() {
+  if(currentProduct) {
+    const products = card.products || [];
+    const productIndex = products.findIndex(p => p.title === currentProduct.title);
+    
+    if(productIndex !== -1) {
+      addToCart(productIndex);
+      closeModal('productModal');
+    }
+  }
+}
+
+// Buy Now functions
+function selectBuyNowPayment(method) {
+  buyNowPaymentMethod = method;
+  
+  const whatsappOption = document.getElementById('whatsappBuyNowOption');
+  const codOption = document.getElementById('codBuyNowOption');
+  const jazzcashOption = document.getElementById('jazzcashBuyNowOption');
+  
+  [whatsappOption, codOption, jazzcashOption].forEach(option => {
+    if(option) {
+      option.style.borderColor = '#e2e8f0';
+      option.style.backgroundColor = 'white';
+    }
+  });
+  
+  if(method === 'whatsapp' && whatsappOption) {
+    whatsappOption.style.borderColor = '#25D366';
+    whatsappOption.style.backgroundColor = '#f0fdf4';
+  } else if(method === 'cod' && codOption) {
+    codOption.style.borderColor = '#10b981';
+    codOption.style.backgroundColor = '#f0fdf4';
+  } else if(method === 'jazzcash' && jazzcashOption) {
+    jazzcashOption.style.borderColor = '#FF6B00';
+    jazzcashOption.style.backgroundColor = '#fff7ed';
+  }
+}
+
+function checkoutBuyNow() {
+  if(!currentProduct) return;
+  
+  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    showPaymentDetailsModal('buyNow');
+  } else {
+    sendBuyNowOrder();
+  }
+}
+
+function sendBuyNowOrder() {
+  if(!currentProduct) return;
+  
+  const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
+  
+  let message = `Hello! I would like to purchase:\n\n` +
+               `Product: ${currentProduct.title || 'Product'}\n` +
+               `Price: PKR ${price}\n` +
+               `${currentProduct.desc ? `Description: ${currentProduct.desc}\n\n` : '\n'}` +
+               `Payment Method: ${getPaymentMethodName(buyNowPaymentMethod)}\n`;
+  
+  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    message += `Payment sent to: ${card.payments.jazzcash.number || ''}\n`;
+    message += `Via: ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
+  } else if(buyNowPaymentMethod === 'cod') {
+    message += `I prefer Cash on Delivery.\n`;
+  }
+  
+  message += `\nPlease confirm availability and share delivery details.`;
+  
+  if(card.phone) {
+    const phone = card.phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+  }
+  
+  closeModal('productModal');
+}
+
+// Checkout functions
+function openCheckoutModal() {
+  const checkoutItems = document.getElementById('checkoutItems');
+  let subtotal = 0;
+  
+  checkoutItems.innerHTML = '';
+  
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    subtotal += price * (item.quantity || 1);
+    
+    checkoutItems.innerHTML += `
+      <div style="display:flex;justify-content:space-between;margin-bottom:10px;padding:10px;background:#f8fafc;border-radius:8px;">
+        <div>
+          <div style="font-weight:600;color:#0f172a;">${item.title || 'Product'}</div>
+          <div style="font-size:12px;color:#64748b;">Qty: ${item.quantity || 1}</div>
+        </div>
+        <div style="font-weight:700;color:#0f172a;">PKR ${(price * (item.quantity || 1)).toFixed(2)}</div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('checkoutSubtotal').textContent = subtotal.toFixed(2);
+  document.getElementById('checkoutTotal').textContent = subtotal.toFixed(2);
+  selectCheckoutPayment('whatsapp');
+  
+  openModal('checkoutModal');
+}
+
+function selectCheckoutPayment(method) {
+  checkoutPaymentMethod = method;
+  
+  const whatsappOption = document.getElementById('whatsappCheckoutOption');
+  const codOption = document.getElementById('codCheckoutOption');
+  const jazzcashOption = document.getElementById('jazzcashCheckoutOption');
+  
+  [whatsappOption, codOption, jazzcashOption].forEach(option => {
+    if(option) {
+      option.style.borderColor = '#e2e8f0';
+      option.style.backgroundColor = 'white';
+    }
+  });
+  
+  if(method === 'whatsapp' && whatsappOption) {
+    whatsappOption.style.borderColor = '#25D366';
+    whatsappOption.style.backgroundColor = '#f0fdf4';
+  } else if(method === 'cod' && codOption) {
+    codOption.style.borderColor = '#10b981';
+    codOption.style.backgroundColor = '#f0fdf4';
+  } else if(method === 'jazzcash' && jazzcashOption) {
+    jazzcashOption.style.borderColor = '#FF6B00';
+    jazzcashOption.style.backgroundColor = '#fff7ed';
+  }
+}
+
+function proceedToPayment() {
+  if(cart.length === 0) return;
+  
+  if(checkoutPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    showPaymentDetailsModal('checkout');
+  } else {
+    sendCheckoutOrder();
+  }
+}
+
+function showPaymentDetailsModal(context) {
+  const paymentMethodTitle = document.getElementById('paymentMethodTitle');
+  const paymentDetailsContent = document.getElementById('paymentDetailsContent');
+  
+  if(context === 'buyNow' && currentProduct) {
+    const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
+    paymentMethodTitle.textContent = 'JazzCash Payment';
+    
+    paymentDetailsContent.innerHTML = `
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:16px;color:#64748b;margin-bottom:10px;">Send <strong>PKR ${price}</strong> to:</div>
+          <div style="font-size:28px;font-weight:700;color:#FF6B00;margin:15px 0;background:rgba(255,107,0,0.1);padding:15px;border-radius:12px;">
+            ${card.payments.jazzcash.number || ''}
+          </div>
+        </div>
+        
+        ${card.payments.jazzcash.barcode ? `
+          <div style="margin:20px 0;text-align:center;">
+            <div style="font-size:14px;color:#64748b;margin-bottom:10px;">Scan QR Code to Pay</div>
+            <img src="${card.payments.jazzcash.barcode}" style="max-width:200px;max-height:200px;border-radius:12px;border:2px solid #e2e8f0;display:block;margin:0 auto;">
+          </div>
+        ` : ''}
+        
+        <div style="background:#f0f9ff;padding:15px;border-radius:12px;margin-top:20px;border-left:4px solid #3b82f6;">
+          <div style="font-size:14px;color:#64748b;margin-bottom:8px;"><strong>Instructions:</strong></div>
+          <ol style="text-align:left;padding-left:20px;margin:10px 0;">
+            <li>Complete payment using the QR code or number above</li>
+            <li>Take screenshot of payment confirmation</li>
+            <li>Share screenshot via WhatsApp for order verification</li>
+          </ol>
+        </div>
+      </div>
+    `;
+  } else if(context === 'checkout') {
+    const total = cart.reduce((sum, item) => {
+      const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+      return sum + (price * (item.quantity || 1));
+    }, 0);
+    
+    paymentMethodTitle.textContent = 'JazzCash Payment';
+    
+    paymentDetailsContent.innerHTML = `
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:16px;color:#64748b;margin-bottom:10px;">Send <strong>PKR ${total.toFixed(2)}</strong> to:</div>
+          <div style="font-size:28px;font-weight:700;color:#FF6B00;margin:15px 0;background:rgba(255,107,0,0.1);padding:15px;border-radius:12px;">
+            ${card.payments.jazzcash.number || ''}
+          </div>
+        </div>
+        
+        ${card.payments.jazzcash.barcode ? `
+          <div style="margin:20px 0;text-align:center;">
+            <div style="font-size:14px;color:#64748b;margin-bottom:10px;">Scan QR Code to Pay</div>
+            <img src="${card.payments.jazzcash.barcode}" style="max-width:200px;max-height:200px;border-radius:12px;border:2px solid #e2e8f0;display:block;margin:0 auto;">
+          </div>
+        ` : ''}
+        
+        <div style="background:#f0f9ff;padding:15px;border-radius:12px;margin-top:20px;border-left:4px solid #3b82f6;">
+          <div style="font-size:14px;color:#64748b;margin-bottom:8px;"><strong>Instructions:</strong></div>
+          <ol style="text-align:left;padding-left:20px;margin:10px 0;">
+            <li>Complete payment using the QR code or number above</li>
+            <li>Take screenshot of payment confirmation</li>
+            <li>Share screenshot via WhatsApp for order verification</li>
+          </ol>
+        </div>
+      </div>
+    `;
+  }
+  
+  openModal('paymentDetailsModal');
+  closeModal(context === 'buyNow' ? 'productModal' : 'checkoutModal');
+}
+
+function confirmPayment() {
+  if(currentPage === 'checkoutModal' || checkoutPaymentMethod === 'jazzcash') {
+    sendCheckoutOrder();
+  } else {
+    sendBuyNowOrder();
+  }
+  closeModal('paymentDetailsModal');
+}
+
+function sendCheckoutOrder() {
+  if(cart.length === 0) return;
+  
+  let message = `Hello! I would like to place an order:\n\n`;
+  
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const total = price * (item.quantity || 1);
+    message += `${index + 1}. ${item.title || 'Product'} - Qty: ${item.quantity || 1} - PKR ${total.toFixed(2)}\n`;
+  });
+  
+  const orderTotal = cart.reduce((sum, item) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    return sum + (price * (item.quantity || 1));
+  }, 0);
+  
+  message += `\nTotal: PKR ${orderTotal.toFixed(2)}\n`;
+  message += `Payment Method: ${getPaymentMethodName(checkoutPaymentMethod)}\n\n`;
+  
+  if(checkoutPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    message += `Payment sent to: ${card.payments.jazzcash.number || ''}\n`;
+    message += `Via: ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
+  } else if(checkoutPaymentMethod === 'cod') {
+    message += `I prefer Cash on Delivery.\n`;
+  }
+  
+  message += `Please confirm availability and share delivery details.`;
+  
+  if(card.phone) {
+    const phone = card.phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+  }
+  
+  // Clear cart
+  cart = [];
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+  closeModal('checkoutModal');
+  navigateTo('homePage');
+}
+
+function getPaymentMethodName(method) {
+  switch(method) {
+    case 'whatsapp': return 'WhatsApp Order';
+    case 'cod': return 'Cash on Delivery';
+    case 'jazzcash': return card.payments?.jazzcash?.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash';
+    default: return 'WhatsApp Order';
+  }
+}
+
+// Contact functions
+function openWhatsAppChat(context) {
+  if(!card.phone) {
+    showNotification('WhatsApp number not available');
+    return;
+  }
+  
+  const phone = card.phone.replace(/\D/g, '');
+  let message = card.payments?.whatsapp?.greeting || 
+    `Hello! I found your business and I'm interested in your products/services.`;
+  
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function makeCall() {
+  if(card.phone) {
+    window.open(`tel:${card.phone}`);
+  }
+}
+
+function sendEmail() {
+  if(card.email) {
+    window.open(`mailto:${card.email}`);
+  }
+}
+
+function openMap() {
+  if(card.address) {
+    window.open(`https://maps.google.com/?q=${encodeURIComponent(card.address)}`, '_blank');
+  }
+}
+
+// Modal functions
+function openModal(modalId) {
+  document.getElementById(modalId).style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+// Utility functions
+function showNotification(message) {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary-gradient);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    z-index: 3000;
+    max-width: 300px;
+    animation: slideIn 0.3s ease;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  `;
+  
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transform = 'translateX(-50%) translateY(-20px)';
+    setTimeout(() => {
+      if(notification.parentNode) {
+        document.body.removeChild(notification);
+      }
+    }, 300);
+  }, 3000);
+}
+
+// Initialize
+updateCartCount();
+</script>
+</body>
+</html>
