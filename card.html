@@ -299,7 +299,8 @@ body {
   overflow: hidden;
 }
 
-.action-card::before {
+/* REMOVED the green line under action cards */
+/* .action-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -307,7 +308,7 @@ body {
   width: 100%;
   height: 4px;
   background: var(--primary-gradient);
-}
+} */
 
 .action-card:hover {
   transform: translateY(-8px) scale(1.02);
@@ -332,9 +333,9 @@ body {
   transform: rotate(10deg) scale(1.1);
 }
 
-.action-card:nth-child(1) .action-icon { background: var(--whatsapp-gradient); }
+.action-card:nth-child(1) .action-icon { background: var(--info-gradient); }
 .action-card:nth-child(2) .action-icon { background: var(--secondary-gradient); }
-.action-card:nth-child(3) .action-icon { background: var(--success-gradient); }
+.action-card:nth-child(3) .action-icon { background: var(--whatsapp-gradient); }
 .action-card:nth-child(4) .action-icon { background: var(--warning-gradient); }
 
 .action-card h3 {
@@ -416,7 +417,7 @@ body {
   display: inline-block;
 }
 
-/* Products Grid - FIXED SIZES */
+/* Products Grid */
 .section-header {
   display: flex;
   align-items: center;
@@ -461,7 +462,7 @@ body {
   padding: 0 25px;
 }
 
-/* FIXED: Product Card with Consistent Image Size - NO CROPPING */
+/* Product Card */
 .product-card {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
@@ -492,7 +493,7 @@ body {
 .product-image {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* CHANGED: contain instead of cover */
+  object-fit: contain;
   transition: var(--transition);
   padding: 15px;
   background: white;
@@ -527,8 +528,8 @@ body {
 }
 
 .product-title {
-  font-size: 15px; /* Reduced font size */
-  font-weight: 700; /* Reduced boldness */
+  font-size: 15px;
+  font-weight: 700;
   color: var(--dark-color);
   margin-bottom: 10px;
   line-height: 1.4;
@@ -556,7 +557,7 @@ body {
 .discount-price {
   color: #ef4444;
   font-weight: 900;
-  font-size: 18px; /* Reduced font size */
+  font-size: 18px;
 }
 
 .product-actions {
@@ -571,7 +572,7 @@ body {
   border: none;
   border-radius: var(--border-radius-xs);
   font-size: 13px;
-  font-weight: 700; /* Reduced boldness */
+  font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
   text-transform: uppercase;
@@ -622,12 +623,12 @@ body {
 
 .products-header h1 {
   color: white;
-  font-size: 28px; /* Reduced font size */
-  font-weight: 800; /* Reduced boldness */
+  font-size: 28px;
+  font-weight: 800;
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
-  margin-top: 20px; /* Added margin for back button */
+  margin-top: 20px;
 }
 
 .products-header p {
@@ -688,12 +689,12 @@ body {
 
 .cart-header h1 {
   color: white;
-  font-size: 28px; /* Reduced font size */
-  font-weight: 800; /* Reduced boldness */
+  font-size: 28px;
+  font-weight: 800;
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
-  margin-top: 20px; /* Added margin for back button */
+  margin-top: 20px;
 }
 
 .cart-header p {
@@ -716,10 +717,10 @@ body {
 }
 
 .cart-empty h3 {
-  font-size: 24px; /* Reduced font size */
+  font-size: 24px;
   color: var(--dark-color);
   margin-bottom: 15px;
-  font-weight: 800; /* Reduced boldness */
+  font-weight: 800;
 }
 
 .cart-empty p {
@@ -735,7 +736,7 @@ body {
   border: none;
   border-radius: var(--border-radius-md);
   font-size: 17px;
-  font-weight: 700; /* Reduced boldness */
+  font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
   box-shadow: var(--shadow-md);
@@ -776,7 +777,7 @@ body {
   width: 90px;
   height: 90px;
   border-radius: var(--border-radius-md);
-  object-fit: contain; /* CHANGED: contain instead of cover */
+  object-fit: contain;
   background: linear-gradient(45deg, #f8fafc, #f1f5f9);
   flex-shrink: 0;
   padding: 10px;
@@ -785,12 +786,12 @@ body {
 .cart-item-details {
   flex: 1;
   min-width: 0;
-  padding-right: 20px; /* Added padding for delete button */
+  padding-right: 20px;
 }
 
 .cart-item-title {
-  font-size: 16px; /* Reduced font size */
-  font-weight: 700; /* Reduced boldness */
+  font-size: 16px;
+  font-weight: 700;
   color: var(--dark-color);
   margin-bottom: 10px;
   line-height: 1.4;
@@ -799,7 +800,7 @@ body {
 .cart-item-price {
   color: #ef4444;
   font-weight: 900;
-  font-size: 18px; /* Reduced font size */
+  font-size: 18px;
   margin-bottom: 15px;
 }
 
@@ -859,7 +860,7 @@ body {
   border-radius: var(--border-radius-xs);
   padding: 10px 20px;
   font-size: 14px;
-  font-weight: 700; /* Reduced boldness */
+  font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
   text-transform: uppercase;
@@ -885,8 +886,8 @@ body {
 }
 
 .cart-summary h3 {
-  font-size: 18px; /* Reduced font size */
-  font-weight: 800; /* Reduced boldness */
+  font-size: 18px;
+  font-weight: 800;
   color: var(--dark-color);
   margin-bottom: 25px;
   padding-bottom: 20px;
@@ -910,7 +911,7 @@ body {
 }
 
 .summary-total {
-  font-size: 24px; /* Reduced font size */
+  font-size: 24px;
   font-weight: 900;
   color: var(--dark-color);
   margin-top: 20px;
@@ -925,8 +926,8 @@ body {
   color: white;
   border: none;
   border-radius: var(--border-radius-lg);
-  font-size: 18px; /* Reduced font size */
-  font-weight: 800; /* Reduced boldness */
+  font-size: 18px;
+  font-weight: 800;
   cursor: pointer;
   transition: var(--transition);
   margin-top: 35px;
@@ -973,12 +974,12 @@ body {
 
 .about-header h1 {
   color: white;
-  font-size: 28px; /* Reduced font size */
-  font-weight: 800; /* Reduced boldness */
+  font-size: 28px;
+  font-weight: 800;
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
-  margin-top: 20px; /* Added margin for back button */
+  margin-top: 20px;
 }
 
 .about-content {
@@ -994,8 +995,8 @@ body {
   line-height: 1.8;
   color: #475569;
   margin-bottom: 25px;
-  font-size: 15px; /* Reduced font size */
-  font-weight: 400; /* Reduced boldness */
+  font-size: 15px;
+  font-weight: 400;
 }
 
 .about-content p:last-child {
@@ -1012,8 +1013,8 @@ body {
 }
 
 .business-hours h3 {
-  font-size: 18px; /* Reduced font size */
-  font-weight: 800; /* Reduced boldness */
+  font-size: 18px;
+  font-weight: 800;
   color: var(--dark-color);
   margin-bottom: 25px;
   display: flex;
@@ -1044,13 +1045,13 @@ body {
 }
 
 .day-name {
-  font-weight: 600; /* Reduced boldness */
+  font-weight: 600;
   color: #475569;
   font-size: 15px;
 }
 
 .day-time {
-  font-weight: 800; /* Reduced boldness */
+  font-weight: 800;
   color: var(--dark-color);
   font-size: 15px;
 }
@@ -1078,12 +1079,12 @@ body {
 
 .contact-header h1 {
   color: white;
-  font-size: 28px; /* Reduced font size */
-  font-weight: 800; /* Reduced boldness */
+  font-size: 28px;
+  font-weight: 800;
   margin-bottom: 12px;
   position: relative;
   z-index: 1;
-  margin-top: 20px; /* Added margin for back button */
+  margin-top: 20px;
 }
 
 .contact-header p {
@@ -1176,8 +1177,8 @@ body {
 }
 
 .contact-value {
-  font-size: 15px; /* Reduced font size */
-  font-weight: 700; /* Reduced boldness */
+  font-size: 15px;
+  font-weight: 700;
   color: var(--dark-color);
   white-space: nowrap;
   overflow: hidden;
@@ -1203,8 +1204,8 @@ body {
 }
 
 .social-links h3 {
-  font-size: 18px; /* Reduced font size */
-  font-weight: 800; /* Reduced boldness */
+  font-size: 18px;
+  font-weight: 800;
   color: var(--dark-color);
   margin-bottom: 25px;
   display: flex;
@@ -1268,6 +1269,15 @@ body {
   transition: var(--transition);
 }
 
+/* FIXED: WhatsApp icon text color - using explicit color */
+.social-icon .fab,
+.contact-icon .fab,
+.action-icon .fab,
+.fab .fab {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
 .social-link:hover .social-icon {
   transform: rotate(15deg) scale(1.1);
 }
@@ -1327,7 +1337,7 @@ body {
   transform: translateX(100%);
 }
 
-/* Back Button - FIXED POSITION */
+/* Back Button */
 .back-btn {
   position: absolute;
   top: 20px;
@@ -1676,7 +1686,7 @@ img {
           <p>Browse products & offers</p>
         </div>
         
-        <div class="action-card" onclick="openCartModal()">
+        <div class="action-card" onclick="navigateTo('cartPage')">
           <div class="action-icon">
             <i class="fas fa-shopping-cart"></i>
           </div>
@@ -2086,7 +2096,24 @@ img {
 // Global variables
 let card = {};
 let currentProduct = null;
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+// Start with some default cart items
+let cart = JSON.parse(localStorage.getItem('cart')) || [
+  {
+    title: "Premium Headphones",
+    discountPrice: "2999",
+    originalPrice: "3999",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+    quantity: 1,
+    desc: "Wireless noise-cancelling headphones"
+  },
+  {
+    title: "Smart Watch",
+    discountPrice: "12999",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w-400",
+    quantity: 1,
+    desc: "Fitness tracker with heart rate monitor"
+  }
+];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
 let currentPage = 'loadingScreen';
@@ -2241,7 +2268,7 @@ function loadProductsPage() {
   });
 }
 
-// Create product card element - FIXED: Images resized, not cropped
+// Create product card element
 function createProductCard(product, index, fullWidth = false) {
   const price = product.discountPrice || product.originalPrice;
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
@@ -2477,6 +2504,9 @@ function updateCartCount() {
   const count = cart.length;
   document.getElementById('cartCountMini').textContent = count;
   document.getElementById('cartBadge').textContent = count;
+  
+  // Save cart to localStorage
+  localStorage.setItem('cart', JSON.stringify(cart));
   
   // Update cart page if active
   if(currentPage === 'cartPage') {
