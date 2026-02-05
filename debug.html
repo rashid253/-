@@ -2,29 +2,32 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>DB Debug</title>
+<title>IndexedDB Debug</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 
+<h2>IndexedDB Debug</h2>
 <button onclick="dump()">Dump IndexedDB</button>
 
 <script>
 function dump(){
   indexedDB.databases().then(dbs=>{
     console.log("DATABASES:", dbs);
-    dbs.forEach(db=>{
-      const req=indexedDB.open(db.name);
-      req.onsuccess=e=>{
-        const d=e.target.result;
-        console.log("DB:",db.name);
-        console.log("STORES:",[...d.objectStoreNames]);
 
-        [...d.objectStoreNames].forEach(store=>{
-          const tx=d.transaction(store,"readonly");
-          const os=tx.objectStore(store);
-          os.getAll().onsuccess=r=>{
-            console.log("STORE:",store);
-            console.log(r.target.result);
+    dbs.forEach(info=>{
+      const req = indexedDB.open(info.name);
+      req.onsuccess = e => {
+        const db = e.target.result;
+        console.log("DB NAME:", db.name);
+        console.log("STORES:", [...db.objectStoreNames]);
+
+        [...db.objectStoreNames].forEach(store=>{
+          const tx = db.transaction(store, "readonly");
+          const os = tx.objectStore(store);
+          os.getAll().onsuccess = ev => {
+            console.log("STORE:", store);
+            console.log(ev.target.result);
           };
         });
       };
