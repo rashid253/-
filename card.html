@@ -1263,19 +1263,8 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 26px;
-  color: white !important; /* Force white color */
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
-}
-
-/* FIXED: Force white color for all icons */
-.social-icon i,
-.contact-icon i,
-.action-icon i,
-.payment-icon i,
-.fab i,
-.nav-icon i {
-  color: white !important;
 }
 
 .social-link:hover .social-icon {
@@ -1288,6 +1277,28 @@ body {
   color: var(--dark-color);
   text-transform: uppercase;
   letter-spacing: 1px;
+}
+
+/* Social Media Platform Specific Colors */
+.social-icon.facebook { background: #1877F2 !important; }
+.social-icon.instagram { 
+  background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D) !important; 
+}
+.social-icon.twitter { background: #1DA1F2 !important; }
+.social-icon.linkedin { background: #0A66C2 !important; }
+.social-icon.youtube { background: #FF0000 !important; }
+.social-icon.tiktok { background: #000000 !important; }
+.social-icon.whatsapp { background: #25D366 !important; }
+
+/* All icons should show properly */
+.social-icon i,
+.contact-icon i,
+.action-icon i,
+.payment-icon i,
+.nav-icon i,
+.back-btn i {
+  color: white !important;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 /* Floating Action Button */
@@ -1303,7 +1314,7 @@ body {
   height: 65px;
   border-radius: 50%;
   background: var(--whatsapp-gradient);
-  color: white !important; /* Force white color */
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2096,7 +2107,6 @@ img {
 // Global variables
 let card = {};
 let currentProduct = null;
-// FIXED: Cart starts empty
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
@@ -2457,12 +2467,12 @@ function loadContactPage() {
   socialGrid.innerHTML = '';
   
   const socialPlatforms = [
-    { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Facebook', color: '#1877F2' },
-    { key: 'instagram', icon: 'fab fa-instagram', label: 'Instagram', color: '#E4405F' },
-    { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', color: '#1DA1F2' },
-    { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', color: '#0A66C2' },
-    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', color: '#FF0000' },
-    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', color: '#000000' }
+    { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Facebook', className: 'facebook' },
+    { key: 'instagram', icon: 'fab fa-instagram', label: 'Instagram', className: 'instagram' },
+    { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', className: 'twitter' },
+    { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', className: 'linkedin' },
+    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', className: 'youtube' },
+    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', className: 'tiktok' }
   ];
   
   socialPlatforms.forEach(platform => {
@@ -2473,7 +2483,7 @@ function loadContactPage() {
       socialLink.href = url.includes('://') ? url : `https://${url}`;
       socialLink.target = '_blank';
       socialLink.innerHTML = `
-        <div class="social-icon" style="background:${platform.color};">
+        <div class="social-icon ${platform.className}">
           <i class="${platform.icon}"></i>
         </div>
         <div class="social-label">${platform.label}</div>
