@@ -380,6 +380,10 @@ body {
   transition: var(--transition);
   cursor: pointer;
   border: 1px solid #f1f5f9;
+  position: relative;
+  height: 280px;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-card:hover {
@@ -389,10 +393,11 @@ body {
 
 .product-image-container {
   width: 100%;
-  height: 140px;
+  height: 150px;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(45deg, #f8fafc, #f1f5f9);
+  background: white;
+  flex-shrink: 0;
 }
 
 .product-image {
@@ -400,11 +405,40 @@ body {
   height: 100%;
   object-fit: contain;
   padding: 10px;
-  background: white;
 }
+
+.product-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 2;
+}
+
+.badge {
+  background: var(--danger-gradient);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.badge.hot { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+.badge.best-seller { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+.badge.discount { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+.badge.limited { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+.badge.stock { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+.badge.delivery { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
 
 .product-content {
   padding: 15px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .product-title {
@@ -413,6 +447,7 @@ body {
   color: var(--dark-color);
   margin-bottom: 8px;
   line-height: 1.4;
+  flex: 1;
 }
 
 .product-price {
@@ -437,7 +472,7 @@ body {
 .product-actions {
   display: flex;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: auto;
 }
 
 .btn-buy, .btn-cart {
@@ -608,7 +643,7 @@ body {
   height: 80px;
   border-radius: var(--border-radius-md);
   object-fit: contain;
-  background: linear-gradient(45deg, #f8fafc, #f1f5f9);
+  background: white;
   flex-shrink: 0;
   padding: 8px;
 }
@@ -1058,10 +1093,6 @@ body {
     max-width: 100%;
   }
   
-  .products-grid {
-    grid-template-columns: 1fr;
-  }
-  
   .social-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1188,13 +1219,6 @@ body {
     </div>
     
     <div class="products-grid" id="featuredProducts">
-    </div>
-
-    <div class="section-header">
-      <h2><i class="fas fa-bolt"></i> Special Offers</h2>
-    </div>
-    
-    <div class="products-grid" id="specialOffers">
     </div>
     
     <div class="page-footer-spacer"></div>
@@ -1629,21 +1653,26 @@ async function renderApp() {
 
 function loadHomePage() {
   const featuredProducts = document.getElementById('featuredProducts');
-  const specialOffers = document.getElementById('specialOffers');
   const products = card.products || [];
   
   featuredProducts.innerHTML = '';
-  specialOffers.innerHTML = '';
   
-  products.slice(0, 4).forEach((product, index) => {
-    featuredProducts.appendChild(createProductCard(product, index));
-  });
+  // Show only products with badges (featured products)
+  const featuredProductsList = products.filter(product => 
+    product.badges && product.badges.length > 0
+  ).slice(0, 4);
   
-  const specialProducts = products.filter(p => p.badges && p.badges.length > 0).slice(0, 4);
-  specialProducts.forEach((product, index) => {
+  featuredProductsList.forEach((product, index) => {
     const originalIndex = products.findIndex(p => p.title === product.title);
-    specialOffers.appendChild(createProductCard(product, originalIndex));
+    featuredProducts.appendChild(createProductCard(product, originalIndex));
   });
+  
+  // If no featured products, show first 4 products
+  if(featuredProductsList.length === 0) {
+    products.slice(0, 4).forEach((product, index) => {
+      featuredProducts.appendChild(createProductCard(product, index));
+    });
+  }
 }
 
 function loadProductsPage() {
@@ -1653,25 +1682,55 @@ function loadProductsPage() {
   allProducts.innerHTML = '';
   
   products.forEach((product, index) => {
-    allProducts.appendChild(createProductCard(product, index, true));
+    allProducts.appendChild(createProductCard(product, index));
   });
 }
 
-function createProductCard(product, index, fullWidth = false) {
+function createProductCard(product, index) {
   const price = product.discountPrice || product.originalPrice;
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
+  const hasDiscount = originalPrice && price && originalPrice > price;
   
   const card = document.createElement('div');
   card.className = 'product-card';
   
+  // Map badge names to CSS classes
+  const badgeClasses = {
+    '🔥 Hot Deal': 'hot',
+    '⭐ Best Seller': 'best-seller',
+    '💸 Discount': 'discount',
+    '⏳ Limited Stock': 'limited',
+    '🛒 In Stock': 'stock',
+    '🚚 Free Delivery': 'delivery'
+  };
+  
+  let badgesHtml = '';
+  if(product.badges && product.badges.length > 0) {
+    badgesHtml = `<div class="product-badges">`;
+    product.badges.slice(0, 2).forEach(badge => {
+      const badgeClass = badgeClasses[badge] || 'discount';
+      badgesHtml += `<span class="badge ${badgeClass}">${badge}</span>`;
+    });
+    badgesHtml += `</div>`;
+  }
+  
+  // Calculate discount percentage if available
+  let discountPercentage = '';
+  if(hasDiscount && originalPrice && price) {
+    const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
+    if(discount > 0) {
+      discountPercentage = `<span class="badge discount">${discount}% OFF</span>`;
+      // Add discount badge if not already present
+      if(!badgesHtml.includes(badgeClasses['💸 Discount'])) {
+        badgesHtml = `<div class="product-badges">${discountPercentage}${badgesHtml.replace('<div class="product-badges">', '')}`;
+      }
+    }
+  }
+  
   card.innerHTML = `
     <div class="product-image-container">
       <img src="${product.image || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
-      ${product.badges && product.badges.length > 0 ? `
-        <div class="product-badges">
-          ${product.badges.slice(0, 2).map(badge => `<span class="badge">${badge}</span>`).join('')}
-        </div>
-      ` : ''}
+      ${badgesHtml}
     </div>
     <div class="product-content">
       <div class="product-title">${product.title || 'Product'}</div>
@@ -1706,7 +1765,7 @@ function filterProducts() {
   
   filteredProducts.forEach((product, index) => {
     const originalIndex = products.findIndex(p => p.title === product.title);
-    allProducts.appendChild(createProductCard(product, originalIndex, true));
+    allProducts.appendChild(createProductCard(product, originalIndex));
   });
 }
 
@@ -1936,15 +1995,18 @@ function showProductModal(productIndex) {
   
   const price = currentProduct.discountPrice || currentProduct.originalPrice;
   const originalPrice = currentProduct.originalPrice && currentProduct.discountPrice ? currentProduct.originalPrice : null;
+  const hasDiscount = originalPrice && price && originalPrice > price;
   
   document.getElementById('modalImage').src = currentProduct.image || '';
   document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
   document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
   
-  if(originalPrice) {
+  if(hasDiscount) {
+    const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
     document.getElementById('modalPrice').innerHTML = `
       <span style="text-decoration:line-through;color:#94a3b8;font-size:16px;margin-right:12px;">PKR ${originalPrice}</span>
-      <span>PKR ${price}</span>
+      <span style="color:#10b981;font-size:24px;font-weight:900;">PKR ${price}</span>
+      <div style="background:var(--danger-gradient);color:white;padding:4px 10px;border-radius:6px;font-size:14px;font-weight:800;display:inline-block;margin-left:12px;">${discount}% OFF</div>
     `;
   } else {
     document.getElementById('modalPrice').textContent = price ? `PKR ${price}` : 'Price not available';
