@@ -991,21 +991,22 @@ body {
 
 .cart-badge {
   position: absolute;
-  top: -2px;
-  right: 2px;
+  top: -6px;
+  right: -6px;
   background: var(--danger-gradient);
   color: white;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
-  min-width: 18px;
-  height: 18px;
+  min-width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
+  padding: 0 5px;
   border: 2px solid var(--glass-bg);
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 10;
 }
 
 .modal-overlay {
@@ -2007,21 +2008,29 @@ function sendBuyNowOrder() {
   if(!currentProduct) return;
   
   const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
+  const businessName = card.businessName || card.name || "Your Business";
   
-  let message = `Hello! I would like to purchase:\n\n` +
-               `Product: ${currentProduct.title || 'Product'}\n` +
-               `Price: PKR ${price}\n` +
-               `${currentProduct.desc ? `Description: ${currentProduct.desc}\n\n` : '\n'}` +
-               `Payment Method: ${getPaymentMethodName(buyNowPaymentMethod)}\n`;
+  let message = `Hello ${businessName} Team,\n\n`;
+  message += `I would like to place an order for the following product:\n\n`;
+  message += `🛒 **Product:** ${currentProduct.title || 'Product'}\n`;
+  message += `💰 **Price:** PKR ${price}\n`;
   
-  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
-    message += `Payment sent to: ${card.payments.jazzcash.number || ''}\n`;
-    message += `Via: ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
-  } else if(buyNowPaymentMethod === 'cod') {
-    message += `I prefer Cash on Delivery.\n`;
+  if(currentProduct.desc) {
+    message += `📝 **Description:** ${currentProduct.desc}\n`;
   }
   
-  message += `\nPlease confirm availability and share delivery details.`;
+  message += `\n---\n`;
+  message += `💳 **Payment Method:** ${getPaymentMethodName(buyNowPaymentMethod)}\n`;
+  
+  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    message += `📱 **Payment Details:** Amount sent to ${card.payments.jazzcash.number || ''}\n`;
+    message += `💸 **Via:** ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
+  } else if(buyNowPaymentMethod === 'cod') {
+    message += `📦 **Delivery:** I prefer Cash on Delivery\n`;
+  }
+  
+  message += `\nPlease confirm product availability and share estimated delivery time.\n`;
+  message += `Thank you!\n`;
   
   if(card.phone) {
     const phone = card.phone.replace(/\D/g, '');
@@ -2095,6 +2104,7 @@ function proceedToPayment() {
 function showPaymentDetailsModal(context) {
   const paymentMethodTitle = document.getElementById('paymentMethodTitle');
   const paymentDetailsContent = document.getElementById('paymentDetailsContent');
+  const businessName = card.businessName || card.name || "Your Business";
   
   if(context === 'buyNow' && currentProduct) {
     const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
@@ -2107,6 +2117,7 @@ function showPaymentDetailsModal(context) {
           <div style="font-size:24px;font-weight:900;color:#FF6B00;margin:15px 0;background:rgba(255,107,0,0.1);padding:15px;border-radius:16px;">
             ${card.payments.jazzcash.number || ''}
           </div>
+          <div style="font-size:13px;color:#64748b;margin-top:10px;">For: ${currentProduct.title || 'Product'}</div>
         </div>
         
         ${card.payments.jazzcash.barcode ? `
@@ -2141,6 +2152,7 @@ function showPaymentDetailsModal(context) {
           <div style="font-size:24px;font-weight:900;color:#FF6B00;margin:15px 0;background:rgba(255,107,0,0.1);padding:15px;border-radius:16px;">
             ${card.payments.jazzcash.number || ''}
           </div>
+          <div style="font-size:13px;color:#64748b;margin-top:10px;">For: ${businessName} - Order (${cart.length} items)</div>
         </div>
         
         ${card.payments.jazzcash.barcode ? `
@@ -2178,7 +2190,11 @@ function confirmPayment() {
 function sendCheckoutOrder() {
   if(cart.length === 0) return;
   
-  let message = `Hello! I would like to place an order:\n\n`;
+  const businessName = card.businessName || card.name || "Your Business";
+  
+  let message = `Hello ${businessName} Team,\n\n`;
+  message += `I would like to place an order:\n\n`;
+  message += `🛒 **Order Details:**\n`;
   
   cart.forEach((item, index) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
@@ -2191,17 +2207,23 @@ function sendCheckoutOrder() {
     return sum + (price * (item.quantity || 1));
   }, 0);
   
-  message += `\nTotal: PKR ${orderTotal.toFixed(2)}\n`;
-  message += `Payment Method: ${getPaymentMethodName(checkoutPaymentMethod)}\n\n`;
+  message += `\n---\n`;
+  message += `💰 **Subtotal:** PKR ${orderTotal.toFixed(2)}\n`;
+  message += `📦 **Shipping:** PKR 0\n`;
+  message += `🎯 **Total:** PKR ${orderTotal.toFixed(2)}\n\n`;
+  
+  message += `💳 **Payment Method:** ${getPaymentMethodName(checkoutPaymentMethod)}\n`;
   
   if(checkoutPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
-    message += `Payment sent to: ${card.payments.jazzcash.number || ''}\n`;
-    message += `Via: ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
+    message += `📱 **Payment Details:** Amount sent to ${card.payments.jazzcash.number || ''}\n`;
+    message += `💸 **Via:** ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
   } else if(checkoutPaymentMethod === 'cod') {
-    message += `I prefer Cash on Delivery.\n`;
+    message += `📦 **Delivery:** I prefer Cash on Delivery\n`;
   }
   
-  message += `Please confirm availability and share delivery details.`;
+  message += `\nPlease confirm all items are available and share estimated delivery time.\n`;
+  message += `Delivery address will be shared in next message.\n`;
+  message += `Thank you!\n`;
   
   if(card.phone) {
     const phone = card.phone.replace(/\D/g, '');
@@ -2231,8 +2253,15 @@ function openWhatsAppChat(context) {
   }
   
   const phone = card.phone.replace(/\D/g, '');
-  let message = card.payments?.whatsapp?.greeting || 
-    `Hello! I found your business and I'm interested in your products/services.`;
+  const businessName = card.businessName || card.name || "Your Business";
+  
+  let message = `Hello ${businessName} Team,\n\n`;
+  message += `I came across your business and I'm interested in your products/services.\n`;
+  message += `Could you please share more information about:\n`;
+  message += `1. Current offers/discounts\n`;
+  message += `2. Product availability\n`;
+  message += `3. Delivery options and charges\n\n`;
+  message += `Thank you!`;
   
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
 }
@@ -2245,7 +2274,9 @@ function makeCall() {
 
 function sendEmail() {
   if(card.email) {
-    window.open(`mailto:${card.email}`);
+    const subject = encodeURIComponent(`Inquiry - ${card.businessName || 'Business'}`);
+    const body = encodeURIComponent(`Hello,\n\nI would like to know more about your products/services.\n\nPlease share more information.\n\nThank you!`);
+    window.open(`mailto:${card.email}?subject=${subject}&body=${body}`);
   }
 }
 
