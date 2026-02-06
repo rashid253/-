@@ -380,7 +380,7 @@ body {
   width: 100%;
   /* Grid layout for internal structure */
   display: grid;
-  grid-template-rows: auto 1fr auto auto;
+  grid-template-rows: auto 1fr auto;
   /* Visual styling */
   background: var(--lighter-color);
   border-radius: 12px;
@@ -470,30 +470,59 @@ body {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   height: 36px; /* Fixed height for consistent title area */
 }
 
-.product-price {
+/* NEW: Price Badge on Image - Top Right Corner */
+.price-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  font-weight: 900;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 3;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 4px;
-  flex-shrink: 0;
-  min-height: 24px; /* Ensures prices are visible */
+  gap: 1px;
+  border: 1px solid rgba(255,255,255,0.3);
+  min-width: 60px;
 }
 
-.original-price {
+.price-badge .current-price {
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.price-badge .original-price {
   text-decoration: line-through;
-  color: #94a3b8;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.9;
+  line-height: 1;
 }
 
-.discount-price {
-  color: #ef4444;
-  font-weight: 700;
-  font-size: 16px;
+/* Discount percentage badge */
+.discount-percentage {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  font-weight: 900;
+  font-size: 12px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 3;
+  border: 1px solid rgba(255,255,255,0.3);
 }
 
 /* BUTTON CONTAINER - Always aligned at bottom */
@@ -1794,25 +1823,32 @@ function createProductCard(product, index) {
   if(hasDiscount && originalPrice && price) {
     const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
     if(discount > 0) {
-      discountPercentage = `<span class="badge discount">${discount}% OFF</span>`;
-      // Add discount badge at the beginning
-      if(!badgesHtml.includes(badgeClasses['💸 Discount'])) {
-        badgesHtml = `<div class="product-badges">${discountPercentage}${badgesHtml.replace('<div class="product-badges">', '')}`;
-      }
+      discountPercentage = `<div class="discount-percentage">${discount}% OFF</div>`;
     }
+  }
+  
+  // Price badge HTML
+  let priceBadgeHtml = '';
+  if(price) {
+    priceBadgeHtml = `<div class="price-badge">`;
+    if(hasDiscount && originalPrice) {
+      priceBadgeHtml += `<div class="original-price">PKR ${originalPrice}</div>`;
+      priceBadgeHtml += `<div class="current-price">PKR ${price}</div>`;
+    } else {
+      priceBadgeHtml += `<div class="current-price" style="font-size:15px;">PKR ${price}</div>`;
+    }
+    priceBadgeHtml += `</div>`;
   }
   
   card.innerHTML = `
     <div class="product-image-container">
       <img src="${product.image || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
       ${badgesHtml}
+      ${discountPercentage}
+      ${priceBadgeHtml}
     </div>
     <div class="product-content">
       <div class="product-title">${product.title || 'Product'}</div>
-      <div class="product-price">
-        ${originalPrice ? `<span class="original-price">PKR ${originalPrice}</span>` : ''}
-        ${price ? `<span class="discount-price">PKR ${price}</span>` : ''}
-      </div>
       <div class="product-actions">
         <button class="btn-primary" onclick="showProductModal(${index}); event.stopPropagation();">
           <i class="fas fa-bolt"></i> Quick Buy
