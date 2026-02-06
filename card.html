@@ -8,10 +8,8 @@
 <meta name="theme-color" content="#0f172a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<!-- Font Awesome with correct integrity hash -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 <style>
 :root {
@@ -61,7 +59,6 @@ body {
   touch-action: none;
 }
 
-/* App Container */
 .app-container {
   position: relative;
   width: 100%;
@@ -74,7 +71,6 @@ body {
   border-radius: 0;
 }
 
-/* Page Transitions */
 .page {
   position: absolute;
   top: 0;
@@ -105,7 +101,6 @@ body {
   visibility: hidden;
 }
 
-/* Loading Screen */
 #loadingScreen {
   display: flex;
   flex-direction: column;
@@ -145,14 +140,13 @@ body {
   max-width: 300px;
 }
 
-/* Bottom Navigation */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   max-width: 480px;
-  height: 85px;
+  height: 70px;
   background: var(--glass-bg);
   backdrop-filter: blur(30px);
   border-top: 1px solid var(--glass-border);
@@ -170,66 +164,41 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 12px 15px;
+  gap: 4px;
+  padding: 8px;
   border-radius: var(--border-radius-md);
   cursor: pointer;
   transition: var(--transition);
   flex: 1;
-  min-width: 60px;
-  position: relative;
 }
 
 .nav-item.active {
   background: rgba(102, 126, 234, 0.1);
-  transform: translateY(-8px);
-}
-
-.nav-item.active::before {
-  content: '';
-  position: absolute;
-  top: -8px;
-  width: 30px;
-  height: 3px;
-  background: var(--primary-gradient);
-  border-radius: 3px;
-}
-
-.nav-item.active .nav-icon {
-  background: var(--primary-gradient);
-  transform: scale(1.15);
-  box-shadow: var(--shadow-sm);
 }
 
 .nav-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--border-radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: white;
-  background: #cbd5e1;
+  font-size: 22px;
+  color: #64748b;
   transition: var(--transition);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.nav-item.active .nav-icon {
+  color: #667eea;
+  transform: scale(1.1);
 }
 
 .nav-label {
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   color: #64748b;
   transition: var(--transition);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .nav-item.active .nav-label {
   color: #667eea;
-  font-weight: 900;
+  font-weight: 700;
 }
 
-/* Home Page */
 #homePage {
   padding-bottom: 100px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
@@ -243,16 +212,6 @@ body {
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-md);
-}
-
-.header-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.1)" d="M0,0 L100,0 L100,100 Z"/><circle cx="20" cy="30" r="15" fill="rgba(255,255,255,0.05)"/><circle cx="80" cy="60" r="20" fill="rgba(255,255,255,0.05)"/></svg>');
-  background-size: cover;
 }
 
 .welcome-text {
@@ -279,7 +238,7 @@ body {
 .quick-actions {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 15px;
   margin-top: -70px;
   padding: 0 25px;
   position: relative;
@@ -290,49 +249,34 @@ body {
   background: var(--glass-bg);
   backdrop-filter: blur(30px);
   border-radius: var(--border-radius-lg);
-  padding: 25px;
+  padding: 20px;
   text-align: center;
   cursor: pointer;
   transition: var(--transition);
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-lg);
-  position: relative;
-  overflow: hidden;
 }
 
 .action-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-5px);
 }
 
 .action-icon {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--border-radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  color: white;
-  margin: 0 auto 20px;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: #667eea;
 }
 
-.action-card:hover .action-icon {
-  transform: rotate(10deg) scale(1.1);
-}
-
-.action-card:nth-child(1) .action-icon { background: var(--info-gradient); }
-.action-card:nth-child(2) .action-icon { background: var(--secondary-gradient); }
-.action-card:nth-child(3) .action-icon { background: var(--whatsapp-gradient); }
-.action-card:nth-child(4) .action-icon { background: var(--warning-gradient); }
+.action-card:nth-child(1) .action-icon { color: #3b82f6; }
+.action-card:nth-child(2) .action-icon { color: #8b5cf6; }
+.action-card:nth-child(3) .action-icon { color: #25D366; }
+.action-card:nth-child(4) .action-icon { color: #f59e0b; }
 
 .action-card h3 {
   font-size: 17px;
   font-weight: 800;
   color: var(--dark-color);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .action-card p {
@@ -341,118 +285,91 @@ body {
   line-height: 1.4;
 }
 
-/* Profile Section */
 .profile-section {
   background: var(--glass-bg);
   border-radius: var(--border-radius-xl);
-  padding: 35px;
+  padding: 30px;
   margin: 40px 25px;
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--glass-border);
   text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.profile-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: var(--primary-gradient);
 }
 
 .profile-avatar {
-  width: 110px;
-  height: 110px;
+  width: 100px;
+  height: 100px;
   border-radius: 50%;
   object-fit: cover;
   border: 5px solid white;
   box-shadow: var(--shadow-lg);
-  margin-bottom: 25px;
-  transition: var(--transition);
-}
-
-.profile-avatar:hover {
-  transform: scale(1.05);
+  margin-bottom: 20px;
 }
 
 .profile-name {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 900;
   color: var(--dark-color);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .verified-badge {
   color: #667eea;
-  font-size: 20px;
-  filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+  font-size: 18px;
 }
 
 .profile-business {
-  font-size: 17px;
+  font-size: 16px;
   color: #764ba2;
   font-weight: 700;
-  margin-bottom: 25px;
-  padding: 8px 20px;
+  margin-bottom: 20px;
+  padding: 6px 18px;
   background: rgba(118, 75, 162, 0.1);
   border-radius: 50px;
   display: inline-block;
 }
 
-/* Products Grid */
 .section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 50px 25px 25px;
+  margin: 40px 25px 20px;
   padding-bottom: 15px;
   border-bottom: 2px solid #f1f5f9;
 }
 
 .section-header h2 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 900;
   color: var(--dark-color);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .see-all {
   color: #667eea;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 6px;
+  padding: 6px 12px;
   background: rgba(102, 126, 234, 0.1);
   border-radius: var(--border-radius-xs);
-  transition: var(--transition);
-}
-
-.see-all:hover {
-  background: rgba(102, 126, 234, 0.2);
-  transform: translateX(5px);
 }
 
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 15px;
   padding: 0 25px;
 }
 
-/* Product Card */
 .product-card {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
@@ -460,134 +377,88 @@ body {
   box-shadow: var(--shadow-md);
   transition: var(--transition);
   cursor: pointer;
-  position: relative;
   border: 1px solid #f1f5f9;
 }
 
 .product-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: var(--shadow-xl);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
 
 .product-image-container {
   width: 100%;
-  height: 160px;
+  height: 140px;
   position: relative;
   overflow: hidden;
   background: linear-gradient(45deg, #f8fafc, #f1f5f9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .product-image {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  transition: var(--transition);
-  padding: 15px;
+  padding: 10px;
   background: white;
 }
 
-.product-card:hover .product-image {
-  transform: scale(1.08);
-}
-
-.product-badges {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.badge {
-  background: var(--danger-gradient);
-  color: white;
-  font-size: 10px;
-  font-weight: 800;
-  padding: 6px 12px;
-  border-radius: 20px;
-  box-shadow: var(--shadow-sm);
-  letter-spacing: 0.5px;
-}
-
 .product-content {
-  padding: 20px;
+  padding: 15px;
 }
 
 .product-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--dark-color);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 44px;
 }
 
 .product-price {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .original-price {
   text-decoration: line-through;
   color: #94a3b8;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
 }
 
 .discount-price {
   color: #ef4444;
-  font-weight: 900;
-  font-size: 18px;
+  font-weight: 800;
+  font-size: 16px;
 }
 
 .product-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 15px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .btn-buy, .btn-cart {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   border: none;
   border-radius: var(--border-radius-xs);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .btn-buy {
   background: var(--success-gradient);
   color: white;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
 }
 
 .btn-cart {
   background: var(--info-gradient);
   color: white;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
-.btn-buy:hover, .btn-cart:hover {
-  opacity: 0.95;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-}
-
-/* Products Page */
 #productsPage {
   padding-bottom: 100px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
@@ -599,16 +470,6 @@ body {
   margin: 0;
   position: relative;
   overflow: hidden;
-}
-
-.products-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><circle cx="20" cy="20" r="8" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="12" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="80" r="10" fill="rgba(255,255,255,0.1)"/></svg>');
 }
 
 .products-header h1 {
@@ -630,7 +491,7 @@ body {
 
 .products-search {
   position: relative;
-  margin: 25px;
+  margin: 20px;
   background: var(--glass-bg);
   border-radius: var(--border-radius-lg);
   padding: 5px;
@@ -640,30 +501,23 @@ body {
 
 .products-search input {
   width: 100%;
-  padding: 18px 60px 18px 25px;
+  padding: 15px 50px 15px 20px;
   border: none;
   border-radius: var(--border-radius-md);
-  font-size: 16px;
+  font-size: 15px;
   background: transparent;
   color: var(--dark-color);
-  transition: var(--transition);
-  font-weight: 500;
-}
-
-.products-search input:focus {
-  outline: none;
 }
 
 .products-search i {
   position: absolute;
-  right: 25px;
+  right: 20px;
   top: 50%;
   transform: translateY(-50%);
   color: #64748b;
-  font-size: 22px;
+  font-size: 20px;
 }
 
-/* Cart Page */
 #cartPage {
   padding-bottom: 100px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
@@ -700,14 +554,14 @@ body {
 }
 
 .cart-empty i {
-  font-size: 100px;
+  font-size: 80px;
   color: #cbd5e1;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   opacity: 0.5;
 }
 
 .cart-empty h3 {
-  font-size: 24px;
+  font-size: 22px;
   color: var(--dark-color);
   margin-bottom: 15px;
   font-weight: 800;
@@ -715,132 +569,102 @@ body {
 
 .cart-empty p {
   color: #64748b;
-  margin-bottom: 35px;
+  margin-bottom: 30px;
   font-size: 16px;
 }
 
 .cart-empty button {
-  padding: 18px 35px;
+  padding: 15px 30px;
   background: var(--primary-gradient);
   color: white;
   border: none;
   border-radius: var(--border-radius-md);
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
-  box-shadow: var(--shadow-md);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.cart-empty button:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-lg);
 }
 
 .cart-items {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 25px;
+  gap: 15px;
+  padding: 20px;
 }
 
 .cart-item {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
-  padding: 20px;
+  padding: 15px;
   display: flex;
-  gap: 20px;
+  gap: 15px;
   box-shadow: var(--shadow-md);
-  transition: var(--transition);
   border: 1px solid #f1f5f9;
-  position: relative;
-}
-
-.cart-item:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-5px);
 }
 
 .cart-item-img {
-  width: 90px;
-  height: 90px;
+  width: 80px;
+  height: 80px;
   border-radius: var(--border-radius-md);
   object-fit: contain;
   background: linear-gradient(45deg, #f8fafc, #f1f5f9);
   flex-shrink: 0;
-  padding: 10px;
+  padding: 8px;
 }
 
 .cart-item-details {
   flex: 1;
-  min-width: 0;
-  padding-right: 20px;
 }
 
 .cart-item-title {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--dark-color);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   line-height: 1.4;
 }
 
 .cart-item-price {
   color: #ef4444;
-  font-weight: 900;
-  font-size: 18px;
-  margin-bottom: 15px;
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 12px;
 }
 
 .cart-item-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .quantity-control {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   background: #f8fafc;
-  padding: 8px;
+  padding: 6px;
   border-radius: var(--border-radius-md);
   border: 1px solid #e2e8f0;
-  flex-shrink: 0;
 }
 
 .quantity-btn {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   border-radius: var(--border-radius-xs);
   border: 2px solid #e2e8f0;
   background: white;
   color: var(--dark-color);
-  font-size: 20px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: var(--transition);
-  font-weight: 900;
-}
-
-.quantity-btn:hover {
-  border-color: #667eea;
-  background: var(--primary-gradient);
-  color: white;
-  transform: scale(1.1);
 }
 
 .quantity {
-  font-weight: 900;
+  font-weight: 800;
   color: var(--dark-color);
-  min-width: 35px;
+  min-width: 25px;
   text-align: center;
-  font-size: 16px;
 }
 
 .remove-btn {
@@ -848,29 +672,17 @@ body {
   color: white;
   border: none;
   border-radius: var(--border-radius-xs);
-  padding: 10px 20px;
-  font-size: 14px;
+  padding: 8px 16px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
-  transition: var(--transition);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.remove-btn:hover {
-  opacity: 0.9;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
 }
 
 .cart-summary {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
-  padding: 30px;
-  margin: 30px 25px;
+  padding: 25px;
+  margin: 25px;
   box-shadow: var(--shadow-md);
   border: 1px solid #f1f5f9;
 }
@@ -879,76 +691,42 @@ body {
   font-size: 18px;
   font-weight: 800;
   color: var(--dark-color);
-  margin-bottom: 25px;
-  padding-bottom: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
   border-bottom: 2px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   color: #475569;
-  font-size: 16px;
-}
-
-.summary-row:last-child {
-  margin-bottom: 0;
+  font-size: 15px;
 }
 
 .summary-total {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 900;
   color: var(--dark-color);
-  margin-top: 20px;
-  padding-top: 20px;
+  margin-top: 15px;
+  padding-top: 15px;
   border-top: 2px solid #f1f5f9;
 }
 
 .checkout-btn {
   width: 100%;
-  padding: 22px;
+  padding: 18px;
   background: var(--success-gradient);
   color: white;
   border: none;
   border-radius: var(--border-radius-lg);
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 800;
   cursor: pointer;
-  transition: var(--transition);
-  margin-top: 35px;
-  box-shadow: var(--shadow-lg);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  position: relative;
-  overflow: hidden;
+  margin-top: 25px;
 }
 
-.checkout-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: var(--transition);
-}
-
-.checkout-btn:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow: var(--shadow-xl);
-}
-
-.checkout-btn:hover::before {
-  left: 100%;
-}
-
-/* About Page */
 #aboutPage {
   padding-bottom: 100px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
@@ -975,30 +753,25 @@ body {
 .about-content {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
-  padding: 30px;
+  padding: 25px;
   box-shadow: var(--shadow-md);
-  margin: 30px 25px;
+  margin: 25px;
   border: 1px solid #f1f5f9;
 }
 
 .about-content p {
   line-height: 1.8;
   color: #475569;
-  margin-bottom: 25px;
-  font-size: 15px;
-  font-weight: 400;
-}
-
-.about-content p:last-child {
-  margin-bottom: 0;
+  margin-bottom: 20px;
+  font-size: 14px;
 }
 
 .business-hours {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
-  padding: 30px;
+  padding: 25px;
   box-shadow: var(--shadow-md);
-  margin: 25px;
+  margin: 20px;
   border: 1px solid #f1f5f9;
 }
 
@@ -1006,56 +779,46 @@ body {
   font-size: 18px;
   font-weight: 800;
   color: var(--dark-color);
-  margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .hours-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
 .hour-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 18px;
+  padding: 15px;
   background: #f8fafc;
   border-radius: var(--border-radius-md);
-  transition: var(--transition);
   border: 1px solid #e2e8f0;
-}
-
-.hour-item:hover {
-  background: #f1f5f9;
-  transform: translateX(5px);
 }
 
 .day-name {
   font-weight: 600;
   color: #475569;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .day-time {
   font-weight: 800;
   color: var(--dark-color);
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .day-time.closed {
   color: #ef4444;
   background: rgba(239, 68, 68, 0.1);
-  padding: 6px 15px;
+  padding: 5px 12px;
   border-radius: 20px;
 }
 
-/* Contact Page */
 #contactPage {
-  padding-bottom: 120px;
+  padding-bottom: 100px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
@@ -1087,63 +850,38 @@ body {
 .contact-info {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
-  padding: 25px;
+  padding: 20px;
   box-shadow: var(--shadow-md);
-  margin: 30px 25px;
+  margin: 25px;
   border: 1px solid #f1f5f9;
 }
 
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 22px;
-  margin-bottom: 18px;
+  gap: 15px;
+  padding: 18px;
+  margin-bottom: 15px;
   background: #f8fafc;
   border-radius: var(--border-radius-md);
-  transition: var(--transition);
   cursor: pointer;
   border: 1px solid #e2e8f0;
-  position: relative;
-  overflow: hidden;
 }
 
 .contact-item:last-child {
   margin-bottom: 0;
 }
 
-.contact-item:hover {
-  background: #f1f5f9;
-  transform: translateX(8px);
-}
-
-.contact-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 4px;
-  background: var(--primary-gradient);
-  opacity: 0;
-  transition: var(--transition);
-}
-
-.contact-item:hover::before {
-  opacity: 1;
-}
-
 .contact-icon {
-  width: 55px;
-  height: 55px;
+  width: 50px;
+  height: 50px;
   border-radius: var(--border-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 20px;
   color: white;
   flex-shrink: 0;
-  box-shadow: var(--shadow-sm);
 }
 
 .contact-item:nth-child(1) .contact-icon { background: var(--success-gradient); }
@@ -1153,43 +891,27 @@ body {
 
 .contact-details {
   flex: 1;
-  min-width: 0;
-  overflow: hidden;
 }
 
 .contact-label {
-  font-size: 12px;
+  font-size: 11px;
   color: #64748b;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
 .contact-value {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   color: var(--dark-color);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  display: block;
-}
-
-.contact-item.email-item .contact-value {
-  font-size: 14px;
-  white-space: normal;
-  word-break: break-word;
-  line-height: 1.4;
 }
 
 .social-links {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
-  padding: 30px;
+  padding: 25px;
   box-shadow: var(--shadow-md);
-  margin: 25px;
+  margin: 20px;
   border: 1px solid #f1f5f9;
 }
 
@@ -1197,134 +919,58 @@ body {
   font-size: 18px;
   font-weight: 800;
   color: var(--dark-color);
-  margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  margin-bottom: 20px;
 }
 
 .social-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 15px;
 }
 
 .social-link {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 15px;
-  padding: 25px;
+  gap: 12px;
+  padding: 20px;
   background: #f8fafc;
   border-radius: var(--border-radius-md);
-  transition: var(--transition);
   cursor: pointer;
   text-decoration: none;
   border: 1px solid #e2e8f0;
-  position: relative;
-  overflow: hidden;
-}
-
-.social-link:hover {
-  background: #f1f5f9;
-  transform: translateY(-8px);
-}
-
-.social-link::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: var(--primary-gradient);
-  transform: scaleX(0);
-  transition: var(--transition);
-}
-
-.social-link:hover::before {
-  transform: scaleX(1);
 }
 
 .social-icon {
-  width: 55px;
-  height: 55px;
+  width: 50px;
+  height: 50px;
   border-radius: var(--border-radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 22px;
   color: white;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
-}
-
-.social-link:hover .social-icon {
-  transform: rotate(15deg) scale(1.1);
 }
 
 .social-label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 900;
   color: var(--dark-color);
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
-/* Floating Action Button */
-.fab-container {
-  position: fixed;
-  bottom: 100px;
-  right: 25px;
-  z-index: 1000;
-}
+.social-icon.facebook { background: #1877F2; }
+.social-icon.instagram { background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); }
+.social-icon.twitter { background: #1DA1F2; }
+.social-icon.linkedin { background: #0A66C2; }
+.social-icon.youtube { background: #FF0000; }
+.social-icon.tiktok { background: #000000; }
 
-.fab {
-  width: 65px;
-  height: 65px;
-  border-radius: 50%;
-  background: var(--whatsapp-gradient);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  cursor: pointer;
-  transition: var(--transition);
-  box-shadow: 0 15px 40px rgba(37, 211, 102, 0.4);
-  border: none;
-  position: relative;
-  overflow: hidden;
-}
-
-.fab::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
-  transform: translateX(-100%);
-  transition: var(--transition);
-}
-
-.fab:hover {
-  transform: scale(1.15) rotate(10deg);
-  box-shadow: 0 20px 50px rgba(37, 211, 102, 0.6);
-}
-
-.fab:hover::before {
-  transform: translateX(100%);
-}
-
-/* Back Button */
 .back-btn {
   position: absolute;
   top: 20px;
   left: 20px;
-  width: 48px;
-  height: 48px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   backdrop-filter: blur(10px);
@@ -1332,76 +978,31 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 20px;
   cursor: pointer;
-  transition: var(--transition);
-  z-index: 10;
   border: 1px solid rgba(255,255,255,0.3);
 }
 
-.back-btn:hover {
-  background: rgba(255,255,255,0.3);
-  transform: translateX(-5px) rotate(-10deg);
-}
-
-/* Footer Fix */
 .page-footer-spacer {
   height: 30px;
-  width: 100%;
-  clear: both;
 }
 
-/* Cart Badge */
 .cart-badge {
   position: absolute;
   top: -5px;
   right: -5px;
   background: var(--danger-gradient);
   color: white;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
 
-/* Icon Fallback Styling */
-.icon-fallback {
-  display: none;
-}
-
-/* Fallback for when Font Awesome doesn't load */
-.no-fa .fas,
-.no-fa .fab {
-  display: none !important;
-}
-
-.no-fa .icon-fallback {
-  display: inline-block;
-  font-weight: bold;
-  font-size: 14px;
-}
-
-/* Force white color for all icons in colored backgrounds */
-.action-icon i,
-.contact-icon i,
-.social-icon i,
-.fab i,
-.nav-icon i {
-  color: white !important;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-/* WhatsApp icon specific fix */
-.fa-whatsapp {
-  color: white !important;
-}
-
-/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1414,13 +1015,7 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 2000;
-  padding: 25px;
-  animation: fadeIn 0.4s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  padding: 20px;
 }
 
 .modal-content {
@@ -1431,126 +1026,42 @@ body {
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  animation: modalSlideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--shadow-xl);
   border: 1px solid var(--glass-border);
 }
 
-@keyframes modalSlideUp {
-  from {
-    opacity: 0;
-    transform: translateY(60px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 .close-btn {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 44px;
-  height: 44px;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(0,0,0,0.1);
   color: var(--dark-color);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 24px;
   cursor: pointer;
-  transition: var(--transition);
   z-index: 10;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(0,0,0,0.1);
 }
 
-.close-btn:hover {
-  background: rgba(0,0,0,0.2);
-  transform: rotate(90deg);
-}
-
-/* Animations */
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideInRight {
-  from { opacity: 0; transform: translateX(40px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.animate-in {
-  animation: fadeInUp 0.8s ease forwards;
-}
-
-.animate-slide {
-  animation: slideInRight 0.8s ease forwards;
-}
-
-.animate-float {
-  animation: float 3s ease-in-out infinite;
-}
-
-/* Responsive */
 @media (max-width: 480px) {
   .app-container {
     max-width: 100%;
   }
   
-  .page {
-    padding: 0;
-  }
-  
   .products-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
   }
   
   .social-grid {
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .nav-icon {
-    width: 42px;
-    height: 42px;
-    font-size: 19px;
-  }
-  
-  .nav-label {
-    font-size: 10px;
-  }
-  
   .quick-actions {
     grid-template-columns: 1fr;
-  }
-  
-  .product-image-container {
-    height: 180px;
-  }
-  
-  .cart-item-actions {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .remove-btn {
-    width: 100%;
-    text-align: center;
   }
 }
 
@@ -1558,74 +1069,21 @@ body {
   .social-grid {
     grid-template-columns: 1fr;
   }
-  
-  .nav-item {
-    padding: 10px;
-  }
-  
-  .nav-icon {
-    width: 38px;
-    height: 38px;
-  }
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f1f5f9;
-  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 10px;
-  transition: var(--transition);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
-/* Data Saver - Image Optimization */
-img {
-  content-visibility: auto;
-}
-
-.product-image[loading="lazy"] {
-  background: linear-gradient(45deg, #f8fafc, #f1f5f9);
-}
-
-/* Performance Optimizations */
-@media (prefers-reduced-motion: reduce) {
-  * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Print Styles */
-@media print {
-  .bottom-nav,
-  .fab-container,
-  .back-btn {
-    display: none !important;
-  }
-  
-  .page {
-    position: static;
-    transform: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    height: auto;
-    overflow: visible;
-  }
-}
-
-/* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   :root {
     --light-color: #0f172a;
@@ -1653,39 +1111,21 @@ img {
     background: var(--lighter-color);
     border-color: rgba(255, 255, 255, 0.1);
   }
-  
-  .contact-value,
-  .product-title,
-  .cart-item-title,
-  .section-header h2,
-  .business-hours h3,
-  .social-links h3 {
-    color: var(--dark-color);
-  }
-  
-  .contact-label,
-  .product-price .original-price,
-  .about-content p {
-    color: #cbd5e1;
-  }
 }
 </style>
 </head>
 
 <body>
 <div class="app-container">
-  <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
     <h1>Digital Business App</h1>
     <p>Loading your premium business experience...</p>
   </div>
 
-  <!-- Home Page -->
   <div id="homePage" class="page">
     <div class="app-header">
-      <div class="header-overlay"></div>
-      <div class="welcome-text animate-in">
+      <div class="welcome-text">
         <h1 id="businessHeader">Welcome</h1>
         <p>Premium business at your fingertips</p>
       </div>
@@ -1694,7 +1134,6 @@ img {
         <div class="action-card" onclick="navigateTo('productsPage')">
           <div class="action-icon">
             <i class="fas fa-shopping-bag"></i>
-            <span class="icon-fallback">🛍️</span>
           </div>
           <h3>Shop Now</h3>
           <p>Browse products & offers</p>
@@ -1703,7 +1142,6 @@ img {
         <div class="action-card" onclick="navigateTo('cartPage')">
           <div class="action-icon">
             <i class="fas fa-shopping-cart"></i>
-            <span class="icon-fallback">🛒</span>
           </div>
           <h3>My Cart</h3>
           <p><span id="cartCountMini">0</span> items</p>
@@ -1712,7 +1150,6 @@ img {
         <div class="action-card" onclick="openWhatsAppChat('greeting')">
           <div class="action-icon">
             <i class="fab fa-whatsapp"></i>
-            <span class="icon-fallback">💬</span>
           </div>
           <h3>Live Chat</h3>
           <p>Instant support</p>
@@ -1721,7 +1158,6 @@ img {
         <div class="action-card" onclick="navigateTo('contactPage')">
           <div class="action-icon">
             <i class="fas fa-map-marker-alt"></i>
-            <span class="icon-fallback">📍</span>
           </div>
           <h3>Location</h3>
           <p>Find us</p>
@@ -1729,7 +1165,7 @@ img {
       </div>
     </div>
 
-    <div class="profile-section animate-slide">
+    <div class="profile-section">
       <img src="" id="photo" class="profile-avatar" loading="lazy">
       <div class="profile-name">
         <span id="name">Loading...</span>
@@ -1746,7 +1182,6 @@ img {
     </div>
     
     <div class="products-grid" id="featuredProducts">
-      <!-- Featured products will be loaded here -->
     </div>
 
     <div class="section-header">
@@ -1754,14 +1189,11 @@ img {
     </div>
     
     <div class="products-grid" id="specialOffers">
-      <!-- Special offers will be loaded here -->
     </div>
     
-    <!-- Footer Spacer -->
     <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- Products Page -->
   <div id="productsPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1778,14 +1210,11 @@ img {
     </div>
     
     <div class="products-grid" id="allProducts">
-      <!-- All products will be loaded here -->
     </div>
     
-    <!-- Footer Spacer -->
     <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- Cart Page -->
   <div id="cartPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1797,14 +1226,11 @@ img {
     </div>
     
     <div id="cartContent">
-      <!-- Cart content will be loaded here -->
     </div>
     
-    <!-- Footer Spacer -->
     <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- About Page -->
   <div id="aboutPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1815,28 +1241,23 @@ img {
     </div>
     
     <div class="about-content" id="aboutContent">
-      <!-- About content will be loaded here -->
     </div>
     
     <div class="business-hours">
       <h3><i class="fas fa-clock"></i> Business Hours</h3>
       <div class="hours-list" id="businessHours">
-        <!-- Business hours will be loaded here -->
       </div>
     </div>
     
     <div class="business-hours">
       <h3><i class="fas fa-calendar-times"></i> Holidays</h3>
       <div class="hours-list" id="holidaysList">
-        <!-- Holidays will be loaded here -->
       </div>
     </div>
     
-    <!-- Footer Spacer -->
     <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- Contact Page -->
   <div id="contactPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1851,7 +1272,6 @@ img {
       <div class="contact-item" onclick="makeCall()">
         <div class="contact-icon">
           <i class="fas fa-phone"></i>
-          <span class="icon-fallback">📞</span>
         </div>
         <div class="contact-details">
           <div class="contact-label">Call Us</div>
@@ -1862,7 +1282,6 @@ img {
       <div class="contact-item" onclick="openWhatsAppChat('greeting')">
         <div class="contact-icon">
           <i class="fab fa-whatsapp"></i>
-          <span class="icon-fallback">💬</span>
         </div>
         <div class="contact-details">
           <div class="contact-label">WhatsApp</div>
@@ -1873,7 +1292,6 @@ img {
       <div class="contact-item email-item" onclick="sendEmail()">
         <div class="contact-icon">
           <i class="fas fa-envelope"></i>
-          <span class="icon-fallback">✉️</span>
         </div>
         <div class="contact-details">
           <div class="contact-label">Email</div>
@@ -1884,7 +1302,6 @@ img {
       <div class="contact-item" onclick="openMap()">
         <div class="contact-icon">
           <i class="fas fa-map-marker-alt"></i>
-          <span class="icon-fallback">📍</span>
         </div>
         <div class="contact-details">
           <div class="contact-label">Address</div>
@@ -1896,20 +1313,16 @@ img {
     <div class="social-links">
       <h3><i class="fas fa-share-alt"></i> Follow Us</h3>
       <div class="social-grid" id="socialGrid">
-        <!-- Social links will be loaded here -->
       </div>
     </div>
     
-    <!-- Footer Spacer -->
     <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- Bottom Navigation -->
   <div class="bottom-nav">
     <div class="nav-item active" onclick="navigateTo('homePage')">
       <div class="nav-icon">
         <i class="fas fa-home"></i>
-        <span class="icon-fallback">🏠</span>
       </div>
       <div class="nav-label">Home</div>
     </div>
@@ -1917,7 +1330,6 @@ img {
     <div class="nav-item" onclick="navigateTo('productsPage')">
       <div class="nav-icon">
         <i class="fas fa-shopping-bag"></i>
-        <span class="icon-fallback">🛍️</span>
       </div>
       <div class="nav-label">Products</div>
     </div>
@@ -1925,7 +1337,6 @@ img {
     <div class="nav-item" onclick="navigateTo('cartPage')">
       <div class="nav-icon">
         <i class="fas fa-shopping-cart"></i>
-        <span class="icon-fallback">🛒</span>
         <span class="cart-badge" id="cartBadge">0</span>
       </div>
       <div class="nav-label">Cart</div>
@@ -1934,7 +1345,6 @@ img {
     <div class="nav-item" onclick="navigateTo('aboutPage')">
       <div class="nav-icon">
         <i class="fas fa-info-circle"></i>
-        <span class="icon-fallback">ℹ️</span>
       </div>
       <div class="nav-label">About</div>
     </div>
@@ -1942,22 +1352,12 @@ img {
     <div class="nav-item" onclick="navigateTo('contactPage')">
       <div class="nav-icon">
         <i class="fas fa-phone"></i>
-        <span class="icon-fallback">📞</span>
       </div>
       <div class="nav-label">Contact</div>
     </div>
   </div>
-
-  <!-- Floating Action Button -->
-  <div class="fab-container">
-    <button class="fab animate-float" onclick="openWhatsAppChat('greeting')">
-      <i class="fab fa-whatsapp"></i>
-      <span class="icon-fallback">💬</span>
-    </button>
-  </div>
 </div>
 
-<!-- Product Detail Modal -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal('productModal')">×</button>
@@ -1965,154 +1365,150 @@ img {
     <div class="product-image-container" style="background:white;">
       <img src="" id="modalImage" class="product-image" loading="lazy">
     </div>
-    <div style="padding:30px;">
-      <h2 id="modalTitle" style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:15px;line-height:1.3;"></h2>
-      <p id="modalDescription" style="color:#64748b;line-height:1.8;margin-bottom:25px;font-size:15px;"></p>
-      <div id="modalPrice" style="font-size:28px;font-weight:900;color:#10b981;margin-bottom:30px;"></div>
+    <div style="padding:25px;">
+      <h2 id="modalTitle" style="font-size:20px;font-weight:800;color:var(--dark-color);margin-bottom:12px;"></h2>
+      <p id="modalDescription" style="color:#64748b;line-height:1.6;margin-bottom:20px;font-size:14px;"></p>
+      <div id="modalPrice" style="font-size:24px;font-weight:900;color:#10b981;margin-bottom:25px;"></div>
       
-      <div id="directCheckoutSection" style="display:none; margin-top: 30px; padding-top: 30px; border-top: 2px solid #f1f5f9;">
-        <h3 style="font-size:18px;font-weight:800;color:var(--dark-color);margin-bottom:20px;display:flex;align-items:center;gap:10px;">
-          <i class="fas fa-credit-card"></i> Checkout Now
+      <div id="directCheckoutSection" style="display:none; margin-top: 25px; padding-top: 25px; border-top: 2px solid #f1f5f9;">
+        <h3 style="font-size:17px;font-weight:800;color:var(--dark-color);margin-bottom:15px;">
+          Checkout Now
         </h3>
         
-        <div class="payment-options" style="display:flex;flex-direction:column;gap:15px;margin-bottom:25px;">
-          <div class="payment-option" onclick="selectBuyNowPayment('whatsapp')" id="whatsappBuyNowOption" style="padding:20px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:15px;transition:var(--transition);background:white;">
-            <div class="payment-icon" style="width:50px;height:50px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;color:white;background:#25D366;">
+        <div class="payment-options" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+          <div class="payment-option" onclick="selectBuyNowPayment('whatsapp')" id="whatsappBuyNowOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#25D366;">
               <i class="fab fa-whatsapp"></i>
             </div>
-            <div style="flex:1;">
-              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">WhatsApp Order</div>
-              <div style="font-size:13px;color:#64748b;line-height:1.4;">Confirm order via WhatsApp chat</div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">WhatsApp Order</div>
+              <div style="font-size:12px;color:#64748b;">Confirm via WhatsApp</div>
             </div>
           </div>
           
-          <div class="payment-option" onclick="selectBuyNowPayment('cod')" id="codBuyNowOption" style="padding:20px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:15px;transition:var(--transition);background:white;">
-            <div class="payment-icon" style="width:50px;height:50px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;color:white;background:#10b981;">
+          <div class="payment-option" onclick="selectBuyNowPayment('cod')" id="codBuyNowOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
               <i class="fas fa-truck"></i>
             </div>
-            <div style="flex:1;">
-              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">Cash on Delivery</div>
-              <div style="font-size:13px;color:#64748b;line-height:1.4;">Pay when product arrives</div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">Cash on Delivery</div>
+              <div style="font-size:12px;color:#64748b;">Pay when arrives</div>
             </div>
           </div>
           
-          <div class="payment-option" onclick="selectBuyNowPayment('jazzcash')" id="jazzcashBuyNowOption" style="padding:20px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:15px;transition:var(--transition);background:white;">
-            <div class="payment-icon" style="width:50px;height:50px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;color:white;background:#FF6B00;">
+          <div class="payment-option" onclick="selectBuyNowPayment('jazzcash')" id="jazzcashBuyNowOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#FF6B00;">
               <i class="fas fa-qrcode"></i>
             </div>
-            <div style="flex:1;">
-              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">JazzCash / EasyPaisa</div>
-              <div style="font-size:13px;color:#64748b;line-height:1.4;">Pay via QR Code or Number</div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">JazzCash / EasyPaisa</div>
+              <div style="font-size:12px;color:#64748b;">Pay via QR Code</div>
             </div>
           </div>
         </div>
         
-        <button onclick="checkoutBuyNow()" style="width:100%;padding:20px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:17px;font-weight:800;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
-          <i class="fas fa-bolt"></i> Complete Purchase
+        <button onclick="checkoutBuyNow()" style="width:100%;padding:18px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:16px;font-weight:800;cursor:pointer;">
+          Complete Purchase
         </button>
       </div>
       
-      <div style="display:flex;gap:15px;margin-top:30px;">
-        <button onclick="showDirectCheckout()" style="flex:1;padding:20px;border:none;border-radius:var(--border-radius-md);font-size:16px;font-weight:800;cursor:pointer;background:var(--primary-gradient);color:white;transition:var(--transition);box-shadow:var(--shadow-md);">
-          <i class="fas fa-shopping-cart"></i> Buy Now
+      <div style="display:flex;gap:12px;margin-top:25px;">
+        <button onclick="showDirectCheckout()" style="flex:1;padding:15px;border:none;border-radius:var(--border-radius-md);font-size:15px;font-weight:800;cursor:pointer;background:var(--primary-gradient);color:white;">
+          Buy Now
         </button>
-        <button onclick="addToCartFromModal()" style="flex:1;padding:20px;border:none;border-radius:var(--border-radius-md);font-size:16px;font-weight:800;cursor:pointer;background:var(--secondary-gradient);color:white;transition:var(--transition);box-shadow:var(--shadow-md);">
-          <i class="fas fa-plus"></i> Add to Cart
+        <button onclick="addToCartFromModal()" style="flex:1;padding:15px;border:none;border-radius:var(--border-radius-md);font-size:15px;font-weight:800;cursor:pointer;background:var(--secondary-gradient);color:white;">
+          Add to Cart
         </button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Checkout Modal -->
 <div class="modal-overlay" id="checkoutModal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal('checkoutModal')">×</button>
     
-    <div style="padding:30px;">
-      <h2 style="font-size:24px;font-weight:800;color:var(--dark-color);margin-bottom:25px;display:flex;align-items:center;gap:12px;">
-        <i class="fas fa-shopping-bag"></i> Checkout
+    <div style="padding:25px;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;">
+        Checkout
       </h2>
       
-      <div id="checkoutItems" style="margin-bottom:30px;max-height:300px;overflow-y:auto;padding-right:10px;">
-        <!-- Checkout items will be loaded here -->
+      <div id="checkoutItems" style="margin-bottom:25px;max-height:250px;overflow-y:auto;padding-right:10px;">
       </div>
       
-      <div style="margin:25px 0;">
-        <h3 style="font-size:18px;font-weight:800;color:var(--dark-color);margin-bottom:20px;display:flex;align-items:center;gap:12px;">
-          <i class="fas fa-credit-card"></i> Payment Method
+      <div style="margin:20px 0;">
+        <h3 style="font-size:17px;font-weight:800;color:var(--dark-color);margin-bottom:15px;">
+          Payment Method
         </h3>
-        <div class="payment-options" style="display:flex;flex-direction:column;gap:15px;">
-          <div class="payment-option" onclick="selectCheckoutPayment('whatsapp')" id="whatsappCheckoutOption" style="padding:20px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:15px;transition:var(--transition);background:white;">
-            <div class="payment-icon" style="width:50px;height:50px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;color:white;background:#25D366;">
+        <div class="payment-options" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="payment-option" onclick="selectCheckoutPayment('whatsapp')" id="whatsappCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#25D366;">
               <i class="fab fa-whatsapp"></i>
             </div>
-            <div style="flex:1;">
-              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">WhatsApp Order</div>
-              <div style="font-size:13px;color:#64748b;line-height:1.4;">Confirm order via WhatsApp chat</div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">WhatsApp Order</div>
+              <div style="font-size:12px;color:#64748b;">Confirm via WhatsApp</div>
             </div>
           </div>
           
-          <div class="payment-option" onclick="selectCheckoutPayment('cod')" id="codCheckoutOption" style="padding:20px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:15px;transition:var(--transition);background:white;">
-            <div class="payment-icon" style="width:50px;height:50px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;color:white;background:#10b981;">
+          <div class="payment-option" onclick="selectCheckoutPayment('cod')" id="codCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
               <i class="fas fa-truck"></i>
             </div>
-            <div style="flex:1;">
-              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">Cash on Delivery</div>
-              <div style="font-size:13px;color:#64748b;line-height:1.4;">Pay when product arrives</div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">Cash on Delivery</div>
+              <div style="font-size:12px;color:#64748b;">Pay when arrives</div>
             </div>
           </div>
           
-          <div class="payment-option" onclick="selectCheckoutPayment('jazzcash')" id="jazzcashCheckoutOption" style="padding:20px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:15px;transition:var(--transition);background:white;">
-            <div class="payment-icon" style="width:50px;height:50px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;color:white;background:#FF6B00;">
+          <div class="payment-option" onclick="selectCheckoutPayment('jazzcash')" id="jazzcashCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#FF6B00;">
               <i class="fas fa-qrcode"></i>
             </div>
-            <div style="flex:1;">
-              <div style="font-weight:800;color:var(--dark-color);font-size:15px;">JazzCash / EasyPaisa</div>
-              <div style="font-size:13px;color:#64748b;line-height:1.4;">Pay via QR Code or Number</div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">JazzCash / EasyPaisa</div>
+              <div style="font-size:12px;color:#64748b;">Pay via QR Code</div>
             </div>
           </div>
         </div>
       </div>
       
-      <div style="background:#f8fafc;padding:25px;border-radius:var(--border-radius-md);margin:30px 0;border:1px solid #e2e8f0;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:15px;align-items:center;">
-          <span style="color:#64748b;font-size:15px;">Subtotal</span>
-          <span style="font-weight:800;color:var(--dark-color);font-size:17px;">PKR <span id="checkoutSubtotal">0</span></span>
+      <div style="background:#f8fafc;padding:20px;border-radius:var(--border-radius-md);margin:25px 0;border:1px solid #e2e8f0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+          <span style="color:#64748b;font-size:14px;">Subtotal</span>
+          <span style="font-weight:800;color:var(--dark-color);font-size:16px;">PKR <span id="checkoutSubtotal">0</span></span>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:15px;align-items:center;">
-          <span style="color:#64748b;font-size:15px;">Shipping</span>
-          <span style="font-weight:800;color:var(--dark-color);font-size:17px;">PKR 0</span>
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+          <span style="color:#64748b;font-size:14px;">Shipping</span>
+          <span style="font-weight:800;color:var(--dark-color);font-size:16px;">PKR 0</span>
         </div>
-        <div style="display:flex;justify-content:space-between;margin-top:20px;padding-top:20px;border-top:2px solid #e2e8f0;align-items:center;">
-          <span style="font-size:20px;font-weight:800;color:var(--dark-color);">Total</span>
-          <span style="font-size:28px;font-weight:900;color:#10b981;">PKR <span id="checkoutTotal">0</span></span>
+        <div style="display:flex;justify-content:space-between;margin-top:15px;padding-top:15px;border-top:2px solid #e2e8f0;">
+          <span style="font-size:18px;font-weight:800;color:var(--dark-color);">Total</span>
+          <span style="font-size:24px;font-weight:900;color:#10b981;">PKR <span id="checkoutTotal">0</span></span>
         </div>
       </div>
       
-      <button onclick="proceedToPayment()" style="width:100%;padding:22px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:18px;font-weight:800;cursor:pointer;transition:var(--transition);box-shadow:var(--shadow-lg);position:relative;overflow:hidden;">
-        <i class="fas fa-lock"></i> Proceed to Payment
+      <button onclick="proceedToPayment()" style="width:100%;padding:18px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:17px;font-weight:800;cursor:pointer;">
+        Proceed to Payment
       </button>
     </div>
   </div>
 </div>
 
-<!-- Payment Details Modal -->
 <div class="modal-overlay" id="paymentDetailsModal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal('paymentDetailsModal')">×</button>
     
-    <div style="padding:30px;">
-      <h2 style="font-size:24px;font-weight:800;color:var(--dark-color);margin-bottom:25px;display:flex;align-items:center;gap:12px;" id="paymentMethodTitle">
-        <i class="fas fa-qrcode"></i> Payment Details
+    <div style="padding:25px;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;" id="paymentMethodTitle">
+        Payment Details
       </h2>
       
       <div id="paymentDetailsContent">
-        <!-- Payment details will be loaded here -->
       </div>
       
-      <button onclick="confirmPayment()" style="width:100%;padding:22px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:18px;font-weight:800;cursor:pointer;transition:var(--transition);margin-top:30px;box-shadow:var(--shadow-lg);">
-        <i class="fas fa-check-circle"></i> Confirm Payment
+      <button onclick="confirmPayment()" style="width:100%;padding:18px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:17px;font-weight:800;cursor:pointer;margin-top:25px;">
+        Confirm Payment
       </button>
     </div>
   </div>
@@ -2120,56 +1516,25 @@ img {
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-// Global variables
 let card = {};
 let currentProduct = null;
-// Start with empty cart
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
 let currentPage = 'loadingScreen';
 
-// Initialize Supabase
 const supa = supabase.createClient(
   "https://dfvnefbxgayxqgjjgtrr.supabase.co",
   "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
 
-// Check if Font Awesome loaded
-function checkFontAwesome() {
-  setTimeout(() => {
-    // Check if any icon elements exist
-    const testIcon = document.createElement('i');
-    testIcon.className = 'fas fa-check';
-    document.body.appendChild(testIcon);
-    
-    // Get computed style
-    const style = window.getComputedStyle(testIcon, ':before');
-    const content = style.content;
-    
-    // If Font Awesome didn't load, show fallback emojis
-    if (content === 'none' || content === 'normal') {
-      console.log('Font Awesome not detected, using fallback emojis');
-      document.body.classList.add('no-fa');
-    }
-    
-    // Clean up test element
-    document.body.removeChild(testIcon);
-  }, 1000);
-}
-
-// Load card data
 document.addEventListener("DOMContentLoaded", async () => {
-  // Check Font Awesome first
-  checkFontAwesome();
-  
   const id = new URLSearchParams(location.search).get("id") || localStorage.getItem("lastCardId");
   if(!id) {
     document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
     return;
   }
 
-  // Show loading for 2 seconds for premium feel
   setTimeout(async () => {
     const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
     if(error || !data) {
@@ -2181,16 +1546,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     await renderApp();
     navigateTo('homePage');
     updateCartCount();
-    
-    // Add animations
-    document.querySelectorAll('.animate-in').forEach(el => {
-      el.style.animationDelay = `${Math.random() * 0.5}s`;
-    });
-    
   }, 2000);
 });
 
-// Navigation functions
 function navigateTo(pageId) {
   if(currentPage === pageId) return;
   
@@ -2207,7 +1565,6 @@ function navigateTo(pageId) {
     newPage.classList.add('active');
     currentPage = pageId;
     
-    // Update nav active state
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.remove('active');
     });
@@ -2224,7 +1581,6 @@ function navigateTo(pageId) {
       document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
     }
     
-    // Load page specific content
     switch(pageId) {
       case 'homePage':
         loadHomePage();
@@ -2245,12 +1601,9 @@ function navigateTo(pageId) {
   }, 300);
 }
 
-// Render the complete app
 async function renderApp() {
-  // Set business name
   document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
   
-  // Load profile image
   const photo = document.getElementById('photo');
   if(card.profileImage) {
     photo.src = card.profileImage;
@@ -2258,22 +1611,17 @@ async function renderApp() {
     photo.style.display = 'none';
   }
   
-  // Set basic info
   document.getElementById('name').textContent = card.name || "";
   document.getElementById('business').textContent = card.businessName || "";
   
-  // Set contact info
   document.getElementById('contactPhone').textContent = card.phone || "Not available";
   document.getElementById('contactEmail').textContent = card.email || "Not available";
   document.getElementById('contactAddress').textContent = card.address || "Not available";
   
-  // Load home page content
   loadHomePage();
 }
 
-// Load home page
 function loadHomePage() {
-  // Load featured products (first 4)
   const featuredProducts = document.getElementById('featuredProducts');
   const specialOffers = document.getElementById('specialOffers');
   const products = card.products || [];
@@ -2285,7 +1633,6 @@ function loadHomePage() {
     featuredProducts.appendChild(createProductCard(product, index));
   });
   
-  // Load special offers (products with badges)
   const specialProducts = products.filter(p => p.badges && p.badges.length > 0).slice(0, 4);
   specialProducts.forEach((product, index) => {
     const originalIndex = products.findIndex(p => p.title === product.title);
@@ -2293,7 +1640,6 @@ function loadHomePage() {
   });
 }
 
-// Load products page
 function loadProductsPage() {
   const allProducts = document.getElementById('allProducts');
   const products = card.products || [];
@@ -2305,16 +1651,12 @@ function loadProductsPage() {
   });
 }
 
-// Create product card element
 function createProductCard(product, index, fullWidth = false) {
   const price = product.discountPrice || product.originalPrice;
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
   
   const card = document.createElement('div');
   card.className = 'product-card';
-  card.style.animationDelay = `${index * 0.1}s`;
-  card.style.animation = 'fadeIn 0.6s ease forwards';
-  card.style.opacity = '0';
   
   card.innerHTML = `
     <div class="product-image-container">
@@ -2343,7 +1685,6 @@ function createProductCard(product, index, fullWidth = false) {
   return card;
 }
 
-// Filter products
 function filterProducts() {
   const searchTerm = document.getElementById('productsSearch').value.toLowerCase();
   const products = card.products || [];
@@ -2363,7 +1704,6 @@ function filterProducts() {
   });
 }
 
-// Load cart page
 function loadCartPage() {
   const cartContent = document.getElementById('cartContent');
   const cartItemsCount = document.getElementById('cartItemsCount');
@@ -2439,18 +1779,15 @@ function loadCartPage() {
   cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
 }
 
-// Load about page
 function loadAboutPage() {
   const aboutContent = document.getElementById('aboutContent');
   const businessHours = document.getElementById('businessHours');
   const holidaysList = document.getElementById('holidaysList');
   
-  // About content
   aboutContent.innerHTML = `
     <p>${card.business?.about || 'No information available'}</p>
   `;
   
-  // Business hours
   if(card.businessHours && card.businessHours.length > 0) {
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     businessHours.innerHTML = '';
@@ -2477,7 +1814,6 @@ function loadAboutPage() {
     });
   }
   
-  // Holidays
   if(card.holidays && card.holidays.length > 0) {
     holidaysList.innerHTML = '';
     
@@ -2502,7 +1838,6 @@ function loadAboutPage() {
   }
 }
 
-// Load contact page
 function loadContactPage() {
   const socialGrid = document.getElementById('socialGrid');
   const socialMedia = card.socialMedia || {};
@@ -2510,12 +1845,12 @@ function loadContactPage() {
   socialGrid.innerHTML = '';
   
   const socialPlatforms = [
-    { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Facebook', color: '#1877F2', fallback: '📘' },
-    { key: 'instagram', icon: 'fab fa-instagram', label: 'Instagram', color: '#E4405F', fallback: '📸' },
-    { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', color: '#1DA1F2', fallback: '🐦' },
-    { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', color: '#0A66C2', fallback: '💼' },
-    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', color: '#FF0000', fallback: '📺' },
-    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', color: '#000000', fallback: '🎵' }
+    { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Facebook', className: 'facebook' },
+    { key: 'instagram', icon: 'fab fa-instagram', label: 'Instagram', className: 'instagram' },
+    { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', className: 'twitter' },
+    { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', className: 'linkedin' },
+    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', className: 'youtube' },
+    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', className: 'tiktok' }
   ];
   
   socialPlatforms.forEach(platform => {
@@ -2526,9 +1861,8 @@ function loadContactPage() {
       socialLink.href = url.includes('://') ? url : `https://${url}`;
       socialLink.target = '_blank';
       socialLink.innerHTML = `
-        <div class="social-icon" style="background:${platform.color};">
+        <div class="social-icon ${platform.className}">
           <i class="${platform.icon}"></i>
-          <span class="icon-fallback">${platform.fallback}</span>
         </div>
         <div class="social-label">${platform.label}</div>
       `;
@@ -2537,16 +1871,13 @@ function loadContactPage() {
   });
 }
 
-// Cart functions
 function updateCartCount() {
   const count = cart.length;
   document.getElementById('cartCountMini').textContent = count;
   document.getElementById('cartBadge').textContent = count;
   
-  // Save cart to localStorage
   localStorage.setItem('cart', JSON.stringify(cart));
   
-  // Update cart page if active
   if(currentPage === 'cartPage') {
     loadCartPage();
   }
@@ -2568,15 +1899,12 @@ function addToCart(productIndex) {
         index: productIndex,
         quantity: 1
       });
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartCount();
-      showNotification('Product added to cart!');
     } else {
       cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
-      localStorage.setItem('cart', JSON.stringify(cart));
-      updateCartCount();
-      showNotification('Product quantity increased!');
     }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    showNotification('Product added to cart!');
   }
 }
 
@@ -2594,7 +1922,6 @@ function updateQuantity(index, change) {
   }
 }
 
-// Product modal functions
 function showProductModal(productIndex) {
   const products = card.products || [];
   currentProduct = products[productIndex];
@@ -2610,7 +1937,7 @@ function showProductModal(productIndex) {
   
   if(originalPrice) {
     document.getElementById('modalPrice').innerHTML = `
-      <span style="text-decoration:line-through;color:#94a3b8;font-size:18px;margin-right:15px;">PKR ${originalPrice}</span>
+      <span style="text-decoration:line-through;color:#94a3b8;font-size:16px;margin-right:12px;">PKR ${originalPrice}</span>
       <span>PKR ${price}</span>
     `;
   } else {
@@ -2639,7 +1966,6 @@ function addToCartFromModal() {
   }
 }
 
-// Buy Now functions
 function selectBuyNowPayment(method) {
   buyNowPaymentMethod = method;
   
@@ -2650,19 +1976,15 @@ function selectBuyNowPayment(method) {
   [whatsappOption, codOption, jazzcashOption].forEach(option => {
     if(option) {
       option.style.borderColor = '#e2e8f0';
-      option.style.backgroundColor = 'white';
     }
   });
   
   if(method === 'whatsapp' && whatsappOption) {
     whatsappOption.style.borderColor = '#25D366';
-    whatsappOption.style.backgroundColor = '#f0fdf4';
   } else if(method === 'cod' && codOption) {
     codOption.style.borderColor = '#10b981';
-    codOption.style.backgroundColor = '#f0fdf4';
   } else if(method === 'jazzcash' && jazzcashOption) {
     jazzcashOption.style.borderColor = '#FF6B00';
-    jazzcashOption.style.backgroundColor = '#fff7ed';
   }
 }
 
@@ -2704,7 +2026,6 @@ function sendBuyNowOrder() {
   closeModal('productModal');
 }
 
-// Checkout functions
 function openCheckoutModal() {
   const checkoutItems = document.getElementById('checkoutItems');
   let subtotal = 0;
@@ -2717,12 +2038,12 @@ function openCheckoutModal() {
     subtotal += itemTotal;
     
     checkoutItems.innerHTML += `
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;padding:15px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;">
         <div>
-          <div style="font-weight:800;color:var(--dark-color);margin-bottom:5px;">${item.title || 'Product'}</div>
-          <div style="font-size:13px;color:#64748b;">Qty: ${item.quantity || 1}</div>
+          <div style="font-weight:800;color:var(--dark-color);margin-bottom:4px;">${item.title || 'Product'}</div>
+          <div style="font-size:12px;color:#64748b;">Qty: ${item.quantity || 1}</div>
         </div>
-        <div style="font-weight:800;color:var(--dark-color);font-size:17px;">PKR ${itemTotal.toFixed(2)}</div>
+        <div style="font-weight:800;color:var(--dark-color);font-size:16px;">PKR ${itemTotal.toFixed(2)}</div>
       </div>
     `;
   });
@@ -2744,19 +2065,15 @@ function selectCheckoutPayment(method) {
   [whatsappOption, codOption, jazzcashOption].forEach(option => {
     if(option) {
       option.style.borderColor = '#e2e8f0';
-      option.style.backgroundColor = 'white';
     }
   });
   
   if(method === 'whatsapp' && whatsappOption) {
     whatsappOption.style.borderColor = '#25D366';
-    whatsappOption.style.backgroundColor = '#f0fdf4';
   } else if(method === 'cod' && codOption) {
     codOption.style.borderColor = '#10b981';
-    codOption.style.backgroundColor = '#f0fdf4';
   } else if(method === 'jazzcash' && jazzcashOption) {
     jazzcashOption.style.borderColor = '#FF6B00';
-    jazzcashOption.style.backgroundColor = '#fff7ed';
   }
 }
 
@@ -2776,29 +2093,29 @@ function showPaymentDetailsModal(context) {
   
   if(context === 'buyNow' && currentProduct) {
     const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
-    paymentMethodTitle.innerHTML = `<i class="fas fa-qrcode"></i> JazzCash Payment`;
+    paymentMethodTitle.innerHTML = `JazzCash Payment`;
     
     paymentDetailsContent.innerHTML = `
       <div style="text-align:center;">
-        <div style="margin-bottom:25px;">
-          <div style="font-size:16px;color:#64748b;margin-bottom:15px;">Send <strong style="color:#10b981;font-size:22px;">PKR ${price}</strong> to:</div>
-          <div style="font-size:28px;font-weight:900;color:#FF6B00;margin:20px 0;background:rgba(255,107,0,0.1);padding:20px;border-radius:16px;letter-spacing:1px;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px;color:#64748b;margin-bottom:12px;">Send <strong style="color:#10b981;font-size:20px;">PKR ${price}</strong> to:</div>
+          <div style="font-size:24px;font-weight:900;color:#FF6B00;margin:15px 0;background:rgba(255,107,0,0.1);padding:15px;border-radius:16px;">
             ${card.payments.jazzcash.number || ''}
           </div>
         </div>
         
         ${card.payments.jazzcash.barcode ? `
-          <div style="margin:25px 0;text-align:center;">
-            <div style="font-size:15px;color:#64748b;margin-bottom:15px;font-weight:700;">Scan QR Code to Pay</div>
-            <img src="${card.payments.jazzcash.barcode}" style="max-width:220px;max-height:220px;border-radius:16px;border:2px solid #e2e8f0;display:block;margin:0 auto;background:white;padding:15px;">
+          <div style="margin:20px 0;text-align:center;">
+            <div style="font-size:14px;color:#64748b;margin-bottom:12px;font-weight:700;">Scan QR Code to Pay</div>
+            <img src="${card.payments.jazzcash.barcode}" style="max-width:200px;max-height:200px;border-radius:16px;border:2px solid #e2e8f0;display:block;margin:0 auto;background:white;padding:12px;">
           </div>
         ` : ''}
         
-        <div style="background:#f0f9ff;padding:20px;border-radius:16px;margin-top:25px;border-left:4px solid #3b82f6;">
-          <div style="font-size:15px;color:#64748b;margin-bottom:12px;font-weight:800;">Instructions:</div>
-          <ol style="text-align:left;padding-left:25px;margin:15px 0;color:#475569;line-height:1.8;">
-            <li style="margin-bottom:10px;">Complete payment using the QR code or number above</li>
-            <li style="margin-bottom:10px;">Take screenshot of payment confirmation</li>
+        <div style="background:#f0f9ff;padding:15px;border-radius:16px;margin-top:20px;">
+          <div style="font-size:14px;color:#64748b;margin-bottom:10px;font-weight:800;">Instructions:</div>
+          <ol style="text-align:left;padding-left:20px;margin:12px 0;color:#475569;line-height:1.6;">
+            <li style="margin-bottom:8px;">Complete payment using the QR code or number above</li>
+            <li style="margin-bottom:8px;">Take screenshot of payment confirmation</li>
             <li>Share screenshot via WhatsApp for order verification</li>
           </ol>
         </div>
@@ -2810,29 +2127,29 @@ function showPaymentDetailsModal(context) {
       return sum + (price * (item.quantity || 1));
     }, 0);
     
-    paymentMethodTitle.innerHTML = `<i class="fas fa-qrcode"></i> JazzCash Payment`;
+    paymentMethodTitle.innerHTML = `JazzCash Payment`;
     
     paymentDetailsContent.innerHTML = `
       <div style="text-align:center;">
-        <div style="margin-bottom:25px;">
-          <div style="font-size:16px;color:#64748b;margin-bottom:15px;">Send <strong style="color:#10b981;font-size:22px;">PKR ${total.toFixed(2)}</strong> to:</div>
-          <div style="font-size:28px;font-weight:900;color:#FF6B00;margin:20px 0;background:rgba(255,107,0,0.1);padding:20px;border-radius:16px;letter-spacing:1px;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px;color:#64748b;margin-bottom:12px;">Send <strong style="color:#10b981;font-size:20px;">PKR ${total.toFixed(2)}</strong> to:</div>
+          <div style="font-size:24px;font-weight:900;color:#FF6B00;margin:15px 0;background:rgba(255,107,0,0.1);padding:15px;border-radius:16px;">
             ${card.payments.jazzcash.number || ''}
           </div>
         </div>
         
         ${card.payments.jazzcash.barcode ? `
-          <div style="margin:25px 0;text-align:center;">
-            <div style="font-size:15px;color:#64748b;margin-bottom:15px;font-weight:700;">Scan QR Code to Pay</div>
-            <img src="${card.payments.jazzcash.barcode}" style="max-width:220px;max-height:220px;border-radius:16px;border:2px solid #e2e8f0;display:block;margin:0 auto;background:white;padding:15px;">
+          <div style="margin:20px 0;text-align:center;">
+            <div style="font-size:14px;color:#64748b;margin-bottom:12px;font-weight:700;">Scan QR Code to Pay</div>
+            <img src="${card.payments.jazzcash.barcode}" style="max-width:200px;max-height:200px;border-radius:16px;border:2px solid #e2e8f0;display:block;margin:0 auto;background:white;padding:12px;">
           </div>
         ` : ''}
         
-        <div style="background:#f0f9ff;padding:20px;border-radius:16px;margin-top:25px;border-left:4px solid #3b82f6;">
-          <div style="font-size:15px;color:#64748b;margin-bottom:12px;font-weight:800;">Instructions:</div>
-          <ol style="text-align:left;padding-left:25px;margin:15px 0;color:#475569;line-height:1.8;">
-            <li style="margin-bottom:10px;">Complete payment using the QR code or number above</li>
-            <li style="margin-bottom:10px;">Take screenshot of payment confirmation</li>
+        <div style="background:#f0f9ff;padding:15px;border-radius:16px;margin-top:20px;">
+          <div style="font-size:14px;color:#64748b;margin-bottom:10px;font-weight:800;">Instructions:</div>
+          <ol style="text-align:left;padding-left:20px;margin:12px 0;color:#475569;line-height:1.6;">
+            <li style="margin-bottom:8px;">Complete payment using the QR code or number above</li>
+            <li style="margin-bottom:8px;">Take screenshot of payment confirmation</li>
             <li>Share screenshot via WhatsApp for order verification</li>
           </ol>
         </div>
@@ -2886,7 +2203,6 @@ function sendCheckoutOrder() {
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   }
   
-  // Clear cart
   cart = [];
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
@@ -2903,7 +2219,6 @@ function getPaymentMethodName(method) {
   }
 }
 
-// Contact functions
 function openWhatsAppChat(context) {
   if(!card.phone) {
     showNotification('WhatsApp number not available');
@@ -2935,7 +2250,6 @@ function openMap() {
   }
 }
 
-// Modal functions
 function openModal(modalId) {
   document.getElementById(modalId).style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -2946,7 +2260,6 @@ function closeModal(modalId) {
   document.body.style.overflow = 'auto';
 }
 
-// Utility functions
 function showNotification(message) {
   const notification = document.createElement('div');
   notification.style.cssText = `
@@ -2956,17 +2269,15 @@ function showNotification(message) {
     transform: translateX(-50%);
     background: var(--primary-gradient);
     color: white;
-    padding: 18px 28px;
-    border-radius: 16px;
+    padding: 15px 25px;
+    border-radius: 12px;
     box-shadow: var(--shadow-xl);
     z-index: 3000;
-    max-width: 320px;
+    max-width: 300px;
     animation: fadeIn 0.3s ease;
     font-weight: 700;
-    font-size: 15px;
+    font-size: 14px;
     text-align: center;
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.2);
   `;
   
   notification.textContent = message;
@@ -2974,7 +2285,6 @@ function showNotification(message) {
   
   setTimeout(() => {
     notification.style.opacity = '0';
-    notification.style.transform = 'translateX(-50%) translateY(-20px)';
     setTimeout(() => {
       if(notification.parentNode) {
         document.body.removeChild(notification);
@@ -2983,7 +2293,6 @@ function showNotification(message) {
   }, 3000);
 }
 
-// Initialize
 updateCartCount();
 </script>
 </body>
