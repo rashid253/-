@@ -299,7 +299,6 @@ body {
   overflow: hidden;
 }
 
-/* REMOVED the green line under action cards */
 .action-card::before {
   content: '';
   position: absolute;
@@ -1264,12 +1263,12 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 26px;
-  color: white;
+  color: white !important; /* Force white color */
   box-shadow: var(--shadow-sm);
   transition: var(--transition);
 }
 
-/* FIXED: Force white color for all icons inside colored backgrounds */
+/* FIXED: Force white color for all icons */
 .social-icon i,
 .contact-icon i,
 .action-icon i,
@@ -1304,7 +1303,7 @@ body {
   height: 65px;
   border-radius: 50%;
   background: var(--whatsapp-gradient);
-  color: white;
+  color: white !important; /* Force white color */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2097,7 +2096,7 @@ img {
 // Global variables
 let card = {};
 let currentProduct = null;
-// FIXED: Start with empty cart
+// FIXED: Cart starts empty
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
