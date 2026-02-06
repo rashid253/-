@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Edit Digital Card</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{margin:0;font-family:system-ui;background:#f1f5f9}
+.wrap{max-width:480px;margin:auto;padding:16px}
+h2{margin-top:20px}
+input,textarea{
+ width:100%;padding:12px;margin:6px 0;
+ border-radius:10px;border:1px solid #cbd5f5
+}
+button{
+ width:100%;padding:16px;
+ border:none;border-radius:12px;
+ background:#16a34a;color:white;
+ font-size:17px;margin-top:20px
+}
+.offerBox{
+ background:white;padding:12px;
+ border-radius:12px;margin-top:10px
+}
+.small{font-size:12px;color:#475569}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<h2>Profile</h2>
+<input type="file" id="profileImage">
+
+<input id="name" placeholder="Full Name">
+<input id="phone" placeholder="Phone">
+<input id="email" placeholder="Email">
+<input id="address" placeholder="Address">
+
+<h2>Business</h2>
+<input id="businessName" placeholder="Business Title">
+<textarea id="businessInfo" placeholder="About your business"></textarea>
+
+<h2>Social Media</h2>
+<input id="facebook" placeholder="Facebook link">
+<input id="instagram" placeholder="Instagram link">
+<input id="youtube" placeholder="YouTube link">
+<input id="website" placeholder="Website link">
+
+<h2>Shop App (Optional)</h2>
+<input id="shopAppLink" placeholder="Play Store app link">
+<input type="file" id="shopAppImage">
+
+<h2>Offers</h2>
+<div id="offersForm"></div>
+
+<button type="button" onclick="save()">Save Changes</button>
+
+<p class="small">
+This link edits only this card.<br>
+Share edit link only with owner.
+</p>
+
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+const db = supabase.createClient(
+ "https://dfvnefbxgayxqgjjgtrr.supabase.co",
+ "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
+);
+
+const id = new URLSearchParams(location.search).get("id");
+if(!id){ alert("No card ID"); throw "No ID"; }
+
+// Build offer boxes
+for(let i=1;i<=5;i++){
+ offersForm.innerHTML+=`
+ <div class="offerBox">
+  <b>Offer ${i}</b>
+  <input type="file" id="offerImg${i}">
+  <input id="offerTitle${i}" placeholder="Title">
+  <textarea id="offerDesc${i}" placeholder="Description"></textarea>
+ </div>`;
+}
+
+// Resize image
+function resizeImage(file){
+ return new Promise(res=>{
+  const img=new Image();
+  img.onload=()=>{
+   const c=document.createElement("canvas");
+   const max=1024;
+   let w=img.width,h=img.height;
+   const r=Math.min(max/w,max/h,1);
+   w*=r; h*=r;
+   c.width=w; c.height=h;
+   c.getContext("2d").drawImage(img,0,0,w,h);
+   res(c.toDataURL("image/jpeg",0.8));
+  }
+  img.src=URL.createObjectURL(file);
+ });
+}
+
+// Load existing data
+db.from("cards").select("*").eq("id",id).single().then(r=>{
+ const d = JSON.parse(r.data.data);
+
+ name.value=d.name;
+ phone.value=d.phone;
+ email.value=d.email;
+ address.value=d.address;
+ businessName.value=d.businessName;
+ businessInfo.value=d.businessInfo;
+ facebook.value=d.facebook || "";
+ instagram.value=d.instagram || "";
+ youtube.value=d.youtube || "";
+ website.value=d.website || "";
+
+ shopAppLink.value=d.shopAppLink || "";
+
+ for(let i=0;i<d.offers.length;i++){
+  document.getElementById("offerTitle"+(i+1)).value=d.offers[i].title;
+  document.getElementById("offerDesc"+(i+1)).value=d.offers[i].desc;
+ }
+});
+
+// Save changes
+async function save(){
+
+ const data={
+  name:name.value,
+  phone:phone.value,
+  email:email.value,
+  address:address.value,
+  businessName:businessName.value,
+  businessInfo:businessInfo.value,
+  facebook:facebook.value,
+  instagram:instagram.value,
+  youtube:youtube.value,
+  website:website.value,
+
+  shopAppLink: shopAppLink.value,
+  shopAppImage: "",
+  profileImage: "",
+  offers:[]
+ };
+
+ if(profileImage.files[0])
+  data.profileImage = await resizeImage(profileImage.files[0]);
+
+ if(shopAppImage.files[0])
+  data.shopAppImage = await resizeImage(shopAppImage.files[0]);
+
+ for(let i=1;i<=5;i++){
+  const title=document.getElementById("offerTitle"+i).value;
+  const desc=document.getElementById("offerDesc"+i).value;
+  const imgFile=document.getElementById("offerImg"+i).files[0];
+  let img="";
+
+  if(imgFile) img = await resizeImage(imgFile);
+
+  if(title && desc){
+   data.offers.push({title,desc,image:img});
+  }
+ }
+
+ await db.from("cards").update({
+  data:JSON.stringify(data)
+ }).eq("id",id);
+
+ alert("Card updated successfully");
+ location.href="card.html?id="+id;
+}
+</script>
+</body>
+</html>
