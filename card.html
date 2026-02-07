@@ -201,6 +201,105 @@ body {
   font-weight: 700;
 }
 
+/* ===== DELIVERY STATUS ICON STYLES - ADDED HERE ===== */
+.delivery-status-icon {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10000;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border: 3px solid white;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: var(--transition-fast);
+}
+
+.delivery-status-icon:hover {
+  transform: scale(1.1);
+}
+
+.delivery-status-icon i {
+  color: white;
+  font-size: 22px;
+}
+
+.delivery-status-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+/* Status colors */
+.delivery-pending { 
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  animation: pulse 2s infinite;
+}
+.delivery-processing { 
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  animation: pulse 1.5s infinite;
+}
+.delivery-shipped { 
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+}
+.delivery-delivered { 
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+.delivery-cancelled { 
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+  50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(0,0,0,0.2); }
+  100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+}
+
+/* Status Modal */
+.delivery-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+  padding: 20px;
+}
+
+.delivery-modal {
+  background: var(--glass-bg);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+/* ===== END DELIVERY STATUS STYLES ===== */
+
 #homePage {
   padding-bottom: 100px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
@@ -1390,6 +1489,13 @@ body {
     <img src="" class="image-zoom-content" id="zoomedImage">
   </div>
 
+  <!-- ===== DELIVERY STATUS ICON - ADDED HERE ===== -->
+  <div class="delivery-status-icon" id="deliveryStatusIcon" onclick="checkDeliveryStatus()">
+    <i class="fas fa-truck"></i>
+    <div class="delivery-status-badge" id="deliveryBadge" style="display:none;">!</div>
+  </div>
+  <!-- ===== END DELIVERY STATUS ICON ===== -->
+
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
     <h1>Digital Business App</h1>
@@ -1624,6 +1730,20 @@ body {
   </div>
 </div>
 
+<!-- ===== DELIVERY STATUS MODAL - ADDED HERE ===== -->
+<div class="delivery-modal-overlay" id="deliveryStatusModal">
+  <div class="delivery-modal">
+    <button onclick="closeDeliveryModal()" style="position:absolute;top:15px;right:15px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.1);border:none;color:var(--dark-color);font-size:24px;cursor:pointer;">×</button>
+    <div id="deliveryStatusContent" style="padding:40px 25px;">
+      <h2 style="text-align:center;margin-bottom:25px;color:var(--dark-color);">
+        <i class="fas fa-truck"></i> Delivery Status
+      </h2>
+      <div id="deliveryStatusList"></div>
+    </div>
+  </div>
+</div>
+<!-- ===== END DELIVERY STATUS MODAL ===== -->
+
 <div class="modal-overlay" id="productModal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal('productModal')">×</button>
@@ -1791,6 +1911,7 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
 let currentPage = 'loadingScreen';
+let deliveryStatusData = [];
 
 const supa = supabase.createClient(
   "https://dfvnefbxgayxqgjjgtrr.supabase.co",
@@ -1815,6 +1936,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     await renderApp();
     navigateTo('homePage');
     updateCartCount();
+    
+    // Check for deliveries after app loads
+    setTimeout(() => {
+      checkForDeliveries();
+    }, 1000);
   }, 2000);
 });
 
@@ -1886,6 +2012,11 @@ async function renderApp() {
   document.getElementById('contactPhone').textContent = card.phone || "Not available";
   document.getElementById('contactEmail').textContent = card.email || "Not available";
   document.getElementById('contactAddress').textContent = card.address || "Not available";
+  
+  // Save phone for delivery tracking
+  if(card.phone) {
+    localStorage.setItem('customerPhone', card.phone);
+  }
   
   loadHomePage();
 }
@@ -2671,6 +2802,90 @@ function showNotification(message) {
     }, 300);
   }, 3000);
 }
+
+/* ===== DELIVERY STATUS FUNCTIONS - ADDED HERE ===== */
+async function checkForDeliveries() {
+  try {
+    const customerPhone = card.phone || localStorage.getItem('customerPhone');
+    
+    if(!customerPhone) {
+      console.log('No customer phone found');
+      return;
+    }
+    
+    console.log('Checking deliveries for:', customerPhone);
+    
+    const { data, error } = await supa
+      .from('delivery_status')
+      .select('*')
+      .eq('customer_phone', customerPhone)
+      .order('last_updated', { ascending: false });
+      
+    if(error) {
+      console.error('Delivery check error:', error);
+      return;
+    }
+    
+    if(data && data.length > 0) {
+      deliveryStatusData = data;
+      updateDeliveryIcon();
+    }
+  } catch(err) {
+    console.log('Delivery check failed:', err);
+  }
+}
+
+function updateDeliveryIcon() {
+  const icon = document.getElementById('deliveryStatusIcon');
+  const badge = document.getElementById('deliveryBadge');
+  
+  if(deliveryStatusData.length > 0) {
+    const latestStatus = deliveryStatusData[0].status;
+    
+    // Update icon color based on status
+    icon.className = `delivery-status-icon delivery-${latestStatus}`;
+    
+    // Show badge with count
+    badge.textContent = deliveryStatusData.length;
+    badge.style.display = 'flex';
+    
+    console.log('Delivery icon updated:', latestStatus, 'count:', deliveryStatusData.length);
+  }
+}
+
+function checkDeliveryStatus() {
+  if(deliveryStatusData.length === 0) {
+    // Show modal with no deliveries
+    document.getElementById('deliveryStatusList').innerHTML = `
+      <div style="text-align:center;padding:40px;">
+        <i class="fas fa-truck" style="font-size:60px;color:#cbd5e1;margin-bottom:20px;"></i>
+        <h3 style="color:var(--dark-color);margin-bottom:15px;">No Active Deliveries</h3>
+        <p style="color:#64748b;margin-bottom:25px;">Your delivery status will appear here once you place an order.</p>
+        <button onclick="navigateTo('productsPage'); closeDeliveryModal();" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
+          <i class="fas fa-shopping-bag"></i> Shop Now
+        </button>
+      </div>
+    `;
+    openDeliveryModal();
+  } else {
+    // Open full status page
+    window.open('status.html?phone=' + encodeURIComponent(card.phone || ''), '_blank');
+  }
+}
+
+function openDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+// Auto-check for deliveries every 30 seconds
+setInterval(checkForDeliveries, 30000);
+/* ===== END DELIVERY STATUS FUNCTIONS ===== */
 
 updateCartCount();
 </script>
