@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>Pak TV - Digital Business App</title>
+<title>Digital Business App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f172a">
@@ -302,51 +302,6 @@ body {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-/* ===== FIX: Delivery Content Overflow ===== */
-#deliveryContent {
-  padding-bottom: 30px;
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-}
-
-#adminContent {
-  padding-bottom: 30px;
-  max-height: calc(100vh - 200px);
-  overflow-y: auto;
-}
-
-/* Logout button styles */
-.logout-btn {
-  background: var(--danger-gradient);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  margin: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.logout-btn:hover {
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-}
-
-/* PWA Install Guide */
-#pwaGuide {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 15px;
-  margin: 20px;
-  border-radius: 16px;
-  text-align: center;
-  display: none;
-}
-
 #homePage {
   padding-bottom: 100px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
@@ -512,6 +467,7 @@ body {
   border-radius: var(--border-radius-xs);
 }
 
+/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1739,11 +1695,6 @@ body {
   color: #94a3b8;
   margin-top: 10px;
 }
-
-/* Prevent body scroll when modal open */
-body.modal-open {
-  overflow: hidden;
-}
 </style>
 </head>
 
@@ -1757,7 +1708,7 @@ body.modal-open {
   <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
-    <h1>Pak TV Business</h1>
+    <h1>Digital Business App</h1>
     <p>Loading your premium business experience...</p>
   </div>
 
@@ -1812,21 +1763,6 @@ body.modal-open {
           <h3>Location</h3>
           <p>Find us</p>
         </div>
-      </div>
-    </div>
-
-    <!-- PWA Install Guide -->
-    <div id="pwaGuide">
-      <button onclick="closePwaGuide()" style="float:right; background:none; border:none; color:white; font-size:20px; cursor:pointer;">×</button>
-      <h3 style="margin-bottom: 10px;"><i class="fas fa-mobile-alt"></i> Install App</h3>
-      <p style="margin-bottom: 15px; font-size: 14px;">Install Pak TV App for better experience & notifications</p>
-      <div style="display: flex; gap: 10px; justify-content: center;">
-        <button onclick="installPWA()" style="padding: 10px 20px; background: white; color: #667eea; border: none; border-radius: 8px; font-weight: 700; cursor:pointer;">
-          <i class="fas fa-download"></i> Install Now
-        </button>
-        <button onclick="showInstallInstructions()" style="padding: 10px 20px; background: rgba(255,255,255,0.2); color: white; border: 1px solid white; border-radius: 8px; font-weight: 700; cursor:pointer;">
-          <i class="fas fa-question-circle"></i> How to Install
-        </button>
       </div>
     </div>
 
@@ -2070,27 +2006,6 @@ body.modal-open {
   </div>
 </div>
 
-<!-- Exit Confirmation Modal -->
-<div class="modal-overlay" id="exitModal">
-  <div class="modal-content" style="max-width: 350px;">
-    <div style="padding: 30px; text-align: center;">
-      <div style="width: 80px; height: 80px; margin: 0 auto 20px; background: var(--warning-gradient); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-        <i class="fas fa-exclamation-triangle" style="font-size: 36px; color: white;"></i>
-      </div>
-      <h2 style="color: var(--dark-color); margin-bottom: 10px;">Exit App?</h2>
-      <p style="color: #64748b; margin-bottom: 25px;">Are you sure you want to exit Pak TV Business App?</p>
-      <div style="display: flex; gap: 12px;">
-        <button onclick="closeModal('exitModal')" style="flex:1; padding:12px; background:#e2e8f0; color:var(--dark-color); border:none; border-radius:8px; font-weight:700; cursor:pointer;">
-          Stay in App
-        </button>
-        <button onclick="closeApp()" style="flex:1; padding:12px; background:var(--danger-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
-          Exit App
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <!-- Other Modals -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-content">
@@ -2275,14 +2190,6 @@ const supa = supabase.createClient(
   "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
 
-// Back button navigation fix
-let backButtonPressed = false;
-let exitAttempts = 0;
-let exitTimer;
-
-// PWA installation
-let deferredPrompt;
-
 document.addEventListener("DOMContentLoaded", async () => {
   const id = new URLSearchParams(location.search).get("id") || localStorage.getItem("lastCardId");
   if(!id) {
@@ -2312,80 +2219,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     setTimeout(() => {
       checkForDeliveries();
     }, 1000);
-    
-    // Setup back button handler
-    setupBackButtonHandler();
-    
-    // Setup PWA
-    setTimeout(() => {
-      setupPWA();
-    }, 3000);
-    
-    // Setup notifications
-    setupNotifications();
-    
   }, 2000);
 });
-
-// ===== FIX BACK BUTTON NAVIGATION =====
-function setupBackButtonHandler() {
-  // Prevent default back behavior
-  window.addEventListener('popstate', function(event) {
-    if (currentPage !== 'homePage') {
-      // Navigate to previous page in app
-      const pageHistory = ['homePage', 'productsPage', 'cartPage', 'aboutPage', 'contactPage'];
-      const currentIndex = pageHistory.indexOf(currentPage);
-      
-      if (currentIndex > 0) {
-        navigateTo(pageHistory[currentIndex - 1]);
-      } else {
-        navigateTo('homePage');
-      }
-      
-      // Prevent browser back
-      history.pushState(null, null, window.location.pathname);
-    } else {
-      // Show exit confirmation on home page
-      showExitConfirmation();
-    }
-  });
-
-  // Initialize history state
-  history.pushState(null, null, window.location.pathname);
-}
-
-function showExitConfirmation() {
-  exitAttempts++;
-  
-  if (exitAttempts === 1) {
-    showNotification("Press back again to exit");
-    
-    // Reset after 2 seconds
-    exitTimer = setTimeout(() => {
-      exitAttempts = 0;
-    }, 2000);
-  } else if (exitAttempts === 2) {
-    clearTimeout(exitTimer);
-    openModal('exitModal');
-    exitAttempts = 0;
-  }
-}
-
-function closeApp() {
-  if (navigator.app) {
-    navigator.app.exitApp();
-  } else if (window.cordova) {
-    navigator.app.exitApp();
-  } else {
-    // For PWA
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      window.close();
-    } else {
-      showNotification("Use device back button to exit.");
-    }
-  }
-  closeModal('exitModal');
-}
 
 // ===== NAVIGATION SYSTEM =====
 function navigateTo(pageId) {
@@ -2622,13 +2457,6 @@ async function loadAdminPanel() {
   }
   
   let html = `
-    <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 15px;">
-      <h3 style="margin:0;">Delivery Admin</h3>
-      <button class="logout-btn" onclick="logoutAdmin()">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </button>
-    </div>
-    
     <input type="text" class="admin-search" id="adminSearch" placeholder="Search orders by ID, phone, name..." onkeyup="searchAdminOrders()">
     
     <button onclick="addNewOrder()" class="admin-btn">
@@ -2677,13 +2505,6 @@ async function loadAdminPanel() {
   }
   
   document.getElementById('adminContent').innerHTML = html;
-}
-
-function logoutAdmin() {
-  if(confirm("Are you sure you want to logout from admin panel?")) {
-    navigateTo('homePage');
-    showNotification("Admin logged out successfully!");
-  }
 }
 
 function searchAdminOrders() {
@@ -2760,87 +2581,9 @@ function addNewOrder() {
     });
 }
 
-// ===== PWA & NOTIFICATIONS =====
-function setupPWA() {
-  // Show install button
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    document.getElementById('pwaGuide').style.display = 'block';
-  });
-}
-
-async function installPWA() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      showNotification("App installed successfully!");
-      document.getElementById('pwaGuide').style.display = 'none';
-    }
-    deferredPrompt = null;
-  }
-}
-
-function closePwaGuide() {
-  document.getElementById('pwaGuide').style.display = 'none';
-  localStorage.setItem('pwaGuideClosed', 'true');
-}
-
-function showInstallInstructions() {
-  alert(`📱 How to Install Pak TV App:
-
-For iPhone:
-1. Tap Share button (📤)
-2. Scroll down & tap "Add to Home Screen"
-3. Tap "Add" on top right
-
-For Android:
-1. Tap Menu (⋮) or Settings
-2. Tap "Install App" or "Add to Home Screen"
-3. Tap "Install"
-
-Once installed, the app will work like a native app with notifications!`);
-}
-
-async function setupNotifications() {
-  if ('Notification' in window && 'serviceWorker' in navigator) {
-    try {
-      // Register service worker
-      const registration = await navigator.serviceWorker.register('service-worker.js');
-      console.log('Service Worker registered');
-      
-      // Request notification permission
-      if (Notification.permission === 'default') {
-        const permission = await Notification.requestPermission();
-        if (permission === 'granted') {
-          showNotification("Notifications enabled! Get order updates.");
-        }
-      }
-    } catch (error) {
-      console.log('Service Worker registration failed:', error);
-    }
-  }
-}
-
-// Send notification example
-function sendOrderNotification(title, body) {
-  if ('Notification' in window && Notification.permission === 'granted') {
-    navigator.serviceWorker.ready.then(registration => {
-      registration.showNotification(title, {
-        body: body,
-        icon: 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png',
-        badge: 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png',
-        tag: 'order-update',
-        requireInteraction: true
-      });
-    });
-  }
-}
-
 // ===== RENDER APP =====
 async function renderApp() {
-  document.getElementById('businessHeader').textContent = card.businessName || card.name || "Pak TV Business";
+  document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
   
   const photo = document.getElementById('photo');
   if(card.profileImage) {
@@ -3600,22 +3343,12 @@ function openMap() {
 
 function openModal(modalId) {
   document.getElementById(modalId).style.display = 'flex';
-  document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeModal(modalId) {
   document.getElementById(modalId).style.display = 'none';
-  document.body.classList.remove('modal-open');
-}
-
-function openDeliveryModal() {
-  document.getElementById('deliveryStatusModal').style.display = 'flex';
-  document.body.classList.add('modal-open');
-}
-
-function closeDeliveryModal() {
-  document.getElementById('deliveryStatusModal').style.display = 'none';
-  document.body.classList.remove('modal-open');
+  document.body.style.overflow = 'auto';
 }
 
 function showNotification(message) {
@@ -3649,6 +3382,16 @@ function showNotification(message) {
       }
     }, 300);
   }, 3000);
+}
+
+function openDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
 }
 
 updateCartCount();
