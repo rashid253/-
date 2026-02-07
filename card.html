@@ -371,27 +371,27 @@ body {
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   padding: 0 16px;
-  align-items: start; /* Ensures cards align at top */
+  align-items: stretch; /* Ensures all cards have same height */
 }
 
 .product-card {
   /* Fixed height card like Daraz/Temu */
-  height: 340px;
+  height: 380px; /* Increased height to accommodate buttons */
   width: 100%;
-  /* Grid layout for internal structure */
-  display: grid;
-  grid-template-rows: auto 1fr auto;
+  /* Flex layout for internal structure */
+  display: flex;
+  flex-direction: column;
   /* Visual styling */
   background: var(--lighter-color);
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   padding: 12px;
-  gap: 8px;
   /* Ensures consistent card sizing */
   overflow: hidden;
   transition: var(--transition-fast);
   cursor: pointer;
+  position: relative;
 }
 
 .product-card:hover {
@@ -403,11 +403,12 @@ body {
 .product-image-container {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; /* Square aspect ratio like Daraz */
+  height: 160px; /* Fixed height for image */
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  flex-shrink: 0; /* Prevents image from shrinking */
 }
 
 .product-image {
@@ -453,11 +454,13 @@ body {
 .badge.stock { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
 .badge.delivery { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
 
-/* Content area - uses grid assigned space */
+/* Content area - flexible and pushes buttons to bottom */
 .product-content {
   display: flex;
   flex-direction: column;
+  flex: 1; /* Takes all available space */
   min-height: 0; /* Critical for text truncation */
+  gap: 8px;
 }
 
 .product-title {
@@ -465,13 +468,12 @@ body {
   font-weight: 600;
   color: var(--dark-color);
   line-height: 1.4;
-  /* Truncate to 2 lines */
+  /* Truncate to 3 lines */
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  margin-bottom: 8px;
-  height: 36px; /* Fixed height for consistent title area */
+  flex-shrink: 0;
 }
 
 /* NEW: Price Badge on Image - BOTTOM RIGHT Corner */
@@ -529,15 +531,15 @@ body {
   text-align: center;
 }
 
-/* BUTTON CONTAINER - Always aligned at bottom */
+/* BUTTON CONTAINER - Fixed at bottom */
 .product-actions {
   display: flex;
   gap: 8px;
   height: 40px; /* Fixed height */
-  align-items: center;
-  margin-top: auto; /* Pushes to bottom in flex container */
-  padding-top: 8px;
+  margin-top: auto; /* Pushes to bottom */
+  padding-top: 12px;
   border-top: 1px solid #f1f5f9;
+  flex-shrink: 0; /* Prevents buttons from shrinking */
 }
 
 /* Action buttons - new improved names */
@@ -555,6 +557,7 @@ body {
   gap: 6px;
   transition: var(--transition-fast);
   white-space: nowrap;
+  min-height: 36px; /* Ensures consistent height */
 }
 
 .btn-primary {
@@ -589,7 +592,11 @@ body {
   }
   
   .product-card {
-    height: 320px;
+    height: 360px; /* Slightly smaller on mobile */
+  }
+  
+  .product-image-container {
+    height: 150px;
   }
   
   .btn-primary, .btn-secondary {
