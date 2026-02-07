@@ -201,22 +201,21 @@ body {
   font-weight: 700;
 }
 
-/* ===== UPDATED: DELIVERY STATUS ICON STYLES - NOW IN HERO SECTION ===== */
+/* ===== UPDATED: SIMPLE DELIVERY STATUS ICON ===== */
 .delivery-status-icon {
   position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  top: 10px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  border: 3px solid white;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   transition: var(--transition-fast);
 }
 
@@ -226,67 +225,42 @@ body {
 
 .delivery-status-icon i {
   color: white;
-  font-size: 22px;
+  font-size: 24px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
 .delivery-status-badge {
   position: absolute;
-  top: -5px;
-  right: -5px;
+  top: -8px;
+  right: -8px;
   background: #ef4444;
   color: white;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 900;
-  min-width: 20px;
-  height: 20px;
+  min-width: 16px;
+  height: 16px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid white;
+  border: 1px solid white;
 }
 
-/* Status colors */
-.delivery-pending { 
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  animation: pulse 2s infinite;
-}
-.delivery-processing { 
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  animation: pulse 1.5s infinite;
-}
-.delivery-shipped { 
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-}
-.delivery-delivered { 
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-}
-.delivery-cancelled { 
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-  50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(0,0,0,0.2); }
-  100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-}
-
-/* ===== UPDATED: LOGIN BUTTON IN HERO SECTION ===== */
+/* ===== UPDATED: SIMPLE LOGIN ICON ===== */
 .login-btn {
   position: absolute;
-  top: 15px;
-  left: 15px;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  top: 10px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   z-index: 10;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  border: 3px solid white;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   transition: var(--transition-fast);
 }
 
@@ -296,7 +270,8 @@ body {
 
 .login-btn i {
   color: white;
-  font-size: 22px;
+  font-size: 24px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
 /* Status Modal */
@@ -326,7 +301,6 @@ body {
   border: 1px solid var(--glass-border);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
-/* ===== END DELIVERY STATUS STYLES ===== */
 
 #homePage {
   padding-bottom: 100px;
@@ -348,6 +322,7 @@ body {
   margin-bottom: 30px;
   position: relative;
   z-index: 1;
+  padding-top: 20px;
 }
 
 .welcome-text h1 {
@@ -492,7 +467,7 @@ body {
   border-radius: var(--border-radius-xs);
 }
 
-/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style - FIXED with Auto-Resize */
+/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -503,24 +478,19 @@ body {
 }
 
 .product-card {
-  /* Fixed height for all cards - COMPACT */
   height: 260px;
   width: 100%;
-  /* Flex layout for internal structure */
   display: flex;
   flex-direction: column;
-  /* Visual styling */
   background: var(--lighter-color);
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   padding: 8px;
-  /* Ensures consistent card sizing */
   overflow: hidden;
   transition: var(--transition-fast);
   cursor: pointer;
   position: relative;
-  /* Prevent content from expanding card */
   min-height: 260px;
   max-height: 260px;
 }
@@ -530,7 +500,6 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Image container with AUTO-RESIZE support - KEEP EXISTING STRATEGY */
 .product-image-container {
   position: relative;
   width: 100%;
@@ -542,7 +511,6 @@ body {
   margin-bottom: 8px;
   flex-shrink: 0;
   border: 1px solid #f1f5f9;
-  /* Container adapts to auto-resized image */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -553,20 +521,18 @@ body {
   height: auto;
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain; /* KEEP contain for auto-resize */
+  object-fit: contain;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
-  padding: 4px; /* Small padding for image breathing room */
+  padding: 4px;
 }
 
-/* Click animation - scales image when clicked */
 .product-card.clicked .product-image {
   transform: scale(1.8);
   z-index: 100;
   position: relative;
 }
 
-/* DISCOUNT BADGE - BOTTOM RIGHT CORNER (RHS) - FIXED */
 .discount-badge {
   position: absolute;
   bottom: 6px;
@@ -586,7 +552,6 @@ body {
   white-space: nowrap;
 }
 
-/* PRICE BADGE - ON IMAGE - MAIN CARD ONLY - FIXED */
 .price-badge {
   position: absolute;
   bottom: 6px;
@@ -624,7 +589,6 @@ body {
   line-height: 1;
 }
 
-/* Other badges - TOP RIGHT */
 .product-badges {
   position: absolute;
   top: 6px;
@@ -658,7 +622,6 @@ body {
 .badge.stock { background: rgba(59, 130, 246, 0.95); }
 .badge.delivery { background: rgba(20, 184, 166, 0.95); }
 
-/* Content area - COMPACT - FIXED */
 .product-content {
   display: flex;
   flex-direction: column;
@@ -683,7 +646,6 @@ body {
   flex-shrink: 0;
 }
 
-/* BUTTON CONTAINER - FIXED position and spacing */
 .product-actions {
   display: flex;
   gap: 6px;
@@ -694,7 +656,6 @@ body {
   border-top: 1px solid #f1f5f9;
 }
 
-/* Action buttons - FIXED size */
 .btn-primary, .btn-secondary {
   flex: 1;
   height: 28px;
@@ -738,7 +699,6 @@ body {
   font-size: 11px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 400px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -781,7 +741,6 @@ body {
   }
 }
 
-/* MODAL VIEW - FIXED for auto-resize images */
 .modal-content .product-image-container {
   min-height: 200px;
   max-height: 300px;
@@ -795,7 +754,6 @@ body {
   max-width: 100%;
 }
 
-/* MODAL PRICE POSITION - Below image, in content flow */
 .modal-price-container {
   margin-bottom: 16px;
   padding: 12px 0;
@@ -817,7 +775,6 @@ body {
   font-weight: 500;
 }
 
-/* Image zoom overlay */
 .image-zoom-overlay {
   position: fixed;
   top: 0;
@@ -1758,15 +1715,15 @@ body {
   <!-- Home Page -->
   <div id="homePage" class="page">
     <div class="app-header">
-      <!-- Delivery Status Icon in Hero Section (Right Side) -->
+      <!-- Simple Login Icon (Left) -->
+      <div class="login-btn" onclick="openAdminPage()">
+        <i class="fas fa-sign-in-alt"></i>
+      </div>
+      
+      <!-- Simple Delivery Status Icon (Right) -->
       <div class="delivery-status-icon" id="deliveryStatusIcon" onclick="checkDeliveryStatus()">
         <i class="fas fa-truck"></i>
         <div class="delivery-status-badge" id="deliveryBadge" style="display:none;">!</div>
-      </div>
-      
-      <!-- Login Button in Hero Section (Left Side) -->
-      <div class="login-btn" onclick="openAdminPage()">
-        <i class="fas fa-sign-in-alt"></i>
       </div>
       
       <div class="welcome-text">
@@ -2362,7 +2319,18 @@ function updateDeliveryIcon() {
   if(deliveryStatusData.length > 0) {
     const latestStatus = deliveryStatusData[0].status;
     
-    icon.className = `delivery-status-icon delivery-${latestStatus}`;
+    // Status colors for simple icon
+    if(latestStatus === 'pending') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #f59e0b;"></i>';
+    } else if(latestStatus === 'processing') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #3b82f6;"></i>';
+    } else if(latestStatus === 'shipped') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #8b5cf6;"></i>';
+    } else if(latestStatus === 'delivered') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #10b981;"></i>';
+    } else if(latestStatus === 'cancelled') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #ef4444;"></i>';
+    }
     
     badge.textContent = deliveryStatusData.length;
     badge.style.display = 'flex';
