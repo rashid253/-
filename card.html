@@ -201,9 +201,9 @@ body {
   font-weight: 700;
 }
 
-/* ===== DELIVERY STATUS ICON STYLES - ADDED HERE ===== */
+/* ===== UPDATED: DELIVERY STATUS ICON STYLES - NOW IN HERO SECTION ===== */
 .delivery-status-icon {
-  position: fixed;
+  position: absolute;
   top: 15px;
   right: 15px;
   width: 50px;
@@ -213,7 +213,7 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 10000;
+  z-index: 10;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   border: 3px solid white;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -269,6 +269,34 @@ body {
   0% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
   50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(0,0,0,0.2); }
   100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+}
+
+/* ===== UPDATED: LOGIN BUTTON IN HERO SECTION ===== */
+.login-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border: 3px solid white;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  transition: var(--transition-fast);
+}
+
+.login-btn:hover {
+  transform: scale(1.1);
+}
+
+.login-btn i {
+  color: white;
+  font-size: 22px;
 }
 
 /* Status Modal */
@@ -1685,26 +1713,6 @@ body {
   font-size: 16px;
 }
 
-.admin-access-btn {
-  position: fixed;
-  bottom: 100px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: var(--dark-color);
-  color: white;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 1000;
-  box-shadow: var(--shadow-lg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  display: none;
-}
-
 .password-prompt {
   background: var(--lighter-color);
   padding: 30px;
@@ -1740,12 +1748,6 @@ body {
     <img src="" class="image-zoom-content" id="zoomedImage">
   </div>
 
-  <!-- Delivery Status Icon -->
-  <div class="delivery-status-icon" id="deliveryStatusIcon" onclick="checkDeliveryStatus()">
-    <i class="fas fa-truck"></i>
-    <div class="delivery-status-badge" id="deliveryBadge" style="display:none;">!</div>
-  </div>
-
   <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
@@ -1756,6 +1758,17 @@ body {
   <!-- Home Page -->
   <div id="homePage" class="page">
     <div class="app-header">
+      <!-- Delivery Status Icon in Hero Section (Right Side) -->
+      <div class="delivery-status-icon" id="deliveryStatusIcon" onclick="checkDeliveryStatus()">
+        <i class="fas fa-truck"></i>
+        <div class="delivery-status-badge" id="deliveryBadge" style="display:none;">!</div>
+      </div>
+      
+      <!-- Login Button in Hero Section (Left Side) -->
+      <div class="login-btn" onclick="openAdminPage()">
+        <i class="fas fa-sign-in-alt"></i>
+      </div>
+      
       <div class="welcome-text">
         <h1 id="businessHeader">Welcome</h1>
         <p>Premium business at your fingertips</p>
@@ -1816,11 +1829,6 @@ body {
     </div>
     
     <div class="page-footer-spacer"></div>
-    
-    <!-- Admin Access Button -->
-    <button class="admin-access-btn" id="adminAccessBtn" onclick="openAdminPage()">
-      <i class="fas fa-cog"></i>
-    </button>
   </div>
 
   <!-- Products Page -->
@@ -1952,7 +1960,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- ===== NEW: DELIVERY STATUS PAGE ===== -->
+  <!-- ===== DELIVERY STATUS PAGE ===== -->
   <div id="deliveryPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1970,7 +1978,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- ===== NEW: ADMIN DELIVERY PAGE ===== -->
+  <!-- ===== ADMIN DELIVERY PAGE ===== -->
   <div id="adminPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -2627,17 +2635,7 @@ async function renderApp() {
     localStorage.setItem('customerPhone', card.phone);
   }
   
-  showAdminButton();
-  
   loadHomePage();
-}
-
-function showAdminButton() {
-  const adminBtn = document.getElementById('adminAccessBtn');
-  adminBtn.style.display = 'flex';
-  
-  console.log("Business ID:", card.id);
-  console.log("Admin Password:", businessAdminPassword);
 }
 
 // ===== AUTO-REFRESH DELIVERIES =====
