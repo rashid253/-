@@ -365,7 +365,7 @@ body {
   border-radius: var(--border-radius-xs);
 }
 
-/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style */
+/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style - FIXED */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -376,8 +376,8 @@ body {
 }
 
 .product-card {
-  /* Fixed height for all cards */
-  height: 320px;
+  /* Fixed height for all cards - COMPACT */
+  height: 260px;
   width: 100%;
   /* Flex layout for internal structure */
   display: flex;
@@ -394,8 +394,8 @@ body {
   cursor: pointer;
   position: relative;
   /* Prevent content from expanding card */
-  min-height: 320px;
-  max-height: 320px;
+  min-height: 260px;
+  max-height: 260px;
 }
 
 .product-card:hover {
@@ -403,54 +403,95 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Image container with fixed height */
+/* Image container with fixed height - FIXED */
 .product-image-container {
   position: relative;
   width: 100%;
-  height: 140px;
+  height: 150px; /* Fixed height */
   background: #f8fafc;
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 8px;
-  flex-shrink: 0;
+  flex-shrink: 0; /* Prevents image from shrinking */
   border: 1px solid #f1f5f9;
 }
 
 .product-image {
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  padding: 4px;
-  transition: transform 0.3s ease;
+  object-fit: cover; /* Changed to cover to fill container */
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
 }
 
-.product-card:hover .product-image {
-  transform: scale(1.03);
+/* Click animation - scales image when clicked */
+.product-card.clicked .product-image {
+  transform: scale(1.8);
+  z-index: 100;
+  position: relative;
 }
 
-/* Discount badge - TOP LEFT CORNER (Daraz style) */
-.discount-badge {
+/* Price badge ON IMAGE - BOTTOM RIGHT - FIXED */
+.price-badge {
   position: absolute;
-  top: 6px;
-  left: 6px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  bottom: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
   color: white;
   font-weight: 900;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  border: 1px solid rgba(255,255,255,0.3);
+  min-width: 70px;
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+.price-badge .current-price {
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+
+.price-badge .original-price {
+  text-decoration: line-through;
   font-size: 11px;
-  padding: 3px 6px;
+  font-weight: 600;
+  opacity: 0.9;
+  line-height: 1;
+}
+
+/* Discount badge - TOP LEFT - FIXED */
+.discount-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+  color: white;
+  font-weight: 900;
+  font-size: 12px;
+  padding: 4px 8px;
   border-radius: 4px;
   z-index: 3;
   border: 1px solid rgba(255,255,255,0.3);
-  min-width: 50px;
+  min-width: 55px;
   text-align: center;
   line-height: 1.2;
+  backdrop-filter: blur(4px);
 }
 
-/* Other badges - TOP RIGHT CORNER */
+/* Other badges - TOP RIGHT */
 .product-badges {
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 8px;
+  right: 8px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -459,7 +500,7 @@ body {
 }
 
 .badge {
-  background: var(--success-gradient);
+  background: rgba(16, 185, 129, 0.95);
   color: white;
   font-size: 9px;
   font-weight: 800;
@@ -470,23 +511,25 @@ body {
   line-height: 1.2;
   text-align: right;
   align-self: flex-end;
+  backdrop-filter: blur(4px);
 }
 
-.badge.hot { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
-.badge.best-seller { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-.badge.discount { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-.badge.limited { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
-.badge.stock { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
-.badge.delivery { background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%); }
+.badge.hot { background: rgba(239, 68, 68, 0.95); }
+.badge.best-seller { background: rgba(245, 158, 11, 0.95); }
+.badge.discount { background: rgba(16, 185, 129, 0.95); }
+.badge.limited { background: rgba(139, 92, 246, 0.95); }
+.badge.stock { background: rgba(59, 130, 246, 0.95); }
+.badge.delivery { background: rgba(20, 184, 166, 0.95); }
 
-/* Content area - flexible and pushes buttons to bottom */
+/* Content area - COMPACT - FIXED */
 .product-content {
   display: flex;
   flex-direction: column;
   flex: 1;
   min-height: 0;
-  gap: 6px;
-  padding: 2px;
+  gap: 4px; /* Reduced gap */
+  padding: 0 2px;
+  margin-top: 2px; /* Reduced margin */
 }
 
 .product-title {
@@ -494,51 +537,31 @@ body {
   font-weight: 500;
   color: var(--dark-color);
   line-height: 1.4;
-  /* Truncate to 2 lines (Daraz style) */
+  /* Truncate to 2 lines */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  height: 33px;
+  height: 34px; /* Fixed height for 2 lines */
   margin-bottom: 2px;
+  flex-shrink: 0;
 }
 
-/* Pricing section - Daraz style */
-.product-pricing {
-  margin-top: auto;
-  margin-bottom: 8px;
-}
-
-.current-price {
-  font-size: 15px;
-  font-weight: 900;
-  color: #10b981;
-  line-height: 1.2;
-}
-
-.original-price {
-  font-size: 11px;
-  color: #94a3b8;
-  text-decoration: line-through;
-  margin-right: 4px;
-  font-weight: 500;
-}
-
-/* BUTTON CONTAINER - Fixed at bottom */
+/* BUTTON CONTAINER - FIXED position and spacing */
 .product-actions {
   display: flex;
   gap: 6px;
   height: 32px;
-  margin-top: auto;
+  margin-top: auto; /* Pushes to bottom */
+  flex-shrink: 0; /* Prevents shrinking */
+  padding-top: 4px; /* Reduced padding */
   border-top: 1px solid #f1f5f9;
-  padding-top: 8px;
-  flex-shrink: 0;
 }
 
-/* Action buttons */
+/* Action buttons - FIXED size */
 .btn-primary, .btn-secondary {
   flex: 1;
-  height: 30px;
+  height: 28px; /* Reduced height */
   border: none;
   border-radius: 4px;
   font-size: 11px;
@@ -550,8 +573,9 @@ body {
   gap: 4px;
   transition: var(--transition-fast);
   white-space: nowrap;
-  min-height: 30px;
-  padding: 0 4px;
+  min-height: 28px;
+  padding: 0 6px;
+  overflow: hidden;
 }
 
 .btn-primary {
@@ -575,7 +599,7 @@ body {
 }
 
 .btn-primary i, .btn-secondary i {
-  font-size: 12px;
+  font-size: 11px;
 }
 
 /* Responsive adjustments */
@@ -587,23 +611,68 @@ body {
   }
   
   .product-card {
-    height: 300px;
-    min-height: 300px;
-    max-height: 300px;
+    height: 250px;
+    min-height: 250px;
+    max-height: 250px;
   }
   
   .product-image-container {
-    height: 130px;
+    height: 140px;
   }
   
   .product-title {
     font-size: 11px;
-    height: 30px;
+    height: 32px;
   }
   
-  .current-price {
-    font-size: 14px;
+  .price-badge {
+    min-width: 65px;
+    padding: 5px 8px;
+    font-size: 13px;
   }
+  
+  .discount-badge {
+    min-width: 50px;
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+  
+  .btn-primary, .btn-secondary {
+    height: 26px;
+    font-size: 10px;
+    min-height: 26px;
+  }
+}
+
+/* Click overlay for image zoom */
+.image-zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  animation: fadeIn 0.3s ease;
+}
+
+.image-zoom-content {
+  max-width: 90%;
+  max-height: 90%;
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 #productsPage {
@@ -1270,6 +1339,11 @@ body {
 
 <body>
 <div class="app-container">
+  <!-- Image Zoom Overlay -->
+  <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="closeImageZoom()">
+    <img src="" class="image-zoom-content" id="zoomedImage">
+  </div>
+
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
     <h1>Digital Business App</h1>
@@ -1811,9 +1885,22 @@ function createProductCard(product, index) {
   let discountPercentage = '';
   if(hasDiscount && originalPrice && price) {
     const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
-    if(discount > 0) {
+    if(discount > 0) { // Don't show if 0% or less
       discountPercentage = `<div class="discount-badge">${discount}% OFF</div>`;
     }
+  }
+  
+  // Price badge HTML
+  let priceBadgeHtml = '';
+  if(price) {
+    priceBadgeHtml = `<div class="price-badge">`;
+    if(hasDiscount && originalPrice) {
+      priceBadgeHtml += `<div class="original-price">PKR ${originalPrice}</div>`;
+      priceBadgeHtml += `<div class="current-price">PKR ${price}</div>`;
+    } else {
+      priceBadgeHtml += `<div class="current-price">PKR ${price}</div>`;
+    }
+    priceBadgeHtml += `</div>`;
   }
   
   // Map badge names to CSS classes
@@ -1841,23 +1928,14 @@ function createProductCard(product, index) {
   card.className = 'product-card';
   
   card.innerHTML = `
-    <div class="product-image-container">
+    <div class="product-image-container" onclick="zoomImage('${product.image || ''}', event)">
       <img src="${product.image || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
       ${discountPercentage}
+      ${priceBadgeHtml}
       ${badgesHtml}
     </div>
     <div class="product-content">
       <div class="product-title">${product.title || 'Product'}</div>
-      <div class="product-pricing">
-        ${hasDiscount ? `
-          <div>
-            <span class="original-price">PKR ${originalPrice}</span>
-            <span class="current-price">PKR ${price}</span>
-          </div>
-        ` : `
-          <div class="current-price">PKR ${price || 'N/A'}</div>
-        `}
-      </div>
       <div class="product-actions">
         <button class="btn-primary" onclick="showProductModal(${index}); event.stopPropagation();">
           <i class="fas fa-bolt"></i> Quick Buy
@@ -1869,9 +1947,33 @@ function createProductCard(product, index) {
     </div>
   `;
   
-  card.onclick = () => showProductModal(index);
+  card.onclick = (e) => {
+    if (!e.target.closest('button')) {
+      showProductModal(index);
+    }
+  };
   
   return card;
+}
+
+// Image zoom functionality
+function zoomImage(imageUrl, event) {
+  event.stopPropagation();
+  
+  const overlay = document.getElementById('imageZoomOverlay');
+  const zoomedImage = document.getElementById('zoomedImage');
+  
+  if (imageUrl) {
+    zoomedImage.src = imageUrl;
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeImageZoom() {
+  const overlay = document.getElementById('imageZoomOverlay');
+  overlay.style.display = 'none';
+  document.body.style.overflow = 'auto';
 }
 
 function filterProducts() {
