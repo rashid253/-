@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>My Digital Card</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  color: #1e293b;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Social Media - Follow/Subscribe icons */
+.social-float-container {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.social-main-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #667eea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  z-index: 1001;
+}
+
+.social-main-icon:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  background: white;
+}
+
+.social-expandable-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.social-expandable-icons.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.social-icon-item {
+  width: 45px;
+  height: 45px;
+  border-radius: 22.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  color: #1e293b;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.social-icon-item:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  background: white;
+}
+
+.social-icon-item i {
+  filter: none;
+}
+
+/* Main Card Container */
+.card-container {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 0;
+  margin-bottom: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  overflow: hidden;
+  position: relative;
+}
+
+.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Enhanced Header - Extended background for profile image */
+.header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 24px 24px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  min-height: 100px;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.1;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.cart-icon, .share-header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.cart-icon:hover, .share-header-icon:hover {
+  background: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #FF6B6B;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Professional Profile Image - Centered with overlapping header */
+.profile-section {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  margin-top: -60px;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  position: relative;
+  background: white;
+  z-index: 2;
+  margin-bottom: 20px;
+}
+
+.profile-avatar::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 50%;
+  z-index: -1;
+}
+
+.profile-info {
+  width: 100%;
+}
+
+.profile-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.verified-badge {
+  color: #667eea;
+  font-size: 16px;
+}
+
+.profile-business {
+  font-size: 16px;
+  color: #764ba2;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.profile-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #64748b;
+  width: 100%;
+  text-align: center;
+}
+
+.contact-item i {
+  width: 20px;
+  color: #667eea;
+  flex-shrink: 0;
+}
+
+/* Live Chat - Moved 3mm below header */
+.live-chat-profile {
+  position: absolute;
+  left: 24px;
+  top: 103px;
+  z-index: 10;
+}
+
+.live-chat-btn {
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  outline: none;
+  white-space: nowrap;
+}
+
+.live-chat-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Sections */
+.section {
+  padding: 24px;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-header i {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.section-header h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* About Section - Text aligned both sides with collapse */
+.about-content {
+  line-height: 1.6;
+  color: #475569;
+  text-align: justify;
+}
+
+.about-text-collapsed {
+  max-height: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.about-text-collapsed::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.95));
+}
+
+.about-text-expanded {
+  max-height: none;
+  overflow: visible;
+}
+
+.read-more {
+  color: #667eea;
+  font-weight: 600;
+  margin-top: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+/* Products - Facebook Ads Style with standardized scrolling */
+.products-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.products-grid {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 10px 5px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.products-grid::-webkit-scrollbar {
+  height: 6px;
+}
+
+.products-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.products-grid::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 10px;
+}
+
+.product-card {
+  width: 135px;
+  flex-shrink: 0;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.product-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  background: #f8fafc;
+}
+
+.product-badges {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.badge {
+  background: rgba(239, 68, 68, 0.95);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.product-details {
+  padding: 12px;
+}
+
+.product-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.discount-price {
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.product-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-buy, .btn-cart {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.btn-buy {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.btn-cart {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: white;
+}
+
+.btn-buy:hover, .btn-cart:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+/* Expandable Business Hours */
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hour-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(241, 245, 249, 0.5);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.hour-item:hover {
+  background: rgba(226, 232, 240, 0.7);
+}
+
+.day-name {
+  font-weight: 500;
+  color: #475569;
+  font-size: 14px;
+}
+
+.day-time {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.closed {
+  color: #ef4444;
+}
+
+.hours-expandable {
+  max-height: 200px;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.hours-expandable.expanded {
+  max-height: 1000px;
+}
+
+.toggle-hours {
+  color: #667eea;
+  font-weight: 600;
+  margin-top: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  user-select: none;
+}
+
+/* Holidays */
+.holidays-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.holiday-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 142, 83, 0.1) 100%);
+  border-radius: 12px;
+  border-left: 4px solid #FF6B6B;
+}
+
+.holiday-name {
+  font-weight: 600;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+.holiday-date {
+  font-size: 13px;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* Website Banner - Only show if there's a link */
+.website-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 16px;
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.website-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.3;
+}
+
+.website-banner h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.website-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50px;
+  margin-top: 12px;
+  transition: all 0.3s;
+}
+
+.website-link:hover {
+  background: rgba(255,255,255,0.3);
+  transform: translateY(-2px);
+}
+
+/* Footer Actions - WhatsApp icon fixed */
+.footer-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  background: white;
+  border-radius: 24px;
+  margin-top: 20px;
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.1);
+}
+
+.action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  padding: 12px;
+  border-radius: 16px;
+  flex: 1;
+  max-width: 80px;
+  user-select: none;
+}
+
+.action-btn:hover {
+  background: #f8fafc;
+  transform: translateY(-4px);
+}
+
+.action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+}
+
+.call-btn .action-icon { 
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+}
+.message-btn .action-icon { 
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+}
+.email-btn .action-icon { 
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); 
+}
+.map-btn .action-icon { 
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+}
+
+.action-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  text-align: center;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Simplified Share Button Styles */
+.share-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 15px;
+  border-radius: 18px;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 1px solid transparent;
+  min-height: 110px;
+}
+
+.share-option:hover {
+  background: white;
+  border-color: #e2e8f0;
+  transform: translateY(-3px);
+}
+
+.share-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: white;
+}
+
+.share-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* JazzCash Barcode/QR Code Styling */
+.barcode-container {
+  text-align: center;
+  margin: 20px 0;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 2px dashed #e2e8f0;
+}
+
+.barcode-image {
+  max-width: 250px;
+  max-height: 250px;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  margin: 0 auto 15px;
+  display: block;
+  background: white;
+  padding: 10px;
+}
+
+.payment-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: #FF6B00;
+  margin: 15px 0;
+  letter-spacing: 1px;
+  background: rgba(255, 107, 0, 0.1);
+  padding: 10px 15px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.payment-instructions {
+  background: #f0f9ff;
+  padding: 15px;
+  border-radius: 12px;
+  margin-top: 20px;
+  border-left: 4px solid #3b82f6;
+}
+
+.payment-instructions ol {
+  text-align: left;
+  padding-left: 20px;
+  margin: 10px 0;
+}
+
+.payment-instructions li {
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .card-container {
+    padding: 15px;
+  }
+  
+  .footer-actions {
+    gap: 10px;
+  }
+  
+  .action-btn {
+    max-width: 70px;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .product-card {
+    width: 125px;
+  }
+  
+  .live-chat-profile {
+    left: 15px;
+    top: 93px;
+  }
+  
+  .live-chat-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  
+  .header {
+    min-height: 90px;
+  }
+  
+  .profile-section {
+    margin-top: -50px;
+  }
+  
+  .social-float-container {
+    bottom: 90px;
+    right: 15px;
+  }
+  
+  .social-main-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 18px;
+  }
+  
+  .social-icon-item {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .product-card {
+    width: 115px;
+  }
+  
+  .live-chat-btn {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  
+  .live-chat-profile {
+    top: 83px;
+  }
+}
+
+/* Close button for all modals */
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.3);
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  z-index: 2001;
+}
+
+.close-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: rotate(90deg);
+}
+</style>
+</head>
+
+<body>
+
+<!-- Social Media Floating Icon - Follow/Subscribe style -->
+<div class="social-float-container">
+  <div class="social-expandable-icons" id="socialIcons"></div>
+  <div class="social-main-icon" onclick="toggleSocialIcons()">
+    <i class="fas fa-users"></i>
+  </div>
+</div>
+
+<!-- Main Card Container -->
+<div class="card-container">
+  
+  <!-- Header with extended blue background -->
+  <div class="glass-card">
+    <div class="header">
+      <h1 id="businessHeader">Digital Business Card</h1>
+      <div class="header-actions">
+        <div class="share-header-icon" onclick="openShareModal()">
+          <i class="fas fa-share-alt"></i>
+        </div>
+        
+        <div class="cart-icon" onclick="openCartModal()">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Professional Profile Section with centered text -->
+    <div class="profile-section">
+      <!-- Live Chat moved 3mm below header -->
+      <div class="live-chat-profile">
+        <button class="live-chat-btn" onclick="openWhatsAppChat('greeting')">
+          <span class="live-dot"></span>
+          Live Chat
+        </button>
+      </div>
+      
+      <img src="" id="photo" class="profile-avatar">
+      
+      <div class="profile-info">
+        <div class="profile-name">
+          <span id="name">Loading...</span>
+          <i class="fas fa-badge-check verified-badge"></i>
+        </div>
+        <div class="profile-business" id="business"></div>
+        <div class="profile-contact">
+          <div class="contact-item" id="phoneItem">
+            <i class="fas fa-phone"></i>
+            <span id="phone"></span>
+          </div>
+          <div class="contact-item" id="emailItem">
+            <i class="fas fa-envelope"></i>
+            <span id="email"></span>
+          </div>
+          <div class="contact-item" id="addressItem">
+            <i class="fas fa-map-marker-alt"></i>
+            <span id="address"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Section - Text aligned both sides with collapse -->
+    <div class="section" id="aboutSection">
+      <div class="section-header">
+        <i class="fas fa-info-circle"></i>
+        <h3>About Business</h3>
+      </div>
+      <div class="about-content">
+        <div id="aboutText" class="about-text-collapsed"></div>
+        <div class="read-more" onclick="toggleAbout()">
+          <span id="aboutMore">See more</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products Section - Facebook Ads Style with standardized scrolling -->
+    <div class="section" id="productsSection">
+      <div class="section-header">
+        <i class="fas fa-gift"></i>
+        <h3>Products & Offers</h3>
+      </div>
+      <div class="products-container">
+        <div class="products-grid" id="productsGrid">
+          <!-- Products will be inserted here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Expandable Business Hours -->
+    <div class="section" id="hoursSection" style="display: none;">
+      <div class="section-header">
+        <i class="fas fa-clock"></i>
+        <h3>Business Hours</h3>
+      </div>
+      <div class="hours-expandable" id="hoursExpandable">
+        <div class="hours-list" id="businessHours"></div>
+      </div>
+      <div class="toggle-hours" onclick="toggleHours()">
+        <span id="hoursMore">See all days</span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </div>
+
+    <!-- Holidays -->
+    <div class="section" id="holidaysSection" style="display: none;">
+      <div class="section-header">
+        <i class="fas fa-calendar-times"></i>
+        <h3>Special Holidays</h3>
+      </div>
+      <div class="holidays-list" id="holidaysList"></div>
+    </div>
+  </div>
+
+  <!-- Website Banner - Only show if website link exists -->
+  <div class="website-banner" id="websiteBanner" style="display: none;">
+    <h3>🎯 Exclusive Online Store</h3>
+    <p>Visit our website for special offers!</p>
+    <a href="#" id="websiteBannerLink" class="website-link" target="_blank">
+      <i class="fas fa-external-link-alt"></i>
+      Shop Now
+    </a>
+  </div>
+
+  <!-- Footer Actions -->
+  <div class="footer-actions">
+    <div class="action-btn call-btn" onclick="makeCall()">
+      <div class="action-icon">
+        <i class="fas fa-phone"></i>
+      </div>
+      <div class="action-label">Call</div>
+    </div>
+    
+    <div class="action-btn message-btn" onclick="openWhatsAppChat('greeting')">
+      <div class="action-icon">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+      <div class="action-label">WhatsApp</div>
+    </div>
+    
+    <div class="action-btn email-btn" onclick="sendEmail()">
+      <div class="action-icon">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="action-label">Email</div>
+    </div>
+    
+    <div class="action-btn map-btn" onclick="openMap()">
+      <div class="action-icon">
+        <i class="fas fa-map-marker-alt"></i>
+      </div>
+      <div class="action-label">Location</div>
+    </div>
+  </div>
+</div>
+
+<!-- Product Detail Modal - ENHANCED WITH BUY NOW CHECKOUT -->
+<div class="modal" id="productModal">
+  <div class="modal-content" style="background:white;border-radius:24px;width:100%;max-width:420px;max-height:90vh;overflow-y:auto;position:relative;animation:slideUp 0.3s ease;">
+    <button class="close-btn" onclick="closeModal('productModal')" style="top:10px;right:10px;background:rgba(0,0,0,0.5);color:white;">×</button>
+    
+    <img src="" id="modalImage" class="modal-image" style="width:100%;height:250px;object-fit:cover;border-radius:24px 24px 0 0;background:#f8fafc;">
+    <div class="modal-body" style="padding:24px;">
+      <h2 class="modal-title" id="modalTitle" style="font-size:22px;font-weight:700;color:#1e293b;margin-bottom:12px;"></h2>
+      <p class="modal-description" id="modalDescription" style="color:#64748b;line-height:1.6;margin-bottom:20px;"></p>
+      <div class="modal-price" id="modalPrice" style="font-size:28px;font-weight:700;color:#10b981;margin-bottom:24px;"></div>
+      
+      <!-- NEW: Direct Checkout Section for Single Product -->
+      <div id="directCheckoutSection" style="display:none; margin-top: 24px; padding-top: 24px; border-top: 1px solid #e2e8f0;">
+        <h3 style="font-size:18px;font-weight:600;color:#1e293b;margin-bottom:15px;">Checkout Now</h3>
+        
+        <div class="payment-options" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+          <div class="payment-option" onclick="selectBuyNowPayment('whatsapp')" id="whatsappBuyNowOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.3s;">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#25D366;">
+              <i class="fab fa-whatsapp"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#1e293b;">WhatsApp Order</div>
+              <div style="font-size:12px;color:#64748b;">Confirm order via WhatsApp chat</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectBuyNowPayment('cod')" id="codBuyNowOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.3s;">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#10b981;">
+              <i class="fas fa-truck"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#1e293b;">Cash on Delivery</div>
+              <div style="font-size:12px;color:#64748b;">Pay when product arrives</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectBuyNowPayment('jazzcash')" id="jazzcashBuyNowOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.3s;">
+            <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#FF6B00;">
+              <i class="fas fa-qrcode"></i>
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;color:#1e293b;">JazzCash / EasyPaisa</div>
+              <div style="font-size:12px;color:#64748b;">Pay via QR Code or Number</div>
+            </div>
+          </div>
+        </div>
+        
+        <button class="buynow-checkout-btn" onclick="checkoutBuyNow()" style="width:100%;padding:16px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">
+          <i class="fas fa-bolt"></i> Complete Purchase
+        </button>
+      </div>
+      
+      <div style="display:flex;gap:12px;margin-top:24px;">
+        <button class="modal-btn" onclick="showDirectCheckout()" style="flex:1;padding:16px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);color:white;">
+          🛒 Buy Now
+        </button>
+        <button class="modal-btn" onclick="addToCartFromModal()" style="flex:1;padding:16px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;background:linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);color:white;">
+          ➕ Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Modal -->
+<div class="modal" id="cartModal">
+  <div class="modal-content" style="background:white;border-radius:24px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto;position:relative;animation:slideUp 0.3s ease;">
+    <button class="close-btn" onclick="closeModal('cartModal')" style="top:10px;right:10px;background:rgba(0,0,0,0.5);color:white;">×</button>
+    
+    <div class="cart-header" style="padding:24px;border-bottom:1px solid #e2e8f0;">
+      <div class="cart-title" style="font-size:20px;font-weight:700;color:#1e293b;">Your Shopping Cart</div>
+    </div>
+    
+    <div class="cart-items" id="cartItems" style="padding:24px;max-height:300px;overflow-y:auto;"></div>
+    
+    <div class="cart-total" style="padding:24px;border-top:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;font-size:20px;font-weight:700;color:#1e293b;">
+      <span>Total:</span>
+      <span>PKR <span id="cartTotal">0</span></span>
+    </div>
+    
+    <!-- Payment Options -->
+    <div class="payment-section" style="padding:0 24px 24px 24px;">
+      <h3 style="margin-bottom:15px;color:#1e293b;">Select Payment Method</h3>
+      <div class="payment-options" style="display:flex;flex-direction:column;gap:12px;">
+        <div class="payment-option" onclick="selectCartPayment('whatsapp')" id="whatsappCartOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.3s;">
+          <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#25D366;">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-weight:600;color:#1e293b;">WhatsApp Order</div>
+            <div style="font-size:12px;color:#64748b;">Confirm order via WhatsApp chat</div>
+          </div>
+        </div>
+        
+        <div class="payment-option" onclick="selectCartPayment('cod')" id="codCartOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.3s;">
+          <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#10b981;">
+            <i class="fas fa-truck"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-weight:600;color:#1e293b;">Cash on Delivery</div>
+            <div style="font-size:12px;color:#64748b;">Pay when product arrives</div>
+          </div>
+        </div>
+        
+        <div class="payment-option" onclick="selectCartPayment('jazzcash')" id="jazzcashCartOption" style="padding:16px;border:2px solid #e2e8f0;border-radius:12px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:all 0.3s;">
+          <div class="payment-icon" style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:white;background:#FF6B00;">
+            <i class="fas fa-qrcode"></i>
+          </div>
+          <div style="flex:1;">
+            <div style="font-weight:600;color:#1e293b;">JazzCash / EasyPaisa</div>
+            <div style="font-size:12px;color:#64748b;">Pay via QR Code or Number</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="padding:0 24px 24px 24px;">
+      <button class="checkout-btn" onclick="checkoutCart()" style="width:100%;padding:18px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;">
+        🚀 Proceed to Checkout
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Share Modal - SIMPLIFIED FOR MOBILE -->
+<div class="modal" id="shareModal">
+  <div class="modal-content" style="background:white;border-radius:24px;width:100%;max-width:350px;max-height:90vh;overflow-y:auto;position:relative;animation:slideUp 0.3s ease;">
+    <button class="close-btn" onclick="closeModal('shareModal')" style="top:10px;right:10px;background:rgba(0,0,0,0.5);color:white;">×</button>
+    
+    <div class="cart-header" style="padding:24px;border-bottom:1px solid #e2e8f0;">
+      <div class="cart-title" style="font-size:20px;font-weight:700;color:#1e293b;">Share Digital Card</div>
+    </div>
+    
+    <div class="share-options" id="shareOptions" style="padding:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+      <!-- Share options will be inserted here -->
+    </div>
+  </div>
+</div>
+
+<!-- JazzCash Payment Modal -->
+<div class="modal" id="jazzcashModal">
+  <div class="modal-content" style="background:white;border-radius:24px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto;position:relative;animation:slideUp 0.3s ease;">
+    <button class="close-btn" onclick="closeModal('jazzcashModal')" style="top:10px;right:10px;background:rgba(0,0,0,0.5);color:white;">×</button>
+    
+    <div class="cart-header" style="padding:24px;border-bottom:1px solid #e2e8f0;">
+      <div class="cart-title" style="font-size:20px;font-weight:700;color:#1e293b;">JazzCash Payment</div>
+    </div>
+    
+    <div style="padding:24px;">
+      <div id="jazzcashDetails">
+        <!-- JazzCash details will be inserted here -->
+      </div>
+      <button onclick="proceedWithJazzcash()" style="width:100%;padding:16px;background:linear-gradient(135deg, #FF6B00 0%, #FF8E53 100%);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;margin-top:20px;cursor:pointer;">
+        <i class="fas fa-check-circle"></i> Confirm Payment
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW: Buy Now Payment Modal (Similar to JazzCash Modal but for single product) -->
+<div class="modal" id="buyNowPaymentModal">
+  <div class="modal-content" style="background:white;border-radius:24px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto;position:relative;animation:slideUp 0.3s ease;">
+    <button class="close-btn" onclick="closeModal('buyNowPaymentModal')" style="top:10px;right:10px;background:rgba(0,0,0,0.5);color:white;">×</button>
+    
+    <div class="cart-header" style="padding:24px;border-bottom:1px solid #e2e8f0;">
+      <div class="cart-title" style="font-size:20px;font-weight:700;color:#1e293b;">Complete Your Purchase</div>
+      <div style="font-size:14px;color:#64748b;margin-top:5px;" id="buyNowProductTitle"></div>
+    </div>
+    
+    <div style="padding:24px;">
+      <div id="buyNowPaymentDetails">
+        <!-- Payment details will be inserted here based on selected method -->
+      </div>
+      
+      <div class="payment-instructions" id="buyNowInstructions">
+        <div style="font-size:14px;color:#64748b;margin-bottom:8px;"><strong>Instructions:</strong></div>
+        <ol id="buyNowStepsList">
+          <li>Complete the payment using the method above</li>
+          <li>Take a screenshot of the payment confirmation</li>
+          <li>Share the screenshot via WhatsApp for order confirmation</li>
+        </ol>
+      </div>
+      
+      <button onclick="confirmBuyNowPayment()" style="width:100%;padding:16px;background:linear-gradient(135deg, #10b981 0%, #059669 100%);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;margin-top:20px;cursor:pointer;">
+        <i class="fas fa-check-circle"></i> I Have Made the Payment
+      </button>
+      
+      <button onclick="closeModal('buyNowPaymentModal')" style="width:100%;padding:12px;background:#f1f5f9;color:#64748b;border:none;border-radius:12px;font-size:14px;font-weight:600;margin-top:10px;cursor:pointer;">
+        Cancel Order
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+// Global variables
+let card = {};
+let currentProduct = null;
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let selectedPaymentMethod = null;
+let socialIconsVisible = false;
+let cartPaymentMethod = 'whatsapp';
+let buyNowPaymentMethod = 'whatsapp'; // NEW: Payment method for Buy Now flow
+
+// Initialize Supabase
+const supa = supabase.createClient(
+  "https://dfvnefbxgayxqgjjgtrr.supabase.co",
+  "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
+);
+
+// Load card data
+document.addEventListener("DOMContentLoaded", async () => {
+  const id = new URLSearchParams(location.search).get("id") || localStorage.getItem("lastCardId");
+  if(!id) {
+    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+    return;
+  }
+
+  const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
+  if(error || !data) {
+    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+    return;
+  }
+
+  card = JSON.parse(data.data);
+  renderCard();
+  updateCartCount();
+  setupShareModal();
+  setupSocialIcons();
+  setupModalCloseListeners();
+});
+
+// Setup modal close listeners
+function setupModalCloseListeners() {
+  // Close modals when clicking outside
+  document.addEventListener('click', (e) => {
+    const modals = ['productModal', 'cartModal', 'shareModal', 'jazzcashModal', 'buyNowPaymentModal'];
+    
+    modals.forEach(modalId => {
+      const modal = document.getElementById(modalId);
+      if(modal && modal.style.display === 'flex' && e.target === modal) {
+        closeModal(modalId);
+      }
+    });
+  });
+
+  // Close modals with Escape key
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') {
+      const modals = ['productModal', 'cartModal', 'shareModal', 'jazzcashModal', 'buyNowPaymentModal'];
+      modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if(modal && modal.style.display === 'flex') {
+          closeModal(modalId);
+        }
+      });
+    }
+  });
+}
+
+// Social Media Icons Setup - Follow/Subscribe style icons
+function setupSocialIcons() {
+  const socialIcons = document.getElementById('socialIcons');
+  const socialMedia = card.socialMedia || {};
+  
+  const socialPlatforms = [
+    { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Follow on Facebook' },
+    { key: 'instagram', icon: 'fab fa-instagram', label: 'Follow on Instagram' },
+    { key: 'twitter', icon: 'fab fa-twitter', label: 'Follow on Twitter' },
+    { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'Connect on LinkedIn' },
+    { key: 'youtube', icon: 'fab fa-youtube', label: 'Subscribe on YouTube' },
+    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'Follow on TikTok' }
+  ];
+  
+  let hasSocialMedia = false;
+  
+  socialPlatforms.forEach(platform => {
+    const url = socialMedia[platform.key];
+    if(url && url.trim()) {
+      hasSocialMedia = true;
+      const socialIcon = document.createElement('div');
+      socialIcon.className = 'social-icon-item';
+      socialIcon.innerHTML = `<i class="${platform.icon}"></i>`;
+      socialIcon.title = platform.label;
+      socialIcon.onclick = () => {
+        window.open(url.includes('://') ? url : `https://${url}`, '_blank');
+      };
+      socialIcons.appendChild(socialIcon);
+    }
+  });
+  
+  // Add website if available
+  if(card.website && card.website.trim()) {
+    hasSocialMedia = true;
+    const websiteIcon = document.createElement('div');
+    websiteIcon.className = 'social-icon-item';
+    websiteIcon.innerHTML = `<i class="fas fa-globe"></i>`;
+    websiteIcon.title = 'Visit Website';
+    websiteIcon.onclick = () => {
+      window.open(card.website, '_blank');
+    };
+    socialIcons.appendChild(websiteIcon);
+  }
+  
+  // Add WhatsApp if phone available
+  if(card.phone) {
+    hasSocialMedia = true;
+    const whatsappIcon = document.createElement('div');
+    whatsappIcon.className = 'social-icon-item';
+    whatsappIcon.innerHTML = `<i class="fab fa-whatsapp"></i>`;
+    whatsappIcon.title = 'Chat on WhatsApp';
+    whatsappIcon.onclick = () => {
+      openWhatsAppChat('greeting');
+    };
+    socialIcons.appendChild(whatsappIcon);
+  }
+  
+  if(!hasSocialMedia) {
+    document.querySelector('.social-float-container').style.display = 'none';
+  }
+}
+
+// Toggle Social Icons
+function toggleSocialIcons() {
+  const socialIcons = document.getElementById('socialIcons');
+  socialIconsVisible = !socialIconsVisible;
+  
+  if(socialIconsVisible) {
+    socialIcons.classList.add('active');
+  } else {
+    socialIcons.classList.remove('active');
+  }
+}
+
+// Setup Share Modal - SIMPLIFIED FOR MOBILE
+function setupShareModal() {
+  const shareOptions = document.getElementById('shareOptions');
+  const shareMethods = [
+    { icon: 'fab fa-whatsapp', label: 'WhatsApp', color: '#25D366', action: 'shareViaWhatsApp' },
+    { icon: 'fab fa-facebook-f', label: 'Facebook', color: '#1877F2', action: 'shareViaFacebook' },
+    { icon: 'fab fa-twitter', label: 'Twitter', color: '#1DA1F2', action: 'shareViaTwitter' },
+    { icon: 'fas fa-copy', label: 'Copy Link', color: '#8b5cf6', action: 'copyCardLink' },
+    { icon: 'fas fa-sms', label: 'SMS', color: '#3b82f6', action: 'shareViaSMS' },
+    { icon: 'fas fa-envelope', label: 'Email', color: '#ef4444', action: 'shareViaEmail' }
+  ];
+
+  // Simple grid layout with larger touch targets
+  shareOptions.innerHTML = shareMethods.map(method => `
+    <div class="share-option" onclick="${method.action}()">
+      <div class="share-icon" style="background:${method.color};">
+        <i class="${method.icon}"></i>
+      </div>
+      <div class="share-label">${method.label}</div>
+    </div>
+  `).join('');
+}
+
+// Render card function with all fixes
+function renderCard() {
+  // Header
+  document.getElementById('businessHeader').textContent = card.businessName || card.name || "Digital Card";
+  
+  // Profile - Professional circular image
+  const photo = document.getElementById('photo');
+  if(card.profileImage) {
+    photo.src = card.profileImage;
+    photo.style.objectFit = 'cover';
+  } else {
+    photo.style.display = 'none';
+  }
+  
+  document.getElementById('name').textContent = card.name || "";
+  document.getElementById('business').textContent = card.businessName || "";
+  
+  const phone = card.phone || "";
+  const email = card.email || "";
+  const address = card.address || "";
+  
+  if(phone) {
+    document.getElementById('phone').textContent = phone;
+    document.getElementById('phoneItem').style.display = 'flex';
+  } else {
+    document.getElementById('phoneItem').style.display = 'none';
+  }
+  
+  if(email) {
+    document.getElementById('email').textContent = email;
+    document.getElementById('emailItem').style.display = 'flex';
+  } else {
+    document.getElementById('emailItem').style.display = 'none';
+  }
+  
+  if(address) {
+    document.getElementById('address').textContent = address;
+    document.getElementById('addressItem').style.display = 'flex';
+  } else {
+    document.getElementById('addressItem').style.display = 'none';
+  }
+  
+  // About - Text aligned both sides with collapse
+  const aboutText = card.business?.about || card.about || "";
+  if(aboutText) {
+    document.getElementById('aboutText').textContent = aboutText;
+    if(aboutText.length > 200) {
+      document.getElementById('aboutMore').style.display = 'inline-flex';
+    } else {
+      document.getElementById('aboutMore').style.display = 'none';
+    }
+  } else {
+    document.getElementById('aboutSection').style.display = 'none';
+  }
+  
+  // Products - Standardized scrolling
+  const products = card.products || card.offers || [];
+  const productsGrid = document.getElementById('productsGrid');
+  
+  if(products.length > 0) {
+    products.forEach((product, index) => {
+      const price = product.discountPrice || product.originalPrice;
+      const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
+      
+      const productCard = document.createElement('div');
+      productCard.className = 'product-card';
+      productCard.innerHTML = `
+        <img src="${product.image || ''}" class="product-image" onerror="this.style.display='none'; this.parentElement.style.background='#f8fafc';">
+        <div class="product-badges">
+          ${(product.badges || []).map(badge => `<span class="badge">${badge}</span>`).join('')}
+        </div>
+        <div class="product-details">
+          <div class="product-title">${product.title || 'Product'}</div>
+          <div class="product-price">
+            ${originalPrice ? `<span class="original-price">PKR ${originalPrice}</span>` : ''}
+            ${price ? `<span class="discount-price">PKR ${price}</span>` : ''}
+          </div>
+          <div class="product-actions">
+            <button class="btn-buy" onclick="showProductModal(${index})">Buy Now</button>
+            <button class="btn-cart" onclick="addToCart(${index})">Add to Cart</button>
+          </div>
+        </div>
+      `;
+      productsGrid.appendChild(productCard);
+    });
+  } else {
+    document.getElementById('productsSection').style.display = 'none';
+  }
+  
+  // Business Hours - Expandable
+  if(card.businessHours && card.businessHours.length > 0) {
+    const hoursList = document.getElementById('businessHours');
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    
+    let visibleDays = 3;
+    
+    card.businessHours.forEach((day, index) => {
+      if(day) {
+        const hourItem = document.createElement('div');
+        hourItem.className = 'hour-item';
+        
+        if(index >= visibleDays) {
+          hourItem.style.display = 'none';
+        }
+        
+        if(!day.open || day.status === 'closed') {
+          hourItem.innerHTML = `
+            <span class="day-name">${days[index]}</span>
+            <span class="day-time closed">Closed</span>
+          `;
+        } else {
+          hourItem.innerHTML = `
+            <span class="day-name">${days[index]}</span>
+            <span class="day-time">${day.start || ''} - ${day.end || ''}</span>
+          `;
+        }
+        
+        hoursList.appendChild(hourItem);
+      }
+    });
+    
+    document.getElementById('hoursSection').style.display = 'block';
+  }
+  
+  // Holidays
+  if(card.holidays && card.holidays.length > 0) {
+    const holidaysList = document.getElementById('holidaysList');
+    
+    card.holidays.forEach(holiday => {
+      if(holiday.name && holiday.date) {
+        const date = new Date(holiday.date);
+        const formattedDate = date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+        
+        const holidayItem = document.createElement('div');
+        holidayItem.className = 'holiday-item';
+        holidayItem.innerHTML = `
+          <span class="holiday-name">${holiday.name}</span>
+          <span class="holiday-date">${formattedDate}</span>
+        `;
+        holidaysList.appendChild(holidayItem);
+      }
+    });
+    
+    document.getElementById('holidaysSection').style.display = 'block';
+  }
+  
+  // Website Banner - Only show if website link exists and is functional
+  if(card.website && card.website.trim() && card.website.includes('://')) {
+    document.getElementById('websiteBanner').style.display = 'block';
+    document.getElementById('websiteBannerLink').href = card.website;
+  } else {
+    document.getElementById('websiteBanner').style.display = 'none';
+  }
+}
+
+// Toggle About Text Collapse
+function toggleAbout() {
+  const aboutText = document.getElementById('aboutText');
+  const aboutMore = document.getElementById('aboutMore');
+  const icon = aboutMore.nextElementSibling;
+  
+  aboutText.classList.toggle('about-text-collapsed');
+  aboutText.classList.toggle('about-text-expanded');
+  
+  if(aboutText.classList.contains('about-text-expanded')) {
+    aboutMore.textContent = 'See less';
+    if(icon) icon.className = 'fas fa-chevron-up';
+  } else {
+    aboutMore.textContent = 'See more';
+    if(icon) icon.className = 'fas fa-chevron-down';
+  }
+}
+
+// Toggle Business Hours
+function toggleHours() {
+  const hoursExpandable = document.getElementById('hoursExpandable');
+  const hoursMore = document.getElementById('hoursMore');
+  const icon = hoursMore.nextElementSibling;
+  const hourItems = document.querySelectorAll('.hour-item');
+  
+  hoursExpandable.classList.toggle('expanded');
+  
+  if(hoursExpandable.classList.contains('expanded')) {
+    hoursMore.textContent = 'Show less';
+    if(icon) icon.className = 'fas fa-chevron-up';
+    
+    hourItems.forEach(item => {
+      item.style.display = 'flex';
+    });
+  } else {
+    hoursMore.textContent = 'See all days';
+    if(icon) icon.className = 'fas fa-chevron-down';
+    
+    hourItems.forEach((item, index) => {
+      item.style.display = index < 3 ? 'flex' : 'none';
+    });
+  }
+}
+
+// WhatsApp Functions
+function openWhatsAppChat(context) {
+  if(!card.phone) {
+    showNotification('WhatsApp number not available');
+    return;
+  }
+  
+  const phone = card.phone.replace(/\D/g, '');
+  let message = '';
+  
+  switch(context) {
+    case 'greeting':
+      message = card.payments?.whatsapp?.greeting || `Hello! I found your digital business card and I'm interested in your products/services. Could you please provide more information?`;
+      break;
+      
+    case 'order':
+      const product = currentProduct;
+      if(product) {
+        const price = product.discountPrice || product.originalPrice;
+        message = `Hello! I'm interested in purchasing:\n\n` +
+                 `Product: ${product.title || 'Product'}\n` +
+                 `Price: PKR ${price || '0'}\n` +
+                 `Description: ${product.desc || 'No description'}\n\n` +
+                 `Please let me know about availability and delivery options.`;
+      } else {
+        message = `Hello! I'm interested in your products. Could you please share the catalog and pricing?`;
+      }
+      break;
+      
+    case 'cod':
+      const codProduct = currentProduct;
+      if(codProduct) {
+        const price = codProduct.discountPrice || codProduct.originalPrice;
+        message = `Hello! I would like to place a Cash on Delivery order:\n\n` +
+                 `Product: ${codProduct.title || 'Product'}\n` +
+                 `Price: PKR ${price || '0'}\n\n` +
+                 `Please confirm availability and share delivery details.`;
+      }
+      break;
+      
+    default:
+      message = card.payments?.whatsapp?.greeting || `Hello! I found your digital business card and I'm interested in your services/products. Could you please provide more information?`;
+  }
+  
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+// Share Functions
+function openShareModal() {
+  document.getElementById('shareModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeShareModal() {
+  closeModal('shareModal');
+}
+
+function shareViaWhatsApp() {
+  const message = `Check out ${card.name || 'this'} digital business card!\n\n` +
+                 `${card.businessName ? `${card.businessName}\n` : ''}` +
+                 `${card.business?.about ? `${card.business.about.substring(0, 100)}...\n\n` : '\n'}` +
+                 `View the complete digital card here:\n${window.location.href}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+  closeShareModal();
+}
+
+function shareViaFacebook() {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+  closeShareModal();
+}
+
+function shareViaTwitter() {
+  const message = `Check out ${card.name || 'this'} digital business card! ${window.location.href}`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(message)}`, '_blank');
+  closeShareModal();
+}
+
+function copyCardLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    showNotification('✅ Card link copied to clipboard!');
+    closeShareModal();
+  }).catch(err => {
+    const textArea = document.createElement('textarea');
+    textArea.value = window.location.href;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    showNotification('✅ Card link copied to clipboard!');
+    closeShareModal();
+  });
+}
+
+function shareViaSMS() {
+  const message = `Check out ${card.name || 'this'} digital business card: ${window.location.href}`;
+  window.open(`sms:?body=${encodeURIComponent(message)}`, '_blank');
+  closeShareModal();
+}
+
+function shareViaEmail() {
+  const subject = `${card.name || 'Digital'} Business Card`;
+  const body = `Hi,\n\nI found ${card.name || 'this'} digital business card and thought you might be interested:\n\n` +
+              `${window.location.href}\n\n` +
+              `${card.businessName ? `Business: ${card.businessName}\n` : ''}` +
+              `${card.business?.about ? `About: ${card.business.about.substring(0, 150)}...\n` : ''}\n` +
+              `Best regards,\n${card.name || 'Digital Card'}`;
+  window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+  closeShareModal();
+}
+
+// Cart Functions
+function updateCartCount() {
+  const count = cart.length;
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartCount').style.display = count > 0 ? 'flex' : 'none';
+}
+
+function addToCart(productIndex) {
+  const products = card.products || card.offers || [];
+  const product = products[productIndex];
+  
+  if(product) {
+    // Check if product already in cart
+    const existingIndex = cart.findIndex(item => 
+      item.title === product.title && 
+      item.discountPrice === product.discountPrice
+    );
+    
+    if(existingIndex === -1) {
+      cart.push({
+        ...product,
+        index: productIndex
+      });
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      showNotification('✅ Product added to cart!');
+    } else {
+      showNotification('⚠️ Product already in cart!');
+    }
+  }
+}
+
+function openCartModal() {
+  document.getElementById('cartModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  
+  const cartItems = document.getElementById('cartItems');
+  cartItems.innerHTML = '';
+  
+  if(cart.length === 0) {
+    cartItems.innerHTML = '<div style="text-align:center;color:#64748b;padding:40px 0;">Your cart is empty</div>';
+    resetCartPaymentSelection();
+    return;
+  }
+  
+  cart.forEach((item, index) => {
+    const price = item.discountPrice || item.originalPrice || 0;
+    const cartItem = document.createElement('div');
+    cartItem.className = 'cart-item';
+    cartItem.style.cssText = `
+      display: flex;
+      gap: 12px;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      align-items: center;
+    `;
+    
+    cartItem.innerHTML = `
+      <div style="width: 60px; height: 60px; border-radius: 8px; overflow: hidden; background: #f1f5f9;">
+        <img src="${item.image || ''}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'">
+      </div>
+      <div style="flex:1;">
+        <div style="font-weight:600;color:#1e293b;margin-bottom:4px;">${item.title || 'Product'}</div>
+        <div style="font-size:14px;color:#ef4444;font-weight:700;">PKR ${price}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button onclick="removeFromCart(${index})" style="width:32px;height:32px;border-radius:50%;background:#f1f5f9;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#ef4444;">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    `;
+    
+    cartItems.appendChild(cartItem);
+  });
+  
+  // Calculate total
+  const total = cart.reduce((sum, item) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    return sum + price;
+  }, 0);
+  
+  document.getElementById('cartTotal').textContent = total.toFixed(2);
+  
+  // Set default payment method
+  selectCartPayment(cartPaymentMethod);
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+  openCartModal();
+}
+
+function closeCartModal() {
+  closeModal('cartModal');
+}
+
+// Cart Payment Selection
+function selectCartPayment(method) {
+  cartPaymentMethod = method;
+  
+  const whatsappOption = document.getElementById('whatsappCartOption');
+  const codOption = document.getElementById('codCartOption');
+  const jazzcashOption = document.getElementById('jazzcashCartOption');
+  
+  // Reset all
+  [whatsappOption, codOption, jazzcashOption].forEach(option => {
+    if(option) {
+      option.style.borderColor = '#e2e8f0';
+      option.style.backgroundColor = 'white';
+    }
+  });
+  
+  // Select the chosen one
+  if(method === 'whatsapp' && whatsappOption) {
+    whatsappOption.style.borderColor = '#25D366';
+    whatsappOption.style.backgroundColor = '#f0fdf4';
+  } else if(method === 'cod' && codOption) {
+    codOption.style.borderColor = '#10b981';
+    codOption.style.backgroundColor = '#f0fdf4';
+  } else if(method === 'jazzcash' && jazzcashOption) {
+    jazzcashOption.style.borderColor = '#FF6B00';
+    jazzcashOption.style.backgroundColor = '#fff7ed';
+  }
+}
+
+function resetCartPaymentSelection() {
+  cartPaymentMethod = 'whatsapp';
+  const whatsappOption = document.getElementById('whatsappCartOption');
+  const codOption = document.getElementById('codCartOption');
+  const jazzcashOption = document.getElementById('jazzcashCartOption');
+  
+  [whatsappOption, codOption, jazzcashOption].forEach(option => {
+    if(option) {
+      option.style.borderColor = '#e2e8f0';
+      option.style.backgroundColor = 'white';
+    }
+  });
+}
+
+// Enhanced Checkout Function with Payment Methods
+function checkoutCart() {
+  if(cart.length === 0) {
+    showNotification('Your cart is empty');
+    return;
+  }
+  
+  let message = `Hello! I would like to place an order:\n\n`;
+  
+  cart.forEach((item, index) => {
+    const price = item.discountPrice || item.originalPrice || 0;
+    message += `${index + 1}. ${item.title || 'Product'} - PKR ${price}\n`;
+  });
+  
+  const total = cart.reduce((sum, item) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    return sum + price;
+  }, 0);
+  
+  message += `\nTotal: PKR ${total.toFixed(2)}\n`;
+  message += `Payment Method: ${getPaymentMethodName(cartPaymentMethod)}\n\n`;
+  
+  // Add payment method specific instructions
+  if(cartPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    message += `I will pay via ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}.\n`;
+    if(card.payments.jazzcash.number) {
+      message += `Account: ${card.payments.jazzcash.number}\n`;
+    }
+  } else if(cartPaymentMethod === 'cod') {
+    message += `I prefer Cash on Delivery.\n`;
+  }
+  
+  message += `Please confirm availability and share delivery details.`;
+  
+  if(card.phone) {
+    const phone = card.phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+  } else {
+    showNotification('Please contact business directly for order');
+  }
+  
+  // Clear cart after checkout
+  cart = [];
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+  closeCartModal();
+}
+
+function getPaymentMethodName(method) {
+  switch(method) {
+    case 'whatsapp': return 'WhatsApp Order';
+    case 'cod': return 'Cash on Delivery';
+    case 'jazzcash': return card.payments?.jazzcash?.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash';
+    default: return 'WhatsApp Order';
+  }
+}
+
+// Product Modal Functions - ENHANCED WITH BUY NOW FLOW
+function showProductModal(productIndex) {
+  const products = card.products || card.offers || [];
+  currentProduct = products[productIndex];
+  
+  if(!currentProduct) return;
+  
+  const modal = document.getElementById('productModal');
+  const price = currentProduct.discountPrice || currentProduct.originalPrice;
+  const originalPrice = currentProduct.originalPrice && currentProduct.discountPrice ? currentProduct.originalPrice : null;
+  
+  document.getElementById('modalImage').src = currentProduct.image || '';
+  document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
+  document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
+  
+  if(originalPrice) {
+    document.getElementById('modalPrice').innerHTML = `
+      <span style="text-decoration:line-through;color:#94a3b8;font-size:18px;margin-right:10px;">PKR ${originalPrice}</span>
+      <span>PKR ${price}</span>
+    `;
+  } else {
+    document.getElementById('modalPrice').textContent = price ? `PKR ${price}` : 'Price not available';
+  }
+  
+  // Hide direct checkout section initially
+  document.getElementById('directCheckoutSection').style.display = 'none';
+  // Reset Buy Now payment selection
+  selectBuyNowPayment('whatsapp');
+  
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function showDirectCheckout() {
+  // Show the checkout section in the product modal
+  document.getElementById('directCheckoutSection').style.display = 'block';
+  // Scroll to the checkout section
+  document.getElementById('directCheckoutSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function addToCartFromModal() {
+  if(currentProduct) {
+    const products = card.products || card.offers || [];
+    const productIndex = products.findIndex(p => p.title === currentProduct.title);
+    
+    if(productIndex !== -1) {
+      addToCart(productIndex);
+      closeModal('productModal');
+    }
+  }
+}
+
+// NEW: Buy Now Payment Selection
+function selectBuyNowPayment(method) {
+  buyNowPaymentMethod = method;
+  
+  const whatsappOption = document.getElementById('whatsappBuyNowOption');
+  const codOption = document.getElementById('codBuyNowOption');
+  const jazzcashOption = document.getElementById('jazzcashBuyNowOption');
+  
+  // Reset all
+  [whatsappOption, codOption, jazzcashOption].forEach(option => {
+    if(option) {
+      option.style.borderColor = '#e2e8f0';
+      option.style.backgroundColor = 'white';
+    }
+  });
+  
+  // Select the chosen one
+  if(method === 'whatsapp' && whatsappOption) {
+    whatsappOption.style.borderColor = '#25D366';
+    whatsappOption.style.backgroundColor = '#f0fdf4';
+  } else if(method === 'cod' && codOption) {
+    codOption.style.borderColor = '#10b981';
+    codOption.style.backgroundColor = '#f0fdf4';
+  } else if(method === 'jazzcash' && jazzcashOption) {
+    jazzcashOption.style.borderColor = '#FF6B00';
+    jazzcashOption.style.backgroundColor = '#fff7ed';
+  }
+}
+
+// NEW: Checkout for Buy Now (Single Product)
+function checkoutBuyNow() {
+  if(!currentProduct) {
+    showNotification('No product selected');
+    return;
+  }
+  
+  const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
+  
+  // If JazzCash/EasyPaisa is selected, show payment details modal
+  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    showBuyNowPaymentModal();
+  } else {
+    // For WhatsApp and COD, directly send message
+    sendBuyNowOrder();
+  }
+}
+
+// NEW: Show Buy Now Payment Modal
+function showBuyNowPaymentModal() {
+  if(!currentProduct) return;
+  
+  document.getElementById('buyNowProductTitle').textContent = currentProduct.title || 'Product';
+  
+  const paymentDetails = document.getElementById('buyNowPaymentDetails');
+  const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
+  
+  let html = '';
+  
+  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    html = `
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:16px;font-weight:600;color:#1e293b;margin-bottom:8px;">${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'} Payment</div>
+          <div style="font-size:18px;color:#475569;margin-bottom:10px;">Send <strong>PKR ${price}</strong> to:</div>
+          <div class="payment-number">${card.payments.jazzcash.number || ''}</div>
+        </div>
+        
+        ${card.payments.jazzcash.barcode ? `
+          <div class="barcode-container">
+            <div style="font-size:14px;color:#64748b;margin-bottom:10px;">Scan QR Code to Pay</div>
+            <img src="${card.payments.jazzcash.barcode}" class="barcode-image" alt="Payment QR Code">
+          </div>
+        ` : ''}
+        
+        <div style="font-size:13px;color:#475569;margin-top:15px;">
+          ${card.payments.jazzcash.instructions || 'Please share payment screenshot via WhatsApp for order confirmation.'}
+        </div>
+      </div>
+    `;
+  }
+  
+  paymentDetails.innerHTML = html;
+  document.getElementById('buyNowPaymentModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  closeModal('productModal');
+}
+
+// NEW: Confirm Buy Now Payment
+function confirmBuyNowPayment() {
+  sendBuyNowOrder();
+  closeModal('buyNowPaymentModal');
+}
+
+// NEW: Send Buy Now Order via WhatsApp
+function sendBuyNowOrder() {
+  if(!currentProduct) return;
+  
+  const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
+  
+  let message = `Hello! I would like to purchase:\n\n` +
+               `Product: ${currentProduct.title || 'Product'}\n` +
+               `Price: PKR ${price}\n` +
+               `${currentProduct.desc ? `Description: ${currentProduct.desc}\n\n` : '\n'}` +
+               `Payment Method: ${getBuyNowPaymentMethodName(buyNowPaymentMethod)}\n`;
+  
+  // Add payment method specific instructions
+  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    message += `Payment sent to: ${card.payments.jazzcash.number || ''}\n`;
+    message += `Via: ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
+  } else if(buyNowPaymentMethod === 'cod') {
+    message += `I prefer Cash on Delivery.\n`;
+  }
+  
+  message += `\nPlease confirm availability and share delivery details.`;
+  
+  if(card.phone) {
+    const phone = card.phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+  } else {
+    showNotification('Please contact business directly for order');
+  }
+  
+  // Close product modal
+  closeModal('productModal');
+}
+
+// NEW: Get payment method name for Buy Now
+function getBuyNowPaymentMethodName(method) {
+  switch(method) {
+    case 'whatsapp': return 'WhatsApp Order';
+    case 'cod': return 'Cash on Delivery';
+    case 'jazzcash': return card.payments?.jazzcash?.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash';
+    default: return 'WhatsApp Order';
+  }
+}
+
+// JazzCash Modal Functions
+function openJazzcashModal() {
+  const jazzcashDetails = document.getElementById('jazzcashDetails');
+  let html = '';
+  
+  if(card.payments?.jazzcash?.active) {
+    html = `
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:16px;font-weight:600;color:#1e293b;margin-bottom:8px;">${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'} Details</div>
+          <div style="font-size:24px;font-weight:700;color:#FF6B00;margin:15px 0;">${card.payments.jazzcash.number || ''}</div>
+        </div>
+        
+        ${card.payments.jazzcash.barcode ? `
+          <div style="margin:20px 0;">
+            <div style="font-size:14px;color:#64748b;margin-bottom:10px;">Scan QR Code to Pay</div>
+            <img src="${card.payments.jazzcash.barcode}" style="max-width:250px;max-height:250px;border-radius:12px;border:2px solid #e2e8f0;">
+          </div>
+        ` : ''}
+        
+        <div style="background:#f8fafc;padding:15px;border-radius:12px;margin-top:20px;">
+          <div style="font-size:14px;color:#64748b;margin-bottom:8px;">Instructions:</div>
+          <div style="font-size:13px;color:#475569;">
+            1. Send payment to the above ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'} number<br>
+            2. Take screenshot of payment confirmation<br>
+            3. Share screenshot via WhatsApp for order confirmation
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  
+  jazzcashDetails.innerHTML = html;
+  document.getElementById('jazzcashModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeJazzcashModal() {
+  closeModal('jazzcashModal');
+}
+
+function proceedWithJazzcash() {
+  if(currentProduct) {
+    const price = currentProduct.discountPrice || currentProduct.originalPrice;
+    let message = `Hello! I have made a ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'} payment for:\n\n` +
+                 `Product: ${currentProduct.title || 'Product'}\n` +
+                 `Amount: PKR ${price || '0'}\n` +
+                 `Payment sent to: ${card.payments.jazzcash.number || ''}\n\n` +
+                 `Please confirm my order.`;
+    
+    if(card.phone) {
+      const phone = card.phone.replace(/\D/g, '');
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+    
+    closeJazzcashModal();
+    closeModal('productModal');
+  }
+}
+
+// Contact Functions
+function makeCall() {
+  if(card.phone) {
+    window.open(`tel:${card.phone}`);
+  } else {
+    showNotification('Phone number not available');
+  }
+}
+
+function sendEmail() {
+  if(card.email) {
+    window.open(`mailto:${card.email}`);
+  } else {
+    showNotification('Email not available');
+  }
+}
+
+function openMap() {
+  if(card.address) {
+    window.open(`https://maps.google.com/?q=${encodeURIComponent(card.address)}`, '_blank');
+  } else {
+    showNotification('Address not available');
+  }
+}
+
+// Utility Functions
+function openModal(modalId) {
+  document.getElementById(modalId).style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+function showNotification(message) {
+  const notification = document.createElement('div');
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    z-index: 3000;
+    max-width: 300px;
+    animation: slideIn 0.3s ease;
+    font-weight: 500;
+    font-size: 14px;
+  `;
+  
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.style.opacity = '0';
+    notification.style.transform = 'translateY(-20px)';
+    setTimeout(() => {
+      if(notification.parentNode) {
+        document.body.removeChild(notification);
+      }
+    }, 300);
+  }, 3000);
+}
+
+// Initialize
+updateCartCount();
+</script>
+</body>
+</html>
