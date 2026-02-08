@@ -201,8 +201,116 @@ body {
   font-weight: 700;
 }
 
-#homePage {
-  padding-bottom: 100px;
+/* ===== SIMPLE DELIVERY STATUS ICON ===== */
+.delivery-status-icon {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: var(--transition-fast);
+}
+
+.delivery-status-icon:hover {
+  transform: scale(1.1);
+}
+
+.delivery-status-icon i {
+  color: white;
+  font-size: 24px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.delivery-status-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid white;
+}
+
+/* ===== SIMPLE LOGIN ICON ===== */
+.login-btn {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: var(--transition-fast);
+}
+
+.login-btn:hover {
+  transform: scale(1.1);
+}
+
+.login-btn i {
+  color: white;
+  font-size: 24px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* DELIVERY MODAL */
+.delivery-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+  padding: 20px;
+}
+
+.delivery-modal {
+  background: var(--glass-bg);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* ALL PAGES FIXED BOTTOM PADDING */
+#homePage,
+#productsPage,
+#cartPage,
+#aboutPage,
+#contactPage,
+#deliveryPage,
+#adminPage {
+  padding-bottom: 120px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
@@ -221,6 +329,7 @@ body {
   margin-bottom: 30px;
   position: relative;
   z-index: 1;
+  padding-top: 20px;
 }
 
 .welcome-text h1 {
@@ -365,7 +474,7 @@ body {
   border-radius: var(--border-radius-xs);
 }
 
-/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style - FIXED with Auto-Resize */
+/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -376,24 +485,19 @@ body {
 }
 
 .product-card {
-  /* Fixed height for all cards - COMPACT */
   height: 260px;
   width: 100%;
-  /* Flex layout for internal structure */
   display: flex;
   flex-direction: column;
-  /* Visual styling */
   background: var(--lighter-color);
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   padding: 8px;
-  /* Ensures consistent card sizing */
   overflow: hidden;
   transition: var(--transition-fast);
   cursor: pointer;
   position: relative;
-  /* Prevent content from expanding card */
   min-height: 260px;
   max-height: 260px;
 }
@@ -403,7 +507,6 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Image container with AUTO-RESIZE support - KEEP EXISTING STRATEGY */
 .product-image-container {
   position: relative;
   width: 100%;
@@ -415,7 +518,6 @@ body {
   margin-bottom: 8px;
   flex-shrink: 0;
   border: 1px solid #f1f5f9;
-  /* Container adapts to auto-resized image */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -426,20 +528,18 @@ body {
   height: auto;
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain; /* KEEP contain for auto-resize */
+  object-fit: contain;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
-  padding: 4px; /* Small padding for image breathing room */
+  padding: 4px;
 }
 
-/* Click animation - scales image when clicked */
 .product-card.clicked .product-image {
   transform: scale(1.8);
   z-index: 100;
   position: relative;
 }
 
-/* DISCOUNT BADGE - BOTTOM RIGHT CORNER (RHS) - FIXED */
 .discount-badge {
   position: absolute;
   bottom: 6px;
@@ -459,7 +559,6 @@ body {
   white-space: nowrap;
 }
 
-/* PRICE BADGE - ON IMAGE - MAIN CARD ONLY - FIXED */
 .price-badge {
   position: absolute;
   bottom: 6px;
@@ -497,7 +596,6 @@ body {
   line-height: 1;
 }
 
-/* Other badges - TOP RIGHT */
 .product-badges {
   position: absolute;
   top: 6px;
@@ -531,7 +629,6 @@ body {
 .badge.stock { background: rgba(59, 130, 246, 0.95); }
 .badge.delivery { background: rgba(20, 184, 166, 0.95); }
 
-/* Content area - COMPACT - FIXED */
 .product-content {
   display: flex;
   flex-direction: column;
@@ -556,7 +653,6 @@ body {
   flex-shrink: 0;
 }
 
-/* BUTTON CONTAINER - FIXED position and spacing */
 .product-actions {
   display: flex;
   gap: 6px;
@@ -567,7 +663,6 @@ body {
   border-top: 1px solid #f1f5f9;
 }
 
-/* Action buttons - FIXED size */
 .btn-primary, .btn-secondary {
   flex: 1;
   height: 28px;
@@ -611,7 +706,6 @@ body {
   font-size: 11px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 400px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -654,7 +748,6 @@ body {
   }
 }
 
-/* MODAL VIEW - FIXED for auto-resize images */
 .modal-content .product-image-container {
   min-height: 200px;
   max-height: 300px;
@@ -668,7 +761,6 @@ body {
   max-width: 100%;
 }
 
-/* MODAL PRICE POSITION - Below image, in content flow */
 .modal-price-container {
   margin-bottom: 16px;
   padding: 12px 0;
@@ -690,7 +782,6 @@ body {
   font-weight: 500;
 }
 
-/* Image zoom overlay */
 .image-zoom-overlay {
   position: fixed;
   top: 0;
@@ -719,11 +810,6 @@ body {
 @keyframes zoomIn {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
-}
-
-#productsPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .products-header {
@@ -778,11 +864,6 @@ body {
   transform: translateY(-50%);
   color: #64748b;
   font-size: 20px;
-}
-
-#cartPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .cart-header {
@@ -995,11 +1076,6 @@ body {
   margin-top: 25px;
 }
 
-#aboutPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-}
-
 .about-header {
   background: var(--primary-gradient);
   padding: 50px 25px;
@@ -1083,11 +1159,6 @@ body {
   background: rgba(239, 68, 68, 0.1);
   padding: 5px 12px;
   border-radius: 20px;
-}
-
-#contactPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .contact-header {
@@ -1249,6 +1320,7 @@ body {
   font-size: 20px;
   cursor: pointer;
   border: 1px solid rgba(255,255,255,0.3);
+  z-index: 10;
 }
 
 .page-footer-spacer {
@@ -1380,6 +1452,237 @@ body {
     border-color: rgba(255, 255, 255, 0.1);
   }
 }
+
+/* ===== DELIVERY PAGE STYLES ===== */
+.delivery-page-header {
+  background: var(--primary-gradient);
+  padding: 50px 25px 30px;
+  border-radius: 0 0 50px 50px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.delivery-page-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  margin-top: 20px;
+}
+
+.delivery-page-header p {
+  color: rgba(255,255,255,0.95);
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.delivery-card {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  margin: 15px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f1f5f9;
+  border-left: 5px solid #667eea;
+}
+
+.delivery-card.pending { border-left-color: #f59e0b; }
+.delivery-card.processing { border-left-color: #3b82f6; }
+.delivery-card.shipped { border-left-color: #8b5cf6; }
+.delivery-card.delivered { border-left-color: #10b981; }
+.delivery-card.cancelled { border-left-color: #ef4444; }
+
+.delivery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.delivery-order-id {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--dark-color);
+}
+
+.delivery-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.delivery-status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.delivery-status.processing {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.delivery-status.shipped {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.delivery-status.delivered {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.delivery-status.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.delivery-info {
+  color: #475569;
+  font-size: 14px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delivery-timestamp {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-search {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin: 15px;
+  font-size: 14px;
+}
+
+.admin-order-card {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  margin: 15px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f1f5f9;
+}
+
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.admin-order-id {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--dark-color);
+}
+
+.admin-customer-info {
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.admin-select {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  background: white;
+}
+
+.admin-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.admin-btn.success {
+  background: var(--success-gradient);
+}
+
+.no-deliveries {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-deliveries i {
+  font-size: 60px;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.no-deliveries h3 {
+  font-size: 20px;
+  color: var(--dark-color);
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.no-deliveries p {
+  color: #64748b;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+.password-prompt {
+  background: var(--lighter-color);
+  padding: 30px;
+  border-radius: var(--border-radius-lg);
+  margin: 40px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.password-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--border-radius-md);
+  font-size: 16px;
+  margin: 20px 0;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.password-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 10px;
+}
 </style>
 </head>
 
@@ -1390,14 +1693,27 @@ body {
     <img src="" class="image-zoom-content" id="zoomedImage">
   </div>
 
+  <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
     <h1>Digital Business App</h1>
     <p>Loading your premium business experience...</p>
   </div>
 
+  <!-- Home Page -->
   <div id="homePage" class="page">
     <div class="app-header">
+      <!-- Simple Login Icon (Left) - For Admin Access -->
+      <div class="login-btn" onclick="openAdminPage()">
+        <i class="fas fa-sign-in-alt"></i>
+      </div>
+      
+      <!-- Simple Delivery Status Icon (Right) -->
+      <div class="delivery-status-icon" id="deliveryStatusIcon" onclick="checkDeliveryStatus()">
+        <i class="fas fa-truck"></i>
+        <div class="delivery-status-badge" id="deliveryBadge" style="display:none;">!</div>
+      </div>
+      
       <div class="welcome-text">
         <h1 id="businessHeader">Welcome</h1>
         <p>Premium business at your fingertips</p>
@@ -1460,6 +1776,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- Products Page -->
   <div id="productsPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1481,6 +1798,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- Cart Page -->
   <div id="cartPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1497,6 +1815,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- About Page -->
   <div id="aboutPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1524,6 +1843,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- Contact Page -->
   <div id="contactPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1585,6 +1905,43 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- ===== DELIVERY STATUS PAGE ===== -->
+  <div id="deliveryPage" class="page">
+    <button class="back-btn" onclick="navigateTo('homePage')">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="delivery-page-header">
+      <h1><i class="fas fa-truck"></i> Delivery Status</h1>
+      <p>Track your orders in real-time</p>
+    </div>
+    
+    <div id="deliveryContent">
+      <!-- Delivery status will load here -->
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- ===== ADMIN DELIVERY PAGE ===== -->
+  <div id="adminPage" class="page">
+    <button class="back-btn" onclick="navigateTo('homePage')">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="delivery-page-header">
+      <h1><i class="fas fa-cog"></i> Delivery Admin</h1>
+      <p>Manage customer deliveries</p>
+    </div>
+    
+    <div id="adminContent">
+      <!-- Admin panel will load here -->
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- Bottom Navigation -->
   <div class="bottom-nav">
     <div class="nav-item active" onclick="navigateTo('homePage')">
       <div class="nav-icon">
@@ -1624,6 +1981,20 @@ body {
   </div>
 </div>
 
+<!-- Delivery Status Modal -->
+<div class="delivery-modal-overlay" id="deliveryStatusModal">
+  <div class="delivery-modal">
+    <button onclick="closeDeliveryModal()" style="position:absolute;top:15px;right:15px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.1);border:none;color:var(--dark-color);font-size:24px;cursor:pointer;">×</button>
+    <div id="deliveryStatusContent" style="padding:40px 25px;">
+      <h2 style="text-align:center;margin-bottom:25px;color:var(--dark-color);">
+        <i class="fas fa-truck"></i> Delivery Status
+      </h2>
+      <div id="deliveryStatusList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Other Modals -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal('productModal')">×</button>
@@ -1721,7 +2092,7 @@ body {
           </div>
           
           <div class="payment-option" onclick="selectCheckoutPayment('cod')" id="codCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
-            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display=flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
               <i class="fas fa-truck"></i>
             </div>
             <div>
@@ -1783,14 +2154,112 @@ body {
   </div>
 </div>
 
+<!-- SHARING OPTIONS -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('shareModal')">×</button>
+    
+    <div style="padding:25px;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;">
+        <i class="fas fa-share-alt"></i> Share Business Card
+      </h2>
+      
+      <div style="text-align:center;margin-bottom:25px;">
+        <div style="font-size:15px;color:#64748b;margin-bottom:15px;">Share this business with others:</div>
+        <div style="background:#f8fafc;padding:15px;border-radius:var(--border-radius-md);border:2px solid #e2e8f0;margin-bottom:20px;">
+          <div style="font-size:12px;color:#64748b;margin-bottom:8px;">Your Business Link:</div>
+          <div style="font-size:14px;font-weight:800;color:var(--dark-color);word-break:break-all;" id="shareableLink">Loading...</div>
+        </div>
+      </div>
+      
+      <div class="social-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:25px;">
+        <div class="social-link" onclick="shareViaWhatsApp()">
+          <div class="social-icon" style="background:#25D366;">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <div class="social-label">WhatsApp</div>
+        </div>
+        
+        <div class="social-link" onclick="copyToClipboard()">
+          <div class="social-icon" style="background:#3b82f6;">
+            <i class="fas fa-copy"></i>
+          </div>
+          <div class="social-label">Copy Link</div>
+        </div>
+        
+        <div class="social-link" onclick="shareViaFacebook()">
+          <div class="social-icon" style="background:#1877F2;">
+            <i class="fab fa-facebook-f"></i>
+          </div>
+          <div class="social-label">Facebook</div>
+        </div>
+        
+        <div class="social-link" onclick="generateQR()">
+          <div class="social-icon" style="background:#0f172a;">
+            <i class="fas fa-qrcode"></i>
+          </div>
+          <div class="social-label">QR Code</div>
+        </div>
+      </div>
+      
+      <div style="background:#f0f9ff;padding:15px;border-radius:var(--border-radius-md);margin-top:20px;border:1px solid #dbeafe;">
+        <div style="font-size:13px;color:#64748b;text-align:center;">
+          <i class="fas fa-info-circle"></i> Powered by <strong>Faiqtech</strong> - Digital Business Solutions
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('qrModal')">×</button>
+    
+    <div style="padding:25px;text-align:center;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;">
+        <i class="fas fa-qrcode"></i> Business QR Code
+      </h2>
+      
+      <div id="qrCodeContainer" style="margin:20px 0;min-height:200px;display:flex;align-items:center;justify-content:center;">
+        <!-- QR Code will be generated here -->
+      </div>
+      
+      <div style="background:#f8fafc;padding:15px;border-radius:var(--border-radius-md);margin-top:20px;border:1px solid #e2e8f0;">
+        <div style="font-size:13px;color:#64748b;">
+          <i class="fas fa-camera"></i> Scan this QR code to open the business card
+        </div>
+      </div>
+      
+      <button onclick="downloadQRCode()" style="width:100%;padding:15px;background:var(--primary-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:15px;font-weight:800;cursor:pointer;margin-top:25px;">
+        <i class="fas fa-download"></i> Download QR Code
+      </button>
+    </div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<!-- QR Code Library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
 <script>
+// ===== PASSWORD GENERATOR SYSTEM =====
+function generateAdminPassword(cardId) {
+  if (!cardId) return "admin123_default";
+  const shortId = cardId.substring(0, 8).toLowerCase();
+  return `business123_${shortId}`;
+}
+
+// ===== MAIN APP CODE =====
 let card = {};
 let currentProduct = null;
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
 let currentPage = 'loadingScreen';
+let deliveryStatusData = [];
+let businessAdminPassword = "";
+let shareableUrl = "";
 
 const supa = supabase.createClient(
   "https://dfvnefbxgayxqgjjgtrr.supabase.co",
@@ -1800,7 +2269,7 @@ const supa = supabase.createClient(
 document.addEventListener("DOMContentLoaded", async () => {
   const id = new URLSearchParams(location.search).get("id") || localStorage.getItem("lastCardId");
   if(!id) {
-    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;background:#0f172a;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;'><h2>Business Card Not Found</h2><p>Please use a valid business card URL</p><p style='color:#64748b;font-size:14px;margin-top:20px;'>Example: https://yourdomain.com/card.html?id=UNIQUE_ID</p></div>";
     return;
   }
 
@@ -1812,12 +2281,383 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     card = JSON.parse(data.data);
+    card.id = data.id;
+    
+    // Generate unique admin password for this business
+    businessAdminPassword = generateAdminPassword(card.id);
+    console.log("Admin password generated:", businessAdminPassword);
+    
+    // Generate shareable URL
+    shareableUrl = window.location.href;
+    
     await renderApp();
     navigateTo('homePage');
     updateCartCount();
+    
+    // Check for deliveries
+    setTimeout(() => {
+      checkForDeliveries();
+    }, 1000);
   }, 2000);
 });
 
+// ===== DELIVERY SYSTEM FUNCTIONS =====
+async function checkForDeliveries() {
+  try {
+    const customerPhone = card.phone || localStorage.getItem('customerPhone');
+    
+    if(!customerPhone) {
+      console.log('No customer phone found');
+      return;
+    }
+    
+    const { data, error } = await supa
+      .from('delivery_status')
+      .select('*')
+      .eq('customer_phone', customerPhone)
+      .order('last_updated', { ascending: false });
+      
+    if(error) {
+      console.error('Delivery check error:', error);
+      return;
+    }
+    
+    if(data && data.length > 0) {
+      deliveryStatusData = data;
+      updateDeliveryIcon();
+    }
+  } catch(err) {
+    console.log('Delivery check failed:', err);
+  }
+}
+
+function updateDeliveryIcon() {
+  const icon = document.getElementById('deliveryStatusIcon');
+  const badge = document.getElementById('deliveryBadge');
+  
+  if(deliveryStatusData.length > 0) {
+    const latestStatus = deliveryStatusData[0].status;
+    
+    // Status colors for simple icon
+    if(latestStatus === 'pending') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #f59e0b;"></i>';
+    } else if(latestStatus === 'processing') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #3b82f6;"></i>';
+    } else if(latestStatus === 'shipped') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #8b5cf6;"></i>';
+    } else if(latestStatus === 'delivered') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #10b981;"></i>';
+    } else if(latestStatus === 'cancelled') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #ef4444;"></i>';
+    }
+    
+    badge.textContent = deliveryStatusData.length;
+    badge.style.display = 'flex';
+  }
+}
+
+function checkDeliveryStatus() {
+  navigateTo('deliveryPage');
+}
+
+async function loadDeliveryStatus() {
+  const phone = card.phone || localStorage.getItem('customerPhone');
+  
+  if(!phone) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div class="no-deliveries">
+        <i class="fas fa-phone"></i>
+        <h3>Phone Number Needed</h3>
+        <p>Please save your phone number to track deliveries.</p>
+        <button onclick="navigateTo('contactPage')" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
+          Update Phone
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  const { data, error } = await supa
+    .from('delivery_status')
+    .select('*')
+    .eq('customer_phone', phone)
+    .order('last_updated', { ascending: false });
+    
+  if(error) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div style="text-align:center;padding:40px;color:#ef4444;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Error loading deliveries</p>
+        <button onclick="loadDeliveryStatus()" style="margin-top:15px;padding:10px 20px;background:#667eea;color:white;border:none;border-radius:8px;cursor:pointer;">
+          Try Again
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  if(!data || data.length === 0) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div class="no-deliveries">
+        <i class="fas fa-truck"></i>
+        <h3>No Active Deliveries</h3>
+        <p>Your delivery status will appear here once you place an order.</p>
+        <button onclick="navigateTo('productsPage')" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
+          <i class="fas fa-shopping-bag"></i> Shop Now
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  data.forEach(order => {
+    const statusClass = order.status;
+    const statusText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+    const updatedTime = new Date(order.last_updated).toLocaleString();
+    
+    html += `
+      <div class="delivery-card ${statusClass}">
+        <div class="delivery-header">
+          <div class="delivery-order-id">Order #${order.order_id}</div>
+          <div class="delivery-status ${statusClass}">${statusText}</div>
+        </div>
+        
+        <div class="delivery-info">
+          <i class="fas fa-user"></i>
+          <span>${order.customer_name || 'Customer'}</span>
+        </div>
+        
+        ${order.location ? `
+          <div class="delivery-info">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>${order.location}</span>
+          </div>
+        ` : ''}
+        
+        ${order.delivery_person ? `
+          <div class="delivery-info">
+            <i class="fas fa-user-tag"></i>
+            <span>${order.delivery_person}</span>
+          </div>
+        ` : ''}
+        
+        <div class="delivery-timestamp">
+          <i class="fas fa-clock"></i>
+          <span>Updated: ${updatedTime}</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('deliveryContent').innerHTML = html;
+}
+
+// ===== ADMIN FUNCTIONS =====
+function openAdminPage() {
+  const password = prompt("Enter admin password:");
+  if(password === businessAdminPassword) {
+    navigateTo('adminPage');
+    loadAdminPanel();
+  } else {
+    alert("Invalid password. Password format: business123_{business_id}");
+  }
+}
+
+async function loadAdminPanel() {
+  const { data, error } = await supa
+    .from('delivery_status')
+    .select('*')
+    .order('last_updated', { ascending: false });
+    
+  if(error || !data) {
+    document.getElementById('adminContent').innerHTML = '<p style="padding:20px;color:#ef4444;">Error loading data</p>';
+    return;
+  }
+  
+  let html = `
+    <input type="text" class="admin-search" id="adminSearch" placeholder="Search orders by ID, phone, name..." onkeyup="searchAdminOrders()">
+    
+    <button onclick="addNewOrder()" class="admin-btn">
+      <i class="fas fa-plus"></i> Add New Order
+    </button>
+  `;
+  
+  if(data.length === 0) {
+    html += '<p style="text-align:center;padding:40px;color:#64748b;">No orders found</p>';
+  } else {
+    data.forEach(order => {
+      const statusClass = order.status;
+      const updatedTime = new Date(order.last_updated).toLocaleString();
+      
+      html += `
+        <div class="admin-order-card" data-order-id="${order.order_id}" data-phone="${order.customer_phone}">
+          <div class="admin-order-header">
+            <div>
+              <div class="admin-order-id">Order #${order.order_id}</div>
+              <div class="admin-customer-info">${order.customer_name || 'No name'}</div>
+              <div class="admin-customer-info">${order.customer_phone}</div>
+            </div>
+            <div style="font-size:12px;color:#94a3b8;">${updatedTime}</div>
+          </div>
+          
+          <select class="admin-select" data-id="${order.id}">
+            <option value="pending" ${statusClass === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+            <option value="processing" ${statusClass === 'processing' ? 'selected' : ''}>🔄 Processing</option>
+            <option value="shipped" ${statusClass === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
+            <option value="delivered" ${statusClass === 'delivered' ? 'selected' : ''}>✅ Delivered</option>
+            <option value="cancelled" ${statusClass === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+          </select>
+          
+          <input type="text" class="admin-input" data-id="${order.id}" 
+                 placeholder="Location" value="${order.location || ''}">
+                 
+          <input type="text" class="admin-input" data-id="${order.id}" 
+                 placeholder="Delivery Person" value="${order.delivery_person || ''}">
+                 
+          <button onclick="updateOrder('${order.id}')" class="admin-btn success">
+            Update Order
+          </button>
+        </div>
+      `;
+    });
+  }
+  
+  document.getElementById('adminContent').innerHTML = html;
+}
+
+function searchAdminOrders() {
+  const searchTerm = document.getElementById('adminSearch').value.toLowerCase();
+  const cards = document.querySelectorAll('.admin-order-card');
+  
+  cards.forEach(card => {
+    const orderId = card.getAttribute('data-order-id').toLowerCase();
+    const phone = card.getAttribute('data-phone').toLowerCase();
+    const text = card.textContent.toLowerCase();
+    
+    if(orderId.includes(searchTerm) || phone.includes(searchTerm) || text.includes(searchTerm)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+async function updateOrder(orderId) {
+  const status = document.querySelector(`.admin-select[data-id="${orderId}"]`).value;
+  const location = document.querySelector(`.admin-input[data-id="${orderId}"]`).value;
+  const deliveryPerson = document.querySelectorAll(`.admin-input[data-id="${orderId}"]`)[1]?.value;
+  
+  const { error } = await supa
+    .from('delivery_status')
+    .update({
+      status: status,
+      location: location,
+      delivery_person: deliveryPerson,
+      last_updated: new Date().toISOString()
+    })
+    .eq('id', orderId);
+    
+  if(!error) {
+    alert('✅ Order updated successfully!');
+    loadAdminPanel();
+    if(currentPage === 'deliveryPage') {
+      loadDeliveryStatus();
+    }
+  } else {
+    alert('❌ Error updating order');
+  }
+}
+
+function addNewOrder() {
+  const orderId = prompt("Enter Order ID:");
+  const customerPhone = prompt("Enter Customer Phone:");
+  const customerName = prompt("Enter Customer Name (optional):");
+  
+  if(!orderId || !customerPhone) {
+    alert("❌ Order ID and Phone are required");
+    return;
+  }
+  
+  supa
+    .from('delivery_status')
+    .insert([{
+      order_id: orderId,
+      customer_phone: customerPhone,
+      customer_name: customerName || '',
+      status: 'pending',
+      location: '',
+      delivery_person: '',
+      last_updated: new Date().toISOString()
+    }])
+    .then(({ error }) => {
+      if(!error) {
+        alert('✅ Order added successfully!');
+        loadAdminPanel();
+      } else {
+        alert('❌ Error adding order: ' + error.message);
+      }
+    });
+}
+
+// ===== SHARING FUNCTIONS =====
+function openShareModal() {
+  document.getElementById('shareableLink').textContent = shareableUrl;
+  openModal('shareModal');
+}
+
+function shareViaWhatsApp() {
+  const businessName = card.businessName || card.name || "Business";
+  const message = `Check out ${businessName} on Faiqtech:\n\n${shareableUrl}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function copyToClipboard() {
+  navigator.clipboard.writeText(shareableUrl).then(() => {
+    alert('✅ Link copied to clipboard!');
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+    alert('❌ Failed to copy link');
+  });
+}
+
+function shareViaFacebook() {
+  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareableUrl)}`;
+  window.open(url, '_blank', 'width=600,height=400');
+}
+
+function generateQR() {
+  closeModal('shareModal');
+  const qrContainer = document.getElementById('qrCodeContainer');
+  qrContainer.innerHTML = '';
+  
+  QRCode.toCanvas(qrContainer, shareableUrl, {
+    width: 200,
+    height: 200,
+    color: {
+      dark: '#000000',
+      light: '#FFFFFF'
+    }
+  }, function(error) {
+    if(error) {
+      qrContainer.innerHTML = '<div style="color:#ef4444;">QR Code generation failed</div>';
+    }
+  });
+  
+  openModal('qrModal');
+}
+
+function downloadQRCode() {
+  const canvas = document.querySelector('#qrCodeContainer canvas');
+  if(canvas) {
+    const link = document.createElement('a');
+    link.download = `${card.businessName || 'business'}-qrcode.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+}
+
+// ===== NAVIGATION SYSTEM =====
 function navigateTo(pageId) {
   if(currentPage === pageId) return;
   
@@ -1843,7 +2683,9 @@ function navigateTo(pageId) {
       'productsPage': 1,
       'cartPage': 2,
       'aboutPage': 3,
-      'contactPage': 4
+      'contactPage': 4,
+      'deliveryPage': 0,
+      'adminPage': 0
     };
     
     if(navMap[pageId] !== undefined) {
@@ -1866,10 +2708,16 @@ function navigateTo(pageId) {
       case 'contactPage':
         loadContactPage();
         break;
+      case 'deliveryPage':
+        loadDeliveryStatus();
+        break;
+      case 'adminPage':
+        break;
     }
   }, 300);
 }
 
+// ===== RENDER APP =====
 async function renderApp() {
   document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
   
@@ -1887,16 +2735,23 @@ async function renderApp() {
   document.getElementById('contactEmail').textContent = card.email || "Not available";
   document.getElementById('contactAddress').textContent = card.address || "Not available";
   
+  if(card.phone) {
+    localStorage.setItem('customerPhone', card.phone);
+  }
+  
   loadHomePage();
 }
 
+// ===== AUTO-REFRESH DELIVERIES =====
+setInterval(checkForDeliveries, 30000);
+
+// ===== ALL EXISTING FUNCTIONS (Keep as is) =====
 function loadHomePage() {
   const featuredProducts = document.getElementById('featuredProducts');
   const products = card.products || [];
   
   featuredProducts.innerHTML = '';
   
-  // Show only products with badges (featured products)
   const featuredProductsList = products.filter(product => 
     product.badges && product.badges.length > 0
   ).slice(0, 4);
@@ -1906,7 +2761,6 @@ function loadHomePage() {
     featuredProducts.appendChild(createProductCard(product, originalIndex));
   });
   
-  // If no featured products, show first 4 products
   if(featuredProductsList.length === 0) {
     products.slice(0, 4).forEach((product, index) => {
       featuredProducts.appendChild(createProductCard(product, index));
@@ -1930,16 +2784,14 @@ function createProductCard(product, index) {
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
   const hasDiscount = originalPrice && price && originalPrice > price;
   
-  // Calculate discount percentage
   let discountPercentage = '';
   if(hasDiscount && originalPrice && price) {
     const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
-    if(discount > 0) { // Don't show if 0% or less
+    if(discount > 0) {
       discountPercentage = `<div class="discount-badge">${discount}% OFF</div>`;
     }
   }
   
-  // Price badge HTML - ON IMAGE for main card
   let priceBadgeHtml = '';
   if(price) {
     priceBadgeHtml = `<div class="price-badge">`;
@@ -1952,7 +2804,6 @@ function createProductCard(product, index) {
     priceBadgeHtml += `</div>`;
   }
   
-  // Map badge names to CSS classes
   const badgeClasses = {
     '🔥 Hot Deal': 'hot',
     '⭐ Best Seller': 'best-seller',
@@ -1965,7 +2816,6 @@ function createProductCard(product, index) {
   let badgesHtml = '';
   if(product.badges && product.badges.length > 0) {
     badgesHtml = `<div class="product-badges">`;
-    // Show only first 2 badges to avoid clutter
     product.badges.slice(0, 2).forEach(badge => {
       const badgeClass = badgeClasses[badge] || 'discount';
       badgesHtml += `<span class="badge ${badgeClass}">${badge}</span>`;
@@ -2005,7 +2855,6 @@ function createProductCard(product, index) {
   return card;
 }
 
-// Image zoom functionality
 function zoomImage(imageUrl, event) {
   event.stopPropagation();
   
@@ -2276,7 +3125,6 @@ function showProductModal(productIndex) {
   document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
   document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
   
-  // MODAL PRICE - Below image, in content flow
   const modalPrice = document.getElementById('modalPrice');
   if(hasDiscount) {
     const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
@@ -2670,6 +3518,16 @@ function showNotification(message) {
       }
     }, 300);
   }, 3000);
+}
+
+function openDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
 }
 
 updateCartCount();
