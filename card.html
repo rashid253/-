@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
 
 <style>
+/* All CSS remains exactly the same - only JavaScript changes */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -98,7 +99,7 @@ body {
 .page.slide-out {
   transform: translateX(-100%);
   opacity: 0;
-  visibility: hidden;
+  visibility hidden;
 }
 
 #loadingScreen {
@@ -2421,18 +2422,52 @@ function generateAdminPassword(cardId) {
   return `business123_${shortId}`;
 }
 
+// ===== DATA ISOLATION SYSTEM =====
+// Each business app will have its own isolated localStorage keys
+let currentBusinessId = '';
+
+function getStorageKey(key) {
+  // Prefix all localStorage keys with business ID
+  return `business_${currentBusinessId}_${key}`;
+}
+
+// Override localStorage functions to use isolated keys
+const isolatedLocalStorage = {
+  setItem: function(key, value) {
+    return localStorage.setItem(getStorageKey(key), value);
+  },
+  
+  getItem: function(key) {
+    return localStorage.getItem(getStorageKey(key));
+  },
+  
+  removeItem: function(key) {
+    return localStorage.removeItem(getStorageKey(key));
+  },
+  
+  clear: function() {
+    // Only clear items for this business
+    const prefix = `business_${currentBusinessId}_`;
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(prefix)) {
+        localStorage.removeItem(key);
+      }
+    }
+  }
+};
+
 // ===== CUSTOMER PHONE MANAGEMENT =====
 function getCustomerPhone() {
-  // Try to get from localStorage first
-  let phone = localStorage.getItem('customerPhone');
+  const phone = isolatedLocalStorage.getItem('customerPhone');
   
   // If not found, check if we're on the business owner's device (using business phone)
   if (!phone && card.phone) {
     // Check if this is the business owner's device by comparing with saved business phone
-    const savedBusinessPhone = localStorage.getItem('businessPhone');
+    const savedBusinessPhone = isolatedLocalStorage.getItem('businessPhone');
     if (savedBusinessPhone === card.phone) {
       // This is business owner's device, use business phone for admin purposes
-      phone = card.phone;
+      return card.phone;
     }
   }
   
@@ -2440,11 +2475,11 @@ function getCustomerPhone() {
 }
 
 function saveCustomerPhone(phone) {
-  localStorage.setItem('customerPhone', phone);
+  isolatedLocalStorage.setItem('customerPhone', phone);
 }
 
 function saveBusinessPhone(phone) {
-  localStorage.setItem('businessPhone', phone);
+  isolatedLocalStorage.setItem('businessPhone', phone);
 }
 
 // ===== BACK BUTTON HANDLING =====
@@ -2483,14 +2518,14 @@ window.addEventListener('popstate', function(event) {
 // ===== MAIN APP CODE =====
 let card = {};
 let currentProduct = null;
-let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let cart = [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
 let currentPage = 'loadingScreen';
 let deliveryStatusData = [];
 let businessAdminPassword = "";
 let shortCardId = "";
-let isAdminLoggedIn = localStorage.getItem('isAdminLoggedIn') === 'true';
+let isAdminLoggedIn = false;
 
 const supa = supabase.createClient(
   "https://dfvnefbxgayxqgjjgtrr.supabase.co",
@@ -2530,7 +2565,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // Save the card ID globally (for backward compatibility)
   localStorage.setItem("lastCardId", id);
+  
+  // Set current business ID for isolation
+  currentBusinessId = id;
+  
+  // Load cart from isolated storage
+  cart = JSON.parse(isolatedLocalStorage.getItem('cart')) || [];
+  
+  // Load admin login status from isolated storage
+  isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
   
   setTimeout(async () => {
     const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
@@ -2549,7 +2594,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     // Generate unique admin password for this business
     businessAdminPassword = generateAdminPassword(card.id);
-    console.log("Admin password generated:", businessAdminPassword);
+    console.log("Admin password generated for business", card.id.substring(0, 8), ":", businessAdminPassword);
     
     // Update password hint with short ID
     if (shortCardId) {
@@ -2583,9 +2628,6 @@ function closeExitModal() {
 }
 
 function exitApp() {
-  // Clear all app data
-  localStorage.clear();
-  
   // If we're in a PWA or fullscreen, exit fullscreen
   if (document.fullscreenElement) {
     document.exitFullscreen();
@@ -2691,7 +2733,7 @@ async function checkForDeliveries() {
     const customerPhone = getCustomerPhone();
     
     if(!customerPhone) {
-      console.log('No customer phone found');
+      console.log('No customer phone found for business', currentBusinessId.substring(0, 8));
       updateDeliveryIcon(); // Update icon even if no phone
       return;
     }
@@ -2931,7 +2973,7 @@ function attemptLogin() {
   
   if (enteredPassword === businessAdminPassword) {
     isAdminLoggedIn = true;
-    localStorage.setItem('isAdminLoggedIn', 'true');
+    isolatedLocalStorage.setItem('isAdminLoggedIn', 'true');
     updateLoginUI();
     showNotification('✅ Login successful!');
     navigateTo('adminPage');
@@ -2950,7 +2992,7 @@ function handleLoginKeypress(event) {
 
 function logoutAdmin() {
   isAdminLoggedIn = false;
-  localStorage.setItem('isAdminLoggedIn', 'false');
+  isolatedLocalStorage.removeItem('isAdminLoggedIn');
   updateLoginUI();
   showNotification('👋 Logged out successfully');
   navigateTo('homePage');
@@ -3133,6 +3175,56 @@ async function renderApp() {
   document.getElementById('contactAddress').textContent = card.address || "Not available";
   
   loadHomePage();
+}
+
+// ===== CART MANAGEMENT FUNCTIONS =====
+function updateCartCount() {
+  const count = cart.length;
+  document.getElementById('cartCountMini').textContent = count;
+  document.getElementById('cartBadge').textContent = count;
+  
+  // Save to isolated storage
+  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+  
+  if(currentPage === 'cartPage') {
+    loadCartPage();
+  }
+}
+
+function addToCart(productIndex) {
+  const products = card.products || [];
+  const product = products[productIndex];
+  
+  if(product) {
+    const existingIndex = cart.findIndex(item => 
+      item.title === product.title && 
+      item.discountPrice === product.discountPrice
+    );
+    
+    if(existingIndex === -1) {
+      cart.push({
+        ...product,
+        index: productIndex,
+        quantity: 1
+      });
+    } else {
+      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+    }
+    updateCartCount();
+    showNotification('Product added to cart!');
+  }
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCartCount();
+}
+
+function updateQuantity(index, change) {
+  if(cart[index]) {
+    cart[index].quantity = Math.max(1, (cart[index].quantity || 1) + change);
+    loadCartPage();
+  }
 }
 
 // ===== KEEP ALL EXISTING FUNCTIONS (unchanged from original) =====
@@ -3450,57 +3542,6 @@ function loadContactPage() {
   });
 }
 
-function updateCartCount() {
-  const count = cart.length;
-  document.getElementById('cartCountMini').textContent = count;
-  document.getElementById('cartBadge').textContent = count;
-  
-  localStorage.setItem('cart', JSON.stringify(cart));
-  
-  if(currentPage === 'cartPage') {
-    loadCartPage();
-  }
-}
-
-function addToCart(productIndex) {
-  const products = card.products || [];
-  const product = products[productIndex];
-  
-  if(product) {
-    const existingIndex = cart.findIndex(item => 
-      item.title === product.title && 
-      item.discountPrice === product.discountPrice
-    );
-    
-    if(existingIndex === -1) {
-      cart.push({
-        ...product,
-        index: productIndex,
-        quantity: 1
-      });
-    } else {
-      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
-    }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    showNotification('Product added to cart!');
-  }
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  localStorage.setItem('cart', JSON.stringify(cart));
-  updateCartCount();
-}
-
-function updateQuantity(index, change) {
-  if(cart[index]) {
-    cart[index].quantity = Math.max(1, (cart[index].quantity || 1) + change);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    loadCartPage();
-  }
-}
-
 function showProductModal(productIndex) {
   const products = card.products || [];
   currentProduct = products[productIndex];
@@ -3812,7 +3853,6 @@ function sendCheckoutOrder() {
   }
   
   cart = [];
-  localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
   closeModal('checkoutModal');
   navigateTo('homePage');
