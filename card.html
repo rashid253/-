@@ -99,7 +99,7 @@ body {
 .page.slide-out {
   transform: translateX(-100%);
   opacity: 0;
-  visibility hidden;
+  visibility: hidden;
 }
 
 #loadingScreen {
@@ -2341,7 +2341,7 @@ body {
           </div>
           
           <div class="payment-option" onclick="selectCheckoutPayment('cod')" id="codCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
-            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display=flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
               <i class="fas fa-truck"></i>
             </div>
             <div>
@@ -2482,187 +2482,57 @@ function saveBusinessPhone(phone) {
   isolatedLocalStorage.setItem('businessPhone', phone);
 }
 
-// ===== BACK BUTTON HANDLING =====
+// ===== FIXED BACK BUTTON SYSTEM =====
 let lastBackPress = 0;
 let backPressCount = 0;
 
-// Handle browser back button
-window.addEventListener('popstate', function(event) {
-  event.preventDefault();
-  
-  const currentTime = new Date().getTime();
-  const timeDiff = currentTime - lastBackPress;
-  
-  if (timeDiff < 1000) { // Double click within 1 second
-    backPressCount++;
-    if (backPressCount >= 2 && currentPage === 'homePage') {
-      showExitModal();
-    }
-  } else {
-    backPressCount = 1;
-  }
-  
-  lastBackPress = currentTime;
-  
-  // Normal back navigation
-  if (currentPage !== 'homePage') {
-    goBack();
-  } else {
-    // If on home page, show warning
-    if (backPressCount === 1) {
-      showNotification('Press back again to exit');
-    }
-  }
-});
+// Store navigation history
+let navigationHistory = [];
 
-// ===== MAIN APP CODE =====
-let card = {};
-let currentProduct = null;
-let cart = [];
-let buyNowPaymentMethod = 'whatsapp';
-let checkoutPaymentMethod = 'whatsapp';
-let currentPage = 'loadingScreen';
-let deliveryStatusData = [];
-let businessAdminPassword = "";
-let shortCardId = "";
-let isAdminLoggedIn = false;
-
-const supa = supabase.createClient(
-  "https://dfvnefbxgayxqgjjgtrr.supabase.co",
-  "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
-);
-
-document.addEventListener("DOMContentLoaded", async () => {
-  // Check for short ID in URL
-  const urlParams = new URLSearchParams(location.search);
-  let id = urlParams.get("id") || localStorage.getItem("lastCardId");
+// Initialize hash-based routing
+function initializeRouting() {
+  // Listen for hash changes
+  window.addEventListener('hashchange', handleHashChange);
   
-  // If it's a short ID (7 characters), map it to full UUID
-  if (id && id.length === 7) {
-    const { data: mapping } = await supa
-      .from('short_urls')
-      .select('full_id')
-      .eq('short_id', id)
-      .single();
-    
-    if (mapping) {
-      id = mapping.full_id;
-      shortCardId = mapping.short_id;
+  // Initial hash check
+  setTimeout(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      handleHashChange();
+    } else {
+      // Set initial hash to home
+      window.location.hash = '#home';
     }
-  } else {
-    // Generate short ID for new cards
-    if (id && id.length === 36) { // UUID length
-      const shortId = generateShortId();
-      await supa
-        .from('short_urls')
-        .insert([{ short_id: shortId, full_id: id }]);
-      shortCardId = shortId;
-    }
-  }
-  
-  if(!id) {
-    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
-    return;
-  }
-
-  // Save the card ID globally (for backward compatibility)
-  localStorage.setItem("lastCardId", id);
-  
-  // Set current business ID for isolation
-  currentBusinessId = id;
-  
-  // Load cart from isolated storage
-  cart = JSON.parse(isolatedLocalStorage.getItem('cart')) || [];
-  
-  // Load admin login status from isolated storage
-  isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
-  
-  setTimeout(async () => {
-    const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
-    if(error || !data) {
-      document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
-      return;
-    }
-
-    card = JSON.parse(data.data);
-    card.id = data.id;
-    
-    // Save business phone for admin check
-    if (card.phone) {
-      saveBusinessPhone(card.phone);
-    }
-    
-    // Generate unique admin password for this business
-    businessAdminPassword = generateAdminPassword(card.id);
-    console.log("Admin password generated for business", card.id.substring(0, 8), ":", businessAdminPassword);
-    
-    // Update password hint with short ID
-    if (shortCardId) {
-      document.getElementById('passwordHint').textContent = 
-        `Hint: Password format is business123_${shortCardId.substring(0, 8).toLowerCase()}`;
-    }
-    
-    await renderApp();
-    navigateTo('homePage');
-    updateCartCount();
-    updateLoginUI();
-    updateCustomerPhoneDisplay();
-    
-    // Check for deliveries
-    setTimeout(() => {
-      checkForDeliveries();
-    }, 1000);
-  }, 2000);
-});
-
-// ===== EXIT MODAL FUNCTIONS =====
-function showExitModal() {
-  document.getElementById('exitModal').style.display = 'flex';
-  document.body.style.overflow = 'hidden';
+  }, 100);
 }
 
-function closeExitModal() {
-  document.getElementById('exitModal').style.display = 'none';
-  document.body.style.overflow = 'auto';
-  backPressCount = 0;
-}
-
-function exitApp() {
-  // If we're in a PWA or fullscreen, exit fullscreen
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  }
-  
-  // Close the app/window
-  if (window.history.length > 1) {
-    window.history.go(-1);
-  } else {
-    window.close();
-  }
-}
-
-// ===== BACK BUTTON FIX =====
-function goBack() {
-  const backMap = {
-    'productsPage': 'homePage',
-    'cartPage': 'homePage',
-    'aboutPage': 'homePage',
-    'contactPage': 'homePage',
-    'deliveryPage': 'homePage',
-    'adminPage': 'homePage',
-    'loginPage': 'homePage'
+// Handle hash changes
+function handleHashChange() {
+  const hash = window.location.hash.replace('#', '');
+  const pageMap = {
+    'home': 'homePage',
+    'products': 'productsPage',
+    'cart': 'cartPage',
+    'about': 'aboutPage',
+    'contact': 'contactPage',
+    'delivery': 'deliveryPage',
+    'admin': 'adminPage',
+    'login': 'loginPage'
   };
   
-  if (backMap[currentPage]) {
-    navigateTo(backMap[currentPage]);
+  if (pageMap[hash]) {
+    // Only navigate if it's a different page
+    if (currentPage !== pageMap[hash]) {
+      navigateToDirect(pageMap[hash]);
+    }
   } else {
-    navigateTo('homePage');
+    // Default to home
+    window.location.hash = '#home';
   }
-  backPressCount = 0;
 }
 
-// ===== NAVIGATION SYSTEM =====
-function navigateTo(pageId) {
+// Direct navigation function (without adding to history)
+function navigateToDirect(pageId) {
   if(currentPage === pageId) return;
   
   const oldPage = document.getElementById(currentPage);
@@ -2678,6 +2548,7 @@ function navigateTo(pageId) {
     newPage.classList.add('active');
     currentPage = pageId;
     
+    // Update navigation
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.remove('active');
     });
@@ -2697,6 +2568,7 @@ function navigateTo(pageId) {
       document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
     }
     
+    // Load page content
     switch(pageId) {
       case 'homePage':
         loadHomePage();
@@ -2725,6 +2597,92 @@ function navigateTo(pageId) {
         break;
     }
   }, 300);
+}
+
+// Main navigation function with history management
+function navigateTo(pageId) {
+  const hashMap = {
+    'homePage': 'home',
+    'productsPage': 'products',
+    'cartPage': 'cart',
+    'aboutPage': 'about',
+    'contactPage': 'contact',
+    'deliveryPage': 'delivery',
+    'adminPage': 'admin',
+    'loginPage': 'login'
+  };
+  
+  if (hashMap[pageId]) {
+    // Add to browser history
+    window.location.hash = `#${hashMap[pageId]}`;
+    
+    // Add to our navigation history
+    navigationHistory.push(pageId);
+  }
+}
+
+// Back navigation
+function goBack() {
+  if (navigationHistory.length > 1) {
+    // Remove current page from history
+    navigationHistory.pop();
+    
+    // Get previous page
+    const previousPage = navigationHistory[navigationHistory.length - 1];
+    
+    // Navigate to previous page
+    const hashMap = {
+      'homePage': 'home',
+      'productsPage': 'products',
+      'cartPage': 'cart',
+      'aboutPage': 'about',
+      'contactPage': 'contact',
+      'deliveryPage': 'delivery',
+      'adminPage': 'admin',
+      'loginPage': 'login'
+    };
+    
+    if (hashMap[previousPage]) {
+      window.history.back(); // Let browser handle the hash change
+    } else {
+      navigateTo('homePage');
+    }
+  } else {
+    // If no history, go to home
+    navigateTo('homePage');
+  }
+}
+
+// Handle browser back button (popstate)
+window.addEventListener('popstate', function(event) {
+  // Let the hashchange handler deal with it
+  // This prevents the double-back exit issue
+});
+
+// ===== EXIT MODAL FUNCTIONS =====
+function showExitModal() {
+  document.getElementById('exitModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeExitModal() {
+  document.getElementById('exitModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+  backPressCount = 0;
+}
+
+function exitApp() {
+  // If we're in a PWA or fullscreen, exit fullscreen
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  }
+  
+  // Close the app/window
+  if (window.history.length > 1) {
+    window.history.go(-1);
+  } else {
+    window.close();
+  }
 }
 
 // ===== DELIVERY SYSTEM FUNCTIONS =====
@@ -3928,7 +3886,94 @@ function closeDeliveryModal() {
 }
 
 // Initialize
-updateCartCount();
+document.addEventListener("DOMContentLoaded", async () => {
+  // Check for short ID in URL
+  const urlParams = new URLSearchParams(location.search);
+  let id = urlParams.get("id") || localStorage.getItem("lastCardId");
+  
+  // If it's a short ID (7 characters), map it to full UUID
+  if (id && id.length === 7) {
+    const { data: mapping } = await supa
+      .from('short_urls')
+      .select('full_id')
+      .eq('short_id', id)
+      .single();
+    
+    if (mapping) {
+      id = mapping.full_id;
+      shortCardId = mapping.short_id;
+    }
+  } else {
+    // Generate short ID for new cards
+    if (id && id.length === 36) { // UUID length
+      const shortId = generateShortId();
+      await supa
+        .from('short_urls')
+        .insert([{ short_id: shortId, full_id: id }]);
+      shortCardId = shortId;
+    }
+  }
+  
+  if(!id) {
+    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+    return;
+  }
+
+  // Save the card ID globally (for backward compatibility)
+  localStorage.setItem("lastCardId", id);
+  
+  // Set current business ID for isolation
+  currentBusinessId = id;
+  
+  // Load cart from isolated storage
+  cart = JSON.parse(isolatedLocalStorage.getItem('cart')) || [];
+  
+  // Load admin login status from isolated storage
+  isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
+  
+  setTimeout(async () => {
+    const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
+    if(error || !data) {
+      document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+      return;
+    }
+
+    card = JSON.parse(data.data);
+    card.id = data.id;
+    
+    // Save business phone for admin check
+    if (card.phone) {
+      saveBusinessPhone(card.phone);
+    }
+    
+    // Generate unique admin password for this business
+    businessAdminPassword = generateAdminPassword(card.id);
+    console.log("Admin password generated for business", card.id.substring(0, 8), ":", businessAdminPassword);
+    
+    // Update password hint with short ID
+    if (shortCardId) {
+      document.getElementById('passwordHint').textContent = 
+        `Hint: Password format is business123_${shortCardId.substring(0, 8).toLowerCase()}`;
+    }
+    
+    await renderApp();
+    
+    // Initialize routing after render
+    initializeRouting();
+    
+    // Start with home page
+    navigationHistory.push('homePage');
+    
+    updateCartCount();
+    updateLoginUI();
+    updateCustomerPhoneDisplay();
+    
+    // Check for deliveries
+    setTimeout(() => {
+      checkForDeliveries();
+    }, 1000);
+  }, 2000);
+});
 </script>
 </body>
 </html>
