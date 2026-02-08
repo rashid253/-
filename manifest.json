@@ -1,6 +1,6 @@
 {
-  "name": "__DYNAMIC_APP_NAME__",
-  "short_name": "__DYNAMIC_SHORT_NAME__",
+  "name": "__BUSINESS_APP__",
+  "short_name": "__BUSINESS__",
   "description": "Premium business application",
   "start_url": "./card.html",
   "scope": "./",
