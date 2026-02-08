@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
 
 <style>
-/* All CSS remains exactly the same */
+/* All CSS remains exactly the same as before - NO CHANGES */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -1924,8 +1924,8 @@ body {
   <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
-    <h1 id="loadingTitle">Digital Business App</h1>
-    <p id="loadingSubtitle">Loading your premium business experience...</p>
+    <h1 id="loadingTitle">Business App</h1>
+    <p id="loadingSubtitle">Loading your business experience...</p>
   </div>
 
   <!-- Home Page -->
@@ -2445,96 +2445,147 @@ const supa = supabase.createClient(
   "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
 
-// ===== DYNAMIC PWA SYSTEM =====
+// ===== DYNAMIC PWA SYSTEM WITH BUSINESS-SPECIFIC NAMES =====
 function setupDynamicPWA(businessData) {
-  // Generate app name from business name
   const businessName = businessData.businessName || businessData.name || "Business";
-  const appName = businessName + " App";
+  const appName = `${businessName} App`;
   const shortName = businessName.length > 12 ? businessName.substring(0, 10) + ".." : businessName;
-  
-  // Use profile image as app icon (or default)
   const profileImage = businessData.profileImage || '';
+  const businessDesc = businessData.business?.about || `Premium business app for ${businessName}`;
   
-  // Create dynamic manifest
-  const manifest = {
+  console.log("Setting up PWA for business:", businessName);
+  
+  // Remove any existing manifest links
+  document.querySelectorAll('link[rel="manifest"]').forEach(link => link.remove());
+  
+  // Create dynamic manifest with business-specific data
+  const dynamicManifest = {
     "name": appName,
-    "short_name": shortName + " App",
-    "description": "Premium business app for " + businessName,
+    "short_name": shortName,
+    "description": businessDesc.substring(0, 200), // Limit description length
     "theme_color": "#667eea",
-    "background_color": "#ffffff",
+    "background_color": "#0f172a",
     "display": "standalone",
     "orientation": "portrait",
     "scope": "./",
     "start_url": window.location.href,
-    "icons": [
+    "icons": []
+  };
+  
+  // Add profile image as app icon if available
+  if (profileImage && isValidImageUrl(profileImage)) {
+    dynamicManifest.icons = [
       {
-        "src": profileImage || getDefaultIcon(businessName),
+        "src": profileImage,
         "sizes": "192x192",
-        "type": profileImage ? "image/jpeg" : "image/png",
+        "type": getImageType(profileImage),
         "purpose": "any maskable"
       },
       {
-        "src": profileImage || getDefaultIcon(businessName),
+        "src": profileImage,
         "sizes": "512x512",
-        "type": profileImage ? "image/jpeg" : "image/png",
+        "type": getImageType(profileImage),
         "purpose": "any maskable"
       }
-    ],
-    "screenshots": [
+    ];
+  } else {
+    // Generate icon from business name
+    const generatedIcon = generateBusinessIcon(businessName);
+    dynamicManifest.icons = [
       {
-        "src": "https://via.placeholder.com/540/720/667eea/ffffff?text=" + encodeURIComponent(businessName),
-        "sizes": "540x720",
-        "type": "image/png",
-        "form_factor": "narrow"
+        "src": generatedIcon,
+        "sizes": "192x192",
+        "type": "image/svg+xml",
+        "purpose": "any maskable"
+      },
+      {
+        "src": generatedIcon,
+        "sizes": "512x512",
+        "type": "image/svg+xml",
+        "purpose": "any maskable"
       }
-    ]
-  };
-  
-  // Remove any existing manifest
-  const oldManifest = document.querySelector('link[rel="manifest"]');
-  if (oldManifest) {
-    oldManifest.remove();
+    ];
   }
   
-  // Inject manifest
-  const manifestString = JSON.stringify(manifest);
+  // Inject the dynamic manifest
+  const manifestString = JSON.stringify(dynamicManifest);
   const manifestBlob = new Blob([manifestString], {type: 'application/manifest+json'});
   const manifestURL = URL.createObjectURL(manifestBlob);
   
   const manifestLink = document.createElement('link');
   manifestLink.rel = 'manifest';
   manifestLink.href = manifestURL;
-  manifestLink.crossOrigin = 'use-credentials';
   document.head.appendChild(manifestLink);
   
-  // Update page title
+  // Update page title and metadata
   document.title = appName;
-  
-  // Update loading screen
   document.getElementById('loadingTitle').textContent = appName;
-  document.getElementById('loadingSubtitle').textContent = `Loading ${businessName} experience...`;
-  
-  // Update theme color meta tag
+  document.getElementById('loadingSubtitle').textContent = `Loading ${businessName}...`;
   document.getElementById('themeColorMeta').content = "#667eea";
+  document.getElementById('businessHeader').textContent = `Welcome to ${businessName}`;
   
   // Update favicon
-  updateFavicon(profileImage || getDefaultIcon(businessName));
+  if (profileImage && isValidImageUrl(profileImage)) {
+    updateFavicon(profileImage);
+  } else {
+    updateFavicon(generateBusinessIcon(businessName));
+  }
   
-  console.log("Dynamic PWA setup for:", businessName);
-  
-  // Trigger PWA install prompt after 3 seconds
-  setTimeout(() => {
-    showInstallPromptIfAvailable();
-  }, 3000);
+  console.log("Dynamic PWA manifest injected for:", businessName);
+  return dynamicManifest;
 }
 
-function getDefaultIcon(businessName) {
-  // Create a colored icon with first letter of business name
+// Helper function to check if URL is a valid image
+function isValidImageUrl(url) {
+  if (!url) return false;
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+  return imageExtensions.some(ext => url.toLowerCase().includes(ext));
+}
+
+// Helper function to get image type from URL
+function getImageType(url) {
+  if (url.includes('.png')) return 'image/png';
+  if (url.includes('.jpg') || url.includes('.jpeg')) return 'image/jpeg';
+  if (url.includes('.gif')) return 'image/gif';
+  if (url.includes('.webp')) return 'image/webp';
+  if (url.includes('.svg')) return 'image/svg+xml';
+  return 'image/jpeg'; // Default
+}
+
+// Generate icon from business name (using first letter)
+function generateBusinessIcon(businessName) {
   const firstLetter = businessName.charAt(0).toUpperCase();
-  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
-  const color = colors[businessName.length % colors.length];
   
-  return `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="60" font-size="48" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
+  // Color palette for icons
+  const colors = [
+    '#667eea', // Purple-blue
+    '#764ba2', // Purple
+    '#10b981', // Green
+    '#f59e0b', // Orange
+    '#ef4444', // Red
+    '#3b82f6'  // Blue
+  ];
+  
+  // Pick color based on business name
+  const colorIndex = Array.from(businessName).reduce((sum, char) => sum + char.charCodeAt(0), 0) % colors.length;
+  const iconColor = colors[colorIndex];
+  
+  // Create SVG icon
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+    <defs>
+      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:${iconColor};stop-opacity:0.9" />
+        <stop offset="100%" style="stop-color:${iconColor};stop-opacity:0.7" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" fill="url(#grad)" rx="20"/>
+    <text x="50" y="65" font-size="48" font-family="Arial, sans-serif" 
+          fill="white" text-anchor="middle" font-weight="bold">
+      ${firstLetter}
+    </text>
+  </svg>`;
+  
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 function updateFavicon(iconUrl) {
@@ -2556,6 +2607,86 @@ function updateFavicon(iconUrl) {
   }
   appleIcon.href = iconUrl;
   appleIcon.sizes = "180x180";
+}
+
+// ===== PWA INSTALLATION HANDLER =====
+let deferredPrompt = null;
+
+// Listen for beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent Chrome 67 and earlier from automatically showing the prompt
+  e.preventDefault();
+  // Stash the event so it can be triggered later
+  deferredPrompt = e;
+  
+  console.log('PWA install prompt available');
+  
+  // Show install button after 3 seconds
+  setTimeout(() => {
+    showInstallButton();
+  }, 3000);
+});
+
+// Show install button
+function showInstallButton() {
+  if (!deferredPrompt) return;
+  
+  // Remove any existing install button
+  const existingContainer = document.querySelector('.install-button-container');
+  if (existingContainer) {
+    existingContainer.remove();
+  }
+  
+  // Create install button
+  const installContainer = document.createElement('div');
+  installContainer.className = 'install-button-container';
+  installContainer.innerHTML = `
+    <button class="install-btn" onclick="installPWA()">
+      <i class="fas fa-download"></i> Install App
+    </button>
+  `;
+  
+  document.body.appendChild(installContainer);
+  
+  // Auto-hide after 30 seconds
+  setTimeout(() => {
+    if (installContainer.parentNode) {
+      installContainer.remove();
+    }
+  }, 30000);
+}
+
+// Install PWA
+function installPWA() {
+  if (!deferredPrompt) return;
+  
+  // Show the install prompt
+  deferredPrompt.prompt();
+  
+  // Wait for the user to respond to the prompt
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+      showNotification('✅ App installed successfully!');
+      
+      // Remove the install button
+      const installContainer = document.querySelector('.install-button-container');
+      if (installContainer) {
+        installContainer.remove();
+      }
+    } else {
+      console.log('User dismissed the install prompt');
+    }
+    
+    // Clear the deferredPrompt variable
+    deferredPrompt = null;
+  });
+}
+
+// Check if PWA is already installed
+function isPWAInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches || 
+         window.navigator.standalone === true;
 }
 
 // ===== SHORT URL SYSTEM =====
@@ -2651,100 +2782,6 @@ function saveCustomerPhone(phone) {
 
 function saveBusinessPhone(phone) {
   isolatedLocalStorage.setItem('businessPhone', phone);
-}
-
-// ===== PWA INSTALLATION HANDLER =====
-let deferredPrompt = null;
-
-// Listen for beforeinstallprompt event
-window.addEventListener('beforeinstallprompt', (e) => {
-  // Prevent Chrome 67 and earlier from automatically showing the prompt
-  e.preventDefault();
-  // Stash the event so it can be triggered later
-  deferredPrompt = e;
-  
-  console.log('PWA install prompt available');
-  
-  // Show install button after 3 seconds
-  setTimeout(() => {
-    showInstallButton();
-  }, 3000);
-});
-
-// Show install button
-function showInstallButton() {
-  if (!deferredPrompt) return;
-  
-  // Remove any existing install button
-  const existingContainer = document.querySelector('.install-button-container');
-  if (existingContainer) {
-    existingContainer.remove();
-  }
-  
-  // Create install button
-  const installContainer = document.createElement('div');
-  installContainer.className = 'install-button-container';
-  installContainer.innerHTML = `
-    <button class="install-btn" onclick="installPWA()">
-      <i class="fas fa-download"></i> Install App
-    </button>
-  `;
-  
-  document.body.appendChild(installContainer);
-  
-  // Auto-hide after 30 seconds
-  setTimeout(() => {
-    if (installContainer.parentNode) {
-      installContainer.remove();
-    }
-  }, 30000);
-}
-
-// Install PWA
-function installPWA() {
-  if (!deferredPrompt) return;
-  
-  // Show the install prompt
-  deferredPrompt.prompt();
-  
-  // Wait for the user to respond to the prompt
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-      showNotification('✅ App installed successfully!');
-      
-      // Remove the install button
-      const installContainer = document.querySelector('.install-button-container');
-      if (installContainer) {
-        installContainer.remove();
-      }
-    } else {
-      console.log('User dismissed the install prompt');
-    }
-    
-    // Clear the deferredPrompt variable
-    deferredPrompt = null;
-  });
-}
-
-// Check if PWA is already installed
-function isPWAInstalled() {
-  return window.matchMedia('(display-mode: standalone)').matches || 
-         window.navigator.standalone === true;
-}
-
-// Show install prompt if available
-function showInstallPromptIfAvailable() {
-  // Don't show if already installed or in standalone mode
-  if (isPWAInstalled()) {
-    console.log('PWA already installed');
-    return;
-  }
-  
-  // Show install button if prompt is available
-  if (deferredPrompt) {
-    showInstallButton();
-  }
 }
 
 // ===== FIXED BACK BUTTON SYSTEM =====
@@ -3393,10 +3430,11 @@ let isAdminLoggedIn = false;
 
 // ===== RENDER APP =====
 async function renderApp() {
-  // Setup Dynamic PWA first
+  // Setup Dynamic PWA with business data FIRST
   setupDynamicPWA(card);
   
-  document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
+  // Then render the rest of the app
+  document.getElementById('businessHeader').textContent = `Welcome to ${card.businessName || card.name || "Premium Business"}`;
   
   const photo = document.getElementById('photo');
   if(card.profileImage) {
