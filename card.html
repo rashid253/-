@@ -1861,6 +1861,40 @@ body {
 .exit-modal-btn.exit:hover {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
 }
+
+/* ===== INSTALL BUTTON ===== */
+.install-button-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  animation: slideDown 0.5s ease;
+}
+
+.install-btn {
+  padding: 12px 24px;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.install-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+@keyframes slideDown {
+  from { top: -100px; opacity: 0; }
+  to { top: 20px; opacity: 1; }
+}
 </style>
 </head>
 
@@ -2456,10 +2490,21 @@ function setupDynamicPWA(businessData) {
     ]
   };
   
+  // Remove any existing manifest
+  const oldManifest = document.querySelector('link[rel="manifest"]');
+  if (oldManifest) {
+    oldManifest.remove();
+  }
+  
   // Inject manifest
+  const manifestString = JSON.stringify(manifest);
+  const manifestBlob = new Blob([manifestString], {type: 'application/manifest+json'});
+  const manifestURL = URL.createObjectURL(manifestBlob);
+  
   const manifestLink = document.createElement('link');
   manifestLink.rel = 'manifest';
-  manifestLink.href = `data:application/manifest+json,${encodeURIComponent(JSON.stringify(manifest))}`;
+  manifestLink.href = manifestURL;
+  manifestLink.crossOrigin = 'use-credentials';
   document.head.appendChild(manifestLink);
   
   // Update page title
@@ -2476,6 +2521,11 @@ function setupDynamicPWA(businessData) {
   updateFavicon(profileImage || getDefaultIcon(businessName));
   
   console.log("Dynamic PWA setup for:", businessName);
+  
+  // Trigger PWA install prompt after 3 seconds
+  setTimeout(() => {
+    showInstallPromptIfAvailable();
+  }, 3000);
 }
 
 function getDefaultIcon(businessName) {
@@ -2505,6 +2555,7 @@ function updateFavicon(iconUrl) {
     document.head.appendChild(appleIcon);
   }
   appleIcon.href = iconUrl;
+  appleIcon.sizes = "180x180";
 }
 
 // ===== SHORT URL SYSTEM =====
@@ -2600,6 +2651,100 @@ function saveCustomerPhone(phone) {
 
 function saveBusinessPhone(phone) {
   isolatedLocalStorage.setItem('businessPhone', phone);
+}
+
+// ===== PWA INSTALLATION HANDLER =====
+let deferredPrompt = null;
+
+// Listen for beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent Chrome 67 and earlier from automatically showing the prompt
+  e.preventDefault();
+  // Stash the event so it can be triggered later
+  deferredPrompt = e;
+  
+  console.log('PWA install prompt available');
+  
+  // Show install button after 3 seconds
+  setTimeout(() => {
+    showInstallButton();
+  }, 3000);
+});
+
+// Show install button
+function showInstallButton() {
+  if (!deferredPrompt) return;
+  
+  // Remove any existing install button
+  const existingContainer = document.querySelector('.install-button-container');
+  if (existingContainer) {
+    existingContainer.remove();
+  }
+  
+  // Create install button
+  const installContainer = document.createElement('div');
+  installContainer.className = 'install-button-container';
+  installContainer.innerHTML = `
+    <button class="install-btn" onclick="installPWA()">
+      <i class="fas fa-download"></i> Install App
+    </button>
+  `;
+  
+  document.body.appendChild(installContainer);
+  
+  // Auto-hide after 30 seconds
+  setTimeout(() => {
+    if (installContainer.parentNode) {
+      installContainer.remove();
+    }
+  }, 30000);
+}
+
+// Install PWA
+function installPWA() {
+  if (!deferredPrompt) return;
+  
+  // Show the install prompt
+  deferredPrompt.prompt();
+  
+  // Wait for the user to respond to the prompt
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+      showNotification('✅ App installed successfully!');
+      
+      // Remove the install button
+      const installContainer = document.querySelector('.install-button-container');
+      if (installContainer) {
+        installContainer.remove();
+      }
+    } else {
+      console.log('User dismissed the install prompt');
+    }
+    
+    // Clear the deferredPrompt variable
+    deferredPrompt = null;
+  });
+}
+
+// Check if PWA is already installed
+function isPWAInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches || 
+         window.navigator.standalone === true;
+}
+
+// Show install prompt if available
+function showInstallPromptIfAvailable() {
+  // Don't show if already installed or in standalone mode
+  if (isPWAInstalled()) {
+    console.log('PWA already installed');
+    return;
+  }
+  
+  // Show install button if prompt is available
+  if (deferredPrompt) {
+    showInstallButton();
+  }
 }
 
 // ===== FIXED BACK BUTTON SYSTEM =====
@@ -4110,6 +4255,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 1000);
   }, 2000);
 });
+
+// ===== SERVICE WORKER REGISTRATION =====
+// Register service worker for PWA capabilities
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js', { scope: './' })
+      .then(function(registration) {
+        console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service Worker registration failed:', error);
+      });
+  });
+}
 </script>
 </body>
 </html>
