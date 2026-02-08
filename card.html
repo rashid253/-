@@ -1683,6 +1683,275 @@ body {
   color: #94a3b8;
   margin-top: 10px;
 }
+
+/* ===== FIXED BACK BUTTON ISSUE ===== */
+.back-btn-fixed {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.3);
+  z-index: 10;
+}
+
+/* ===== FIX FOR ADMIN PAGE FOOTER ===== */
+#adminPage .page-footer-spacer {
+  height: 120px !important;
+}
+
+/* ===== DRAGGABLE NOTIFICATION BELL ===== */
+.notification-bell {
+  position: fixed;
+  top: 100px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: var(--primary-gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: move;
+  z-index: 9999;
+  box-shadow: var(--shadow-lg);
+  border: 3px solid white;
+  user-select: none;
+  touch-action: none;
+}
+
+.notification-bell i {
+  color: white;
+  font-size: 24px;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--danger-gradient);
+  color: white;
+  font-size: 12px;
+  font-weight: 900;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* ===== NOTIFICATIONS PANEL ===== */
+.notifications-panel {
+  position: fixed;
+  top: 170px;
+  right: 20px;
+  width: 300px;
+  max-height: 400px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--glass-border);
+  z-index: 9998;
+  display: none;
+  overflow: hidden;
+}
+
+.notifications-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notifications-header h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.clear-notifications {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 6px;
+}
+
+.clear-notifications:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.notifications-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.notification-item {
+  padding: 15px;
+  background: rgba(255,255,255,0.5);
+  border-radius: var(--border-radius-md);
+  margin-bottom: 10px;
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.notification-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+  transform: translateX(-5px);
+}
+
+.notification-item.unread {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 4px solid #3b82f6;
+}
+
+.notification-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-bottom: 5px;
+}
+
+.notification-message {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.notification-time {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ===== ADMIN LOGIN MODAL ===== */
+.admin-login-modal {
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-xl);
+  padding: 30px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--glass-border);
+}
+
+.admin-login-title {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.admin-login-title h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-bottom: 10px;
+}
+
+.admin-login-title p {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.admin-business-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  background: #f8fafc;
+  padding: 15px;
+  border-radius: var(--border-radius-md);
+  margin-bottom: 25px;
+  border: 1px solid #e2e8f0;
+}
+
+.admin-business-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-business-details h4 {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-bottom: 5px;
+}
+
+.admin-business-details p {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.admin-password-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--border-radius-md);
+  font-size: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  letter-spacing: 1px;
+  font-family: monospace;
+}
+
+.admin-password-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.admin-login-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-login-btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.admin-login-btn.primary {
+  background: var(--primary-gradient);
+  color: white;
+}
+
+.admin-login-btn.secondary {
+  background: #f1f5f9;
+  color: #64748b;
+}
 </style>
 </head>
 
@@ -1704,7 +1973,7 @@ body {
   <div id="homePage" class="page">
     <div class="app-header">
       <!-- Simple Login Icon (Left) - For Admin Access -->
-      <div class="login-btn" onclick="openAdminPage()">
+      <div class="login-btn" onclick="showAdminLoginModal()">
         <i class="fas fa-sign-in-alt"></i>
       </div>
       
@@ -1778,7 +2047,7 @@ body {
 
   <!-- Products Page -->
   <div id="productsPage" class="page">
-    <button class="back-btn" onclick="navigateTo('homePage')">
+    <button class="back-btn-fixed" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -1800,7 +2069,7 @@ body {
 
   <!-- Cart Page -->
   <div id="cartPage" class="page">
-    <button class="back-btn" onclick="navigateTo('homePage')">
+    <button class="back-btn-fixed" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -1817,7 +2086,7 @@ body {
 
   <!-- About Page -->
   <div id="aboutPage" class="page">
-    <button class="back-btn" onclick="navigateTo('homePage')">
+    <button class="back-btn-fixed" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -1845,7 +2114,7 @@ body {
 
   <!-- Contact Page -->
   <div id="contactPage" class="page">
-    <button class="back-btn" onclick="navigateTo('homePage')">
+    <button class="back-btn-fixed" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -1907,7 +2176,7 @@ body {
 
   <!-- ===== DELIVERY STATUS PAGE ===== -->
   <div id="deliveryPage" class="page">
-    <button class="back-btn" onclick="navigateTo('homePage')">
+    <button class="back-btn-fixed" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -1925,7 +2194,7 @@ body {
 
   <!-- ===== ADMIN DELIVERY PAGE ===== -->
   <div id="adminPage" class="page">
-    <button class="back-btn" onclick="navigateTo('homePage')">
+    <button class="back-btn-fixed" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -1981,6 +2250,23 @@ body {
   </div>
 </div>
 
+<!-- ===== DRAGGABLE NOTIFICATION BELL ===== -->
+<div class="notification-bell" id="notificationBell">
+  <i class="fas fa-bell"></i>
+  <div class="notification-badge" id="notificationBadge" style="display: none;">0</div>
+</div>
+
+<!-- ===== NOTIFICATIONS PANEL ===== -->
+<div class="notifications-panel" id="notificationsPanel">
+  <div class="notifications-header">
+    <h3><i class="fas fa-bell"></i> Notifications</h3>
+    <button class="clear-notifications" onclick="clearAllNotifications()">Clear All</button>
+  </div>
+  <div class="notifications-list" id="notificationsList">
+    <!-- Notifications will be added here -->
+  </div>
+</div>
+
 <!-- Delivery Status Modal -->
 <div class="delivery-modal-overlay" id="deliveryStatusModal">
   <div class="delivery-modal">
@@ -1990,6 +2276,37 @@ body {
         <i class="fas fa-truck"></i> Delivery Status
       </h2>
       <div id="deliveryStatusList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Login Modal -->
+<div class="modal-overlay" id="adminLoginModal">
+  <div class="admin-login-modal">
+    <button class="close-btn" onclick="closeModal('adminLoginModal')">×</button>
+    
+    <div class="admin-login-title">
+      <h2><i class="fas fa-lock"></i> Admin Login</h2>
+      <p>Enter password to access delivery admin</p>
+    </div>
+    
+    <div class="admin-business-info" id="adminBusinessInfo">
+      <!-- Business info will be loaded here -->
+    </div>
+    
+    <input type="password" class="admin-password-input" id="adminPasswordInput" placeholder="Enter admin password" onkeyup="if(event.key === 'Enter') checkAdminPassword()">
+    
+    <div class="admin-password-hint" id="adminPasswordHint">
+      <!-- Password hint will be shown here -->
+    </div>
+    
+    <div class="admin-login-buttons">
+      <button class="admin-login-btn secondary" onclick="closeModal('adminLoginModal')">
+        Cancel
+      </button>
+      <button class="admin-login-btn primary" onclick="checkAdminPassword()">
+        Login
+      </button>
     </div>
   </div>
 </div>
@@ -2244,10 +2561,309 @@ body {
 
 <script>
 // ===== PASSWORD GENERATOR SYSTEM =====
+function generateShortId(fullId) {
+  if (!fullId) return "abc123";
+  // Take first 6 characters and mix with numbers
+  const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+  let shortId = '';
+  for(let i = 0; i < 6; i++) {
+    const char = fullId[i] || chars[Math.floor(Math.random() * chars.length)];
+    shortId += char;
+  }
+  return shortId.toLowerCase();
+}
+
 function generateAdminPassword(cardId) {
-  if (!cardId) return "admin123_default";
-  const shortId = cardId.substring(0, 8).toLowerCase();
-  return `business123_${shortId}`;
+  const shortId = generateShortId(cardId);
+  return `admin123_${shortId}`;
+}
+
+// ===== NOTIFICATIONS SYSTEM =====
+let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
+let notificationBellDragging = false;
+let notificationBellOffset = { x: 0, y: 0 };
+
+// Initialize draggable notification bell
+function initNotificationBell() {
+  const bell = document.getElementById('notificationBell');
+  const panel = document.getElementById('notificationsPanel');
+  
+  // Load saved position
+  const savedPos = localStorage.getItem('notificationBellPosition');
+  if (savedPos) {
+    const pos = JSON.parse(savedPos);
+    bell.style.top = pos.top;
+    bell.style.right = pos.right;
+    panel.style.top = (parseInt(pos.top) + 70) + 'px';
+    panel.style.right = pos.right;
+  }
+  
+  // Make bell draggable
+  bell.addEventListener('mousedown', startDrag);
+  bell.addEventListener('touchstart', startDragTouch);
+  
+  // Toggle notifications panel
+  bell.addEventListener('click', function(e) {
+    if (!notificationBellDragging) {
+      toggleNotificationsPanel();
+    }
+  });
+  
+  updateNotificationBadge();
+}
+
+function startDrag(e) {
+  e.preventDefault();
+  notificationBellDragging = true;
+  const bell = document.getElementById('notificationBell');
+  const rect = bell.getBoundingClientRect();
+  
+  if (e.type === 'mousedown') {
+    notificationBellOffset.x = e.clientX - rect.left;
+    notificationBellOffset.y = e.clientY - rect.top;
+    
+    document.addEventListener('mousemove', dragBell);
+    document.addEventListener('mouseup', stopDrag);
+  }
+}
+
+function startDragTouch(e) {
+  e.preventDefault();
+  notificationBellDragging = true;
+  const bell = document.getElementById('notificationBell');
+  const touch = e.touches[0];
+  const rect = bell.getBoundingClientRect();
+  
+  notificationBellOffset.x = touch.clientX - rect.left;
+  notificationBellOffset.y = touch.clientY - rect.top;
+  
+  document.addEventListener('touchmove', dragBellTouch);
+  document.addEventListener('touchend', stopDrag);
+}
+
+function dragBell(e) {
+  if (!notificationBellDragging) return;
+  
+  const bell = document.getElementById('notificationBell');
+  const panel = document.getElementById('notificationsPanel');
+  const container = document.querySelector('.app-container');
+  const containerRect = container.getBoundingClientRect();
+  
+  let x = e.clientX - notificationBellOffset.x;
+  let y = e.clientY - notificationBellOffset.y;
+  
+  // Constrain within app container
+  x = Math.max(containerRect.left, Math.min(x, containerRect.right - bell.offsetWidth));
+  y = Math.max(containerRect.top, Math.min(y, containerRect.bottom - bell.offsetHeight));
+  
+  // Convert to right/top positioning
+  const right = containerRect.right - x - bell.offsetWidth;
+  const top = y - containerRect.top;
+  
+  bell.style.right = right + 'px';
+  bell.style.top = top + 'px';
+  bell.style.left = 'auto';
+  
+  // Update panel position
+  panel.style.top = (top + 70) + 'px';
+  panel.style.right = right + 'px';
+}
+
+function dragBellTouch(e) {
+  if (!notificationBellDragging || !e.touches[0]) return;
+  
+  const bell = document.getElementById('notificationBell');
+  const panel = document.getElementById('notificationsPanel');
+  const container = document.querySelector('.app-container');
+  const containerRect = container.getBoundingClientRect();
+  const touch = e.touches[0];
+  
+  let x = touch.clientX - notificationBellOffset.x;
+  let y = touch.clientY - notificationBellOffset.y;
+  
+  // Constrain within app container
+  x = Math.max(containerRect.left, Math.min(x, containerRect.right - bell.offsetWidth));
+  y = Math.max(containerRect.top, Math.min(y, containerRect.bottom - bell.offsetHeight));
+  
+  // Convert to right/top positioning
+  const right = containerRect.right - x - bell.offsetWidth;
+  const top = y - containerRect.top;
+  
+  bell.style.right = right + 'px';
+  bell.style.top = top + 'px';
+  bell.style.left = 'auto';
+  
+  // Update panel position
+  panel.style.top = (top + 70) + 'px';
+  panel.style.right = right + 'px';
+}
+
+function stopDrag() {
+  notificationBellDragging = false;
+  
+  // Save position
+  const bell = document.getElementById('notificationBell');
+  const position = {
+    top: bell.style.top,
+    right: bell.style.right
+  };
+  localStorage.setItem('notificationBellPosition', JSON.stringify(position));
+  
+  document.removeEventListener('mousemove', dragBell);
+  document.removeEventListener('touchmove', dragBellTouch);
+  document.removeEventListener('mouseup', stopDrag);
+  document.removeEventListener('touchend', stopDrag);
+}
+
+function addNotification(title, message, type = 'info') {
+  const notification = {
+    id: Date.now(),
+    title: title,
+    message: message,
+    type: type,
+    time: new Date().toISOString(),
+    read: false
+  };
+  
+  notifications.unshift(notification);
+  
+  // Keep only last 50 notifications
+  if (notifications.length > 50) {
+    notifications = notifications.slice(0, 50);
+  }
+  
+  localStorage.setItem('notifications', JSON.stringify(notifications));
+  updateNotificationBadge();
+  showNotificationAlert(title, message);
+  
+  return notification;
+}
+
+function updateNotificationBadge() {
+  const badge = document.getElementById('notificationBadge');
+  const unreadCount = notifications.filter(n => !n.read).length;
+  
+  if (unreadCount > 0) {
+    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function toggleNotificationsPanel() {
+  const panel = document.getElementById('notificationsPanel');
+  if (panel.style.display === 'block') {
+    panel.style.display = 'none';
+  } else {
+    panel.style.display = 'block';
+    updateNotificationsList();
+  }
+}
+
+function updateNotificationsList() {
+  const list = document.getElementById('notificationsList');
+  
+  if (notifications.length === 0) {
+    list.innerHTML = `
+      <div style="text-align:center;padding:40px 20px;color:#64748b;">
+        <i class="fas fa-bell-slash" style="font-size:40px;margin-bottom:15px;opacity:0.5;"></i>
+        <div style="font-size:14px;">No notifications yet</div>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  notifications.forEach(notification => {
+    const time = new Date(notification.time);
+    const timeString = time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const dateString = time.toLocaleDateString();
+    
+    html += `
+      <div class="notification-item ${notification.read ? '' : 'unread'}" onclick="markNotificationRead(${notification.id})">
+        <div class="notification-title">
+          ${notification.title}
+          ${notification.type === 'delivery' ? '<i class="fas fa-truck" style="margin-left:5px;color:#667eea;"></i>' : ''}
+          ${notification.type === 'order' ? '<i class="fas fa-shopping-cart" style="margin-left:5px;color:#10b981;"></i>' : ''}
+          ${notification.type === 'alert' ? '<i class="fas fa-exclamation-triangle" style="margin-left:5px;color:#f59e0b;"></i>' : ''}
+        </div>
+        <div class="notification-message">${notification.message}</div>
+        <div class="notification-time">
+          <i class="far fa-clock"></i> ${timeString} • ${dateString}
+        </div>
+      </div>
+    `;
+  });
+  
+  list.innerHTML = html;
+}
+
+function markNotificationRead(id) {
+  const notification = notifications.find(n => n.id === id);
+  if (notification) {
+    notification.read = true;
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    updateNotificationBadge();
+    updateNotificationsList();
+  }
+}
+
+function clearAllNotifications() {
+  if (confirm('Clear all notifications?')) {
+    notifications = [];
+    localStorage.setItem('notifications', JSON.stringify(notifications));
+    updateNotificationBadge();
+    updateNotificationsList();
+  }
+}
+
+function showNotificationAlert(title, message) {
+  // Create alert notification
+  const alert = document.createElement('div');
+  alert.className = 'notification-alert';
+  alert.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(30px);
+    border-radius: var(--border-radius-md);
+    padding: 15px;
+    max-width: 300px;
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--glass-border);
+    z-index: 10000;
+    animation: slideInRight 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  `;
+  
+  alert.innerHTML = `
+    <div style="width:40px;height:40px;border-radius:50%;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <i class="fas fa-bell" style="color:white;font-size:18px;"></i>
+    </div>
+    <div style="flex:1;">
+      <div style="font-weight:800;color:var(--dark-color);font-size:14px;margin-bottom:4px;">${title}</div>
+      <div style="font-size:12px;color:#64748b;line-height:1.4;">${message}</div>
+    </div>
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#64748b;font-size:20px;cursor:pointer;padding:0;line-height:1;">×</button>
+  `;
+  
+  document.body.appendChild(alert);
+  
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (alert.parentElement) {
+      alert.style.animation = 'slideOutRight 0.3s ease';
+      setTimeout(() => {
+        if (alert.parentElement) {
+          document.body.removeChild(alert);
+        }
+      }, 300);
+    }
+  }, 5000);
 }
 
 // ===== MAIN APP CODE =====
@@ -2267,39 +2883,194 @@ const supa = supabase.createClient(
 );
 
 document.addEventListener("DOMContentLoaded", async () => {
-  const id = new URLSearchParams(location.search).get("id") || localStorage.getItem("lastCardId");
-  if(!id) {
-    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;background:#0f172a;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;'><h2>Business Card Not Found</h2><p>Please use a valid business card URL</p><p style='color:#64748b;font-size:14px;margin-top:20px;'>Example: https://yourdomain.com/card.html?id=UNIQUE_ID</p></div>";
+  // Check for short ID in URL
+  const urlParams = new URLSearchParams(location.search);
+  const shortId = urlParams.get("id") || localStorage.getItem("lastCardShortId");
+  
+  if(!shortId) {
+    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;background:#0f172a;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;'><h2>Business Card Not Found</h2><p>Please use a valid business card URL</p><p style='color:#64748b;font-size:14px;margin-top:20px;'>Example: https://yourdomain.com/card.html?id=SHORT_ID</p></div>";
     return;
   }
 
   setTimeout(async () => {
-    const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
-    if(error || !data) {
+    // Try to find card by short ID first
+    const {data: cardsData, error: cardsError} = await supa
+      .from("cards")
+      .select("id, data")
+      .ilike('id', `%${shortId}%`);
+    
+    let cardData = null;
+    
+    if(!cardsError && cardsData && cardsData.length > 0) {
+      // Use the first matching card
+      cardData = cardsData[0];
+    } else {
+      // Try direct ID lookup
+      const {data, error} = await supa.from("cards").select("*").eq("id", shortId).single();
+      if(!error && data) {
+        cardData = data;
+      }
+    }
+    
+    if(!cardData) {
       document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
       return;
     }
 
-    card = JSON.parse(data.data);
-    card.id = data.id;
+    card = JSON.parse(cardData.data);
+    card.id = cardData.id;
+    
+    // Store short ID for future use
+    const cardShortId = generateShortId(card.id);
+    localStorage.setItem('lastCardShortId', cardShortId);
+    
+    // Update URL with short ID
+    const newUrl = window.location.pathname + '?id=' + cardShortId;
+    window.history.replaceState({}, document.title, newUrl);
     
     // Generate unique admin password for this business
     businessAdminPassword = generateAdminPassword(card.id);
     console.log("Admin password generated:", businessAdminPassword);
     
     // Generate shareable URL
-    shareableUrl = window.location.href;
+    shareableUrl = window.location.origin + window.location.pathname + '?id=' + cardShortId;
     
     await renderApp();
     navigateTo('homePage');
     updateCartCount();
     
+    // Initialize notification bell
+    initNotificationBell();
+    
     // Check for deliveries
     setTimeout(() => {
       checkForDeliveries();
     }, 1000);
+    
+    // Add welcome notification
+    addNotification(
+      'Welcome to ' + (card.businessName || card.name || "Business"),
+      'Browse products and place orders easily',
+      'info'
+    );
   }, 2000);
 });
+
+// ===== NAVIGATION SYSTEM =====
+function navigateBack() {
+  const pageHistory = ['homePage', 'productsPage', 'cartPage', 'aboutPage', 'contactPage'];
+  const currentIndex = pageHistory.indexOf(currentPage);
+  
+  if (currentIndex > 0) {
+    navigateTo(pageHistory[currentIndex - 1]);
+  } else {
+    navigateTo('homePage');
+  }
+}
+
+function navigateTo(pageId) {
+  if(currentPage === pageId) return;
+  
+  const oldPage = document.getElementById(currentPage);
+  const newPage = document.getElementById(pageId);
+  
+  if(oldPage) {
+    oldPage.classList.remove('active');
+    oldPage.classList.add('slide-out');
+  }
+  
+  setTimeout(() => {
+    if(oldPage) oldPage.classList.remove('slide-out');
+    newPage.classList.add('active');
+    currentPage = pageId;
+    
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    const navMap = {
+      'homePage': 0,
+      'productsPage': 1,
+      'cartPage': 2,
+      'aboutPage': 3,
+      'contactPage': 4,
+      'deliveryPage': 0,
+      'adminPage': 0
+    };
+    
+    if(navMap[pageId] !== undefined) {
+      document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
+    }
+    
+    switch(pageId) {
+      case 'homePage':
+        loadHomePage();
+        break;
+      case 'productsPage':
+        loadProductsPage();
+        break;
+      case 'cartPage':
+        loadCartPage();
+        break;
+      case 'aboutPage':
+        loadAboutPage();
+        break;
+      case 'contactPage':
+        loadContactPage();
+        break;
+      case 'deliveryPage':
+        loadDeliveryStatus();
+        break;
+      case 'adminPage':
+        break;
+    }
+  }, 300);
+}
+
+// ===== ADMIN LOGIN MODAL =====
+function showAdminLoginModal() {
+  const adminBusinessInfo = document.getElementById('adminBusinessInfo');
+  const adminPasswordHint = document.getElementById('adminPasswordHint');
+  
+  // Show business info in login modal
+  adminBusinessInfo.innerHTML = `
+    <img src="${card.profileImage || ''}" class="admin-business-avatar" onerror="this.style.display='none'">
+    <div class="admin-business-details">
+      <h4>${card.businessName || card.name || "Business"}</h4>
+      <p>Delivery Admin Access</p>
+    </div>
+  `;
+  
+  // Show password hint
+  const shortId = generateShortId(card.id);
+  adminPasswordHint.innerHTML = `Password: admin123_${shortId}`;
+  
+  openModal('adminLoginModal');
+  document.getElementById('adminPasswordInput').focus();
+}
+
+function checkAdminPassword() {
+  const password = document.getElementById('adminPasswordInput').value;
+  const shortId = generateShortId(card.id);
+  const expectedPassword = `admin123_${shortId}`;
+  
+  if(password === expectedPassword) {
+    closeModal('adminLoginModal');
+    navigateTo('adminPage');
+    loadAdminPanel();
+    
+    // Add admin login notification
+    addNotification(
+      'Admin Login Successful',
+      'Delivery admin panel accessed',
+      'alert'
+    );
+  } else {
+    alert("❌ Invalid password. Password format: admin123_{short_id}");
+    document.getElementById('adminPasswordInput').value = '';
+    document.getElementById('adminPasswordInput').focus();
+  }
+}
 
 // ===== DELIVERY SYSTEM FUNCTIONS =====
 async function checkForDeliveries() {
@@ -2307,7 +3078,6 @@ async function checkForDeliveries() {
     const customerPhone = card.phone || localStorage.getItem('customerPhone');
     
     if(!customerPhone) {
-      console.log('No customer phone found');
       return;
     }
     
@@ -2318,13 +3088,28 @@ async function checkForDeliveries() {
       .order('last_updated', { ascending: false });
       
     if(error) {
-      console.error('Delivery check error:', error);
       return;
     }
     
     if(data && data.length > 0) {
       deliveryStatusData = data;
       updateDeliveryIcon();
+      
+      // Check for new deliveries and add notifications
+      const lastCheck = localStorage.getItem('lastDeliveryCheck') || '0';
+      const newDeliveries = data.filter(d => new Date(d.last_updated) > new Date(lastCheck));
+      
+      if(newDeliveries.length > 0) {
+        newDeliveries.forEach(delivery => {
+          addNotification(
+            'Delivery Update: ' + delivery.status.toUpperCase(),
+            'Order #' + delivery.order_id + ' is now ' + delivery.status,
+            'delivery'
+          );
+        });
+        
+        localStorage.setItem('lastDeliveryCheck', new Date().toISOString());
+      }
     }
   } catch(err) {
     console.log('Delivery check failed:', err);
@@ -2454,16 +3239,6 @@ async function loadDeliveryStatus() {
 }
 
 // ===== ADMIN FUNCTIONS =====
-function openAdminPage() {
-  const password = prompt("Enter admin password:");
-  if(password === businessAdminPassword) {
-    navigateTo('adminPage');
-    loadAdminPanel();
-  } else {
-    alert("Invalid password. Password format: business123_{business_id}");
-  }
-}
-
 async function loadAdminPanel() {
   const { data, error } = await supa
     .from('delivery_status')
@@ -2478,7 +3253,7 @@ async function loadAdminPanel() {
   let html = `
     <input type="text" class="admin-search" id="adminSearch" placeholder="Search orders by ID, phone, name..." onkeyup="searchAdminOrders()">
     
-    <button onclick="addNewOrder()" class="admin-btn">
+    <button onclick="addNewOrder()" class="admin-btn" style="margin:15px;">
       <i class="fas fa-plus"></i> Add New Order
     </button>
   `;
@@ -2559,7 +3334,13 @@ async function updateOrder(orderId) {
     .eq('id', orderId);
     
   if(!error) {
-    alert('✅ Order updated successfully!');
+    // Add notification
+    addNotification(
+      'Order Updated',
+      'Order status changed to ' + status,
+      'order'
+    );
+    
     loadAdminPanel();
     if(currentPage === 'deliveryPage') {
       loadDeliveryStatus();
@@ -2592,7 +3373,13 @@ function addNewOrder() {
     }])
     .then(({ error }) => {
       if(!error) {
-        alert('✅ Order added successfully!');
+        // Add notification
+        addNotification(
+          'New Order Added',
+          'Order #' + orderId + ' created for ' + (customerName || customerPhone),
+          'order'
+        );
+        
         loadAdminPanel();
       } else {
         alert('❌ Error adding order: ' + error.message);
@@ -2614,10 +3401,10 @@ function shareViaWhatsApp() {
 
 function copyToClipboard() {
   navigator.clipboard.writeText(shareableUrl).then(() => {
-    alert('✅ Link copied to clipboard!');
+    showNotification('✅ Link copied to clipboard!');
   }).catch(err => {
     console.error('Failed to copy: ', err);
-    alert('❌ Failed to copy link');
+    showNotification('❌ Failed to copy link');
   });
 }
 
@@ -2655,66 +3442,6 @@ function downloadQRCode() {
     link.href = canvas.toDataURL('image/png');
     link.click();
   }
-}
-
-// ===== NAVIGATION SYSTEM =====
-function navigateTo(pageId) {
-  if(currentPage === pageId) return;
-  
-  const oldPage = document.getElementById(currentPage);
-  const newPage = document.getElementById(pageId);
-  
-  if(oldPage) {
-    oldPage.classList.remove('active');
-    oldPage.classList.add('slide-out');
-  }
-  
-  setTimeout(() => {
-    if(oldPage) oldPage.classList.remove('slide-out');
-    newPage.classList.add('active');
-    currentPage = pageId;
-    
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.classList.remove('active');
-    });
-    
-    const navMap = {
-      'homePage': 0,
-      'productsPage': 1,
-      'cartPage': 2,
-      'aboutPage': 3,
-      'contactPage': 4,
-      'deliveryPage': 0,
-      'adminPage': 0
-    };
-    
-    if(navMap[pageId] !== undefined) {
-      document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
-    }
-    
-    switch(pageId) {
-      case 'homePage':
-        loadHomePage();
-        break;
-      case 'productsPage':
-        loadProductsPage();
-        break;
-      case 'cartPage':
-        loadCartPage();
-        break;
-      case 'aboutPage':
-        loadAboutPage();
-        break;
-      case 'contactPage':
-        loadContactPage();
-        break;
-      case 'deliveryPage':
-        loadDeliveryStatus();
-        break;
-      case 'adminPage':
-        break;
-    }
-  }, 300);
 }
 
 // ===== RENDER APP =====
@@ -3094,13 +3821,30 @@ function addToCart(productIndex) {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     showNotification('Product added to cart!');
+    
+    // Add notification
+    addNotification(
+      'Added to Cart',
+      product.title + ' added to your cart',
+      'order'
+    );
   }
 }
 
 function removeFromCart(index) {
+  const item = cart[index];
   cart.splice(index, 1);
   localStorage.setItem('cart', JSON.stringify(cart));
   updateCartCount();
+  
+  // Add notification
+  if(item) {
+    addNotification(
+      'Removed from Cart',
+      item.title + ' removed from your cart',
+      'order'
+    );
+  }
 }
 
 function updateQuantity(index, change) {
@@ -3229,6 +3973,13 @@ function sendBuyNowOrder() {
   }
   
   closeModal('productModal');
+  
+  // Add notification
+  addNotification(
+    'Order Placed',
+    'Order placed for ' + currentProduct.title,
+    'order'
+  );
 }
 
 function openCheckoutModal() {
@@ -3420,6 +4171,13 @@ function sendCheckoutOrder() {
     const phone = card.phone.replace(/\D/g, '');
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   }
+  
+  // Add notification
+  addNotification(
+    'Order Submitted',
+    'Order for ' + cart.length + ' items submitted successfully',
+    'order'
+  );
   
   cart = [];
   localStorage.setItem('cart', JSON.stringify(cart));
