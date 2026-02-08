@@ -140,6 +140,86 @@ body {
   max-width: 300px;
 }
 
+/* ===== FIXED HEADER ===== */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 480px;
+  height: 70px;
+  background: var(--primary-gradient);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: var(--shadow-md);
+  border-radius: 0 0 20px 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-logo {
+  font-size: 22px;
+  font-weight: 900;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.3);
+  transition: var(--transition-fast);
+}
+
+.header-icon:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.1);
+}
+
+.header-icon i {
+  color: white;
+  font-size: 18px;
+}
+
+.header-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: var(--danger-gradient);
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  border: 2px solid var(--primary-gradient);
+}
+
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -201,79 +281,6 @@ body {
   font-weight: 700;
 }
 
-/* ===== SIMPLE DELIVERY STATUS ICON ===== */
-.delivery-status-icon {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  transition: var(--transition-fast);
-}
-
-.delivery-status-icon:hover {
-  transform: scale(1.1);
-}
-
-.delivery-status-icon i {
-  color: white;
-  font-size: 24px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
-.delivery-status-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ef4444;
-  color: white;
-  font-size: 10px;
-  font-weight: 900;
-  min-width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid white;
-}
-
-/* ===== SIMPLE LOGIN ICON ===== */
-.login-btn {
-  position: absolute;
-  top: 10px;
-  left: 20px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  transition: var(--transition-fast);
-}
-
-.login-btn:hover {
-  transform: scale(1.1);
-}
-
-.login-btn i {
-  color: white;
-  font-size: 24px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
-}
-
 /* DELIVERY MODAL */
 .delivery-modal-overlay {
   position: fixed;
@@ -310,15 +317,16 @@ body {
 #contactPage,
 #deliveryPage,
 #adminPage {
+  padding-top: 70px;
   padding-bottom: 120px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
-.app-header {
+.home-content {
   background: var(--primary-gradient);
-  padding: 50px 25px 30px;
-  border-radius: 0 0 50px 50px;
-  margin: 0;
+  padding: 30px 25px;
+  border-radius: 0 0 40px 40px;
+  margin: -70px 0 0 0;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-md);
@@ -329,11 +337,11 @@ body {
   margin-bottom: 30px;
   position: relative;
   z-index: 1;
-  padding-top: 20px;
+  padding-top: 10px;
 }
 
 .welcome-text h1 {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 900;
   margin-bottom: 8px;
   text-shadow: 0 2px 10px rgba(0,0,0,0.2);
@@ -341,7 +349,7 @@ body {
 }
 
 .welcome-text p {
-  font-size: 16px;
+  font-size: 14px;
   opacity: 0.95;
   font-weight: 400;
 }
@@ -814,15 +822,16 @@ body {
 
 .products-header {
   background: var(--primary-gradient);
-  padding: 50px 25px;
-  margin: 0;
+  padding: 40px 25px 30px;
+  margin: -70px 0 0 0;
   position: relative;
   overflow: hidden;
+  border-radius: 0 0 40px 40px;
 }
 
 .products-header h1 {
   color: white;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   margin-bottom: 12px;
   position: relative;
@@ -832,7 +841,7 @@ body {
 
 .products-header p {
   color: rgba(255,255,255,0.95);
-  font-size: 16px;
+  font-size: 14px;
   position: relative;
   z-index: 1;
 }
@@ -868,15 +877,16 @@ body {
 
 .cart-header {
   background: var(--primary-gradient);
-  padding: 50px 25px;
-  margin: 0;
+  padding: 40px 25px 30px;
+  margin: -70px 0 0 0;
   position: relative;
   overflow: hidden;
+  border-radius: 0 0 40px 40px;
 }
 
 .cart-header h1 {
   color: white;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   margin-bottom: 12px;
   position: relative;
@@ -886,7 +896,7 @@ body {
 
 .cart-header p {
   color: rgba(255,255,255,0.95);
-  font-size: 16px;
+  font-size: 14px;
   position: relative;
   z-index: 1;
 }
@@ -1078,15 +1088,16 @@ body {
 
 .about-header {
   background: var(--primary-gradient);
-  padding: 50px 25px;
-  margin: 0;
+  padding: 40px 25px 30px;
+  margin: -70px 0 0 0;
   position: relative;
   overflow: hidden;
+  border-radius: 0 0 40px 40px;
 }
 
 .about-header h1 {
   color: white;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   margin-bottom: 12px;
   position: relative;
@@ -1163,15 +1174,16 @@ body {
 
 .contact-header {
   background: var(--primary-gradient);
-  padding: 50px 25px;
-  margin: 0;
+  padding: 40px 25px 30px;
+  margin: -70px 0 0 0;
   position: relative;
   overflow: hidden;
+  border-radius: 0 0 40px 40px;
 }
 
 .contact-header h1 {
   color: white;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   margin-bottom: 12px;
   position: relative;
@@ -1181,7 +1193,7 @@ body {
 
 .contact-header p {
   color: rgba(255,255,255,0.95);
-  font-size: 16px;
+  font-size: 14px;
   position: relative;
   z-index: 1;
 }
@@ -1305,11 +1317,11 @@ body {
 .social-icon.tiktok { background: #000000; }
 
 .back-btn {
-  position: absolute;
-  top: 20px;
+  position: fixed;
+  top: 85px;
   left: 20px;
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   backdrop-filter: blur(10px);
@@ -1317,7 +1329,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   border: 1px solid rgba(255,255,255,0.3);
   z-index: 10;
@@ -1456,17 +1468,17 @@ body {
 /* ===== DELIVERY PAGE STYLES ===== */
 .delivery-page-header {
   background: var(--primary-gradient);
-  padding: 50px 25px 30px;
-  border-radius: 0 0 50px 50px;
-  margin: 0;
+  padding: 40px 25px 30px;
+  margin: -70px 0 0 0;
   position: relative;
   overflow: hidden;
+  border-radius: 0 0 40px 40px;
   box-shadow: var(--shadow-md);
 }
 
 .delivery-page-header h1 {
   color: white;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 800;
   margin-bottom: 12px;
   position: relative;
@@ -1476,7 +1488,7 @@ body {
 
 .delivery-page-header p {
   color: rgba(255,255,255,0.95);
-  font-size: 16px;
+  font-size: 14px;
   position: relative;
   z-index: 1;
 }
@@ -1686,11 +1698,11 @@ body {
 
 /* ===== FIXED BACK BUTTON ISSUE ===== */
 .back-btn-fixed {
-  position: absolute;
-  top: 20px;
+  position: fixed;
+  top: 85px;
   left: 20px;
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   backdrop-filter: blur(10px);
@@ -1698,7 +1710,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
   border: 1px solid rgba(255,255,255,0.3);
   z-index: 10;
@@ -1709,91 +1721,49 @@ body {
   height: 120px !important;
 }
 
-/* ===== DRAGGABLE NOTIFICATION BELL ===== */
-.notification-bell {
-  position: fixed;
-  top: 100px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  background: var(--primary-gradient);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: move;
-  z-index: 9999;
-  box-shadow: var(--shadow-lg);
-  border: 3px solid white;
-  user-select: none;
-  touch-action: none;
-}
-
-.notification-bell i {
-  color: white;
-  font-size: 24px;
-}
-
-.notification-badge {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: var(--danger-gradient);
-  color: white;
-  font-size: 12px;
-  font-weight: 900;
-  min-width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 3px solid white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
 /* ===== NOTIFICATIONS PANEL ===== */
 .notifications-panel {
   position: fixed;
-  top: 170px;
+  top: 70px;
   right: 20px;
-  width: 300px;
+  width: 280px;
   max-height: 400px;
   background: var(--glass-bg);
   backdrop-filter: blur(30px);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-xl);
   border: 1px solid var(--glass-border);
-  z-index: 9998;
+  z-index: 9999;
   display: none;
   overflow: hidden;
 }
 
 .notifications-header {
-  padding: 20px;
+  padding: 15px 20px;
   border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: rgba(255,255,255,0.5);
 }
 
 .notifications-header h3 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 800;
   color: var(--dark-color);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .clear-notifications {
   background: transparent;
   border: none;
   color: #ef4444;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  padding: 5px 10px;
+  padding: 4px 8px;
   border-radius: 6px;
 }
 
@@ -1808,10 +1778,10 @@ body {
 }
 
 .notification-item {
-  padding: 15px;
+  padding: 12px;
   background: rgba(255,255,255,0.5);
   border-radius: var(--border-radius-md);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   border: 1px solid var(--glass-border);
   cursor: pointer;
   transition: var(--transition-fast);
@@ -1819,41 +1789,44 @@ body {
 
 .notification-item:hover {
   background: rgba(102, 126, 234, 0.1);
-  transform: translateX(-5px);
+  transform: translateX(-3px);
 }
 
 .notification-item.unread {
   background: rgba(59, 130, 246, 0.1);
-  border-left: 4px solid #3b82f6;
+  border-left: 3px solid #3b82f6;
 }
 
 .notification-title {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   color: var(--dark-color);
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .notification-message {
-  font-size: 12px;
+  font-size: 11px;
   color: #64748b;
   line-height: 1.4;
 }
 
 .notification-time {
-  font-size: 10px;
+  font-size: 9px;
   color: #94a3b8;
-  margin-top: 8px;
+  margin-top: 6px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 /* ===== ADMIN LOGIN MODAL ===== */
 .admin-login-modal {
   background: var(--glass-bg);
   border-radius: var(--border-radius-xl);
-  padding: 30px;
+  padding: 25px;
   width: 90%;
   max-width: 400px;
   box-shadow: var(--shadow-xl);
@@ -1862,70 +1835,63 @@ body {
 
 .admin-login-title {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .admin-login-title h2 {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--dark-color);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .admin-login-title p {
-  font-size: 14px;
+  font-size: 13px;
   color: #64748b;
 }
 
 .admin-business-info {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
   background: #f8fafc;
-  padding: 15px;
+  padding: 12px;
   border-radius: var(--border-radius-md);
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   border: 1px solid #e2e8f0;
 }
 
 .admin-business-avatar {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid white;
+  border: 2px solid white;
   box-shadow: var(--shadow-sm);
 }
 
 .admin-business-details h4 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 800;
   color: var(--dark-color);
-  margin-bottom: 5px;
+  margin-bottom: 4px;
 }
 
 .admin-business-details p {
-  font-size: 12px;
+  font-size: 11px;
   color: #64748b;
 }
 
 .admin-password-input {
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   border: 2px solid #e2e8f0;
   border-radius: var(--border-radius-md);
-  font-size: 16px;
-  margin-bottom: 20px;
+  font-size: 15px;
+  margin-bottom: 15px;
   text-align: center;
   letter-spacing: 1px;
   font-family: monospace;
-}
-
-.admin-password-hint {
-  font-size: 12px;
-  color: #94a3b8;
-  text-align: center;
-  margin-bottom: 25px;
 }
 
 .admin-login-buttons {
@@ -1935,10 +1901,10 @@ body {
 
 .admin-login-btn {
   flex: 1;
-  padding: 15px;
+  padding: 12px;
   border: none;
   border-radius: var(--border-radius-md);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 800;
   cursor: pointer;
 }
@@ -1951,6 +1917,88 @@ body {
 .admin-login-btn.secondary {
   background: #f1f5f9;
   color: #64748b;
+}
+
+/* ===== LOGOUT MODAL ===== */
+.logout-modal {
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-xl);
+  padding: 25px;
+  width: 90%;
+  max-width: 350px;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--glass-border);
+  text-align: center;
+}
+
+.logout-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--warning-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.logout-icon i {
+  color: white;
+  font-size: 24px;
+}
+
+.logout-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-bottom: 10px;
+}
+
+.logout-message {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.logout-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.logout-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.logout-btn.cancel {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.logout-btn.confirm {
+  background: var(--danger-gradient);
+  color: white;
+}
+
+/* ===== HEADER ICON STATES ===== */
+.header-icon.active {
+  background: rgba(255,255,255,0.3);
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.5);
+}
+
+.header-icon.logged-in {
+  background: rgba(16, 185, 129, 0.3);
+  border-color: rgba(16, 185, 129, 0.5);
+}
+
+.header-icon.logged-in i {
+  color: #10b981;
 }
 </style>
 </head>
@@ -1969,20 +2017,46 @@ body {
     <p>Loading your premium business experience...</p>
   </div>
 
+  <!-- ===== FIXED HEADER ===== -->
+  <div class="app-header">
+    <div class="header-left">
+      <div class="header-logo" id="headerLogo">DB</div>
+    </div>
+    
+    <div class="header-icons">
+      <!-- Notification Bell -->
+      <div class="header-icon" id="notificationIcon" onclick="toggleNotificationsPanel()">
+        <i class="fas fa-bell"></i>
+        <div class="header-badge" id="notificationBadge" style="display: none;">0</div>
+      </div>
+      
+      <!-- Delivery Status -->
+      <div class="header-icon" id="deliveryIcon" onclick="checkDeliveryStatus()">
+        <i class="fas fa-truck"></i>
+        <div class="header-badge" id="deliveryBadge" style="display: none;">!</div>
+      </div>
+      
+      <!-- Admin Login/Logout -->
+      <div class="header-icon" id="adminIcon" onclick="toggleAdminMenu()">
+        <i class="fas fa-sign-in-alt" id="adminIconIcon"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== NOTIFICATIONS PANEL ===== -->
+  <div class="notifications-panel" id="notificationsPanel">
+    <div class="notifications-header">
+      <h3><i class="fas fa-bell"></i> Notifications</h3>
+      <button class="clear-notifications" onclick="clearAllNotifications()">Clear All</button>
+    </div>
+    <div class="notifications-list" id="notificationsList">
+      <!-- Notifications will be added here -->
+    </div>
+  </div>
+
   <!-- Home Page -->
   <div id="homePage" class="page">
-    <div class="app-header">
-      <!-- Simple Login Icon (Left) - For Admin Access -->
-      <div class="login-btn" onclick="showAdminLoginModal()">
-        <i class="fas fa-sign-in-alt"></i>
-      </div>
-      
-      <!-- Simple Delivery Status Icon (Right) -->
-      <div class="delivery-status-icon" id="deliveryStatusIcon" onclick="checkDeliveryStatus()">
-        <i class="fas fa-truck"></i>
-        <div class="delivery-status-badge" id="deliveryBadge" style="display:none;">!</div>
-      </div>
-      
+    <div class="home-content">
       <div class="welcome-text">
         <h1 id="businessHeader">Welcome</h1>
         <p>Premium business at your fingertips</p>
@@ -2047,7 +2121,7 @@ body {
 
   <!-- Products Page -->
   <div id="productsPage" class="page">
-    <button class="back-btn-fixed" onclick="navigateBack()">
+    <button class="back-btn" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -2069,7 +2143,7 @@ body {
 
   <!-- Cart Page -->
   <div id="cartPage" class="page">
-    <button class="back-btn-fixed" onclick="navigateBack()">
+    <button class="back-btn" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -2086,7 +2160,7 @@ body {
 
   <!-- About Page -->
   <div id="aboutPage" class="page">
-    <button class="back-btn-fixed" onclick="navigateBack()">
+    <button class="back-btn" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -2114,7 +2188,7 @@ body {
 
   <!-- Contact Page -->
   <div id="contactPage" class="page">
-    <button class="back-btn-fixed" onclick="navigateBack()">
+    <button class="back-btn" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -2176,7 +2250,7 @@ body {
 
   <!-- ===== DELIVERY STATUS PAGE ===== -->
   <div id="deliveryPage" class="page">
-    <button class="back-btn-fixed" onclick="navigateBack()">
+    <button class="back-btn" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -2194,7 +2268,7 @@ body {
 
   <!-- ===== ADMIN DELIVERY PAGE ===== -->
   <div id="adminPage" class="page">
-    <button class="back-btn-fixed" onclick="navigateBack()">
+    <button class="back-btn" onclick="navigateBack()">
       <i class="fas fa-arrow-left"></i>
     </button>
     
@@ -2250,23 +2324,6 @@ body {
   </div>
 </div>
 
-<!-- ===== DRAGGABLE NOTIFICATION BELL ===== -->
-<div class="notification-bell" id="notificationBell">
-  <i class="fas fa-bell"></i>
-  <div class="notification-badge" id="notificationBadge" style="display: none;">0</div>
-</div>
-
-<!-- ===== NOTIFICATIONS PANEL ===== -->
-<div class="notifications-panel" id="notificationsPanel">
-  <div class="notifications-header">
-    <h3><i class="fas fa-bell"></i> Notifications</h3>
-    <button class="clear-notifications" onclick="clearAllNotifications()">Clear All</button>
-  </div>
-  <div class="notifications-list" id="notificationsList">
-    <!-- Notifications will be added here -->
-  </div>
-</div>
-
 <!-- Delivery Status Modal -->
 <div class="delivery-modal-overlay" id="deliveryStatusModal">
   <div class="delivery-modal">
@@ -2296,16 +2353,39 @@ body {
     
     <input type="password" class="admin-password-input" id="adminPasswordInput" placeholder="Enter admin password" onkeyup="if(event.key === 'Enter') checkAdminPassword()">
     
-    <div class="admin-password-hint" id="adminPasswordHint">
-      <!-- Password hint will be shown here -->
-    </div>
-    
     <div class="admin-login-buttons">
       <button class="admin-login-btn secondary" onclick="closeModal('adminLoginModal')">
         Cancel
       </button>
       <button class="admin-login-btn primary" onclick="checkAdminPassword()">
         Login
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Logout Modal -->
+<div class="modal-overlay" id="logoutModal">
+  <div class="logout-modal">
+    <button class="close-btn" onclick="closeModal('logoutModal')">×</button>
+    
+    <div class="logout-icon">
+      <i class="fas fa-sign-out-alt"></i>
+    </div>
+    
+    <div class="logout-title">Logout from Admin</div>
+    <div class="logout-message">
+      Are you sure you want to logout from the delivery admin panel?
+      <br>
+      <small style="color:#94a3b8;">You can login again anytime</small>
+    </div>
+    
+    <div class="logout-buttons">
+      <button class="logout-btn cancel" onclick="closeModal('logoutModal')">
+        Cancel
+      </button>
+      <button class="logout-btn confirm" onclick="confirmLogout()">
+        Logout
       </button>
     </div>
   </div>
@@ -2580,171 +2660,47 @@ function generateAdminPassword(cardId) {
 
 // ===== NOTIFICATIONS SYSTEM =====
 let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-let notificationBellDragging = false;
-let notificationBellOffset = { x: 0, y: 0 };
+let isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+let loggedInBusinessId = localStorage.getItem('loggedInBusinessId');
 
-// Initialize draggable notification bell
-function initNotificationBell() {
-  const bell = document.getElementById('notificationBell');
-  const panel = document.getElementById('notificationsPanel');
-  
-  // Load saved position
-  const savedPos = localStorage.getItem('notificationBellPosition');
-  if (savedPos) {
-    const pos = JSON.parse(savedPos);
-    bell.style.top = pos.top;
-    bell.style.right = pos.right;
-    panel.style.top = (parseInt(pos.top) + 70) + 'px';
-    panel.style.right = pos.right;
-  }
-  
-  // Make bell draggable
-  bell.addEventListener('mousedown', startDrag);
-  bell.addEventListener('touchstart', startDragTouch);
-  
-  // Toggle notifications panel
-  bell.addEventListener('click', function(e) {
-    if (!notificationBellDragging) {
-      toggleNotificationsPanel();
+// Initialize header
+function initHeader() {
+  updateNotificationBadge();
+  updateAdminIcon();
+  updateDeliveryBadge();
+}
+
+// ===== MOBILE BACK BUTTON FIX =====
+// Prevent browser back button from exiting app
+history.pushState(null, null, location.href);
+window.onpopstate = function(event) {
+  if (currentPage !== 'homePage') {
+    navigateBack();
+    history.pushState(null, null, location.href);
+  } else {
+    // If already on home page, show exit confirmation
+    if (confirm("Do you want to exit the app?")) {
+      // Close the app (for PWA) or navigate away
+      if (window.navigator.standalone) {
+        // For iOS standalone apps
+        window.history.back();
+      } else {
+        // For regular browsers
+        window.close();
+      }
+    } else {
+      history.pushState(null, null, location.href);
     }
-  });
-  
-  updateNotificationBadge();
-}
-
-function startDrag(e) {
-  e.preventDefault();
-  notificationBellDragging = true;
-  const bell = document.getElementById('notificationBell');
-  const rect = bell.getBoundingClientRect();
-  
-  if (e.type === 'mousedown') {
-    notificationBellOffset.x = e.clientX - rect.left;
-    notificationBellOffset.y = e.clientY - rect.top;
-    
-    document.addEventListener('mousemove', dragBell);
-    document.addEventListener('mouseup', stopDrag);
   }
-}
+};
 
-function startDragTouch(e) {
-  e.preventDefault();
-  notificationBellDragging = true;
-  const bell = document.getElementById('notificationBell');
-  const touch = e.touches[0];
-  const rect = bell.getBoundingClientRect();
-  
-  notificationBellOffset.x = touch.clientX - rect.left;
-  notificationBellOffset.y = touch.clientY - rect.top;
-  
-  document.addEventListener('touchmove', dragBellTouch);
-  document.addEventListener('touchend', stopDrag);
-}
-
-function dragBell(e) {
-  if (!notificationBellDragging) return;
-  
-  const bell = document.getElementById('notificationBell');
-  const panel = document.getElementById('notificationsPanel');
-  const container = document.querySelector('.app-container');
-  const containerRect = container.getBoundingClientRect();
-  
-  let x = e.clientX - notificationBellOffset.x;
-  let y = e.clientY - notificationBellOffset.y;
-  
-  // Constrain within app container
-  x = Math.max(containerRect.left, Math.min(x, containerRect.right - bell.offsetWidth));
-  y = Math.max(containerRect.top, Math.min(y, containerRect.bottom - bell.offsetHeight));
-  
-  // Convert to right/top positioning
-  const right = containerRect.right - x - bell.offsetWidth;
-  const top = y - containerRect.top;
-  
-  bell.style.right = right + 'px';
-  bell.style.top = top + 'px';
-  bell.style.left = 'auto';
-  
-  // Update panel position
-  panel.style.top = (top + 70) + 'px';
-  panel.style.right = right + 'px';
-}
-
-function dragBellTouch(e) {
-  if (!notificationBellDragging || !e.touches[0]) return;
-  
-  const bell = document.getElementById('notificationBell');
-  const panel = document.getElementById('notificationsPanel');
-  const container = document.querySelector('.app-container');
-  const containerRect = container.getBoundingClientRect();
-  const touch = e.touches[0];
-  
-  let x = touch.clientX - notificationBellOffset.x;
-  let y = touch.clientY - notificationBellOffset.y;
-  
-  // Constrain within app container
-  x = Math.max(containerRect.left, Math.min(x, containerRect.right - bell.offsetWidth));
-  y = Math.max(containerRect.top, Math.min(y, containerRect.bottom - bell.offsetHeight));
-  
-  // Convert to right/top positioning
-  const right = containerRect.right - x - bell.offsetWidth;
-  const top = y - containerRect.top;
-  
-  bell.style.right = right + 'px';
-  bell.style.top = top + 'px';
-  bell.style.left = 'auto';
-  
-  // Update panel position
-  panel.style.top = (top + 70) + 'px';
-  panel.style.right = right + 'px';
-}
-
-function stopDrag() {
-  notificationBellDragging = false;
-  
-  // Save position
-  const bell = document.getElementById('notificationBell');
-  const position = {
-    top: bell.style.top,
-    right: bell.style.right
-  };
-  localStorage.setItem('notificationBellPosition', JSON.stringify(position));
-  
-  document.removeEventListener('mousemove', dragBell);
-  document.removeEventListener('touchmove', dragBellTouch);
-  document.removeEventListener('mouseup', stopDrag);
-  document.removeEventListener('touchend', stopDrag);
-}
-
-function addNotification(title, message, type = 'info') {
-  const notification = {
-    id: Date.now(),
-    title: title,
-    message: message,
-    type: type,
-    time: new Date().toISOString(),
-    read: false
-  };
-  
-  notifications.unshift(notification);
-  
-  // Keep only last 50 notifications
-  if (notifications.length > 50) {
-    notifications = notifications.slice(0, 50);
-  }
-  
-  localStorage.setItem('notifications', JSON.stringify(notifications));
-  updateNotificationBadge();
-  showNotificationAlert(title, message);
-  
-  return notification;
-}
-
+// ===== NOTIFICATIONS FUNCTIONS =====
 function updateNotificationBadge() {
   const badge = document.getElementById('notificationBadge');
   const unreadCount = notifications.filter(n => !n.read).length;
   
   if (unreadCount > 0) {
-    badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+    badge.textContent = unreadCount > 9 ? '9+' : unreadCount;
     badge.style.display = 'flex';
   } else {
     badge.style.display = 'none';
@@ -2753,11 +2709,16 @@ function updateNotificationBadge() {
 
 function toggleNotificationsPanel() {
   const panel = document.getElementById('notificationsPanel');
+  const icon = document.getElementById('notificationIcon');
+  
   if (panel.style.display === 'block') {
     panel.style.display = 'none';
+    icon.classList.remove('active');
   } else {
     panel.style.display = 'block';
+    icon.classList.add('active');
     updateNotificationsList();
+    markAllNotificationsRead();
   }
 }
 
@@ -2799,6 +2760,34 @@ function updateNotificationsList() {
   list.innerHTML = html;
 }
 
+function addNotification(title, message, type = 'info') {
+  const notification = {
+    id: Date.now(),
+    title: title,
+    message: message,
+    type: type,
+    time: new Date().toISOString(),
+    read: false
+  };
+  
+  notifications.unshift(notification);
+  
+  // Keep only last 50 notifications
+  if (notifications.length > 50) {
+    notifications = notifications.slice(0, 50);
+  }
+  
+  localStorage.setItem('notifications', JSON.stringify(notifications));
+  updateNotificationBadge();
+  
+  // Show alert only for important notifications
+  if (type === 'delivery' || type === 'alert') {
+    showNotificationAlert(title, message);
+  }
+  
+  return notification;
+}
+
 function markNotificationRead(id) {
   const notification = notifications.find(n => n.id === id);
   if (notification) {
@@ -2807,6 +2796,14 @@ function markNotificationRead(id) {
     updateNotificationBadge();
     updateNotificationsList();
   }
+}
+
+function markAllNotificationsRead() {
+  notifications.forEach(notification => {
+    notification.read = true;
+  });
+  localStorage.setItem('notifications', JSON.stringify(notifications));
+  updateNotificationBadge();
 }
 
 function clearAllNotifications() {
@@ -2824,36 +2821,36 @@ function showNotificationAlert(title, message) {
   alert.className = 'notification-alert';
   alert.style.cssText = `
     position: fixed;
-    top: 20px;
+    top: 80px;
     right: 20px;
     background: var(--glass-bg);
     backdrop-filter: blur(30px);
     border-radius: var(--border-radius-md);
-    padding: 15px;
-    max-width: 300px;
+    padding: 12px;
+    max-width: 280px;
     box-shadow: var(--shadow-xl);
     border: 1px solid var(--glass-border);
-    z-index: 10000;
+    z-index: 9998;
     animation: slideInRight 0.3s ease;
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 10px;
   `;
   
   alert.innerHTML = `
-    <div style="width:40px;height:40px;border-radius:50%;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-      <i class="fas fa-bell" style="color:white;font-size:18px;"></i>
+    <div style="width:35px;height:35px;border-radius:50%;background:var(--primary-gradient);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <i class="fas fa-bell" style="color:white;font-size:16px;"></i>
     </div>
     <div style="flex:1;">
-      <div style="font-weight:800;color:var(--dark-color);font-size:14px;margin-bottom:4px;">${title}</div>
-      <div style="font-size:12px;color:#64748b;line-height:1.4;">${message}</div>
+      <div style="font-weight:800;color:var(--dark-color);font-size:13px;margin-bottom:3px;">${title}</div>
+      <div style="font-size:11px;color:#64748b;line-height:1.4;">${message}</div>
     </div>
-    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#64748b;font-size:20px;cursor:pointer;padding:0;line-height:1;">×</button>
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:#64748b;font-size:18px;cursor:pointer;padding:0;line-height:1;flex-shrink:0;">×</button>
   `;
   
   document.body.appendChild(alert);
   
-  // Auto remove after 5 seconds
+  // Auto remove after 4 seconds
   setTimeout(() => {
     if (alert.parentElement) {
       alert.style.animation = 'slideOutRight 0.3s ease';
@@ -2863,7 +2860,101 @@ function showNotificationAlert(title, message) {
         }
       }, 300);
     }
-  }, 5000);
+  }, 4000);
+}
+
+// ===== ADMIN FUNCTIONS =====
+function updateAdminIcon() {
+  const adminIcon = document.getElementById('adminIcon');
+  const adminIconIcon = document.getElementById('adminIconIcon');
+  
+  if (isLoggedIn && loggedInBusinessId === card.id) {
+    adminIcon.classList.add('logged-in');
+    adminIconIcon.className = 'fas fa-sign-out-alt';
+    adminIcon.title = 'Logout from Admin';
+  } else {
+    adminIcon.classList.remove('logged-in');
+    adminIconIcon.className = 'fas fa-sign-in-alt';
+    adminIcon.title = 'Login to Admin';
+  }
+}
+
+function toggleAdminMenu() {
+  if (isLoggedIn && loggedInBusinessId === card.id) {
+    // Show logout modal
+    openModal('logoutModal');
+  } else {
+    // Show login modal
+    showAdminLoginModal();
+  }
+}
+
+function showAdminLoginModal() {
+  const adminBusinessInfo = document.getElementById('adminBusinessInfo');
+  
+  // Show business info in login modal
+  adminBusinessInfo.innerHTML = `
+    <img src="${card.profileImage || ''}" class="admin-business-avatar" onerror="this.style.display='none'">
+    <div class="admin-business-details">
+      <h4>${card.businessName || card.name || "Business"}</h4>
+      <p>Delivery Admin Access</p>
+    </div>
+  `;
+  
+  openModal('adminLoginModal');
+  document.getElementById('adminPasswordInput').focus();
+}
+
+function checkAdminPassword() {
+  const password = document.getElementById('adminPasswordInput').value;
+  const expectedPassword = generateAdminPassword(card.id);
+  
+  if(password === expectedPassword) {
+    // Login successful
+    isLoggedIn = true;
+    loggedInBusinessId = card.id;
+    localStorage.setItem('adminLoggedIn', 'true');
+    localStorage.setItem('loggedInBusinessId', card.id);
+    
+    closeModal('adminLoginModal');
+    updateAdminIcon();
+    
+    // Add login notification
+    addNotification(
+      'Admin Login Successful',
+      'Delivery admin panel accessed',
+      'alert'
+    );
+    
+    // Navigate to admin page
+    navigateTo('adminPage');
+  } else {
+    showNotification('❌ Invalid password');
+    document.getElementById('adminPasswordInput').value = '';
+    document.getElementById('adminPasswordInput').focus();
+  }
+}
+
+function confirmLogout() {
+  isLoggedIn = false;
+  loggedInBusinessId = null;
+  localStorage.removeItem('adminLoggedIn');
+  localStorage.removeItem('loggedInBusinessId');
+  
+  closeModal('logoutModal');
+  updateAdminIcon();
+  
+  // Add logout notification
+  addNotification(
+    'Admin Logout',
+    'Successfully logged out from admin panel',
+    'alert'
+  );
+  
+  // Navigate to home if on admin page
+  if (currentPage === 'adminPage') {
+    navigateTo('homePage');
+  }
 }
 
 // ===== MAIN APP CODE =====
@@ -2930,7 +3021,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     // Generate unique admin password for this business
     businessAdminPassword = generateAdminPassword(card.id);
-    console.log("Admin password generated:", businessAdminPassword);
     
     // Generate shareable URL
     shareableUrl = window.location.origin + window.location.pathname + '?id=' + cardShortId;
@@ -2939,13 +3029,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     navigateTo('homePage');
     updateCartCount();
     
-    // Initialize notification bell
-    initNotificationBell();
-    
-    // Check for deliveries
-    setTimeout(() => {
-      checkForDeliveries();
-    }, 1000);
+    // Initialize header
+    initHeader();
     
     // Add welcome notification
     addNotification(
@@ -2953,18 +3038,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       'Browse products and place orders easily',
       'info'
     );
+    
+    // Check for deliveries
+    setTimeout(() => {
+      checkForDeliveries();
+    }, 1000);
   }, 2000);
 });
 
 // ===== NAVIGATION SYSTEM =====
 function navigateBack() {
-  const pageHistory = ['homePage', 'productsPage', 'cartPage', 'aboutPage', 'contactPage'];
+  const pageHistory = ['homePage', 'productsPage', 'cartPage', 'aboutPage', 'contactPage', 'deliveryPage', 'adminPage'];
   const currentIndex = pageHistory.indexOf(currentPage);
   
   if (currentIndex > 0) {
-    navigateTo(pageHistory[currentIndex - 1]);
-  } else {
-    navigateTo('homePage');
+    navigateTo(pageHistory[0]); // Always go back to home page
   }
 }
 
@@ -3002,6 +3090,14 @@ function navigateTo(pageId) {
       document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
     }
     
+    // Close notifications panel when navigating
+    const panel = document.getElementById('notificationsPanel');
+    const icon = document.getElementById('notificationIcon');
+    if (panel.style.display === 'block') {
+      panel.style.display = 'none';
+      icon.classList.remove('active');
+    }
+    
     switch(pageId) {
       case 'homePage':
         loadHomePage();
@@ -3022,54 +3118,14 @@ function navigateTo(pageId) {
         loadDeliveryStatus();
         break;
       case 'adminPage':
+        if (isLoggedIn && loggedInBusinessId === card.id) {
+          loadAdminPanel();
+        } else {
+          navigateTo('homePage');
+        }
         break;
     }
   }, 300);
-}
-
-// ===== ADMIN LOGIN MODAL =====
-function showAdminLoginModal() {
-  const adminBusinessInfo = document.getElementById('adminBusinessInfo');
-  const adminPasswordHint = document.getElementById('adminPasswordHint');
-  
-  // Show business info in login modal
-  adminBusinessInfo.innerHTML = `
-    <img src="${card.profileImage || ''}" class="admin-business-avatar" onerror="this.style.display='none'">
-    <div class="admin-business-details">
-      <h4>${card.businessName || card.name || "Business"}</h4>
-      <p>Delivery Admin Access</p>
-    </div>
-  `;
-  
-  // Show password hint
-  const shortId = generateShortId(card.id);
-  adminPasswordHint.innerHTML = `Password: admin123_${shortId}`;
-  
-  openModal('adminLoginModal');
-  document.getElementById('adminPasswordInput').focus();
-}
-
-function checkAdminPassword() {
-  const password = document.getElementById('adminPasswordInput').value;
-  const shortId = generateShortId(card.id);
-  const expectedPassword = `admin123_${shortId}`;
-  
-  if(password === expectedPassword) {
-    closeModal('adminLoginModal');
-    navigateTo('adminPage');
-    loadAdminPanel();
-    
-    // Add admin login notification
-    addNotification(
-      'Admin Login Successful',
-      'Delivery admin panel accessed',
-      'alert'
-    );
-  } else {
-    alert("❌ Invalid password. Password format: admin123_{short_id}");
-    document.getElementById('adminPasswordInput').value = '';
-    document.getElementById('adminPasswordInput').focus();
-  }
 }
 
 // ===== DELIVERY SYSTEM FUNCTIONS =====
@@ -3093,7 +3149,7 @@ async function checkForDeliveries() {
     
     if(data && data.length > 0) {
       deliveryStatusData = data;
-      updateDeliveryIcon();
+      updateDeliveryBadge();
       
       // Check for new deliveries and add notifications
       const lastCheck = localStorage.getItem('lastDeliveryCheck') || '0';
@@ -3116,28 +3172,14 @@ async function checkForDeliveries() {
   }
 }
 
-function updateDeliveryIcon() {
-  const icon = document.getElementById('deliveryStatusIcon');
+function updateDeliveryBadge() {
   const badge = document.getElementById('deliveryBadge');
   
   if(deliveryStatusData.length > 0) {
-    const latestStatus = deliveryStatusData[0].status;
-    
-    // Status colors for simple icon
-    if(latestStatus === 'pending') {
-      icon.innerHTML = '<i class="fas fa-truck" style="color: #f59e0b;"></i>';
-    } else if(latestStatus === 'processing') {
-      icon.innerHTML = '<i class="fas fa-truck" style="color: #3b82f6;"></i>';
-    } else if(latestStatus === 'shipped') {
-      icon.innerHTML = '<i class="fas fa-truck" style="color: #8b5cf6;"></i>';
-    } else if(latestStatus === 'delivered') {
-      icon.innerHTML = '<i class="fas fa-truck" style="color: #10b981;"></i>';
-    } else if(latestStatus === 'cancelled') {
-      icon.innerHTML = '<i class="fas fa-truck" style="color: #ef4444;"></i>';
-    }
-    
-    badge.textContent = deliveryStatusData.length;
+    badge.textContent = deliveryStatusData.length > 9 ? '9+' : deliveryStatusData.length;
     badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
   }
 }
 
@@ -3346,7 +3388,7 @@ async function updateOrder(orderId) {
       loadDeliveryStatus();
     }
   } else {
-    alert('❌ Error updating order');
+    showNotification('❌ Error updating order');
   }
 }
 
@@ -3356,7 +3398,7 @@ function addNewOrder() {
   const customerName = prompt("Enter Customer Name (optional):");
   
   if(!orderId || !customerPhone) {
-    alert("❌ Order ID and Phone are required");
+    showNotification("❌ Order ID and Phone are required");
     return;
   }
   
@@ -3382,66 +3424,9 @@ function addNewOrder() {
         
         loadAdminPanel();
       } else {
-        alert('❌ Error adding order: ' + error.message);
+        showNotification('❌ Error adding order: ' + error.message);
       }
     });
-}
-
-// ===== SHARING FUNCTIONS =====
-function openShareModal() {
-  document.getElementById('shareableLink').textContent = shareableUrl;
-  openModal('shareModal');
-}
-
-function shareViaWhatsApp() {
-  const businessName = card.businessName || card.name || "Business";
-  const message = `Check out ${businessName} on Faiqtech:\n\n${shareableUrl}`;
-  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
-}
-
-function copyToClipboard() {
-  navigator.clipboard.writeText(shareableUrl).then(() => {
-    showNotification('✅ Link copied to clipboard!');
-  }).catch(err => {
-    console.error('Failed to copy: ', err);
-    showNotification('❌ Failed to copy link');
-  });
-}
-
-function shareViaFacebook() {
-  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareableUrl)}`;
-  window.open(url, '_blank', 'width=600,height=400');
-}
-
-function generateQR() {
-  closeModal('shareModal');
-  const qrContainer = document.getElementById('qrCodeContainer');
-  qrContainer.innerHTML = '';
-  
-  QRCode.toCanvas(qrContainer, shareableUrl, {
-    width: 200,
-    height: 200,
-    color: {
-      dark: '#000000',
-      light: '#FFFFFF'
-    }
-  }, function(error) {
-    if(error) {
-      qrContainer.innerHTML = '<div style="color:#ef4444;">QR Code generation failed</div>';
-    }
-  });
-  
-  openModal('qrModal');
-}
-
-function downloadQRCode() {
-  const canvas = document.querySelector('#qrCodeContainer canvas');
-  if(canvas) {
-    const link = document.createElement('a');
-    link.download = `${card.businessName || 'business'}-qrcode.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  }
 }
 
 // ===== RENDER APP =====
@@ -3472,7 +3457,7 @@ async function renderApp() {
 // ===== AUTO-REFRESH DELIVERIES =====
 setInterval(checkForDeliveries, 30000);
 
-// ===== ALL EXISTING FUNCTIONS (Keep as is) =====
+// ===== ALL EXISTING FUNCTIONS =====
 function loadHomePage() {
   const featuredProducts = document.getElementById('featuredProducts');
   const products = card.products || [];
@@ -3820,7 +3805,7 @@ function addToCart(productIndex) {
     }
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
-    showNotification('Product added to cart!');
+    showNotification('✅ Product added to cart!');
     
     // Add notification
     addNotification(
@@ -4249,19 +4234,19 @@ function showNotification(message) {
   const notification = document.createElement('div');
   notification.style.cssText = `
     position: fixed;
-    top: 20px;
+    top: 80px;
     left: 50%;
     transform: translateX(-50%);
     background: var(--primary-gradient);
     color: white;
-    padding: 15px 25px;
+    padding: 12px 20px;
     border-radius: 12px;
     box-shadow: var(--shadow-xl);
-    z-index: 3000;
-    max-width: 300px;
+    z-index: 9998;
+    max-width: 280px;
     animation: fadeIn 0.3s ease;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 13px;
     text-align: center;
   `;
   
