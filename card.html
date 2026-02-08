@@ -140,190 +140,6 @@ body {
   max-width: 300px;
 }
 
-/* NOTIFICATION SYSTEM */
-.notifications-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  max-width: 320px;
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.notification {
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--border-radius-lg);
-  padding: 15px;
-  box-shadow: var(--shadow-xl);
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  cursor: grab;
-  transform-origin: top right;
-  animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  max-width: 320px;
-  user-select: none;
-}
-
-.notification:active {
-  cursor: grabbing;
-}
-
-.notification.dragging {
-  opacity: 0.5;
-}
-
-.notification.dismissing {
-  animation: slideOutRight 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-@keyframes slideInRight {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideOutRight {
-  from {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%) scale(0.8);
-    opacity: 0;
-  }
-}
-
-.notification-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--border-radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  color: white;
-  flex-shrink: 0;
-}
-
-.notification.success .notification-icon {
-  background: var(--success-gradient);
-}
-
-.notification.warning .notification-icon {
-  background: var(--warning-gradient);
-}
-
-.notification.info .notification-icon {
-  background: var(--info-gradient);
-}
-
-.notification.danger .notification-icon {
-  background: var(--danger-gradient);
-}
-
-.notification-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.notification-title {
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--dark-color);
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-
-.notification-message {
-  font-size: 12px;
-  color: #64748b;
-  line-height: 1.4;
-}
-
-.notification-time {
-  font-size: 10px;
-  color: #94a3b8;
-  margin-top: 4px;
-  font-weight: 600;
-}
-
-.close-notification {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: rgba(0,0,0,0.1);
-  color: var(--dark-color);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: var(--transition-fast);
-}
-
-.close-notification:hover {
-  opacity: 1;
-  background: rgba(0,0,0,0.15);
-}
-
-.notification-badge {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: var(--danger-gradient);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  cursor: pointer;
-  z-index: 9999;
-  box-shadow: var(--shadow-lg);
-  border: 2px solid var(--glass-bg);
-  transition: var(--transition);
-}
-
-.notification-badge:hover {
-  transform: scale(1.1);
-}
-
-.notification-badge .count {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  background: var(--primary-gradient);
-  color: white;
-  font-size: 11px;
-  font-weight: 900;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--glass-bg);
-}
-
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -385,8 +201,116 @@ body {
   font-weight: 700;
 }
 
-#homePage {
-  padding-bottom: 100px;
+/* ===== SIMPLE DELIVERY STATUS ICON ===== */
+.delivery-status-icon {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: var(--transition-fast);
+}
+
+.delivery-status-icon:hover {
+  transform: scale(1.1);
+}
+
+.delivery-status-icon i {
+  color: white;
+  font-size: 24px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.delivery-status-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid white;
+}
+
+/* ===== SIMPLE LOGIN ICON ===== */
+.login-btn {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: var(--transition-fast);
+}
+
+.login-btn:hover {
+  transform: scale(1.1);
+}
+
+.login-btn i {
+  color: white;
+  font-size: 24px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* DELIVERY MODAL */
+.delivery-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+  padding: 20px;
+}
+
+.delivery-modal {
+  background: var(--glass-bg);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* ALL PAGES FIXED BOTTOM PADDING */
+#homePage,
+#productsPage,
+#cartPage,
+#aboutPage,
+#contactPage,
+#deliveryPage,
+#adminPage {
+  padding-bottom: 120px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
@@ -405,6 +329,7 @@ body {
   margin-bottom: 30px;
   position: relative;
   z-index: 1;
+  padding-top: 20px;
 }
 
 .welcome-text h1 {
@@ -549,7 +474,7 @@ body {
   border-radius: var(--border-radius-xs);
 }
 
-/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style - FIXED with Auto-Resize */
+/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -560,24 +485,19 @@ body {
 }
 
 .product-card {
-  /* Fixed height for all cards - COMPACT */
   height: 260px;
   width: 100%;
-  /* Flex layout for internal structure */
   display: flex;
   flex-direction: column;
-  /* Visual styling */
   background: var(--lighter-color);
   border-radius: 8px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   padding: 8px;
-  /* Ensures consistent card sizing */
   overflow: hidden;
   transition: var(--transition-fast);
   cursor: pointer;
   position: relative;
-  /* Prevent content from expanding card */
   min-height: 260px;
   max-height: 260px;
 }
@@ -587,7 +507,6 @@ body {
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-/* Image container with AUTO-RESIZE support - KEEP EXISTING STRATEGY */
 .product-image-container {
   position: relative;
   width: 100%;
@@ -599,7 +518,6 @@ body {
   margin-bottom: 8px;
   flex-shrink: 0;
   border: 1px solid #f1f5f9;
-  /* Container adapts to auto-resized image */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -610,20 +528,18 @@ body {
   height: auto;
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain; /* KEEP contain for auto-resize */
+  object-fit: contain;
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: block;
-  padding: 4px; /* Small padding for image breathing room */
+  padding: 4px;
 }
 
-/* Click animation - scales image when clicked */
 .product-card.clicked .product-image {
   transform: scale(1.8);
   z-index: 100;
   position: relative;
 }
 
-/* DISCOUNT BADGE - BOTTOM RIGHT CORNER (RHS) - FIXED */
 .discount-badge {
   position: absolute;
   bottom: 6px;
@@ -643,7 +559,6 @@ body {
   white-space: nowrap;
 }
 
-/* PRICE BADGE - ON IMAGE - MAIN CARD ONLY - FIXED */
 .price-badge {
   position: absolute;
   bottom: 6px;
@@ -681,7 +596,6 @@ body {
   line-height: 1;
 }
 
-/* Other badges - TOP RIGHT */
 .product-badges {
   position: absolute;
   top: 6px;
@@ -715,7 +629,6 @@ body {
 .badge.stock { background: rgba(59, 130, 246, 0.95); }
 .badge.delivery { background: rgba(20, 184, 166, 0.95); }
 
-/* Content area - COMPACT - FIXED */
 .product-content {
   display: flex;
   flex-direction: column;
@@ -740,7 +653,6 @@ body {
   flex-shrink: 0;
 }
 
-/* BUTTON CONTAINER - FIXED position and spacing */
 .product-actions {
   display: flex;
   gap: 6px;
@@ -751,7 +663,6 @@ body {
   border-top: 1px solid #f1f5f9;
 }
 
-/* Action buttons - FIXED size */
 .btn-primary, .btn-secondary {
   flex: 1;
   height: 28px;
@@ -795,7 +706,6 @@ body {
   font-size: 11px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 400px) {
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -838,7 +748,6 @@ body {
   }
 }
 
-/* MODAL VIEW - FIXED for auto-resize images */
 .modal-content .product-image-container {
   min-height: 200px;
   max-height: 300px;
@@ -852,7 +761,6 @@ body {
   max-width: 100%;
 }
 
-/* MODAL PRICE POSITION - Below image, in content flow */
 .modal-price-container {
   margin-bottom: 16px;
   padding: 12px 0;
@@ -874,7 +782,6 @@ body {
   font-weight: 500;
 }
 
-/* Image zoom overlay */
 .image-zoom-overlay {
   position: fixed;
   top: 0;
@@ -903,11 +810,6 @@ body {
 @keyframes zoomIn {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
-}
-
-#productsPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .products-header {
@@ -962,11 +864,6 @@ body {
   transform: translateY(-50%);
   color: #64748b;
   font-size: 20px;
-}
-
-#cartPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .cart-header {
@@ -1179,11 +1076,6 @@ body {
   margin-top: 25px;
 }
 
-#aboutPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-}
-
 .about-header {
   background: var(--primary-gradient);
   padding: 50px 25px;
@@ -1267,11 +1159,6 @@ body {
   background: rgba(239, 68, 68, 0.1);
   padding: 5px 12px;
   border-radius: 20px;
-}
-
-#contactPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .contact-header {
@@ -1433,6 +1320,7 @@ body {
   font-size: 20px;
   cursor: pointer;
   border: 1px solid rgba(255,255,255,0.3);
+  z-index: 10;
 }
 
 .page-footer-spacer {
@@ -1503,161 +1391,6 @@ body {
   z-index: 10;
 }
 
-/* LOGIN PAGE STYLES */
-#loginPage {
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-}
-
-.login-header {
-  background: var(--primary-gradient);
-  padding: 50px 25px;
-  margin: 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.login-header h1 {
-  color: white;
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 12px;
-  position: relative;
-  z-index: 1;
-  margin-top: 20px;
-}
-
-.login-form {
-  background: var(--lighter-color);
-  border-radius: var(--border-radius-lg);
-  padding: 25px;
-  margin: 25px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid #f1f5f9;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--dark-color);
-  margin-bottom: 8px;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 15px;
-  border: 2px solid #e2e8f0;
-  border-radius: var(--border-radius-md);
-  font-size: 15px;
-  font-family: 'Poppins', sans-serif;
-  transition: var(--transition);
-}
-
-.form-group input:focus {
-  outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-.login-btn {
-  width: 100%;
-  padding: 18px;
-  background: var(--primary-gradient);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-size: 17px;
-  font-weight: 800;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.delivery-details-container {
-  background: var(--lighter-color);
-  border-radius: var(--border-radius-lg);
-  padding: 20px;
-  margin: 20px;
-  box-shadow: var(--shadow-md);
-  border: 1px solid #f1f5f9;
-}
-
-.delivery-details-container h3 {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--dark-color);
-  margin-bottom: 20px;
-}
-
-.delivery-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-.delivery-card {
-  background: #f8fafc;
-  border-radius: var(--border-radius-md);
-  padding: 20px;
-  border: 1px solid #e2e8f0;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.delivery-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-
-.delivery-card.selected {
-  border-color: #667eea;
-  background: rgba(102, 126, 234, 0.05);
-}
-
-.delivery-card h4 {
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--dark-color);
-  margin-bottom: 10px;
-}
-
-.delivery-card p {
-  font-size: 13px;
-  color: #64748b;
-  line-height: 1.5;
-  margin-bottom: 15px;
-}
-
-.delivery-price {
-  font-size: 18px;
-  font-weight: 900;
-  color: #10b981;
-}
-
-.delivery-footer {
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 2px solid #f1f5f9;
-}
-
-.confirm-delivery-btn {
-  width: 100%;
-  padding: 18px;
-  background: var(--success-gradient);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius-md);
-  font-size: 17px;
-  font-weight: 800;
-  cursor: pointer;
-  margin-top: 20px;
-}
-
 @media (max-width: 480px) {
   .app-container {
     max-width: 100%;
@@ -1669,16 +1402,6 @@ body {
   
   .quick-actions {
     grid-template-columns: 1fr;
-  }
-  
-  .notifications-container {
-    right: 10px;
-    left: 10px;
-    max-width: calc(100% - 20px);
-  }
-  
-  .notification {
-    max-width: 100%;
   }
 }
 
@@ -1724,95 +1447,273 @@ body {
   .about-content,
   .business-hours,
   .contact-info,
-  .social-links,
-  .login-form,
-  .delivery-details-container {
+  .social-links {
     background: var(--lighter-color);
     border-color: rgba(255, 255, 255, 0.1);
   }
+}
+
+/* ===== DELIVERY PAGE STYLES ===== */
+.delivery-page-header {
+  background: var(--primary-gradient);
+  padding: 50px 25px 30px;
+  border-radius: 0 0 50px 50px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.delivery-page-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  margin-top: 20px;
+}
+
+.delivery-page-header p {
+  color: rgba(255,255,255,0.95);
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.delivery-card {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  margin: 15px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f1f5f9;
+  border-left: 5px solid #667eea;
+}
+
+.delivery-card.pending { border-left-color: #f59e0b; }
+.delivery-card.processing { border-left-color: #3b82f6; }
+.delivery-card.shipped { border-left-color: #8b5cf6; }
+.delivery-card.delivered { border-left-color: #10b981; }
+.delivery-card.cancelled { border-left-color: #ef4444; }
+
+.delivery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.delivery-order-id {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--dark-color);
+}
+
+.delivery-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.delivery-status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.delivery-status.processing {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.delivery-status.shipped {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.delivery-status.delivered {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.delivery-status.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.delivery-info {
+  color: #475569;
+  font-size: 14px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delivery-timestamp {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-search {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin: 15px;
+  font-size: 14px;
+}
+
+.admin-order-card {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  margin: 15px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f1f5f9;
+}
+
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.admin-order-id {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--dark-color);
+}
+
+.admin-customer-info {
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.admin-select {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  background: white;
+}
+
+.admin-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.admin-btn.success {
+  background: var(--success-gradient);
+}
+
+.no-deliveries {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-deliveries i {
+  font-size: 60px;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.no-deliveries h3 {
+  font-size: 20px;
+  color: var(--dark-color);
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.no-deliveries p {
+  color: #64748b;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+.password-prompt {
+  background: var(--lighter-color);
+  padding: 30px;
+  border-radius: var(--border-radius-lg);
+  margin: 40px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.password-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--border-radius-md);
+  font-size: 16px;
+  margin: 20px 0;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.password-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 10px;
 }
 </style>
 </head>
 
 <body>
 <div class="app-container">
-  <!-- Notification System -->
-  <div class="notifications-container" id="notificationsContainer"></div>
-  
-  <div class="notification-badge" id="notificationBadge" onclick="toggleNotifications()">
-    <i class="fas fa-bell"></i>
-    <span class="count" id="notificationCount">0</span>
-  </div>
-
   <!-- Image Zoom Overlay -->
   <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="closeImageZoom()">
     <img src="" class="image-zoom-content" id="zoomedImage">
   </div>
 
+  <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
     <h1>Digital Business App</h1>
     <p>Loading your premium business experience...</p>
   </div>
 
-  <!-- Login Page -->
-  <div id="loginPage" class="page">
-    <div class="login-header">
-      <h1>Welcome Back</h1>
-      <p>Sign in to continue shopping</p>
-    </div>
-    
-    <div class="login-form">
-      <div class="form-group">
-        <label for="loginEmail"><i class="fas fa-envelope"></i> Email Address</label>
-        <input type="email" id="loginEmail" placeholder="Enter your email">
-      </div>
-      
-      <div class="form-group">
-        <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
-        <input type="password" id="loginPassword" placeholder="Enter your password">
-      </div>
-      
-      <button class="login-btn" onclick="performLogin()">
-        <i class="fas fa-sign-in-alt"></i> Sign In
-      </button>
-    </div>
-    
-    <div class="delivery-details-container">
-      <h3><i class="fas fa-truck"></i> Delivery Options</h3>
-      
-      <div class="delivery-cards" id="deliveryCards">
-        <div class="delivery-card" onclick="selectDeliveryOption(0)">
-          <h4>Standard Delivery</h4>
-          <p>Delivery within 3-5 business days. Free for orders above PKR 2000.</p>
-          <div class="delivery-price">PKR 150</div>
-        </div>
-        
-        <div class="delivery-card" onclick="selectDeliveryOption(1)">
-          <h4>Express Delivery</h4>
-          <p>Next day delivery. Available in major cities only.</p>
-          <div class="delivery-price">PKR 300</div>
-        </div>
-        
-        <div class="delivery-card" onclick="selectDeliveryOption(2)">
-          <h4>Same Day Delivery</h4>
-          <p>Delivery within 4 hours. Order before 2 PM for same day delivery.</p>
-          <div class="delivery-price">PKR 500</div>
-        </div>
-      </div>
-      
-      <div class="delivery-footer">
-        <button class="confirm-delivery-btn" onclick="confirmDeliveryAndLogin()">
-          <i class="fas fa-check-circle"></i> Confirm & Continue
-        </button>
-      </div>
-    </div>
-    
-    <div class="page-footer-spacer"></div>
-  </div>
-
+  <!-- Home Page -->
   <div id="homePage" class="page">
     <div class="app-header">
+      <!-- Simple Login Icon (Left) - For Admin Access -->
+      <div class="login-btn" onclick="openAdminPage()">
+        <i class="fas fa-sign-in-alt"></i>
+      </div>
+      
+      <!-- Simple Delivery Status Icon (Right) -->
+      <div class="delivery-status-icon" id="deliveryStatusIcon" onclick="checkDeliveryStatus()">
+        <i class="fas fa-truck"></i>
+        <div class="delivery-status-badge" id="deliveryBadge" style="display:none;">!</div>
+      </div>
+      
       <div class="welcome-text">
         <h1 id="businessHeader">Welcome</h1>
         <p>Premium business at your fingertips</p>
@@ -1875,6 +1776,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- Products Page -->
   <div id="productsPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1896,6 +1798,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- Cart Page -->
   <div id="cartPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1912,6 +1815,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- About Page -->
   <div id="aboutPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -1939,6 +1843,7 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- Contact Page -->
   <div id="contactPage" class="page">
     <button class="back-btn" onclick="navigateTo('homePage')">
       <i class="fas fa-arrow-left"></i>
@@ -2000,6 +1905,43 @@ body {
     <div class="page-footer-spacer"></div>
   </div>
 
+  <!-- ===== DELIVERY STATUS PAGE ===== -->
+  <div id="deliveryPage" class="page">
+    <button class="back-btn" onclick="navigateTo('homePage')">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="delivery-page-header">
+      <h1><i class="fas fa-truck"></i> Delivery Status</h1>
+      <p>Track your orders in real-time</p>
+    </div>
+    
+    <div id="deliveryContent">
+      <!-- Delivery status will load here -->
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- ===== ADMIN DELIVERY PAGE ===== -->
+  <div id="adminPage" class="page">
+    <button class="back-btn" onclick="navigateTo('homePage')">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="delivery-page-header">
+      <h1><i class="fas fa-cog"></i> Delivery Admin</h1>
+      <p>Manage customer deliveries</p>
+    </div>
+    
+    <div id="adminContent">
+      <!-- Admin panel will load here -->
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- Bottom Navigation -->
   <div class="bottom-nav">
     <div class="nav-item active" onclick="navigateTo('homePage')">
       <div class="nav-icon">
@@ -2039,6 +1981,20 @@ body {
   </div>
 </div>
 
+<!-- Delivery Status Modal -->
+<div class="delivery-modal-overlay" id="deliveryStatusModal">
+  <div class="delivery-modal">
+    <button onclick="closeDeliveryModal()" style="position:absolute;top:15px;right:15px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.1);border:none;color:var(--dark-color);font-size:24px;cursor:pointer;">×</button>
+    <div id="deliveryStatusContent" style="padding:40px 25px;">
+      <h2 style="text-align:center;margin-bottom:25px;color:var(--dark-color);">
+        <i class="fas fa-truck"></i> Delivery Status
+      </h2>
+      <div id="deliveryStatusList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Other Modals -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-content">
     <button class="close-btn" onclick="closeModal('productModal')">×</button>
@@ -2136,7 +2092,7 @@ body {
           </div>
           
           <div class="payment-option" onclick="selectCheckoutPayment('cod')" id="codCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
-            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display=flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
               <i class="fas fa-truck"></i>
             </div>
             <div>
@@ -2198,22 +2154,112 @@ body {
   </div>
 </div>
 
+<!-- SHARING OPTIONS -->
+<div class="modal-overlay" id="shareModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('shareModal')">×</button>
+    
+    <div style="padding:25px;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;">
+        <i class="fas fa-share-alt"></i> Share Business Card
+      </h2>
+      
+      <div style="text-align:center;margin-bottom:25px;">
+        <div style="font-size:15px;color:#64748b;margin-bottom:15px;">Share this business with others:</div>
+        <div style="background:#f8fafc;padding:15px;border-radius:var(--border-radius-md);border:2px solid #e2e8f0;margin-bottom:20px;">
+          <div style="font-size:12px;color:#64748b;margin-bottom:8px;">Your Business Link:</div>
+          <div style="font-size:14px;font-weight:800;color:var(--dark-color);word-break:break-all;" id="shareableLink">Loading...</div>
+        </div>
+      </div>
+      
+      <div class="social-grid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:25px;">
+        <div class="social-link" onclick="shareViaWhatsApp()">
+          <div class="social-icon" style="background:#25D366;">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <div class="social-label">WhatsApp</div>
+        </div>
+        
+        <div class="social-link" onclick="copyToClipboard()">
+          <div class="social-icon" style="background:#3b82f6;">
+            <i class="fas fa-copy"></i>
+          </div>
+          <div class="social-label">Copy Link</div>
+        </div>
+        
+        <div class="social-link" onclick="shareViaFacebook()">
+          <div class="social-icon" style="background:#1877F2;">
+            <i class="fab fa-facebook-f"></i>
+          </div>
+          <div class="social-label">Facebook</div>
+        </div>
+        
+        <div class="social-link" onclick="generateQR()">
+          <div class="social-icon" style="background:#0f172a;">
+            <i class="fas fa-qrcode"></i>
+          </div>
+          <div class="social-label">QR Code</div>
+        </div>
+      </div>
+      
+      <div style="background:#f0f9ff;padding:15px;border-radius:var(--border-radius-md);margin-top:20px;border:1px solid #dbeafe;">
+        <div style="font-size:13px;color:#64748b;text-align:center;">
+          <i class="fas fa-info-circle"></i> Powered by <strong>Faiqtech</strong> - Digital Business Solutions
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QR Code Modal -->
+<div class="modal-overlay" id="qrModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('qrModal')">×</button>
+    
+    <div style="padding:25px;text-align:center;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;">
+        <i class="fas fa-qrcode"></i> Business QR Code
+      </h2>
+      
+      <div id="qrCodeContainer" style="margin:20px 0;min-height:200px;display:flex;align-items:center;justify-content:center;">
+        <!-- QR Code will be generated here -->
+      </div>
+      
+      <div style="background:#f8fafc;padding:15px;border-radius:var(--border-radius-md);margin-top:20px;border:1px solid #e2e8f0;">
+        <div style="font-size:13px;color:#64748b;">
+          <i class="fas fa-camera"></i> Scan this QR code to open the business card
+        </div>
+      </div>
+      
+      <button onclick="downloadQRCode()" style="width:100%;padding:15px;background:var(--primary-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:15px;font-weight:800;cursor:pointer;margin-top:25px;">
+        <i class="fas fa-download"></i> Download QR Code
+      </button>
+    </div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<!-- QR Code Library -->
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
 <script>
+// ===== PASSWORD GENERATOR SYSTEM =====
+function generateAdminPassword(cardId) {
+  if (!cardId) return "admin123_default";
+  const shortId = cardId.substring(0, 8).toLowerCase();
+  return `business123_${shortId}`;
+}
+
+// ===== MAIN APP CODE =====
 let card = {};
 let currentProduct = null;
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
 let currentPage = 'loadingScreen';
-let selectedDeliveryOption = null;
-let notifications = JSON.parse(localStorage.getItem('notifications')) || [];
-let notificationBadgeVisible = false;
-let lastHomeClick = 0;
-let isDraggingNotification = false;
-
-// Short ID key for compatibility
-const shortIdKey = "busapp123";
+let deliveryStatusData = [];
+let businessAdminPassword = "";
+let shareableUrl = "";
 
 const supa = supabase.createClient(
   "https://dfvnefbxgayxqgjjgtrr.supabase.co",
@@ -2221,21 +2267,13 @@ const supa = supabase.createClient(
 );
 
 document.addEventListener("DOMContentLoaded", async () => {
-  // Check if user is logged in
-  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const id = new URLSearchParams(location.search).get("id") || localStorage.getItem("lastCardId");
-  
   if(!id) {
-    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;background:#0f172a;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;'><h2>Business Card Not Found</h2><p>Please use a valid business card URL</p><p style='color:#64748b;font-size:14px;margin-top:20px;'>Example: https://yourdomain.com/card.html?id=UNIQUE_ID</p></div>";
     return;
   }
 
   setTimeout(async () => {
-    if (!isLoggedIn) {
-      navigateTo('loginPage');
-      return;
-    }
-
     const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
     if(error || !data) {
       document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
@@ -2243,36 +2281,385 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     card = JSON.parse(data.data);
+    card.id = data.id;
+    
+    // Generate unique admin password for this business
+    businessAdminPassword = generateAdminPassword(card.id);
+    console.log("Admin password generated:", businessAdminPassword);
+    
+    // Generate shareable URL
+    shareableUrl = window.location.href;
+    
     await renderApp();
     navigateTo('homePage');
     updateCartCount();
-    updateNotificationBadge();
     
-    // Add initial notifications
-    addNotification('success', 'Welcome Back!', 'You have successfully logged in to your account.');
+    // Check for deliveries
+    setTimeout(() => {
+      checkForDeliveries();
+    }, 1000);
   }, 2000);
 });
 
-function navigateTo(pageId) {
-  if(currentPage === pageId) {
-    // Double click on home page to exit
-    if(pageId === 'homePage') {
-      const now = Date.now();
-      if(now - lastHomeClick < 500) {
-        showNotification('Double tap to exit');
-        setTimeout(() => {
-          if(confirm('Do you want to exit the app?')) {
-            // Close app (in PWA) or go back
-            if(window.navigator.standalone) {
-              window.history.back();
-            }
-          }
-        }, 300);
-      }
-      lastHomeClick = now;
+// ===== DELIVERY SYSTEM FUNCTIONS =====
+async function checkForDeliveries() {
+  try {
+    const customerPhone = card.phone || localStorage.getItem('customerPhone');
+    
+    if(!customerPhone) {
+      console.log('No customer phone found');
+      return;
     }
+    
+    const { data, error } = await supa
+      .from('delivery_status')
+      .select('*')
+      .eq('customer_phone', customerPhone)
+      .order('last_updated', { ascending: false });
+      
+    if(error) {
+      console.error('Delivery check error:', error);
+      return;
+    }
+    
+    if(data && data.length > 0) {
+      deliveryStatusData = data;
+      updateDeliveryIcon();
+    }
+  } catch(err) {
+    console.log('Delivery check failed:', err);
+  }
+}
+
+function updateDeliveryIcon() {
+  const icon = document.getElementById('deliveryStatusIcon');
+  const badge = document.getElementById('deliveryBadge');
+  
+  if(deliveryStatusData.length > 0) {
+    const latestStatus = deliveryStatusData[0].status;
+    
+    // Status colors for simple icon
+    if(latestStatus === 'pending') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #f59e0b;"></i>';
+    } else if(latestStatus === 'processing') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #3b82f6;"></i>';
+    } else if(latestStatus === 'shipped') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #8b5cf6;"></i>';
+    } else if(latestStatus === 'delivered') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #10b981;"></i>';
+    } else if(latestStatus === 'cancelled') {
+      icon.innerHTML = '<i class="fas fa-truck" style="color: #ef4444;"></i>';
+    }
+    
+    badge.textContent = deliveryStatusData.length;
+    badge.style.display = 'flex';
+  }
+}
+
+function checkDeliveryStatus() {
+  navigateTo('deliveryPage');
+}
+
+async function loadDeliveryStatus() {
+  const phone = card.phone || localStorage.getItem('customerPhone');
+  
+  if(!phone) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div class="no-deliveries">
+        <i class="fas fa-phone"></i>
+        <h3>Phone Number Needed</h3>
+        <p>Please save your phone number to track deliveries.</p>
+        <button onclick="navigateTo('contactPage')" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
+          Update Phone
+        </button>
+      </div>
+    `;
     return;
   }
+  
+  const { data, error } = await supa
+    .from('delivery_status')
+    .select('*')
+    .eq('customer_phone', phone)
+    .order('last_updated', { ascending: false });
+    
+  if(error) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div style="text-align:center;padding:40px;color:#ef4444;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Error loading deliveries</p>
+        <button onclick="loadDeliveryStatus()" style="margin-top:15px;padding:10px 20px;background:#667eea;color:white;border:none;border-radius:8px;cursor:pointer;">
+          Try Again
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  if(!data || data.length === 0) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div class="no-deliveries">
+        <i class="fas fa-truck"></i>
+        <h3>No Active Deliveries</h3>
+        <p>Your delivery status will appear here once you place an order.</p>
+        <button onclick="navigateTo('productsPage')" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
+          <i class="fas fa-shopping-bag"></i> Shop Now
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  data.forEach(order => {
+    const statusClass = order.status;
+    const statusText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+    const updatedTime = new Date(order.last_updated).toLocaleString();
+    
+    html += `
+      <div class="delivery-card ${statusClass}">
+        <div class="delivery-header">
+          <div class="delivery-order-id">Order #${order.order_id}</div>
+          <div class="delivery-status ${statusClass}">${statusText}</div>
+        </div>
+        
+        <div class="delivery-info">
+          <i class="fas fa-user"></i>
+          <span>${order.customer_name || 'Customer'}</span>
+        </div>
+        
+        ${order.location ? `
+          <div class="delivery-info">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>${order.location}</span>
+          </div>
+        ` : ''}
+        
+        ${order.delivery_person ? `
+          <div class="delivery-info">
+            <i class="fas fa-user-tag"></i>
+            <span>${order.delivery_person}</span>
+          </div>
+        ` : ''}
+        
+        <div class="delivery-timestamp">
+          <i class="fas fa-clock"></i>
+          <span>Updated: ${updatedTime}</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('deliveryContent').innerHTML = html;
+}
+
+// ===== ADMIN FUNCTIONS =====
+function openAdminPage() {
+  const password = prompt("Enter admin password:");
+  if(password === businessAdminPassword) {
+    navigateTo('adminPage');
+    loadAdminPanel();
+  } else {
+    alert("Invalid password. Password format: business123_{business_id}");
+  }
+}
+
+async function loadAdminPanel() {
+  const { data, error } = await supa
+    .from('delivery_status')
+    .select('*')
+    .order('last_updated', { ascending: false });
+    
+  if(error || !data) {
+    document.getElementById('adminContent').innerHTML = '<p style="padding:20px;color:#ef4444;">Error loading data</p>';
+    return;
+  }
+  
+  let html = `
+    <input type="text" class="admin-search" id="adminSearch" placeholder="Search orders by ID, phone, name..." onkeyup="searchAdminOrders()">
+    
+    <button onclick="addNewOrder()" class="admin-btn">
+      <i class="fas fa-plus"></i> Add New Order
+    </button>
+  `;
+  
+  if(data.length === 0) {
+    html += '<p style="text-align:center;padding:40px;color:#64748b;">No orders found</p>';
+  } else {
+    data.forEach(order => {
+      const statusClass = order.status;
+      const updatedTime = new Date(order.last_updated).toLocaleString();
+      
+      html += `
+        <div class="admin-order-card" data-order-id="${order.order_id}" data-phone="${order.customer_phone}">
+          <div class="admin-order-header">
+            <div>
+              <div class="admin-order-id">Order #${order.order_id}</div>
+              <div class="admin-customer-info">${order.customer_name || 'No name'}</div>
+              <div class="admin-customer-info">${order.customer_phone}</div>
+            </div>
+            <div style="font-size:12px;color:#94a3b8;">${updatedTime}</div>
+          </div>
+          
+          <select class="admin-select" data-id="${order.id}">
+            <option value="pending" ${statusClass === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+            <option value="processing" ${statusClass === 'processing' ? 'selected' : ''}>🔄 Processing</option>
+            <option value="shipped" ${statusClass === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
+            <option value="delivered" ${statusClass === 'delivered' ? 'selected' : ''}>✅ Delivered</option>
+            <option value="cancelled" ${statusClass === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+          </select>
+          
+          <input type="text" class="admin-input" data-id="${order.id}" 
+                 placeholder="Location" value="${order.location || ''}">
+                 
+          <input type="text" class="admin-input" data-id="${order.id}" 
+                 placeholder="Delivery Person" value="${order.delivery_person || ''}">
+                 
+          <button onclick="updateOrder('${order.id}')" class="admin-btn success">
+            Update Order
+          </button>
+        </div>
+      `;
+    });
+  }
+  
+  document.getElementById('adminContent').innerHTML = html;
+}
+
+function searchAdminOrders() {
+  const searchTerm = document.getElementById('adminSearch').value.toLowerCase();
+  const cards = document.querySelectorAll('.admin-order-card');
+  
+  cards.forEach(card => {
+    const orderId = card.getAttribute('data-order-id').toLowerCase();
+    const phone = card.getAttribute('data-phone').toLowerCase();
+    const text = card.textContent.toLowerCase();
+    
+    if(orderId.includes(searchTerm) || phone.includes(searchTerm) || text.includes(searchTerm)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+async function updateOrder(orderId) {
+  const status = document.querySelector(`.admin-select[data-id="${orderId}"]`).value;
+  const location = document.querySelector(`.admin-input[data-id="${orderId}"]`).value;
+  const deliveryPerson = document.querySelectorAll(`.admin-input[data-id="${orderId}"]`)[1]?.value;
+  
+  const { error } = await supa
+    .from('delivery_status')
+    .update({
+      status: status,
+      location: location,
+      delivery_person: deliveryPerson,
+      last_updated: new Date().toISOString()
+    })
+    .eq('id', orderId);
+    
+  if(!error) {
+    alert('✅ Order updated successfully!');
+    loadAdminPanel();
+    if(currentPage === 'deliveryPage') {
+      loadDeliveryStatus();
+    }
+  } else {
+    alert('❌ Error updating order');
+  }
+}
+
+function addNewOrder() {
+  const orderId = prompt("Enter Order ID:");
+  const customerPhone = prompt("Enter Customer Phone:");
+  const customerName = prompt("Enter Customer Name (optional):");
+  
+  if(!orderId || !customerPhone) {
+    alert("❌ Order ID and Phone are required");
+    return;
+  }
+  
+  supa
+    .from('delivery_status')
+    .insert([{
+      order_id: orderId,
+      customer_phone: customerPhone,
+      customer_name: customerName || '',
+      status: 'pending',
+      location: '',
+      delivery_person: '',
+      last_updated: new Date().toISOString()
+    }])
+    .then(({ error }) => {
+      if(!error) {
+        alert('✅ Order added successfully!');
+        loadAdminPanel();
+      } else {
+        alert('❌ Error adding order: ' + error.message);
+      }
+    });
+}
+
+// ===== SHARING FUNCTIONS =====
+function openShareModal() {
+  document.getElementById('shareableLink').textContent = shareableUrl;
+  openModal('shareModal');
+}
+
+function shareViaWhatsApp() {
+  const businessName = card.businessName || card.name || "Business";
+  const message = `Check out ${businessName} on Faiqtech:\n\n${shareableUrl}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function copyToClipboard() {
+  navigator.clipboard.writeText(shareableUrl).then(() => {
+    alert('✅ Link copied to clipboard!');
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+    alert('❌ Failed to copy link');
+  });
+}
+
+function shareViaFacebook() {
+  const url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareableUrl)}`;
+  window.open(url, '_blank', 'width=600,height=400');
+}
+
+function generateQR() {
+  closeModal('shareModal');
+  const qrContainer = document.getElementById('qrCodeContainer');
+  qrContainer.innerHTML = '';
+  
+  QRCode.toCanvas(qrContainer, shareableUrl, {
+    width: 200,
+    height: 200,
+    color: {
+      dark: '#000000',
+      light: '#FFFFFF'
+    }
+  }, function(error) {
+    if(error) {
+      qrContainer.innerHTML = '<div style="color:#ef4444;">QR Code generation failed</div>';
+    }
+  });
+  
+  openModal('qrModal');
+}
+
+function downloadQRCode() {
+  const canvas = document.querySelector('#qrCodeContainer canvas');
+  if(canvas) {
+    const link = document.createElement('a');
+    link.download = `${card.businessName || 'business'}-qrcode.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  }
+}
+
+// ===== NAVIGATION SYSTEM =====
+function navigateTo(pageId) {
+  if(currentPage === pageId) return;
   
   const oldPage = document.getElementById(currentPage);
   const newPage = document.getElementById(pageId);
@@ -2296,7 +2683,9 @@ function navigateTo(pageId) {
       'productsPage': 1,
       'cartPage': 2,
       'aboutPage': 3,
-      'contactPage': 4
+      'contactPage': 4,
+      'deliveryPage': 0,
+      'adminPage': 0
     };
     
     if(navMap[pageId] !== undefined) {
@@ -2319,84 +2708,16 @@ function navigateTo(pageId) {
       case 'contactPage':
         loadContactPage();
         break;
+      case 'deliveryPage':
+        loadDeliveryStatus();
+        break;
+      case 'adminPage':
+        break;
     }
   }, 300);
 }
 
-function performLogin() {
-  const email = document.getElementById('loginEmail').value;
-  const password = document.getElementById('loginPassword').value;
-  
-  if(!email || !password) {
-    addNotification('danger', 'Login Failed', 'Please enter both email and password.');
-    return;
-  }
-  
-  // Simple validation
-  if(password.length < 6) {
-    addNotification('danger', 'Login Failed', 'Password must be at least 6 characters.');
-    return;
-  }
-  
-  localStorage.setItem('isLoggedIn', 'true');
-  localStorage.setItem('userEmail', email);
-  addNotification('success', 'Login Successful', 'Welcome to Digital Business App!');
-  
-  // Continue to home if delivery is selected, otherwise stay on login
-  if(selectedDeliveryOption !== null) {
-    setTimeout(() => {
-      navigateTo('loadingScreen');
-      loadCardData();
-    }, 1000);
-  }
-}
-
-function selectDeliveryOption(index) {
-  selectedDeliveryOption = index;
-  
-  // Update UI
-  document.querySelectorAll('.delivery-card').forEach((card, i) => {
-    if(i === index) {
-      card.classList.add('selected');
-    } else {
-      card.classList.remove('selected');
-    }
-  });
-}
-
-function confirmDeliveryAndLogin() {
-  if(selectedDeliveryOption === null) {
-    addNotification('warning', 'Delivery Option', 'Please select a delivery option.');
-    return;
-  }
-  
-  const deliveryOptions = ['Standard', 'Express', 'Same Day'];
-  addNotification('success', 'Delivery Selected', `${deliveryOptions[selectedDeliveryOption]} delivery confirmed.`);
-  
-  performLogin();
-}
-
-async function loadCardData() {
-  const id = new URLSearchParams(location.search).get("id") || localStorage.getItem("lastCardId");
-  
-  if(!id) {
-    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
-    return;
-  }
-
-  const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
-  if(error || !data) {
-    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
-    return;
-  }
-
-  card = JSON.parse(data.data);
-  await renderApp();
-  navigateTo('homePage');
-  updateCartCount();
-  updateNotificationBadge();
-}
-
+// ===== RENDER APP =====
 async function renderApp() {
   document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
   
@@ -2414,220 +2735,23 @@ async function renderApp() {
   document.getElementById('contactEmail').textContent = card.email || "Not available";
   document.getElementById('contactAddress').textContent = card.address || "Not available";
   
+  if(card.phone) {
+    localStorage.setItem('customerPhone', card.phone);
+  }
+  
   loadHomePage();
 }
 
-// NOTIFICATION SYSTEM
-function addNotification(type, title, message) {
-  const notification = {
-    id: Date.now(),
-    type: type || 'info',
-    title: title || 'Notification',
-    message: message || '',
-    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-    read: false
-  };
-  
-  notifications.unshift(notification);
-  if(notifications.length > 20) notifications.length = 20; // Limit to 20 notifications
-  
-  localStorage.setItem('notifications', JSON.stringify(notifications));
-  updateNotificationBadge();
-  
-  if(!notificationBadgeVisible) {
-    showNotificationPopup(notification);
-  }
-}
+// ===== AUTO-REFRESH DELIVERIES =====
+setInterval(checkForDeliveries, 30000);
 
-function showNotificationPopup(notification) {
-  const container = document.getElementById('notificationsContainer');
-  
-  const notificationEl = document.createElement('div');
-  notificationEl.className = `notification ${notification.type}`;
-  notificationEl.dataset.id = notification.id;
-  notificationEl.innerHTML = `
-    <div class="notification-icon">
-      <i class="fas fa-${getNotificationIcon(notification.type)}"></i>
-    </div>
-    <div class="notification-content">
-      <div class="notification-title">${notification.title}</div>
-      <div class="notification-message">${notification.message}</div>
-      <div class="notification-time">${notification.time}</div>
-    </div>
-    <div class="close-notification" onclick="removeNotification(${notification.id})">×</div>
-  `;
-  
-  // Add drag functionality
-  setupDragAndDrop(notificationEl);
-  
-  container.insertBefore(notificationEl, container.firstChild);
-  
-  // Auto remove after 5 seconds
-  setTimeout(() => {
-    if(notificationEl.parentNode) {
-      notificationEl.classList.add('dismissing');
-      setTimeout(() => {
-        if(notificationEl.parentNode) {
-          notificationEl.remove();
-        }
-      }, 300);
-    }
-  }, 5000);
-}
-
-function getNotificationIcon(type) {
-  switch(type) {
-    case 'success': return 'check-circle';
-    case 'warning': return 'exclamation-triangle';
-    case 'danger': return 'times-circle';
-    default: return 'info-circle';
-  }
-}
-
-function setupDragAndDrop(element) {
-  let startX, startY, initialX, initialY;
-  
-  element.addEventListener('mousedown', startDrag);
-  element.addEventListener('touchstart', startDragTouch);
-  
-  function startDrag(e) {
-    e.preventDefault();
-    startX = e.clientX;
-    startY = e.clientY;
-    initialX = element.offsetLeft;
-    initialY = element.offsetTop;
-    
-    element.classList.add('dragging');
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('mouseup', stopDrag);
-  }
-  
-  function startDragTouch(e) {
-    if(e.touches.length === 1) {
-      const touch = e.touches[0];
-      startX = touch.clientX;
-      startY = touch.clientY;
-      initialX = element.offsetLeft;
-      initialY = element.offsetTop;
-      
-      element.classList.add('dragging');
-      document.addEventListener('touchmove', dragTouch);
-      document.addEventListener('touchend', stopDragTouch);
-    }
-  }
-  
-  function drag(e) {
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-    
-    element.style.transform = `translate(${dx}px, ${dy}px)`;
-    
-    // Dismiss if dragged far enough
-    if(Math.abs(dx) > 150 || Math.abs(dy) > 150) {
-      removeNotification(parseInt(element.dataset.id));
-    }
-  }
-  
-  function dragTouch(e) {
-    if(e.touches.length === 1) {
-      const touch = e.touches[0];
-      const dx = touch.clientX - startX;
-      const dy = touch.clientY - startY;
-      
-      element.style.transform = `translate(${dx}px, ${dy}px)`;
-      
-      // Dismiss if dragged far enough
-      if(Math.abs(dx) > 150 || Math.abs(dy) > 150) {
-        removeNotification(parseInt(element.dataset.id));
-      }
-    }
-  }
-  
-  function stopDrag() {
-    element.classList.remove('dragging');
-    element.style.transform = '';
-    document.removeEventListener('mousemove', drag);
-    document.removeEventListener('mouseup', stopDrag);
-  }
-  
-  function stopDragTouch() {
-    element.classList.remove('dragging');
-    element.style.transform = '';
-    document.removeEventListener('touchmove', dragTouch);
-    document.removeEventListener('touchend', stopDragTouch);
-  }
-}
-
-function removeNotification(id) {
-  notifications = notifications.filter(n => n.id !== id);
-  localStorage.setItem('notifications', JSON.stringify(notifications));
-  
-  const notificationEl = document.querySelector(`.notification[data-id="${id}"]`);
-  if(notificationEl) {
-    notificationEl.classList.add('dismissing');
-    setTimeout(() => {
-      if(notificationEl.parentNode) {
-        notificationEl.remove();
-      }
-    }, 300);
-  }
-  
-  updateNotificationBadge();
-}
-
-function toggleNotifications() {
-  const container = document.getElementById('notificationsContainer');
-  notificationBadgeVisible = !notificationBadgeVisible;
-  
-  if(notificationBadgeVisible) {
-    // Show all notifications
-    container.innerHTML = '';
-    notifications.forEach(notification => {
-      const notificationEl = document.createElement('div');
-      notificationEl.className = `notification ${notification.type}`;
-      notificationEl.dataset.id = notification.id;
-      notificationEl.innerHTML = `
-        <div class="notification-icon">
-          <i class="fas fa-${getNotificationIcon(notification.type)}"></i>
-        </div>
-        <div class="notification-content">
-          <div class="notification-title">${notification.title}</div>
-          <div class="notification-message">${notification.message}</div>
-          <div class="notification-time">${notification.time}</div>
-        </div>
-        <div class="close-notification" onclick="removeNotification(${notification.id})">×</div>
-      `;
-      setupDragAndDrop(notificationEl);
-      container.appendChild(notificationEl);
-    });
-    
-    // Mark all as read
-    notifications.forEach(n => n.read = true);
-    localStorage.setItem('notifications', JSON.stringify(notifications));
-    updateNotificationBadge();
-  } else {
-    // Hide notifications
-    container.innerHTML = '';
-  }
-}
-
-function updateNotificationBadge() {
-  const unreadCount = notifications.filter(n => !n.read).length;
-  const badge = document.getElementById('notificationCount');
-  
-  if(badge) {
-    badge.textContent = unreadCount;
-    badge.style.display = unreadCount > 0 ? 'flex' : 'none';
-  }
-}
-
+// ===== ALL EXISTING FUNCTIONS (Keep as is) =====
 function loadHomePage() {
   const featuredProducts = document.getElementById('featuredProducts');
   const products = card.products || [];
   
   featuredProducts.innerHTML = '';
   
-  // Show only products with badges (featured products)
   const featuredProductsList = products.filter(product => 
     product.badges && product.badges.length > 0
   ).slice(0, 4);
@@ -2637,7 +2761,6 @@ function loadHomePage() {
     featuredProducts.appendChild(createProductCard(product, originalIndex));
   });
   
-  // If no featured products, show first 4 products
   if(featuredProductsList.length === 0) {
     products.slice(0, 4).forEach((product, index) => {
       featuredProducts.appendChild(createProductCard(product, index));
@@ -2645,21 +2768,30 @@ function loadHomePage() {
   }
 }
 
+function loadProductsPage() {
+  const allProducts = document.getElementById('allProducts');
+  const products = card.products || [];
+  
+  allProducts.innerHTML = '';
+  
+  products.forEach((product, index) => {
+    allProducts.appendChild(createProductCard(product, index));
+  });
+}
+
 function createProductCard(product, index) {
   const price = product.discountPrice || product.originalPrice;
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
   const hasDiscount = originalPrice && price && originalPrice > price;
   
-  // Calculate discount percentage
   let discountPercentage = '';
   if(hasDiscount && originalPrice && price) {
     const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
-    if(discount > 0) { // Don't show if 0% or less
+    if(discount > 0) {
       discountPercentage = `<div class="discount-badge">${discount}% OFF</div>`;
     }
   }
   
-  // Price badge HTML - ON IMAGE for main card
   let priceBadgeHtml = '';
   if(price) {
     priceBadgeHtml = `<div class="price-badge">`;
@@ -2672,7 +2804,6 @@ function createProductCard(product, index) {
     priceBadgeHtml += `</div>`;
   }
   
-  // Map badge names to CSS classes
   const badgeClasses = {
     '🔥 Hot Deal': 'hot',
     '⭐ Best Seller': 'best-seller',
@@ -2685,7 +2816,6 @@ function createProductCard(product, index) {
   let badgesHtml = '';
   if(product.badges && product.badges.length > 0) {
     badgesHtml = `<div class="product-badges">`;
-    // Show only first 2 badges to avoid clutter
     product.badges.slice(0, 2).forEach(badge => {
       const badgeClass = badgeClasses[badge] || 'discount';
       badgesHtml += `<span class="badge ${badgeClass}">${badge}</span>`;
@@ -2725,18 +2855,23 @@ function createProductCard(product, index) {
   return card;
 }
 
-// Rest of the functions remain the same as your original code...
-// [All the other functions like loadProductsPage, filterProducts, addToCart, etc. remain exactly the same]
+function zoomImage(imageUrl, event) {
+  event.stopPropagation();
+  
+  const overlay = document.getElementById('imageZoomOverlay');
+  const zoomedImage = document.getElementById('zoomedImage');
+  
+  if (imageUrl) {
+    zoomedImage.src = imageUrl;
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
 
-function loadProductsPage() {
-  const allProducts = document.getElementById('allProducts');
-  const products = card.products || [];
-  
-  allProducts.innerHTML = '';
-  
-  products.forEach((product, index) => {
-    allProducts.appendChild(createProductCard(product, index));
-  });
+function closeImageZoom() {
+  const overlay = document.getElementById('imageZoomOverlay');
+  overlay.style.display = 'none';
+  document.body.style.overflow = 'auto';
 }
 
 function filterProducts() {
@@ -2935,11 +3070,6 @@ function updateCartCount() {
   if(currentPage === 'cartPage') {
     loadCartPage();
   }
-  
-  // Add notification when cart is updated
-  if(count > 0) {
-    addNotification('info', 'Cart Updated', `You have ${count} items in your cart.`);
-  }
 }
 
 function addToCart(productIndex) {
@@ -2964,18 +3094,13 @@ function addToCart(productIndex) {
     localStorage.setItem('cart', JSON.stringify(cart));
     updateCartCount();
     showNotification('Product added to cart!');
-    addNotification('success', 'Cart Updated', `${product.title || 'Product'} added to cart!`);
   }
 }
 
 function removeFromCart(index) {
-  if(cart[index]) {
-    const productName = cart[index].title || 'Product';
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    addNotification('warning', 'Cart Updated', `${productName} removed from cart.`);
-  }
+  cart.splice(index, 1);
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
 }
 
 function updateQuantity(index, change) {
@@ -2983,7 +3108,6 @@ function updateQuantity(index, change) {
     cart[index].quantity = Math.max(1, (cart[index].quantity || 1) + change);
     localStorage.setItem('cart', JSON.stringify(cart));
     loadCartPage();
-    addNotification('info', 'Quantity Updated', `Updated ${cart[index].title || 'Product'} quantity to ${cart[index].quantity}.`);
   }
 }
 
@@ -3001,7 +3125,6 @@ function showProductModal(productIndex) {
   document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
   document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
   
-  // MODAL PRICE - Below image, in content flow
   const modalPrice = document.getElementById('modalPrice');
   if(hasDiscount) {
     const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
@@ -3106,7 +3229,6 @@ function sendBuyNowOrder() {
   }
   
   closeModal('productModal');
-  addNotification('success', 'Order Placed', 'Your order has been sent via WhatsApp!');
 }
 
 function openCheckoutModal() {
@@ -3304,7 +3426,6 @@ function sendCheckoutOrder() {
   updateCartCount();
   closeModal('checkoutModal');
   navigateTo('homePage');
-  addNotification('success', 'Order Completed', 'Your order has been placed successfully!');
 }
 
 function getPaymentMethodName(method) {
@@ -3399,28 +3520,17 @@ function showNotification(message) {
   }, 3000);
 }
 
-// Image zoom functionality
-function zoomImage(imageUrl, event) {
-  event.stopPropagation();
-  
-  const overlay = document.getElementById('imageZoomOverlay');
-  const zoomedImage = document.getElementById('zoomedImage');
-  
-  if (imageUrl) {
-    zoomedImage.src = imageUrl;
-    overlay.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
+function openDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
-function closeImageZoom() {
-  const overlay = document.getElementById('imageZoomOverlay');
-  overlay.style.display = 'none';
+function closeDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'none';
   document.body.style.overflow = 'auto';
 }
 
 updateCartCount();
-updateNotificationBadge();
 </script>
 </body>
 </html>
