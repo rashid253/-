@@ -1,7 +1,7 @@
 {
-  "name": "Digital Business App",
-  "short_name": "BusinessApp",
-  "description": "Premium business application for shopping and services",
+  "name": "__DYNAMIC_APP_NAME__",
+  "short_name": "__DYNAMIC_SHORT_NAME__",
+  "description": "Premium business application",
   "start_url": "./card.html",
   "scope": "./",
   "display": "standalone",
