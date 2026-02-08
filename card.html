@@ -1784,6 +1784,82 @@ body {
   margin-top: 20px;
   font-style: italic;
 }
+
+/* ===== DOUBLE CLICK EXIT MODAL ===== */
+.exit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+  padding: 20px;
+}
+
+.exit-modal {
+  background: var(--glass-bg);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 350px;
+  padding: 30px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.exit-modal h2 {
+  color: var(--dark-color);
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.exit-modal p {
+  color: #64748b;
+  margin-bottom: 25px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.exit-modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.exit-modal-btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.exit-modal-btn.cancel {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.exit-modal-btn.exit {
+  background: var(--danger-gradient);
+  color: white;
+}
+
+.exit-modal-btn.cancel:hover {
+  background: #e2e8f0;
+}
+
+.exit-modal-btn.exit:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
 </style>
 </head>
 
@@ -1792,6 +1868,22 @@ body {
   <!-- Image Zoom Overlay -->
   <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="closeImageZoom()">
     <img src="" class="image-zoom-content" id="zoomedImage">
+  </div>
+
+  <!-- Exit Confirmation Modal -->
+  <div class="exit-modal-overlay" id="exitModal">
+    <div class="exit-modal">
+      <h2><i class="fas fa-sign-out-alt"></i> Exit App?</h2>
+      <p>Are you sure you want to exit? Press back again to confirm.</p>
+      <div class="exit-modal-buttons">
+        <button class="exit-modal-btn cancel" onclick="closeExitModal()">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button class="exit-modal-btn exit" onclick="exitApp()">
+          <i class="fas fa-sign-out-alt"></i> Exit
+        </button>
+      </div>
+    </div>
   </div>
 
   <!-- Loading Screen -->
@@ -1959,6 +2051,19 @@ body {
     </div>
     
     <div class="contact-info">
+      <!-- Customer Phone Input -->
+      <div class="contact-item" onclick="openPhoneInput()" style="cursor:pointer;">
+        <div class="contact-icon" style="background:var(--primary-gradient);">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">Your Phone Number</div>
+          <div class="contact-value" id="customerPhoneDisplay">
+            Tap to add your number
+          </div>
+        </div>
+      </div>
+      
       <div class="contact-item" onclick="makeCall()">
         <div class="contact-icon">
           <i class="fas fa-phone"></i>
@@ -2316,6 +2421,65 @@ function generateAdminPassword(cardId) {
   return `business123_${shortId}`;
 }
 
+// ===== CUSTOMER PHONE MANAGEMENT =====
+function getCustomerPhone() {
+  // Try to get from localStorage first
+  let phone = localStorage.getItem('customerPhone');
+  
+  // If not found, check if we're on the business owner's device (using business phone)
+  if (!phone && card.phone) {
+    // Check if this is the business owner's device by comparing with saved business phone
+    const savedBusinessPhone = localStorage.getItem('businessPhone');
+    if (savedBusinessPhone === card.phone) {
+      // This is business owner's device, use business phone for admin purposes
+      phone = card.phone;
+    }
+  }
+  
+  return phone;
+}
+
+function saveCustomerPhone(phone) {
+  localStorage.setItem('customerPhone', phone);
+}
+
+function saveBusinessPhone(phone) {
+  localStorage.setItem('businessPhone', phone);
+}
+
+// ===== BACK BUTTON HANDLING =====
+let lastBackPress = 0;
+let backPressCount = 0;
+
+// Handle browser back button
+window.addEventListener('popstate', function(event) {
+  event.preventDefault();
+  
+  const currentTime = new Date().getTime();
+  const timeDiff = currentTime - lastBackPress;
+  
+  if (timeDiff < 1000) { // Double click within 1 second
+    backPressCount++;
+    if (backPressCount >= 2 && currentPage === 'homePage') {
+      showExitModal();
+    }
+  } else {
+    backPressCount = 1;
+  }
+  
+  lastBackPress = currentTime;
+  
+  // Normal back navigation
+  if (currentPage !== 'homePage') {
+    goBack();
+  } else {
+    // If on home page, show warning
+    if (backPressCount === 1) {
+      showNotification('Press back again to exit');
+    }
+  }
+});
+
 // ===== MAIN APP CODE =====
 let card = {};
 let currentProduct = null;
@@ -2366,6 +2530,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  localStorage.setItem("lastCardId", id);
+  
   setTimeout(async () => {
     const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
     if(error || !data) {
@@ -2375,6 +2541,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     card = JSON.parse(data.data);
     card.id = data.id;
+    
+    // Save business phone for admin check
+    if (card.phone) {
+      saveBusinessPhone(card.phone);
+    }
     
     // Generate unique admin password for this business
     businessAdminPassword = generateAdminPassword(card.id);
@@ -2390,6 +2561,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     navigateTo('homePage');
     updateCartCount();
     updateLoginUI();
+    updateCustomerPhoneDisplay();
     
     // Check for deliveries
     setTimeout(() => {
@@ -2397,6 +2569,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     }, 1000);
   }, 2000);
 });
+
+// ===== EXIT MODAL FUNCTIONS =====
+function showExitModal() {
+  document.getElementById('exitModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeExitModal() {
+  document.getElementById('exitModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+  backPressCount = 0;
+}
+
+function exitApp() {
+  // Clear all app data
+  localStorage.clear();
+  
+  // If we're in a PWA or fullscreen, exit fullscreen
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  }
+  
+  // Close the app/window
+  if (window.history.length > 1) {
+    window.history.go(-1);
+  } else {
+    window.close();
+  }
+}
 
 // ===== BACK BUTTON FIX =====
 function goBack() {
@@ -2415,6 +2616,7 @@ function goBack() {
   } else {
     navigateTo('homePage');
   }
+  backPressCount = 0;
 }
 
 // ===== NAVIGATION SYSTEM =====
@@ -2486,10 +2688,11 @@ function navigateTo(pageId) {
 // ===== DELIVERY SYSTEM FUNCTIONS =====
 async function checkForDeliveries() {
   try {
-    const customerPhone = card.phone || localStorage.getItem('customerPhone');
+    const customerPhone = getCustomerPhone();
     
     if(!customerPhone) {
       console.log('No customer phone found');
+      updateDeliveryIcon(); // Update icon even if no phone
       return;
     }
     
@@ -2501,6 +2704,7 @@ async function checkForDeliveries() {
       
     if(error) {
       console.error('Delivery check error:', error);
+      updateDeliveryIcon(); // Update icon even on error
       return;
     }
     
@@ -2513,9 +2717,14 @@ async function checkForDeliveries() {
       if (pendingOrders.length > 0) {
         showNotification(`🚚 You have ${pendingOrders.length} pending delivery${pendingOrders.length > 1 ? 's' : ''}`);
       }
+    } else {
+      // No deliveries for this customer
+      deliveryStatusData = [];
+      updateDeliveryIcon();
     }
   } catch(err) {
     console.log('Delivery check failed:', err);
+    updateDeliveryIcon();
   }
 }
 
@@ -2524,8 +2733,6 @@ function updateDeliveryIcon() {
   const badge = document.getElementById('deliveryBadge');
   
   if(deliveryStatusData.length > 0) {
-    const latestStatus = deliveryStatusData[0].status;
-    
     // ALWAYS GREEN if there are orders (as requested)
     icon.style.color = '#10b981';
     
@@ -2542,15 +2749,25 @@ function updateDeliveryIcon() {
   } else {
     icon.style.color = 'white';
     badge.style.display = 'none';
+    badge.classList.remove('alert');
   }
 }
 
 function checkDeliveryStatus() {
+  const customerPhone = getCustomerPhone();
+  
+  if(!customerPhone) {
+    // Show phone input prompt
+    openPhoneInput();
+    showNotification('Please add your phone number to track deliveries');
+    return;
+  }
+  
   navigateTo('deliveryPage');
 }
 
 async function loadDeliveryStatus() {
-  const phone = card.phone || localStorage.getItem('customerPhone');
+  const phone = getCustomerPhone();
   
   if(!phone) {
     document.getElementById('deliveryContent').innerHTML = `
@@ -2558,8 +2775,8 @@ async function loadDeliveryStatus() {
         <i class="fas fa-phone"></i>
         <h3>Phone Number Needed</h3>
         <p>Please save your phone number to track deliveries.</p>
-        <button onclick="navigateTo('contactPage')" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
-          Update Phone
+        <button onclick="openPhoneInput()" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
+          Add Phone Number
         </button>
       </div>
     `;
@@ -2640,6 +2857,47 @@ async function loadDeliveryStatus() {
   });
   
   document.getElementById('deliveryContent').innerHTML = html;
+}
+
+// ===== CUSTOMER PHONE FUNCTIONS =====
+function openPhoneInput() {
+  const currentPhone = getCustomerPhone();
+  const phone = prompt("Enter your phone number for delivery tracking:", currentPhone || "");
+  
+  if (phone) {
+    // Validate phone number
+    const cleanedPhone = phone.replace(/\D/g, '');
+    if (cleanedPhone.length >= 10) {
+      saveCustomerPhone(cleanedPhone);
+      updateCustomerPhoneDisplay();
+      showNotification('✅ Phone number saved successfully!');
+      
+      // Check for deliveries with new phone
+      checkForDeliveries();
+      
+      // If on delivery page, reload
+      if (currentPage === 'deliveryPage') {
+        loadDeliveryStatus();
+      }
+    } else {
+      showNotification('❌ Please enter a valid phone number');
+    }
+  }
+}
+
+function updateCustomerPhoneDisplay() {
+  const phone = getCustomerPhone();
+  const displayElement = document.getElementById('customerPhoneDisplay');
+  
+  if (phone) {
+    displayElement.textContent = phone;
+    displayElement.style.color = '#10b981';
+    displayElement.style.fontWeight = '800';
+  } else {
+    displayElement.textContent = 'Tap to add your number';
+    displayElement.style.color = '';
+    displayElement.style.fontWeight = '';
+  }
 }
 
 // ===== LOGIN/LOGOUT SYSTEM =====
@@ -2873,10 +3131,6 @@ async function renderApp() {
   document.getElementById('contactPhone').textContent = card.phone || "Not available";
   document.getElementById('contactEmail').textContent = card.email || "Not available";
   document.getElementById('contactAddress').textContent = card.address || "Not available";
-  
-  if(card.phone) {
-    localStorage.setItem('customerPhone', card.phone);
-  }
   
   loadHomePage();
 }
@@ -3633,6 +3887,7 @@ function closeDeliveryModal() {
   document.body.style.overflow = 'auto';
 }
 
+// Initialize
 updateCartCount();
 </script>
 </body>
