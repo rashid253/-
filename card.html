@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <title>Digital Business App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <!-- Dynamic Manifest will be injected by JavaScript -->
+<link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#0f172a" id="themeColorMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="description" content="Premium Digital Business App">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
 
-<!-- All CSS styles remain exactly the same -->
 <style>
-/* ALL CSS FROM ORIGINAL FILE REMAINS EXACTLY THE SAME */
+/* All CSS remains exactly the same as before - NO CHANGES */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -1926,8 +1925,8 @@ body {
   <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
-    <h1 id="loadingTitle">Digital Business App</h1>
-    <p id="loadingSubtitle">Loading your premium business experience...</p>
+    <h1 id="loadingTitle">Business App</h1>
+    <p id="loadingSubtitle">Loading your business experience...</p>
   </div>
 
   <!-- Home Page -->
@@ -2447,104 +2446,147 @@ const supa = supabase.createClient(
   "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
 
-// ===== FIXED PWA MANIFEST SYSTEM =====
+// ===== DYNAMIC PWA SYSTEM WITH BUSINESS-SPECIFIC NAMES =====
 function setupDynamicPWA(businessData) {
-  // Generate app name from business name
   const businessName = businessData.businessName || businessData.name || "Business";
-  const appName = businessName + " App";
+  const appName = `${businessName} App`;
   const shortName = businessName.length > 12 ? businessName.substring(0, 10) + ".." : businessName;
-  
-  // Use profile image as app icon (or default)
   const profileImage = businessData.profileImage || '';
+  const businessDesc = businessData.business?.about || `Premium business app for ${businessName}`;
   
-  // Create FIXED manifest object with proper structure
-  const manifest = {
+  console.log("Setting up PWA for business:", businessName);
+  
+  // Remove any existing manifest links
+  document.querySelectorAll('link[rel="manifest"]').forEach(link => link.remove());
+  
+  // Create dynamic manifest with business-specific data
+  const dynamicManifest = {
     "name": appName,
-    "short_name": shortName + " App",
-    "description": "Premium business app for " + businessName,
+    "short_name": shortName,
+    "description": businessDesc.substring(0, 200), // Limit description length
     "theme_color": "#667eea",
-    "background_color": "#ffffff",
+    "background_color": "#0f172a",
     "display": "standalone",
     "orientation": "portrait",
-    "scope": "/",
-    "start_url": window.location.origin + window.location.pathname + "?source=pwa",
-    "icons": [
+    "scope": "./",
+    "start_url": window.location.href,
+    "icons": []
+  };
+  
+  // Add profile image as app icon if available
+  if (profileImage && isValidImageUrl(profileImage)) {
+    dynamicManifest.icons = [
       {
-        "src": profileImage || getDefaultIcon(businessName),
+        "src": profileImage,
         "sizes": "192x192",
-        "type": "image/png",
+        "type": getImageType(profileImage),
         "purpose": "any maskable"
       },
       {
-        "src": profileImage || getDefaultIcon(businessName),
+        "src": profileImage,
         "sizes": "512x512",
-        "type": "image/png",
+        "type": getImageType(profileImage),
         "purpose": "any maskable"
       }
-    ]
-  };
-  
-  // Remove any existing manifest
-  const oldManifest = document.querySelector('link[rel="manifest"]');
-  if (oldManifest) {
-    oldManifest.remove();
+    ];
+  } else {
+    // Generate icon from business name
+    const generatedIcon = generateBusinessIcon(businessName);
+    dynamicManifest.icons = [
+      {
+        "src": generatedIcon,
+        "sizes": "192x192",
+        "type": "image/svg+xml",
+        "purpose": "any maskable"
+      },
+      {
+        "src": generatedIcon,
+        "sizes": "512x512",
+        "type": "image/svg+xml",
+        "purpose": "any maskable"
+      }
+    ];
   }
   
-  // Create manifest link with proper URL
+  // Inject the dynamic manifest
+  const manifestString = JSON.stringify(dynamicManifest);
+  const manifestBlob = new Blob([manifestString], {type: 'application/manifest+json'});
+  const manifestURL = URL.createObjectURL(manifestBlob);
+  
   const manifestLink = document.createElement('link');
   manifestLink.rel = 'manifest';
-  manifestLink.href = 'manifest.json'; // Use static manifest file
+  manifestLink.href = manifestURL;
   document.head.appendChild(manifestLink);
   
-  // Also create a static manifest.json file dynamically
-  createStaticManifest(manifest);
-  
-  // Update page title
+  // Update page title and metadata
   document.title = appName;
-  
-  // Update loading screen
   document.getElementById('loadingTitle').textContent = appName;
-  document.getElementById('loadingSubtitle').textContent = `Loading ${businessName} experience...`;
-  
-  // Update theme color meta tag
+  document.getElementById('loadingSubtitle').textContent = `Loading ${businessName}...`;
   document.getElementById('themeColorMeta').content = "#667eea";
+  document.getElementById('businessHeader').textContent = `Welcome to ${businessName}`;
   
   // Update favicon
-  updateFavicon(profileImage || getDefaultIcon(businessName));
-  
-  console.log("Dynamic PWA setup for:", businessName);
-  
-  // Trigger PWA install prompt after 3 seconds
-  setTimeout(() => {
-    showInstallPromptIfAvailable();
-  }, 3000);
-}
-
-function createStaticManifest(manifest) {
-  // Create a static manifest.json file
-  const manifestData = JSON.stringify(manifest, null, 2);
-  const blob = new Blob([manifestData], {type: 'application/json'});
-  const manifestURL = URL.createObjectURL(blob);
-  
-  // Store in localStorage for service worker to use
-  localStorage.setItem('pwa_manifest', manifestData);
-  
-  // Update the manifest link
-  const manifestLink = document.querySelector('link[rel="manifest"]');
-  if (manifestLink) {
-    manifestLink.href = manifestURL;
+  if (profileImage && isValidImageUrl(profileImage)) {
+    updateFavicon(profileImage);
+  } else {
+    updateFavicon(generateBusinessIcon(businessName));
   }
+  
+  console.log("Dynamic PWA manifest injected for:", businessName);
+  return dynamicManifest;
 }
 
-function getDefaultIcon(businessName) {
-  // Create a colored icon with first letter of business name
+// Helper function to check if URL is a valid image
+function isValidImageUrl(url) {
+  if (!url) return false;
+  const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+  return imageExtensions.some(ext => url.toLowerCase().includes(ext));
+}
+
+// Helper function to get image type from URL
+function getImageType(url) {
+  if (url.includes('.png')) return 'image/png';
+  if (url.includes('.jpg') || url.includes('.jpeg')) return 'image/jpeg';
+  if (url.includes('.gif')) return 'image/gif';
+  if (url.includes('.webp')) return 'image/webp';
+  if (url.includes('.svg')) return 'image/svg+xml';
+  return 'image/jpeg'; // Default
+}
+
+// Generate icon from business name (using first letter)
+function generateBusinessIcon(businessName) {
   const firstLetter = businessName.charAt(0).toUpperCase();
-  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
-  const color = colors[businessName.length % colors.length];
   
-  // Return data URL for SVG icon
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
-  return 'data:image/svg+xml;base64,' + btoa(svg);
+  // Color palette for icons
+  const colors = [
+    '#667eea', // Purple-blue
+    '#764ba2', // Purple
+    '#10b981', // Green
+    '#f59e0b', // Orange
+    '#ef4444', // Red
+    '#3b82f6'  // Blue
+  ];
+  
+  // Pick color based on business name
+  const colorIndex = Array.from(businessName).reduce((sum, char) => sum + char.charCodeAt(0), 0) % colors.length;
+  const iconColor = colors[colorIndex];
+  
+  // Create SVG icon
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+    <defs>
+      <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:${iconColor};stop-opacity:0.9" />
+        <stop offset="100%" style="stop-color:${iconColor};stop-opacity:0.7" />
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" fill="url(#grad)" rx="20"/>
+    <text x="50" y="65" font-size="48" font-family="Arial, sans-serif" 
+          fill="white" text-anchor="middle" font-weight="bold">
+      ${firstLetter}
+    </text>
+  </svg>`;
+  
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 function updateFavicon(iconUrl) {
@@ -2568,6 +2610,149 @@ function updateFavicon(iconUrl) {
   appleIcon.sizes = "180x180";
 }
 
+// ===== PWA INSTALLATION HANDLER =====
+let deferredPrompt = null;
+
+// Listen for beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent Chrome 67 and earlier from automatically showing the prompt
+  e.preventDefault();
+  // Stash the event so it can be triggered later
+  deferredPrompt = e;
+  
+  console.log('PWA install prompt available');
+  
+  // Show install button after 3 seconds
+  setTimeout(() => {
+    showInstallButton();
+  }, 3000);
+});
+
+// Improved PWA installation function
+function improvedInstallPWA() {
+  if (!deferredPrompt) {
+    console.log('Install prompt not available');
+    showNotification('⚠️ App installation is not supported on this browser');
+    return;
+  }
+  
+  // Show the install prompt
+  deferredPrompt.prompt();
+  
+  // Wait for the user to respond
+  deferredPrompt.userChoice.then((choiceResult) => {
+    console.log('User choice:', choiceResult.outcome);
+    
+    if (choiceResult.outcome === 'accepted') {
+      console.log('✅ User accepted PWA installation');
+      showNotification('📱 App installed successfully!');
+      
+      // Remove install button
+      const installContainer = document.querySelector('.install-button-container');
+      if (installContainer) {
+        installContainer.remove();
+      }
+      
+      // Optional: Redirect to app or show success message
+      setTimeout(() => {
+        showNotification('🎉 Welcome to ' + (card.businessName || 'Business App') + '!');
+      }, 1000);
+      
+    } else {
+      console.log('❌ User declined PWA installation');
+      showNotification('ℹ️ You can install later from browser menu');
+      
+      // Show hint for manual installation
+      setTimeout(() => {
+        showNotification('💡 Tip: Tap ⋮ (menu) → "Install App"');
+      }, 2000);
+    }
+    
+    // Clear the deferredPrompt variable
+    deferredPrompt = null;
+  });
+}
+
+// Check if app is running as PWA
+function checkPWAStatus() {
+  if (isPWAInstalled()) {
+    console.log('📱 Running as installed PWA');
+    // Hide install button if already installed
+    const installContainer = document.querySelector('.install-button-container');
+    if (installContainer) {
+      installContainer.remove();
+    }
+  } else {
+    console.log('🌐 Running in browser');
+  }
+}
+
+// Check if PWA is already installed
+function isPWAInstalled() {
+  return (
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true ||
+    document.referrer.includes('android-app://') ||
+    window.location.protocol === 'chrome-extension:'
+  );
+}
+
+// Show install button
+function showInstallButton() {
+  // Don't show if already installed
+  if (isPWAInstalled()) {
+    console.log('App already installed, hiding button');
+    return;
+  }
+  
+  if (!deferredPrompt) {
+    console.log('No install prompt available');
+    return;
+  }
+  
+  // Remove any existing install button
+  const existingContainer = document.querySelector('.install-button-container');
+  if (existingContainer) {
+    existingContainer.remove();
+  }
+  
+  // Create install button
+  const installContainer = document.createElement('div');
+  installContainer.className = 'install-button-container';
+  installContainer.innerHTML = `
+    <button class="install-btn" onclick="improvedInstallPWA()">
+      <i class="fas fa-download"></i> Install App
+    </button>
+  `;
+  
+  document.body.appendChild(installContainer);
+  
+  // Auto-hide after 15 seconds
+  setTimeout(() => {
+    if (installContainer.parentNode) {
+      installContainer.style.opacity = '0';
+      installContainer.style.transition = 'opacity 0.5s ease';
+      setTimeout(() => {
+        if (installContainer.parentNode) {
+          installContainer.remove();
+        }
+      }, 500);
+    }
+  }, 15000);
+}
+
+// Auto-refresh after PWA installation
+window.addEventListener('appinstalled', (event) => {
+  console.log('🎉 PWA was installed');
+  
+  // Optional: Reload page to apply PWA mode
+  setTimeout(() => {
+    if (!isPWAInstalled()) {
+      location.reload();
+    }
+  }, 1000);
+});
+
 // ===== SHORT URL SYSTEM =====
 function generateShortId() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -2586,13 +2771,17 @@ function generateAdminPassword(cardId) {
 }
 
 // ===== DATA ISOLATION SYSTEM =====
+// Each business app will have its own isolated localStorage keys
 let currentBusinessId = '';
 
 function getStorageKey(key) {
+  // Prefix all localStorage keys with business ID
+  // Use only first 8 characters to avoid long keys
   const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
   return `business_${businessKey}_${key}`;
 }
 
+// Override localStorage functions to use isolated keys
 const isolatedLocalStorage = {
   setItem: function(key, value) {
     const storageKey = getStorageKey(key);
@@ -2610,6 +2799,7 @@ const isolatedLocalStorage = {
   },
   
   clear: function() {
+    // Only clear items for this business
     const prefix = getStorageKey('');
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -2619,6 +2809,7 @@ const isolatedLocalStorage = {
     }
   },
   
+  // Get all keys for current business
   getAllKeys: function() {
     const prefix = getStorageKey('');
     const keys = [];
@@ -2636,9 +2827,12 @@ const isolatedLocalStorage = {
 function getCustomerPhone() {
   const phone = isolatedLocalStorage.getItem('customerPhone');
   
+  // If not found, check if we're on the business owner's device (using business phone)
   if (!phone && card.phone) {
+    // Check if this is the business owner's device by comparing with saved business phone
     const savedBusinessPhone = isolatedLocalStorage.getItem('businessPhone');
     if (savedBusinessPhone === card.phone) {
+      // This is business owner's device, use business phone for admin purposes
       return card.phone;
     }
   }
@@ -2654,109 +2848,25 @@ function saveBusinessPhone(phone) {
   isolatedLocalStorage.setItem('businessPhone', phone);
 }
 
-// ===== FIXED PWA INSTALLATION HANDLER =====
-let deferredPrompt = null;
-let installButtonShown = false;
-
-// Listen for beforeinstallprompt event
-window.addEventListener('beforeinstallprompt', (e) => {
-  console.log('PWA install prompt available');
-  e.preventDefault();
-  deferredPrompt = e;
-  
-  if (!installButtonShown) {
-    setTimeout(() => {
-      showInstallButton();
-      installButtonShown = true;
-    }, 5000);
-  }
-});
-
-// Show install button
-function showInstallButton() {
-  if (!deferredPrompt) return;
-  
-  const existingContainer = document.querySelector('.install-button-container');
-  if (existingContainer) {
-    existingContainer.remove();
-  }
-  
-  const installContainer = document.createElement('div');
-  installContainer.className = 'install-button-container';
-  installContainer.innerHTML = `
-    <button class="install-btn" onclick="installPWA()">
-      <i class="fas fa-download"></i> Install App
-    </button>
-  `;
-  
-  document.body.appendChild(installContainer);
-  
-  setTimeout(() => {
-    if (installContainer.parentNode) {
-      installContainer.remove();
-      installButtonShown = false;
-    }
-  }, 30000);
-}
-
-// Install PWA
-function installPWA() {
-  if (!deferredPrompt) return;
-  
-  deferredPrompt.prompt();
-  
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-      showNotification('✅ App installed successfully!');
-      
-      const installContainer = document.querySelector('.install-button-container');
-      if (installContainer) {
-        installContainer.remove();
-      }
-      
-      // Hide install button permanently for this session
-      installButtonShown = true;
-    } else {
-      console.log('User dismissed the install prompt');
-    }
-    
-    deferredPrompt = null;
-  });
-}
-
-// Check if PWA is already installed
-function isPWAInstalled() {
-  return window.matchMedia('(display-mode: standalone)').matches || 
-         window.navigator.standalone === true;
-}
-
-// Show install prompt if available
-function showInstallPromptIfAvailable() {
-  if (isPWAInstalled()) {
-    console.log('PWA already installed');
-    return;
-  }
-  
-  if (deferredPrompt && !installButtonShown) {
-    showInstallButton();
-  }
-}
-
 // ===== FIXED BACK BUTTON SYSTEM =====
 let lastBackPress = 0;
 let backPressCount = 0;
+
+// Store navigation history
 let navigationHistory = [];
 
 // Initialize hash-based routing
 function initializeRouting() {
+  // Listen for hash changes
   window.addEventListener('hashchange', handleHashChange);
   
+  // Initial hash check
   setTimeout(() => {
     const hash = window.location.hash.replace('#', '');
     if (hash) {
       handleHashChange();
     } else {
+      // Set initial hash to home
       window.location.hash = '#home';
     }
   }, 100);
@@ -2777,15 +2887,17 @@ function handleHashChange() {
   };
   
   if (pageMap[hash]) {
+    // Only navigate if it's a different page
     if (currentPage !== pageMap[hash]) {
       navigateToDirect(pageMap[hash]);
     }
   } else {
+    // Default to home
     window.location.hash = '#home';
   }
 }
 
-// Direct navigation function
+// Direct navigation function (without adding to history)
 function navigateToDirect(pageId) {
   if(currentPage === pageId) return;
   
@@ -2802,6 +2914,7 @@ function navigateToDirect(pageId) {
     newPage.classList.add('active');
     currentPage = pageId;
     
+    // Update navigation
     document.querySelectorAll('.nav-item').forEach(item => {
       item.classList.remove('active');
     });
@@ -2821,6 +2934,7 @@ function navigateToDirect(pageId) {
       document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
     }
     
+    // Load page content
     switch(pageId) {
       case 'homePage':
         loadHomePage();
@@ -2851,7 +2965,7 @@ function navigateToDirect(pageId) {
   }, 300);
 }
 
-// Main navigation function
+// Main navigation function with history management
 function navigateTo(pageId) {
   const hashMap = {
     'homePage': 'home',
@@ -2865,7 +2979,10 @@ function navigateTo(pageId) {
   };
   
   if (hashMap[pageId]) {
+    // Add to browser history
     window.location.hash = `#${hashMap[pageId]}`;
+    
+    // Add to our navigation history
     navigationHistory.push(pageId);
   }
 }
@@ -2873,9 +2990,13 @@ function navigateTo(pageId) {
 // Back navigation
 function goBack() {
   if (navigationHistory.length > 1) {
+    // Remove current page from history
     navigationHistory.pop();
+    
+    // Get previous page
     const previousPage = navigationHistory[navigationHistory.length - 1];
     
+    // Navigate to previous page
     const hashMap = {
       'homePage': 'home',
       'productsPage': 'products',
@@ -2888,18 +3009,20 @@ function goBack() {
     };
     
     if (hashMap[previousPage]) {
-      window.history.back();
+      window.history.back(); // Let browser handle the hash change
     } else {
       navigateTo('homePage');
     }
   } else {
+    // If no history, go to home
     navigateTo('homePage');
   }
 }
 
-// Handle browser back button
+// Handle browser back button (popstate)
 window.addEventListener('popstate', function(event) {
   // Let the hashchange handler deal with it
+  // This prevents the double-back exit issue
 });
 
 // ===== EXIT MODAL FUNCTIONS =====
@@ -2915,10 +3038,12 @@ function closeExitModal() {
 }
 
 function exitApp() {
+  // If we're in a PWA or fullscreen, exit fullscreen
   if (document.fullscreenElement) {
     document.exitFullscreen();
   }
   
+  // Close the app/window
   if (window.history.length > 1) {
     window.history.go(-1);
   } else {
@@ -2933,7 +3058,7 @@ async function checkForDeliveries() {
     
     if(!customerPhone) {
       console.log('No customer phone found for business', currentBusinessId.substring(0, 8));
-      updateDeliveryIcon();
+      updateDeliveryIcon(); // Update icon even if no phone
       return;
     }
     
@@ -2945,7 +3070,7 @@ async function checkForDeliveries() {
       
     if(error) {
       console.error('Delivery check error:', error);
-      updateDeliveryIcon();
+      updateDeliveryIcon(); // Update icon even on error
       return;
     }
     
@@ -2953,11 +3078,13 @@ async function checkForDeliveries() {
       deliveryStatusData = data;
       updateDeliveryIcon();
       
+      // Show notification for new pending orders
       const pendingOrders = data.filter(order => order.status === 'pending');
       if (pendingOrders.length > 0) {
         showNotification(`🚚 You have ${pendingOrders.length} pending delivery${pendingOrders.length > 1 ? 's' : ''}`);
       }
     } else {
+      // No deliveries for this customer
       deliveryStatusData = [];
       updateDeliveryIcon();
     }
@@ -2972,10 +3099,13 @@ function updateDeliveryIcon() {
   const badge = document.getElementById('deliveryBadge');
   
   if(deliveryStatusData.length > 0) {
+    // ALWAYS GREEN if there are orders (as requested)
     icon.style.color = '#10b981';
+    
     badge.textContent = deliveryStatusData.length;
     badge.style.display = 'flex';
     
+    // Add alert animation for pending orders
     const hasPending = deliveryStatusData.some(order => order.status === 'pending');
     if (hasPending) {
       badge.classList.add('alert');
@@ -2993,6 +3123,7 @@ function checkDeliveryStatus() {
   const customerPhone = getCustomerPhone();
   
   if(!customerPhone) {
+    // Show phone input prompt
     openPhoneInput();
     showNotification('Please add your phone number to track deliveries');
     return;
@@ -3100,14 +3231,17 @@ function openPhoneInput() {
   const phone = prompt("Enter your phone number for delivery tracking:", currentPhone || "");
   
   if (phone) {
+    // Validate phone number
     const cleanedPhone = phone.replace(/\D/g, '');
     if (cleanedPhone.length >= 10) {
       saveCustomerPhone(cleanedPhone);
       updateCustomerPhoneDisplay();
       showNotification('✅ Phone number saved successfully!');
       
+      // Check for deliveries with new phone
       checkForDeliveries();
       
+      // If on delivery page, reload
       if (currentPage === 'deliveryPage') {
         loadDeliveryStatus();
       }
@@ -3135,6 +3269,7 @@ function updateCustomerPhoneDisplay() {
 // ===== LOGIN/LOGOUT SYSTEM =====
 function toggleLogin() {
   if (isAdminLoggedIn) {
+    // Show confirmation before logout
     if (confirm("Are you sure you want to logout?")) {
       logoutAdmin();
     }
@@ -3336,6 +3471,7 @@ function showNotification(message) {
   notification.textContent = message;
   notification.style.display = 'block';
   
+  // Auto-hide after 3 seconds
   setTimeout(() => {
     notification.style.display = 'none';
   }, 3000);
@@ -3358,9 +3494,11 @@ let isAdminLoggedIn = false;
 
 // ===== RENDER APP =====
 async function renderApp() {
+  // Setup Dynamic PWA with business data FIRST
   setupDynamicPWA(card);
   
-  document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
+  // Then render the rest of the app
+  document.getElementById('businessHeader').textContent = `Welcome to ${card.businessName || card.name || "Premium Business"}`;
   
   const photo = document.getElementById('photo');
   if(card.profileImage) {
@@ -3385,6 +3523,7 @@ function updateCartCount() {
   document.getElementById('cartCountMini').textContent = count;
   document.getElementById('cartBadge').textContent = count;
   
+  // Save to isolated storage
   isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
   
   if(currentPage === 'cartPage') {
@@ -3428,6 +3567,7 @@ function updateQuantity(index, change) {
   }
 }
 
+// ===== KEEP ALL EXISTING FUNCTIONS =====
 function loadHomePage() {
   const featuredProducts = document.getElementById('featuredProducts');
   const products = card.products || [];
@@ -3505,10 +3645,10 @@ function createProductCard(product, index) {
     badgesHtml += `</div>`;
   }
   
-  const cardElement = document.createElement('div');
-  cardElement.className = 'product-card';
+  const card = document.createElement('div');
+  card.className = 'product-card';
   
-  cardElement.innerHTML = `
+  card.innerHTML = `
     <div class="product-image-container" onclick="zoomImage('${product.image || ''}', event)">
       <img src="${product.image || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
       ${discountPercentage}
@@ -3528,13 +3668,13 @@ function createProductCard(product, index) {
     </div>
   `;
   
-  cardElement.onclick = (e) => {
+  card.onclick = (e) => {
     if (!e.target.closest('button')) {
       showProductModal(index);
     }
   };
   
-  return cardElement;
+  return card;
 }
 
 function zoomImage(imageUrl, event) {
@@ -4127,27 +4267,8 @@ function closeDeliveryModal() {
   document.body.style.overflow = 'auto';
 }
 
-// ===== FIXED SERVICE WORKER REGISTRATION =====
-function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      // Register service worker with proper scope
-      navigator.serviceWorker.register('./sw.js', { scope: './' })
-        .then(function(registration) {
-          console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch(function(error) {
-          console.log('Service Worker registration failed:', error);
-        });
-    });
-  }
-}
-
 // ===== INITIALIZE APP =====
 document.addEventListener("DOMContentLoaded", async () => {
-  // Register service worker first
-  registerServiceWorker();
-  
   // Check for short ID in URL
   const urlParams = new URLSearchParams(location.search);
   let id = urlParams.get("id") || localStorage.getItem("lastCardId");
@@ -4234,7 +4355,55 @@ document.addEventListener("DOMContentLoaded", async () => {
     setTimeout(() => {
       checkForDeliveries();
     }, 1000);
+    
+    // Check PWA status
+    setTimeout(checkPWAStatus, 2000);
   }, 2000);
+});
+
+// ===== SERVICE WORKER REGISTRATION =====
+// Register service worker for PWA capabilities
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    // Try to register service worker from root
+    navigator.serviceWorker.register('sw.js')
+      .then(function(registration) {
+        console.log('✅ Service Worker registered successfully:', registration);
+        
+        // Force PWA install prompt after service worker is ready
+        if (registration.active) {
+          console.log('Service Worker is active');
+          
+          // Check if app is already installed
+          setTimeout(() => {
+            if (!isPWAInstalled() && deferredPrompt) {
+              showInstallButton();
+            }
+          }, 3000);
+        }
+      })
+      .catch(function(error) {
+        console.log('❌ Service Worker registration failed:', error);
+        
+        // Try alternative path
+        try {
+          navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('Fallback registration successful:', reg))
+            .catch(err => console.log('All registration attempts failed:', err));
+        } catch(e) {
+          console.log('All service worker registration attempts failed');
+        }
+      });
+  });
+}
+
+// Add PWA status check on page load
+window.addEventListener('load', function() {
+  console.log('PWA Status Check:');
+  console.log('HTTPS:', window.location.protocol === 'https:');
+  console.log('Service Worker:', 'serviceWorker' in navigator);
+  console.log('BeforeInstallPrompt:', !!deferredPrompt);
+  console.log('Is PWA installed:', isPWAInstalled());
 });
 </script>
 </body>
