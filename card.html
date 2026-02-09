@@ -4,16 +4,20 @@
 <meta charset="UTF-8">
 <title>Digital Business App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Dynamic Manifest will be injected by JavaScript -->
-<meta name="theme-color" content="#0f172a" id="themeColorMeta">
+<meta name="theme-color" content="#667eea" id="themeColorMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Business App">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="description" content="Premium Digital Business App">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" href="https://img.icons8.com/color/96/000000/business.png">
+<link rel="apple-touch-icon" href="https://img.icons8.com/color/96/000000/business.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
 
 <style>
-/* ALL CSS FROM ORIGINAL FILE REMAINS EXACTLY THE SAME */
+/* ALL CSS FROM ORIGINAL FILE */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -1863,8 +1867,8 @@ body {
   background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
 }
 
-/* ===== INSTALL BUTTON ===== */
-.install-button-container {
+/* ===== PWA INSTALL BUTTON ===== */
+.pwa-install-container {
   position: fixed;
   top: 20px;
   right: 20px;
@@ -1872,7 +1876,7 @@ body {
   animation: slideDown 0.5s ease;
 }
 
-.install-btn {
+.pwa-install-btn {
   padding: 12px 24px;
   background: var(--primary-gradient);
   color: white;
@@ -1887,7 +1891,7 @@ body {
   transition: var(--transition);
 }
 
-.install-btn:hover {
+.pwa-install-btn:hover {
   transform: scale(1.05);
   box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
 }
@@ -1920,6 +1924,13 @@ body {
         </button>
       </div>
     </div>
+  </div>
+
+  <!-- PWA Install Button -->
+  <div class="pwa-install-container" id="pwaInstallContainer" style="display: none;">
+    <button class="pwa-install-btn" id="pwaInstallBtn">
+      <i class="fas fa-download"></i> Install App
+    </button>
   </div>
 
   <!-- Loading Screen -->
@@ -2446,148 +2457,26 @@ const supa = supabase.createClient(
   "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
 
-// ===== FIXED PWA MANIFEST SYSTEM =====
-function setupDynamicPWA(businessData) {
-  // Generate app name from business name
-  const businessName = businessData.businessName || businessData.name || "Business";
-  const appName = businessName + " App";
-  const shortName = businessName.length > 12 ? businessName.substring(0, 10) + ".." : businessName;
-  
-  // Use profile image as app icon (or default)
-  const profileImage = businessData.profileImage || '';
-  
-  // Create FIXED manifest object with proper structure for PWA
-  const manifest = {
-    "name": appName,
-    "short_name": shortName + " App",
-    "description": "Premium business app for " + businessName,
-    "theme_color": "#667eea",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "orientation": "portrait",
-    "scope": "./",
-    "start_url": window.location.href.split('?')[0] + "?source=pwa&utm_source=pwa&id=" + (businessData.id || ''),
-    "id": "./",
-    "categories": ["business", "shopping", "productivity"],
-    "icons": [
-      {
-        "src": profileImage || getDefaultIcon(businessName),
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "any maskable"
-      },
-      {
-        "src": profileImage || getDefaultIcon(businessName),
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "any maskable"
-      }
-    ]
-  };
-  
-  // Remove any existing manifest
-  const oldManifest = document.querySelector('link[rel="manifest"]');
-  if (oldManifest) {
-    oldManifest.remove();
-  }
-  
-  // Create manifest link with proper URL
-  const manifestLink = document.createElement('link');
-  manifestLink.rel = 'manifest';
-  manifestLink.href = '#';
-  document.head.appendChild(manifestLink);
-  
-  // Create a dynamic manifest for PWA
-  const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
-  const manifestURL = URL.createObjectURL(manifestBlob);
-  manifestLink.href = manifestURL;
-  
-  // Also add apple touch icon for iOS
-  const appleIcon = document.createElement('link');
-  appleIcon.rel = 'apple-touch-icon';
-  appleIcon.href = profileImage || getDefaultIcon(businessName);
-  document.head.appendChild(appleIcon);
-  
-  // Update page title
-  document.title = appName;
-  
-  // Update loading screen
-  document.getElementById('loadingTitle').textContent = appName;
-  document.getElementById('loadingSubtitle').textContent = `Loading ${businessName} experience...`;
-  
-  // Update theme color meta tag
-  document.getElementById('themeColorMeta').content = "#667eea";
-  
-  // Update favicon
-  updateFavicon(profileImage || getDefaultIcon(businessName));
-  
-  console.log("✅ Dynamic PWA setup for:", businessName);
-  
-  // Store manifest for service worker
-  localStorage.setItem('pwa_manifest', JSON.stringify(manifest));
-  
-  // Trigger PWA install prompt after 3 seconds
-  setTimeout(() => {
-    showInstallPromptIfAvailable();
-  }, 3000);
-}
-
-function getDefaultIcon(businessName) {
-  // Create a colored icon with first letter of business name
-  const firstLetter = businessName.charAt(0).toUpperCase();
-  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
-  const color = colors[businessName.length % colors.length];
-  
-  // Return data URL for SVG icon
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
-  return 'data:image/svg+xml;base64,' + btoa(svg);
-}
-
-function updateFavicon(iconUrl) {
-  // Update favicon
-  let favicon = document.querySelector('link[rel="icon"]');
-  if (!favicon) {
-    favicon = document.createElement('link');
-    favicon.rel = 'icon';
-    document.head.appendChild(favicon);
-  }
-  favicon.href = iconUrl;
-  
-  // Update Apple touch icon
-  let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
-  if (!appleIcon) {
-    appleIcon = document.createElement('link');
-    appleIcon.rel = 'apple-touch-icon';
-    document.head.appendChild(appleIcon);
-  }
-  appleIcon.href = iconUrl;
-  appleIcon.sizes = "180x180";
-}
-
-// ===== FIXED PWA INSTALLATION HANDLER =====
+// ===== FIXED PWA INSTALLATION SYSTEM =====
 let deferredPrompt = null;
-let installButtonShown = false;
 let isPWAInstalled = false;
 
 // Check if PWA is already installed
 function checkIfPWAInstalled() {
-  // Check multiple ways to detect PWA installation
   isPWAInstalled = window.matchMedia('(display-mode: standalone)').matches || 
                    window.navigator.standalone === true ||
                    localStorage.getItem('pwa_installed') === 'true';
   
   if (isPWAInstalled) {
-    console.log('✅ PWA is already installed as standalone app');
-    // Hide install button if exists
-    const installBtn = document.querySelector('.install-button-container');
-    if (installBtn) installBtn.remove();
+    console.log('✅ PWA is already installed');
+    document.getElementById('pwaInstallContainer').style.display = 'none';
   }
   return isPWAInstalled;
 }
 
 // Listen for beforeinstallprompt event
 window.addEventListener('beforeinstallprompt', (e) => {
-  console.log('✅ PWA install prompt available (beforeinstallprompt fired)');
+  console.log('✅ PWA install prompt available');
   
   // Prevent Chrome from automatically showing the prompt
   e.preventDefault();
@@ -2595,69 +2484,51 @@ window.addEventListener('beforeinstallprompt', (e) => {
   // Stash the event so it can be triggered later
   deferredPrompt = e;
   
-  // Update UI to notify the user they can install the PWA
-  if (!installButtonShown && !checkIfPWAInstalled()) {
-    showInstallButton();
-    installButtonShown = true;
-  }
+  // Show install button
+  document.getElementById('pwaInstallContainer').style.display = 'block';
   
-  // You can also show a custom install button
-  showNotification('📱 Install our app for better experience!');
+  // Show notification
+  showNotification('📱 Click "Install App" to install as standalone app');
 });
 
 // Listen for appinstalled event
 window.addEventListener('appinstalled', (evt) => {
-  console.log('🎉 PWA was successfully installed as standalone app!');
-  isPWAInstalled = true;
-  installButtonShown = true;
+  console.log('🎉 PWA was installed successfully');
   
-  // Hide install button
-  const installContainer = document.querySelector('.install-button-container');
-  if (installContainer) {
-    installContainer.remove();
-  }
+  // Hide the install button
+  document.getElementById('pwaInstallContainer').style.display = 'none';
   
   // Clear the deferredPrompt
   deferredPrompt = null;
   
-  // Track installation
+  // Set flag
   localStorage.setItem('pwa_installed', 'true');
+  isPWAInstalled = true;
   
-  showNotification('✅ App installed successfully! It will now appear in your app drawer.');
+  // Show success message
+  showNotification('✅ App installed successfully! It will appear in your app drawer.');
 });
 
-// Show install button
-function showInstallButton() {
-  if (checkIfPWAInstalled()) return;
-  
-  const existingContainer = document.querySelector('.install-button-container');
-  if (existingContainer) {
-    existingContainer.remove();
-  }
-  
-  const installContainer = document.createElement('div');
-  installContainer.className = 'install-button-container';
-  installContainer.innerHTML = `
-    <button class="install-btn" onclick="installPWA()">
-      <i class="fas fa-download"></i> Install App
-    </button>
-  `;
-  
-  document.body.appendChild(installContainer);
-  
-  // Auto-hide after 30 seconds
-  setTimeout(() => {
-    if (installContainer.parentNode) {
-      installContainer.remove();
-      installButtonShown = false;
-    }
-  }, 30000);
-}
-
-// Install PWA - FIXED FOR STANDALONE APP
-function installPWA() {
+// Install button click handler
+document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
   if (!deferredPrompt) {
-    showNotification('⚠️ Installation not available. Try refreshing the page.');
+    // Show manual instructions if no prompt available
+    const instructions = `
+📱 **How to Install This App:**
+
+**For Android Chrome:**
+1. Tap the menu (⋮) in top-right corner
+2. Select "Install app" or "Add to Home screen"
+3. Tap "INSTALL" (not "Add shortcut")
+
+**For iOS Safari:**
+1. Tap the share button (⎙)
+2. Scroll down and tap "Add to Home Screen"
+3. Tap "Add" in top-right corner
+
+The app will install as a standalone app, not as a shortcut!`;
+    
+    alert(instructions);
     return;
   }
   
@@ -2665,61 +2536,50 @@ function installPWA() {
   deferredPrompt.prompt();
   
   // Wait for the user to respond to the prompt
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('✅ User accepted the PWA install prompt');
-      showNotification('🎉 Installing app... It will appear in your app drawer.');
-      
-      // Hide install button
-      const installContainer = document.querySelector('.install-button-container');
-      if (installContainer) {
-        installContainer.remove();
-      }
-      
-      // PWA will now install as standalone app
-      isPWAInstalled = true;
-      installButtonShown = true;
-      
-    } else {
-      console.log('❌ User dismissed the PWA install prompt');
-      showNotification('Installation cancelled. You can install from browser menu (⋮ → Install app).');
-      installButtonShown = false;
-    }
-    
-    // Clear the deferredPrompt variable
-    deferredPrompt = null;
-  });
-}
-
-// Show install prompt if available
-function showInstallPromptIfAvailable() {
-  if (checkIfPWAInstalled()) {
-    console.log('PWA already installed as standalone app');
-    return;
+  const { outcome } = await deferredPrompt.userChoice;
+  
+  if (outcome === 'accepted') {
+    console.log('✅ User accepted the PWA install prompt');
+    showNotification('🎉 Installing app...');
+  } else {
+    console.log('❌ User dismissed the PWA install prompt');
+    showNotification('You can install from browser menu (⋮ → Install app)');
   }
   
-  if (deferredPrompt && !installButtonShown) {
-    showInstallButton();
-  } else if (!installButtonShown) {
-    // Show button after delay if no prompt yet
+  // Clear the deferredPrompt variable
+  deferredPrompt = null;
+  
+  // Hide the install button
+  document.getElementById('pwaInstallContainer').style.display = 'none';
+});
+
+// Check on page load
+window.addEventListener('load', () => {
+  // Register service worker for PWA
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js')
+      .then(registration => {
+        console.log('✅ Service Worker registered:', registration);
+      })
+      .catch(error => {
+        console.log('❌ Service Worker registration failed:', error);
+      });
+  }
+  
+  // Check PWA status
+  setTimeout(() => {
+    checkIfPWAInstalled();
+    
+    // If not installed after 5 seconds, check again
     setTimeout(() => {
-      if (!installButtonShown && !checkIfPWAInstalled()) {
-        const installContainer = document.querySelector('.install-button-container');
-        if (!installContainer) {
-          const btn = document.createElement('div');
-          btn.className = 'install-button-container';
-          btn.innerHTML = `<button class="install-btn" onclick="manualInstallGuide()"><i class="fas fa-download"></i> Install App</button>`;
-          document.body.appendChild(btn);
-        }
+      if (!isPWAInstalled && !deferredPrompt) {
+        // Show manual install button
+        document.getElementById('pwaInstallContainer').style.display = 'block';
+        document.getElementById('pwaInstallBtn').innerHTML = '<i class="fas fa-mobile-alt"></i> Install Guide';
       }
     }, 5000);
-  }
-}
-
-function manualInstallGuide() {
-  const guide = "To install this app:\n\n1. Open Chrome menu (⋮)\n2. Tap 'Install app' or 'Add to Home screen'\n3. Choose 'Install' (not 'Add shortcut')\n4. App will appear in your app drawer";
-  alert(guide);
-}
+  }, 1000);
+});
 
 // ===== SHORT URL SYSTEM =====
 function generateShortId() {
@@ -2805,34 +2665,6 @@ function saveCustomerPhone(phone) {
 
 function saveBusinessPhone(phone) {
   isolatedLocalStorage.setItem('businessPhone', phone);
-}
-
-// ===== FIXED SERVICE WORKER REGISTRATION =====
-function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      // Register service worker with proper scope
-      navigator.serviceWorker.register('./sw.js', { 
-        scope: './',
-        updateViaCache: 'none' // Important for PWA updates
-      })
-        .then(function(registration) {
-          console.log('✅ Service Worker registered with scope:', registration.scope);
-          
-          // Check for updates
-          registration.addEventListener('updatefound', () => {
-            const newWorker = registration.installing;
-            console.log('New service worker found:', newWorker);
-          });
-          
-          // Force update check
-          registration.update();
-        })
-        .catch(function(error) {
-          console.log('❌ Service Worker registration failed:', error);
-        });
-    });
-  }
 }
 
 // ===== FIXED BACK BUTTON SYSTEM =====
@@ -3450,8 +3282,6 @@ let isAdminLoggedIn = false;
 
 // ===== RENDER APP =====
 async function renderApp() {
-  setupDynamicPWA(card);
-  
   document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
   
   const photo = document.getElementById('photo');
@@ -4221,9 +4051,6 @@ function closeDeliveryModal() {
 
 // ===== INITIALIZE APP =====
 document.addEventListener("DOMContentLoaded", async () => {
-  // Register service worker first - IMPORTANT FOR PWA
-  registerServiceWorker();
-  
   // Check for short ID in URL
   const urlParams = new URLSearchParams(location.search);
   let id = urlParams.get("id") || localStorage.getItem("lastCardId");
