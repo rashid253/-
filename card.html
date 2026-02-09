@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <title>Digital Business App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<!-- Dynamic Manifest will be injected by JavaScript -->
 <meta name="theme-color" content="#0f172a" id="themeColorMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="Premium Digital Business App">
+<link rel="manifest" href="manifest.json" id="appManifest">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
 
-<!-- All CSS styles remain exactly the same -->
 <style>
-/* ALL CSS FROM ORIGINAL FILE REMAINS EXACTLY THE SAME */
+/* ALL CSS STYLES REMAIN EXACTLY THE SAME AS BEFORE */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -2449,55 +2449,10 @@ const supa = supabase.createClient(
 
 // ===== FIXED PWA MANIFEST SYSTEM =====
 function setupDynamicPWA(businessData) {
-  // Generate app name from business name
   const businessName = businessData.businessName || businessData.name || "Business";
   const appName = businessName + " App";
   const shortName = businessName.length > 12 ? businessName.substring(0, 10) + ".." : businessName;
-  
-  // Use profile image as app icon (or default)
-  const profileImage = businessData.profileImage || '';
-  
-  // Create FIXED manifest object with proper structure
-  const manifest = {
-    "name": appName,
-    "short_name": shortName + " App",
-    "description": "Premium business app for " + businessName,
-    "theme_color": "#667eea",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "orientation": "portrait",
-    "scope": "/",
-    "start_url": window.location.origin + window.location.pathname + "?source=pwa",
-    "icons": [
-      {
-        "src": profileImage || getDefaultIcon(businessName),
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "any maskable"
-      },
-      {
-        "src": profileImage || getDefaultIcon(businessName),
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "any maskable"
-      }
-    ]
-  };
-  
-  // Remove any existing manifest
-  const oldManifest = document.querySelector('link[rel="manifest"]');
-  if (oldManifest) {
-    oldManifest.remove();
-  }
-  
-  // Create manifest link with proper URL
-  const manifestLink = document.createElement('link');
-  manifestLink.rel = 'manifest';
-  manifestLink.href = 'manifest.json'; // Use static manifest file
-  document.head.appendChild(manifestLink);
-  
-  // Also create a static manifest.json file dynamically
-  createStaticManifest(manifest);
+  const profileImage = businessData.profileImage || getDefaultIcon(businessName);
   
   // Update page title
   document.title = appName;
@@ -2510,45 +2465,21 @@ function setupDynamicPWA(businessData) {
   document.getElementById('themeColorMeta').content = "#667eea";
   
   // Update favicon
-  updateFavicon(profileImage || getDefaultIcon(businessName));
+  updateFavicon(profileImage);
   
   console.log("Dynamic PWA setup for:", businessName);
-  
-  // Trigger PWA install prompt after 3 seconds
-  setTimeout(() => {
-    showInstallPromptIfAvailable();
-  }, 3000);
-}
-
-function createStaticManifest(manifest) {
-  // Create a static manifest.json file
-  const manifestData = JSON.stringify(manifest, null, 2);
-  const blob = new Blob([manifestData], {type: 'application/json'});
-  const manifestURL = URL.createObjectURL(blob);
-  
-  // Store in localStorage for service worker to use
-  localStorage.setItem('pwa_manifest', manifestData);
-  
-  // Update the manifest link
-  const manifestLink = document.querySelector('link[rel="manifest"]');
-  if (manifestLink) {
-    manifestLink.href = manifestURL;
-  }
 }
 
 function getDefaultIcon(businessName) {
-  // Create a colored icon with first letter of business name
   const firstLetter = businessName.charAt(0).toUpperCase();
   const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
   const color = colors[businessName.length % colors.length];
   
-  // Return data URL for SVG icon
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
   return 'data:image/svg+xml;base64,' + btoa(svg);
 }
 
 function updateFavicon(iconUrl) {
-  // Update favicon
   let favicon = document.querySelector('link[rel="icon"]');
   if (!favicon) {
     favicon = document.createElement('link');
@@ -2556,16 +2487,6 @@ function updateFavicon(iconUrl) {
     document.head.appendChild(favicon);
   }
   favicon.href = iconUrl;
-  
-  // Update Apple touch icon
-  let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
-  if (!appleIcon) {
-    appleIcon = document.createElement('link');
-    appleIcon.rel = 'apple-touch-icon';
-    document.head.appendChild(appleIcon);
-  }
-  appleIcon.href = iconUrl;
-  appleIcon.sizes = "180x180";
 }
 
 // ===== SHORT URL SYSTEM =====
@@ -2658,7 +2579,6 @@ function saveBusinessPhone(phone) {
 let deferredPrompt = null;
 let installButtonShown = false;
 
-// Listen for beforeinstallprompt event
 window.addEventListener('beforeinstallprompt', (e) => {
   console.log('PWA install prompt available');
   e.preventDefault();
@@ -2672,7 +2592,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
   }
 });
 
-// Show install button
 function showInstallButton() {
   if (!deferredPrompt) return;
   
@@ -2699,7 +2618,6 @@ function showInstallButton() {
   }, 30000);
 }
 
-// Install PWA
 function installPWA() {
   if (!deferredPrompt) return;
   
@@ -2715,7 +2633,6 @@ function installPWA() {
         installContainer.remove();
       }
       
-      // Hide install button permanently for this session
       installButtonShown = true;
     } else {
       console.log('User dismissed the install prompt');
@@ -2725,30 +2642,16 @@ function installPWA() {
   });
 }
 
-// Check if PWA is already installed
 function isPWAInstalled() {
   return window.matchMedia('(display-mode: standalone)').matches || 
          window.navigator.standalone === true;
 }
 
-// Show install prompt if available
-function showInstallPromptIfAvailable() {
-  if (isPWAInstalled()) {
-    console.log('PWA already installed');
-    return;
-  }
-  
-  if (deferredPrompt && !installButtonShown) {
-    showInstallButton();
-  }
-}
-
-// ===== FIXED BACK BUTTON SYSTEM =====
+// ===== FIXED ROUTING SYSTEM =====
 let lastBackPress = 0;
 let backPressCount = 0;
 let navigationHistory = [];
 
-// Initialize hash-based routing
 function initializeRouting() {
   window.addEventListener('hashchange', handleHashChange);
   
@@ -2762,7 +2665,6 @@ function initializeRouting() {
   }, 100);
 }
 
-// Handle hash changes
 function handleHashChange() {
   const hash = window.location.hash.replace('#', '');
   const pageMap = {
@@ -2785,7 +2687,6 @@ function handleHashChange() {
   }
 }
 
-// Direct navigation function
 function navigateToDirect(pageId) {
   if(currentPage === pageId) return;
   
@@ -2851,7 +2752,6 @@ function navigateToDirect(pageId) {
   }, 300);
 }
 
-// Main navigation function
 function navigateTo(pageId) {
   const hashMap = {
     'homePage': 'home',
@@ -2870,7 +2770,6 @@ function navigateTo(pageId) {
   }
 }
 
-// Back navigation
 function goBack() {
   if (navigationHistory.length > 1) {
     navigationHistory.pop();
@@ -2897,11 +2796,6 @@ function goBack() {
   }
 }
 
-// Handle browser back button
-window.addEventListener('popstate', function(event) {
-  // Let the hashchange handler deal with it
-});
-
 // ===== EXIT MODAL FUNCTIONS =====
 function showExitModal() {
   document.getElementById('exitModal').style.display = 'flex';
@@ -2927,6 +2821,8 @@ function exitApp() {
 }
 
 // ===== DELIVERY SYSTEM FUNCTIONS =====
+let deliveryStatusData = [];
+
 async function checkForDeliveries() {
   try {
     const customerPhone = getCustomerPhone();
@@ -3133,6 +3029,8 @@ function updateCustomerPhoneDisplay() {
 }
 
 // ===== LOGIN/LOGOUT SYSTEM =====
+let isAdminLoggedIn = false;
+
 function toggleLogin() {
   if (isAdminLoggedIn) {
     if (confirm("Are you sure you want to logout?")) {
@@ -3351,10 +3249,8 @@ let cart = [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
 let currentPage = 'loadingScreen';
-let deliveryStatusData = [];
 let businessAdminPassword = "";
 let shortCardId = "";
-let isAdminLoggedIn = false;
 
 // ===== RENDER APP =====
 async function renderApp() {
@@ -4130,29 +4026,23 @@ function closeDeliveryModal() {
 // ===== FIXED SERVICE WORKER REGISTRATION =====
 function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      // Register service worker with proper scope
-      navigator.serviceWorker.register('./sw.js', { scope: './' })
-        .then(function(registration) {
-          console.log('Service Worker registered with scope:', registration.scope);
-        })
-        .catch(function(error) {
-          console.log('Service Worker registration failed:', error);
-        });
-    });
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(registration) {
+        console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service Worker registration failed:', error);
+      });
   }
 }
 
 // ===== INITIALIZE APP =====
 document.addEventListener("DOMContentLoaded", async () => {
-  // Register service worker first
   registerServiceWorker();
   
-  // Check for short ID in URL
   const urlParams = new URLSearchParams(location.search);
   let id = urlParams.get("id") || localStorage.getItem("lastCardId");
   
-  // If it's a short ID (7 characters), map it to full UUID
   if (id && id.length === 7) {
     const { data: mapping } = await supa
       .from('short_urls')
@@ -4165,8 +4055,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       shortCardId = mapping.short_id;
     }
   } else {
-    // Generate short ID for new cards
-    if (id && id.length === 36) { // UUID length
+    if (id && id.length === 36) {
       const shortId = generateShortId();
       await supa
         .from('short_urls')
@@ -4180,17 +4069,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  // Save the card ID globally (for backward compatibility)
   localStorage.setItem("lastCardId", id);
-  
-  // Set current business ID for isolation
   currentBusinessId = id;
   
-  // Load cart from isolated storage
   const savedCart = isolatedLocalStorage.getItem('cart');
   cart = savedCart ? JSON.parse(savedCart) : [];
   
-  // Load admin login status from isolated storage
   isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
   
   setTimeout(async () => {
@@ -4203,16 +4087,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     card = JSON.parse(data.data);
     card.id = data.id;
     
-    // Save business phone for admin check
     if (card.phone) {
       saveBusinessPhone(card.phone);
     }
     
-    // Generate unique admin password for this business
     businessAdminPassword = generateAdminPassword(card.id);
-    console.log("Admin password generated for business", card.id.substring(0, 8), ":", businessAdminPassword);
+    console.log("Admin password generated:", businessAdminPassword);
     
-    // Update password hint with short ID
     if (shortCardId) {
       document.getElementById('passwordHint').textContent = 
         `Hint: Password format is business123_${shortCardId.substring(0, 8).toLowerCase()}`;
@@ -4220,17 +4101,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     await renderApp();
     
-    // Initialize routing after render
     initializeRouting();
-    
-    // Start with home page
     navigationHistory.push('homePage');
     
     updateCartCount();
     updateLoginUI();
     updateCustomerPhoneDisplay();
     
-    // Check for deliveries
     setTimeout(() => {
       checkForDeliveries();
     }, 1000);
