@@ -4,17 +4,22 @@
 <meta charset="UTF-8">
 <title>Digital Business App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- Dynamic Manifest will be injected by JavaScript -->
 <meta name="theme-color" content="#0f172a" id="themeColorMeta">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="Premium Digital Business App">
-<link rel="manifest" href="manifest.json" id="appManifest">
-<link rel="apple-touch-icon" href="icon-192.png">
+<!-- PWA Icons -->
+<link rel="manifest" id="dynamicManifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23667eea' rx='20'/%3E%3Ctext x='50' y='65' font-size='40' font-family='Arial' fill='white' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23667eea' rx='20'/%3E%3Ctext x='50' y='65' font-size='40' font-family='Arial' fill='white' text-anchor='middle'%3EB%3C/text%3E%3C/svg%3E">
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
 
+<!-- All CSS styles remain exactly the same -->
 <style>
-/* ALL CSS STYLES REMAIN EXACTLY THE SAME AS BEFORE */
+/* ALL CSS FROM ORIGINAL FILE REMAINS EXACTLY THE SAME */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -2449,10 +2454,63 @@ const supa = supabase.createClient(
 
 // ===== FIXED PWA MANIFEST SYSTEM =====
 function setupDynamicPWA(businessData) {
+  // Generate app name from business name
   const businessName = businessData.businessName || businessData.name || "Business";
   const appName = businessName + " App";
   const shortName = businessName.length > 12 ? businessName.substring(0, 10) + ".." : businessName;
+  
+  // Use profile image as app icon (or default)
   const profileImage = businessData.profileImage || getDefaultIcon(businessName);
+  
+  // Build start URL with current query string
+  let startUrl = window.location.origin + window.location.pathname;
+  if (window.location.search) {
+    startUrl += window.location.search + "&source=pwa";
+  } else {
+    startUrl += "?source=pwa";
+  }
+  
+  // Create dynamic manifest
+  const manifest = {
+    "name": appName,
+    "short_name": shortName + " App",
+    "description": "Premium business app for " + businessName,
+    "theme_color": "#667eea",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "./",
+    "start_url": startUrl,
+    "icons": [
+      {
+        "src": profileImage,
+        "sizes": "192x192",
+        "type": profileImage.startsWith('data:') ? 'image/svg+xml' : 'image/png',
+        "purpose": "any maskable"
+      },
+      {
+        "src": profileImage,
+        "sizes": "512x512",
+        "type": profileImage.startsWith('data:') ? 'image/svg+xml' : 'image/png',
+        "purpose": "any maskable"
+      }
+    ]
+  };
+  
+  // Remove any existing manifest
+  const oldManifest = document.querySelector('link[rel="manifest"]');
+  if (oldManifest) {
+    oldManifest.remove();
+  }
+  
+  // Create manifest blob and link
+  const manifestBlob = new Blob([JSON.stringify(manifest, null, 2)], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(manifestBlob);
+  
+  const manifestLink = document.createElement('link');
+  manifestLink.rel = 'manifest';
+  manifestLink.href = manifestURL;
+  document.head.appendChild(manifestLink);
   
   // Update page title
   document.title = appName;
@@ -2464,22 +2522,22 @@ function setupDynamicPWA(businessData) {
   // Update theme color meta tag
   document.getElementById('themeColorMeta').content = "#667eea";
   
-  // Update favicon
+  // Update favicon and apple touch icon
   updateFavicon(profileImage);
   
   console.log("Dynamic PWA setup for:", businessName);
-}
-
-function getDefaultIcon(businessName) {
-  const firstLetter = businessName.charAt(0).toUpperCase();
-  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
-  const color = colors[businessName.length % colors.length];
   
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
-  return 'data:image/svg+xml;base64,' + btoa(svg);
+  // Store manifest in session for reference
+  sessionStorage.setItem('pwa_manifest', JSON.stringify(manifest));
+  
+  // Trigger PWA install prompt after 3 seconds
+  setTimeout(() => {
+    showInstallPromptIfAvailable();
+  }, 3000);
 }
 
 function updateFavicon(iconUrl) {
+  // Update regular favicon
   let favicon = document.querySelector('link[rel="icon"]');
   if (!favicon) {
     favicon = document.createElement('link');
@@ -2487,6 +2545,156 @@ function updateFavicon(iconUrl) {
     document.head.appendChild(favicon);
   }
   favicon.href = iconUrl;
+  
+  // Update Apple touch icons
+  const sizes = [57, 60, 72, 76, 114, 120, 144, 152, 180];
+  sizes.forEach(size => {
+    let appleIcon = document.querySelector(`link[rel="apple-touch-icon"][sizes="${size}x${size}"]`);
+    if (!appleIcon) {
+      appleIcon = document.createElement('link');
+      appleIcon.rel = 'apple-touch-icon';
+      appleIcon.sizes = `${size}x${size}`;
+      document.head.appendChild(appleIcon);
+    }
+    appleIcon.href = iconUrl;
+  });
+  
+  // Update 192x192 icon
+  let icon192 = document.querySelector('link[rel="icon"][sizes="192x192"]');
+  if (!icon192) {
+    icon192 = document.createElement('link');
+    icon192.rel = 'icon';
+    icon192.sizes = '192x192';
+    document.head.appendChild(icon192);
+  }
+  icon192.href = iconUrl;
+  
+  // Update 512x512 icon
+  let icon512 = document.querySelector('link[rel="icon"][sizes="512x512"]');
+  if (!icon512) {
+    icon512 = document.createElement('link');
+    icon512.rel = 'icon';
+    icon512.sizes = '512x512';
+    document.head.appendChild(icon512);
+  }
+  icon512.href = iconUrl;
+}
+
+function getDefaultIcon(businessName) {
+  // Create a colored icon with first letter of business name
+  const firstLetter = businessName.charAt(0).toUpperCase();
+  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
+  const color = colors[businessName.length % colors.length];
+  
+  // Create SVG icon
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+      <rect width="512" height="512" fill="${color}" rx="128"/>
+      <text x="256" y="340" font-size="240" font-family="Arial, sans-serif" 
+            fill="white" text-anchor="middle" font-weight="bold" dy=".35em">
+        ${firstLetter}
+      </text>
+    </svg>
+  `;
+  
+  return 'data:image/svg+xml;base64,' + btoa(svg);
+}
+
+// ===== PWA INSTALLATION HANDLER =====
+let deferredPrompt = null;
+let installButtonShown = false;
+
+// Listen for beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('PWA install prompt available');
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  // Show install button after 3 seconds
+  setTimeout(() => {
+    if (deferredPrompt && !installButtonShown) {
+      showInstallButton();
+      installButtonShown = true;
+    }
+  }, 3000);
+});
+
+// Show install button
+function showInstallButton() {
+  if (!deferredPrompt || installButtonShown) return;
+  
+  // Remove existing button
+  const existingContainer = document.querySelector('.install-button-container');
+  if (existingContainer) {
+    existingContainer.remove();
+  }
+  
+  // Create new install button
+  const installContainer = document.createElement('div');
+  installContainer.className = 'install-button-container';
+  installContainer.innerHTML = `
+    <button class="install-btn" onclick="installPWA()">
+      <i class="fas fa-download"></i> Install ${document.title}
+    </button>
+  `;
+  
+  document.body.appendChild(installContainer);
+  
+  // Auto-hide after 30 seconds
+  setTimeout(() => {
+    if (installContainer.parentNode) {
+      installContainer.remove();
+      installButtonShown = false;
+    }
+  }, 30000);
+}
+
+// Install PWA
+function installPWA() {
+  if (!deferredPrompt) {
+    showNotification('❌ Install prompt not available. Please try again later.');
+    return;
+  }
+  
+  deferredPrompt.prompt();
+  
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+      showNotification('✅ App installed successfully!');
+      
+      // Hide install button
+      const installContainer = document.querySelector('.install-button-container');
+      if (installContainer) {
+        installContainer.remove();
+      }
+      
+      installButtonShown = true;
+    } else {
+      console.log('User dismissed the install prompt');
+      showNotification('ℹ️ You can install later from browser menu');
+    }
+    
+    deferredPrompt = null;
+  });
+}
+
+// Check if PWA is already installed
+function isPWAInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches || 
+         window.navigator.standalone === true;
+}
+
+// Show install prompt if available
+function showInstallPromptIfAvailable() {
+  if (isPWAInstalled()) {
+    console.log('PWA already installed');
+    return;
+  }
+  
+  if (deferredPrompt && !installButtonShown) {
+    showInstallButton();
+  }
 }
 
 // ===== SHORT URL SYSTEM =====
@@ -2575,83 +2783,39 @@ function saveBusinessPhone(phone) {
   isolatedLocalStorage.setItem('businessPhone', phone);
 }
 
-// ===== FIXED PWA INSTALLATION HANDLER =====
-let deferredPrompt = null;
-let installButtonShown = false;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-  console.log('PWA install prompt available');
-  e.preventDefault();
-  deferredPrompt = e;
-  
-  if (!installButtonShown) {
-    setTimeout(() => {
-      showInstallButton();
-      installButtonShown = true;
-    }, 5000);
-  }
-});
-
-function showInstallButton() {
-  if (!deferredPrompt) return;
-  
-  const existingContainer = document.querySelector('.install-button-container');
-  if (existingContainer) {
-    existingContainer.remove();
-  }
-  
-  const installContainer = document.createElement('div');
-  installContainer.className = 'install-button-container';
-  installContainer.innerHTML = `
-    <button class="install-btn" onclick="installPWA()">
-      <i class="fas fa-download"></i> Install App
-    </button>
-  `;
-  
-  document.body.appendChild(installContainer);
-  
-  setTimeout(() => {
-    if (installContainer.parentNode) {
-      installContainer.remove();
-      installButtonShown = false;
-    }
-  }, 30000);
-}
-
-function installPWA() {
-  if (!deferredPrompt) return;
-  
-  deferredPrompt.prompt();
-  
-  deferredPrompt.userChoice.then((choiceResult) => {
-    if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the install prompt');
-      showNotification('✅ App installed successfully!');
-      
-      const installContainer = document.querySelector('.install-button-container');
-      if (installContainer) {
-        installContainer.remove();
+// ===== FIXED SERVICE WORKER REGISTRATION =====
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    // Clear any existing service workers first
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+      for(let registration of registrations) {
+        registration.unregister();
       }
       
-      installButtonShown = true;
-    } else {
-      console.log('User dismissed the install prompt');
-    }
-    
-    deferredPrompt = null;
-  });
+      // Register new service worker
+      window.addEventListener('load', function() {
+        // Register with proper scope
+        navigator.serviceWorker.register('./sw (6).js', { scope: './' })
+          .then(function(registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+            
+            // Check for updates
+            registration.update();
+          })
+          .catch(function(error) {
+            console.log('Service Worker registration failed:', error);
+          });
+      });
+    });
+  }
 }
 
-function isPWAInstalled() {
-  return window.matchMedia('(display-mode: standalone)').matches || 
-         window.navigator.standalone === true;
-}
-
-// ===== FIXED ROUTING SYSTEM =====
+// ===== FIXED BACK BUTTON SYSTEM =====
 let lastBackPress = 0;
 let backPressCount = 0;
 let navigationHistory = [];
 
+// Initialize hash-based routing
 function initializeRouting() {
   window.addEventListener('hashchange', handleHashChange);
   
@@ -2665,6 +2829,7 @@ function initializeRouting() {
   }, 100);
 }
 
+// Handle hash changes
 function handleHashChange() {
   const hash = window.location.hash.replace('#', '');
   const pageMap = {
@@ -2687,6 +2852,7 @@ function handleHashChange() {
   }
 }
 
+// Direct navigation function
 function navigateToDirect(pageId) {
   if(currentPage === pageId) return;
   
@@ -2752,6 +2918,7 @@ function navigateToDirect(pageId) {
   }, 300);
 }
 
+// Main navigation function
 function navigateTo(pageId) {
   const hashMap = {
     'homePage': 'home',
@@ -2770,6 +2937,7 @@ function navigateTo(pageId) {
   }
 }
 
+// Back navigation
 function goBack() {
   if (navigationHistory.length > 1) {
     navigationHistory.pop();
@@ -2796,6 +2964,11 @@ function goBack() {
   }
 }
 
+// Handle browser back button
+window.addEventListener('popstate', function(event) {
+  // Let the hashchange handler deal with it
+});
+
 // ===== EXIT MODAL FUNCTIONS =====
 function showExitModal() {
   document.getElementById('exitModal').style.display = 'flex';
@@ -2821,8 +2994,6 @@ function exitApp() {
 }
 
 // ===== DELIVERY SYSTEM FUNCTIONS =====
-let deliveryStatusData = [];
-
 async function checkForDeliveries() {
   try {
     const customerPhone = getCustomerPhone();
@@ -3029,8 +3200,6 @@ function updateCustomerPhoneDisplay() {
 }
 
 // ===== LOGIN/LOGOUT SYSTEM =====
-let isAdminLoggedIn = false;
-
 function toggleLogin() {
   if (isAdminLoggedIn) {
     if (confirm("Are you sure you want to logout?")) {
@@ -3249,8 +3418,10 @@ let cart = [];
 let buyNowPaymentMethod = 'whatsapp';
 let checkoutPaymentMethod = 'whatsapp';
 let currentPage = 'loadingScreen';
+let deliveryStatusData = [];
 let businessAdminPassword = "";
 let shortCardId = "";
+let isAdminLoggedIn = false;
 
 // ===== RENDER APP =====
 async function renderApp() {
@@ -4023,26 +4194,16 @@ function closeDeliveryModal() {
   document.body.style.overflow = 'auto';
 }
 
-// ===== FIXED SERVICE WORKER REGISTRATION =====
-function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./sw.js')
-      .then(function(registration) {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch(function(error) {
-        console.log('Service Worker registration failed:', error);
-      });
-  }
-}
-
 // ===== INITIALIZE APP =====
 document.addEventListener("DOMContentLoaded", async () => {
+  // Register service worker first
   registerServiceWorker();
   
+  // Check for short ID in URL
   const urlParams = new URLSearchParams(location.search);
   let id = urlParams.get("id") || localStorage.getItem("lastCardId");
   
+  // If it's a short ID (7 characters), map it to full UUID
   if (id && id.length === 7) {
     const { data: mapping } = await supa
       .from('short_urls')
@@ -4055,7 +4216,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       shortCardId = mapping.short_id;
     }
   } else {
-    if (id && id.length === 36) {
+    // Generate short ID for new cards
+    if (id && id.length === 36) { // UUID length
       const shortId = generateShortId();
       await supa
         .from('short_urls')
@@ -4069,12 +4231,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+  // Save the card ID globally (for backward compatibility)
   localStorage.setItem("lastCardId", id);
+  
+  // Set current business ID for isolation
   currentBusinessId = id;
   
+  // Load cart from isolated storage
   const savedCart = isolatedLocalStorage.getItem('cart');
   cart = savedCart ? JSON.parse(savedCart) : [];
   
+  // Load admin login status from isolated storage
   isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
   
   setTimeout(async () => {
@@ -4087,13 +4254,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     card = JSON.parse(data.data);
     card.id = data.id;
     
+    // Save business phone for admin check
     if (card.phone) {
       saveBusinessPhone(card.phone);
     }
     
+    // Generate unique admin password for this business
     businessAdminPassword = generateAdminPassword(card.id);
-    console.log("Admin password generated:", businessAdminPassword);
+    console.log("Admin password generated for business", card.id.substring(0, 8), ":", businessAdminPassword);
     
+    // Update password hint with short ID
     if (shortCardId) {
       document.getElementById('passwordHint').textContent = 
         `Hint: Password format is business123_${shortCardId.substring(0, 8).toLowerCase()}`;
@@ -4101,13 +4271,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     
     await renderApp();
     
+    // Initialize routing after render
     initializeRouting();
+    
+    // Start with home page
     navigationHistory.push('homePage');
     
     updateCartCount();
     updateLoginUI();
     updateCustomerPhoneDisplay();
     
+    // Check for deliveries
     setTimeout(() => {
       checkForDeliveries();
     }, 1000);
