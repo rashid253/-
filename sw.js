@@ -1,5 +1,5 @@
 // Service Worker for Digital Business App
-const CACHE_NAME = 'digital-business-app-v1';
+const CACHE_NAME = 'digital-business-app-v2';
 const urlsToCache = [
   './',
   './index.html',
@@ -15,6 +15,7 @@ self.addEventListener('install', event => {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -32,9 +33,8 @@ self.addEventListener('activate', event => {
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  return self.clients.claim();
 });
 
 // Fetch event
