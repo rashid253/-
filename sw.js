@@ -1,62 +1,46 @@
 // Service Worker for Digital Business App
-const CACHE_NAME = 'digital-business-app-v3';
+const CACHE_NAME = 'business-app-v1.0';
 const urlsToCache = [
   './',
-  './index.html'
+  './index.html',
+  './manifest.json',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
+  'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap',
+  'https://unpkg.com/@supabase/supabase-js@2'
 ];
 
-// Install event
+// Install Event
 self.addEventListener('install', event => {
-  console.log('Service Worker installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => {
-        console.log('Opened cache');
+        console.log('Cache opened');
         return cache.addAll(urlsToCache);
       })
+      .then(() => self.skipWaiting())
   );
 });
 
-// Activate event
+// Activate Event
 self.addEventListener('activate', event => {
-  console.log('Service Worker activating...');
-  // Remove old caches
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
+        cacheNames.map(cache => {
+          if (cache !== CACHE_NAME) {
+            console.log('Deleting old cache:', cache);
+            return caches.delete(cache);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  return self.clients.claim();
 });
 
-// Fetch event
+// Fetch Event
 self.addEventListener('fetch', event => {
-  console.log('Service Worker fetching:', event.request.url);
-  
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') return;
-  
-  // Skip blob requests (dynamic manifest)
-  if (event.request.url.startsWith('blob:')) return;
-  
-  // Skip manifest.json - serve fresh always
-  if (event.request.url.includes('manifest.json')) {
-    event.respondWith(fetch(event.request));
-    return;
-  }
-  
-  // Skip Supabase and external requests
-  if (event.request.url.includes('supabase.co') || 
-      event.request.url.includes('fonts.googleapis.com') ||
-      event.request.url.includes('fonts.gstatic.com') ||
-      event.request.url.includes('cdnjs.cloudflare.com')) {
+  // Skip Supabase requests
+  if (event.request.url.includes('supabase.co')) {
     return;
   }
   
@@ -71,72 +55,90 @@ self.addEventListener('fetch', event => {
         // Clone the request
         const fetchRequest = event.request.clone();
         
-        return fetch(fetchRequest).then(
-          response => {
-            // Check if we received a valid response
-            if(!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-            
-            // Clone the response
-            const responseToCache = response.clone();
-            
-            caches.open(CACHE_NAME)
-              .then(cache => {
-                cache.put(event.request, responseToCache);
-              });
-            
+        return fetch(fetchRequest).then(response => {
+          // Check if valid response
+          if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
-        );
+          
+          // Clone the response
+          const responseToCache = response.clone();
+          
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              cache.put(event.request, responseToCache);
+            });
+          
+          return response;
+        }).catch(() => {
+          // If offline and not in cache, return offline page
+          if (event.request.headers.get('accept').includes('text/html')) {
+            return caches.match('./index.html');
+          }
+        });
       })
   );
 });
 
-// Handle push notifications
+// Background Sync (for orders when offline)
+self.addEventListener('sync', event => {
+  if (event.tag === 'sync-orders') {
+    event.waitUntil(syncOrders());
+  }
+});
+
+// Push Notification
 self.addEventListener('push', event => {
-  console.log('Push notification received:', event);
-  
-  const title = 'Digital Business App';
   const options = {
-    body: 'You have a new notification!',
-    icon: './icon-192.png',
-    badge: './icon-192.png',
-    vibrate: [200, 100, 200],
+    body: event.data ? event.data.text() : 'New update available!',
+    icon: 'icons/icon-192x192.png',
+    badge: 'icons/icon-72x72.png',
+    vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
       primaryKey: 1
-    }
+    },
+    actions: [
+      {
+        action: 'explore',
+        title: 'Open App',
+        icon: 'icons/icon-72x72.png'
+      },
+      {
+        action: 'close',
+        title: 'Close',
+        icon: 'icons/icon-72x72.png'
+      }
+    ]
   };
   
   event.waitUntil(
-    self.registration.showNotification(title, options)
+    self.registration.showNotification('Business App', options)
   );
 });
 
-// Handle notification click
+// Notification Click
 self.addEventListener('notificationclick', event => {
-  console.log('Notification click received:', event);
   event.notification.close();
   
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true })
-      .then(windowClients => {
-        for (const client of windowClients) {
-          if (client.url === './' && 'focus' in client) {
-            return client.focus();
-          }
-        }
-        if (clients.openWindow) {
-          return clients.openWindow('./');
-        }
-      })
-  );
-});
-
-// Handle messages from main thread
-self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
+  if (event.action === 'explore') {
+    event.waitUntil(
+      clients.openWindow('./')
+    );
+  } else if (event.action === 'close') {
+    // Do nothing
+  } else {
+    event.waitUntil(
+      clients.openWindow('./')
+    );
   }
 });
+
+// Helper function for background sync
+function syncOrders() {
+  return new Promise((resolve, reject) => {
+    // Here you would sync pending orders with server
+    console.log('Syncing orders...');
+    resolve();
+  });
+}
