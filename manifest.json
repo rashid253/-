@@ -1,77 +1,118 @@
 {
-  "name": "Digital Business App",
-  "short_name": "BusinessApp",
-  "description": "Premium Business Management App",
-  "start_url": "./index.html",
+  "name": "Dubai Royal Commerce",
+  "short_name": "Dubai Royal",
+  "description": "Premium luxury goods from the heart of Dubai. Shop gold, saffron, perfumes & more with express delivery.",
+  "start_url": "/card.html",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "orientation": "portrait-primary",
-  "scope": "./",
-  "categories": ["business", "shopping", "utilities"],
+  "background_color": "#ffffff",
+  "theme_color": "#bf9530",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "en-US",
+  "dir": "ltr",
+  "categories": ["shopping", "business", "luxury", "ecommerce"],
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "icons/icon-72x72.png",
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=72&h=72&fit=crop",
       "sizes": "72x72",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png"
-    },
-    {
-      "src": "icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png"
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=96&h=96&fit=crop",
+      "sizes": "96x96",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     },
     {
-      "src": "icons/icon-512x512.png",
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=128&h=128&fit=crop",
+      "sizes": "128x128",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=144&h=144&fit=crop",
+      "sizes": "144x144",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=152&h=152&fit=crop",
+      "sizes": "152x152",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=192&h=192&fit=crop",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=256&h=256&fit=crop",
+      "sizes": "256x256",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=384&h=384&fit=crop",
+      "sizes": "384x384",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=512&h=512&fit=crop",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/jpeg",
+      "purpose": "any maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "screenshots/screenshot1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
+      "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=1080&h=1920&fit=crop",
+      "sizes": "1080x1920",
+      "type": "image/jpeg",
+      "platform": "wide",
+      "label": "Home Screen - Dubai Royal Commerce"
     }
   ],
   "shortcuts": [
     {
       "name": "Shop Now",
       "short_name": "Shop",
-      "description": "Browse products",
-      "url": "./index.html#productsPage"
+      "description": "Browse our royal collection",
+      "url": "/card.html?source=pwa_shop",
+      "icons": [
+        {
+          "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=96&h=96&fit=crop",
+          "sizes": "96x96"
+        }
+      ]
     },
     {
-      "name": "My Cart",
-      "short_name": "Cart",
-      "description": "View cart items",
-      "url": "./index.html#cartPage"
+      "name": "Track Order",
+      "short_name": "Track",
+      "description": "Track your delivery",
+      "url": "/card.html?source=pwa_track",
+      "icons": [
+        {
+          "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=96&h=96&fit=crop",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Contact Us",
+      "short_name": "Contact",
+      "description": "Get in touch with our team",
+      "url": "/card.html?source=pwa_contact",
+      "icons": [
+        {
+          "src": "https://images.unsplash.com/photo-1580757468214-c73f7062a5cb?w=96&h=96&fit=crop",
+          "sizes": "96x96"
+        }
+      ]
     }
   ]
 }
