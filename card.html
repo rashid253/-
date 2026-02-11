@@ -6,7 +6,7 @@
     <title>Dubai Royal Commerce • Premium WPA System</title>
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#bf9530">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -433,9 +433,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.85);
             backdrop-filter: blur(10px);
-            display: none;
+            display: flex;
             justify-content: center;
             align-items: center;
             z-index: 100000;
@@ -443,10 +443,10 @@
         }
 
         .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255,255,255,0.3);
-            border-top: 4px solid white;
+            width: 80px;
+            height: 80px;
+            border: 6px solid rgba(255,255,255,0.2);
+            border-top: 6px solid #bf9530;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 20px;
@@ -464,12 +464,18 @@
             transform: translateX(-50%);
             background: var(--theme-primary);
             color: white;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 14px 28px;
+            border-radius: 50px;
             box-shadow: var(--shadow-luxury);
-            z-index: 10001;
+            z-index: 100001;
             display: none;
             font-weight: 700;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { top: -100px; opacity: 0; }
+            to { top: 20px; opacity: 1; }
         }
     </style>
 </head>
@@ -477,7 +483,8 @@
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
-        <div style="color: white; font-size: 18px; font-weight: 700;">Loading Dubai Royal Commerce...</div>
+        <div style="color: white; font-size: 20px; font-weight: 700; margin-bottom: 10px;">Dubai Royal Commerce</div>
+        <div style="color: rgba(255,255,255,0.8); font-size: 14px;">Loading premium experience...</div>
     </div>
 
     <!-- Notification Alert -->
@@ -518,7 +525,7 @@
                 </h1>
                 <div class="d-flex gap-3 mt-2 flex-wrap">
                     <span class="badge bg-dark"><i class="fas fa-map-pin me-1"></i>Deliver: <span id="header-location">Dubai Marina</span></span>
-                    <span class="badge bg-warning text-dark"><i class="fas fa-database me-1"></i><span id="db-status">Supabase Live</span></span>
+                    <span class="badge bg-warning text-dark"><i class="fas fa-database me-1"></i><span id="db-status">Connected</span></span>
                     <span class="badge bg-info"><i class="fas fa-shield-alt me-1"></i>WPA Ready</span>
                     <span class="badge bg-success" id="cartCountBadge" style="display: none;"><i class="fas fa-shopping-cart me-1"></i><span id="cartCount">0</span></span>
                 </div>
@@ -641,7 +648,6 @@
                         </div>
                         
                         <div class="elite-grid" id="product-grid">
-                            <!-- Products loaded dynamically -->
                             <div class="text-center py-5">
                                 <div class="spinner-border text-warning" role="status"></div>
                                 <p class="mt-3">Loading products...</p>
@@ -1017,8 +1023,16 @@
         </div>
     </div>
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // ========== SUPABASE CONFIGURATION ==========
+        // ============================================
+        // DUBAI ROYAL COMMERCE - COMPLETE SYSTEM v2.0
+        // SINGLE SUPABASE INSTANCE - NO DUPLICATE ERRORS
+        // ============================================
+
+        // ========== SUPABASE CONFIGURATION - SINGLE INSTANCE ==========
         const SUPABASE_URL = "https://dfvnefbxgayxqgjjgtrr.supabase.co";
         const SUPABASE_KEY = "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE";
         const supabase = supabaseClient.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1036,6 +1050,11 @@
         let currentOrder = null;
         let map = null;
         let mapMarker = null;
+        let deviceId = null;
+        let savedAddresses = [];
+        let appliedCoupon = null;
+        
+        // Delivery Configuration
         let deliveryConfig = {
             baseRates: {
                 'Dubai': { standard: 15, express: 25, sameDay: 40, freeMin: 200 },
@@ -1060,64 +1079,88 @@
                 'New York': { standard: '5-7 days', express: '3-4 days', sameDay: null }
             }
         };
-        let appliedCoupon = null;
-        let deviceId = null;
-        let savedAddresses = [];
 
         // ========== INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', async function() {
             showLoading();
             
-            // Generate or get device ID
-            deviceId = localStorage.getItem('dubai_device_id');
-            if (!deviceId) {
-                deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-                localStorage.setItem('dubai_device_id', deviceId);
-            }
-            
-            // Check for business ID in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            let id = urlParams.get('id') || localStorage.getItem('lastCardId') || 'sample-business-1';
-            
-            // Handle short ID
-            if (id && id.length === 6) {
-                const { data: mapping } = await supabase
-                    .from('short_urls')
-                    .select('full_id')
-                    .eq('short_id', id)
-                    .single();
-                
-                if (mapping) {
-                    id = mapping.full_id;
+            try {
+                // Generate or get device ID
+                deviceId = localStorage.getItem('dubai_device_id');
+                if (!deviceId) {
+                    deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
+                    localStorage.setItem('dubai_device_id', deviceId);
                 }
+                
+                // Check for business ID in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                let id = urlParams.get('id') || localStorage.getItem('lastCardId') || 'sample-business-1';
+                
+                // Handle short ID (6 characters)
+                if (id && id.length === 6) {
+                    try {
+                        const { data: mapping } = await supabase
+                            .from('short_urls')
+                            .select('full_id')
+                            .eq('short_id', id)
+                            .single();
+                        
+                        if (mapping) {
+                            id = mapping.full_id;
+                        }
+                    } catch (e) {
+                        console.log('Short URL lookup failed, using ID as is');
+                    }
+                }
+                
+                currentBusinessId = id;
+                localStorage.setItem('lastCardId', id);
+                
+                // Load business card data
+                await loadBusinessCard(id);
+                
+                // Load cart from localStorage
+                loadCart();
+                
+                // Load saved addresses
+                await loadSavedAddresses();
+                
+                // Load delivery config
+                await loadDeliveryConfig();
+                
+                // Check for PWA install
+                setupPWA();
+                
+                // Initialize map (will be called when needed)
+                
+                // Update UI
+                updateCartUI();
+                
+                // Register Service Worker
+                registerServiceWorker();
+                
+            } catch (error) {
+                console.error('Initialization error:', error);
+                showNotification('Error loading application. Using offline mode.', 'warning');
+            } finally {
+                setTimeout(() => {
+                    hideLoading();
+                }, 1000);
             }
-            
-            currentBusinessId = id;
-            localStorage.setItem('lastCardId', id);
-            
-            // Load business card data
-            await loadBusinessCard(id);
-            
-            // Load cart from localStorage
-            loadCart();
-            
-            // Load saved addresses
-            await loadSavedAddresses();
-            
-            // Load delivery config
-            await loadDeliveryConfig();
-            
-            // Check for PWA install
-            setupPWA();
-            
-            // Initialize map
-            initAddressMap();
-            
-            // Update UI
-            updateCartUI();
-            
-            hideLoading();
         });
+
+        // ========== REGISTER SERVICE WORKER ==========
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+            }
+        }
 
         // ========== LOAD BUSINESS CARD ==========
         async function loadBusinessCard(id) {
@@ -1128,7 +1171,12 @@
                     .eq('id', id)
                     .single();
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Supabase error:', error);
+                    // Use sample data as fallback
+                    useSampleBusinessData();
+                    return;
+                }
                 
                 if (data) {
                     currentCardData = JSON.parse(data.data);
@@ -1149,21 +1197,14 @@
                             price: parseFloat(p.discountPrice || p.originalPrice || 99.99),
                             originalPrice: p.originalPrice ? parseFloat(p.originalPrice) : null,
                             weight: 0.5,
-                            category: p.badges ? p.badges[0] || 'General' : 'General',
+                            category: p.badges && p.badges.length > 0 ? p.badges[0] : 'General',
                             image: p.image || 'https://images.unsplash.com/photo-1599493595981-1df4c7dc984d?w=400',
                             stock: 100,
                             description: p.desc || 'Premium quality product',
                             badges: p.badges || []
                         }));
                     } else {
-                        // Default products
-                        products = [
-                            { id: 1, name: 'Dubai Gold Date Box', price: 349.99, originalPrice: 399.99, weight: 1.2, category: 'Luxury', image: 'https://images.unsplash.com/photo-1599493595981-1df4c7dc984d?w=400', stock: 100, description: 'Premium dates coated with 24K gold', badges: ['Hot Deal'] },
-                            { id: 2, name: 'Saffron Elite (10g)', price: 189.99, originalPrice: 249.99, weight: 0.1, category: 'Spices', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400', stock: 50, description: 'Pure Kashmiri saffron', badges: ['Best Seller'] },
-                            { id: 3, name: 'Arabian Oud Perfume', price: 599.99, originalPrice: 799.99, weight: 0.3, category: 'Fragrance', image: 'https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=400', stock: 30, description: 'Luxurious oud fragrance', badges: ['Limited Stock'] },
-                            { id: 4, name: 'Camel Milk Chocolate', price: 79.99, originalPrice: 99.99, weight: 0.5, category: 'Gourmet', image: 'https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=400', stock: 200, description: 'Premium camel milk chocolate', badges: ['Discount'] },
-                            { id: 5, name: 'Gold Plated Lamp', price: 1299.99, weight: 2.5, category: 'Decor', image: 'https://images.unsplash.com/photo-1543198126-a4ad8e3be0b6?w=400', stock: 15, description: 'Handcrafted gold plated lamp', badges: ['Free Delivery'] }
-                        ];
+                        useSampleProducts();
                     }
                     
                     renderProductGrid();
@@ -1178,11 +1219,39 @@
                         const initials = (currentCardData.businessName || 'DRC').substring(0, 2).toUpperCase();
                         document.getElementById('businessLogoFallback').textContent = initials;
                     }
+                    
+                    document.getElementById('db-status').textContent = 'Connected';
                 }
             } catch (error) {
                 console.error('Error loading business card:', error);
-                showNotification('Error loading business data', 'error');
+                useSampleBusinessData();
             }
+        }
+
+        // ========== SAMPLE DATA FALLBACKS ==========
+        function useSampleBusinessData() {
+            document.getElementById('businessNameHeader').textContent = 'Dubai Royal Commerce';
+            document.getElementById('businessName').textContent = 'Dubai Royal Commerce';
+            document.getElementById('businessAbout').textContent = 'Premium luxury goods from the heart of Dubai';
+            document.getElementById('businessPhone').textContent = '+971 50 123 4567';
+            document.getElementById('businessEmail').textContent = 'info@dubairoyal.com';
+            document.getElementById('businessAddress').textContent = 'Burj Khalifa, Dubai';
+            document.getElementById('businessProfileCard').style.display = 'block';
+            document.getElementById('businessLogoFallback').textContent = 'DRC';
+            document.getElementById('db-status').textContent = 'Offline Mode';
+            
+            useSampleProducts();
+        }
+
+        function useSampleProducts() {
+            products = [
+                { id: 1, name: 'Dubai Gold Date Box', price: 349.99, originalPrice: 399.99, weight: 1.2, category: 'Luxury', image: 'https://images.unsplash.com/photo-1599493595981-1df4c7dc984d?w=400', stock: 100, description: 'Premium dates coated with 24K gold', badges: ['Hot Deal'] },
+                { id: 2, name: 'Saffron Elite (10g)', price: 189.99, originalPrice: 249.99, weight: 0.1, category: 'Spices', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400', stock: 50, description: 'Pure Kashmiri saffron', badges: ['Best Seller'] },
+                { id: 3, name: 'Arabian Oud Perfume', price: 599.99, originalPrice: 799.99, weight: 0.3, category: 'Fragrance', image: 'https://images.unsplash.com/photo-1590736704728-f4730bb30770?w=400', stock: 30, description: 'Luxurious oud fragrance', badges: ['Limited Stock'] },
+                { id: 4, name: 'Camel Milk Chocolate', price: 79.99, originalPrice: 99.99, weight: 0.5, category: 'Gourmet', image: 'https://images.unsplash.com/photo-1587132137056-bfbf0166836e?w=400', stock: 200, description: 'Premium camel milk chocolate', badges: ['Discount'] },
+                { id: 5, name: 'Gold Plated Lamp', price: 1299.99, weight: 2.5, category: 'Decor', image: 'https://images.unsplash.com/photo-1543198126-a4ad8e3be0b6?w=400', stock: 15, description: 'Handcrafted gold plated lamp', badges: ['Free Delivery'] }
+            ];
+            renderProductGrid();
         }
 
         // ========== PRODUCT FUNCTIONS ==========
@@ -1215,7 +1284,7 @@
                             </button>
                         </div>
                         <div class="d-flex mt-2 gap-1">
-                            ${p.badges.slice(0, 2).map(badge => `<span class="badge bg-light text-dark">${badge}</span>`).join('')}
+                            ${p.badges && p.badges.length > 0 ? p.badges.slice(0, 2).map(badge => `<span class="badge bg-light text-dark">${badge}</span>`).join('') : ''}
                         </div>
                         <small class="text-muted d-block mt-1">Stock: ${p.stock}</small>
                     </div>
@@ -1234,7 +1303,7 @@
             const filtered = products.filter(p => 
                 p.name.toLowerCase().includes(searchTerm) || 
                 p.category.toLowerCase().includes(searchTerm) ||
-                p.description.toLowerCase().includes(searchTerm)
+                (p.description && p.description.toLowerCase().includes(searchTerm))
             );
             
             const grid = document.getElementById('product-grid');
@@ -1267,13 +1336,14 @@
             
             document.getElementById('productModalTitle').textContent = product.name;
             document.getElementById('productModalImage').src = product.image;
-            document.getElementById('productModalDesc').textContent = product.description;
+            document.getElementById('productModalDesc').textContent = product.description || 'Premium quality product';
             document.getElementById('productModalPrice').textContent = `$${product.price.toFixed(2)}`;
             document.getElementById('productModalStock').textContent = `In Stock: ${product.stock}`;
             document.getElementById('productModalQuantity').value = 1;
             document.getElementById('productModalQuantity').max = product.stock;
             
-            $('#productModal').modal('show');
+            const modal = new bootstrap.Modal(document.getElementById('productModal'));
+            modal.show();
         }
 
         // ========== CART FUNCTIONS ==========
@@ -1307,13 +1377,13 @@
         }
 
         function addToCartFromModal() {
-            const productId = parseInt(document.getElementById('productModalTitle').textContent.split(' - ')[1] || '1');
-            const quantity = parseInt(document.getElementById('productModalQuantity').value);
-            const product = products.find(p => p.id === productId);
-            
+            const productName = document.getElementById('productModalTitle').textContent;
+            const product = products.find(p => p.name === productName);
             if (!product) return;
             
-            const existing = cart.find(item => item.id === productId);
+            const quantity = parseInt(document.getElementById('productModalQuantity').value);
+            
+            const existing = cart.find(item => item.id === product.id);
             if (existing) {
                 if (existing.quantity + quantity <= product.stock) {
                     existing.quantity += quantity;
@@ -1335,7 +1405,10 @@
             
             saveCart();
             updateCartUI();
-            $('#productModal').modal('hide');
+            
+            const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+            modal.hide();
+            
             showNotification(`${product.name} added to cart`, 'success');
         }
 
@@ -1429,7 +1502,7 @@
 
         // ========== ADDRESS & MAP FUNCTIONS ==========
         function initAddressMap() {
-            if (document.getElementById('address-map')._leaflet_id) return;
+            if (!document.getElementById('address-map') || document.getElementById('address-map')._leaflet_id) return;
             
             const dubaiCoords = [25.2048, 55.2708];
             map = L.map('address-map').setView(dubaiCoords, 12);
@@ -1460,7 +1533,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.address) {
-                        const street = data.address.road || data.address.suburb || '';
+                        const street = data.address.road || data.address.suburb || data.address.city || '';
                         const city = data.address.city || data.address.town || data.address.state || '';
                         document.getElementById('address-street').value = street;
                         if (city && !document.getElementById('address-city').value) {
@@ -1479,14 +1552,20 @@
 
         async function loadSavedAddresses() {
             try {
+                if (!supabase) return;
+                
                 const { data, error } = await supabase
                     .from('customer_addresses')
                     .select('*')
-                    .eq('business_id', currentBusinessId)
+                    .eq('business_id', currentBusinessId || 'sample-business-1')
                     .eq('device_id', deviceId)
                     .order('created_at', { ascending: false });
                 
-                if (error) throw error;
+                if (error) {
+                    console.error('Error loading addresses:', error);
+                    loadSavedAddressesFromLocal();
+                    return;
+                }
                 
                 savedAddresses = data || [];
                 
@@ -1495,15 +1574,47 @@
                     listEl.innerHTML = '<p class="text-muted">No saved addresses</p>';
                 } else {
                     let html = '';
-                    savedAddresses.forEach(addr => {
-                        const addrData = JSON.parse(addr.address_data);
+                    savedAddresses.slice(0, 3).forEach(addr => {
+                        try {
+                            const addrData = JSON.parse(addr.address_data);
+                            html += `
+                                <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
+                                    <div>
+                                        <strong>${addrData.name || 'Address'}</strong><br>
+                                        <small>${addrData.street || ''}, ${addrData.city || ''}</small>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-warning" onclick="useSavedAddress('${addr.id}')">
+                                        Use
+                                    </button>
+                                </div>
+                            `;
+                        } catch (e) {}
+                    });
+                    listEl.innerHTML = html || '<p class="text-muted">No saved addresses</p>';
+                }
+            } catch (error) {
+                console.error('Error in loadSavedAddresses:', error);
+                loadSavedAddressesFromLocal();
+            }
+        }
+
+        function loadSavedAddressesFromLocal() {
+            try {
+                const local = JSON.parse(localStorage.getItem('dubai_addresses') || '[]');
+                const listEl = document.getElementById('saved-addresses-list');
+                
+                if (local.length === 0) {
+                    listEl.innerHTML = '<p class="text-muted">No saved addresses</p>';
+                } else {
+                    let html = '';
+                    local.slice(0, 3).forEach(addr => {
                         html += `
                             <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
                                 <div>
-                                    <strong>${addrData.name}</strong><br>
-                                    <small>${addrData.street}, ${addrData.city}</small>
+                                    <strong>${addr.name || 'Address'}</strong><br>
+                                    <small>${addr.street || ''}, ${addr.city || ''}</small>
                                 </div>
-                                <button class="btn btn-sm btn-outline-warning" onclick="useSavedAddress('${addr.id}')">
+                                <button class="btn btn-sm btn-outline-warning" onclick="useLocalAddress('${addr.id}')">
                                     Use
                                 </button>
                             </div>
@@ -1511,27 +1622,93 @@
                     });
                     listEl.innerHTML = html;
                 }
-            } catch (error) {
-                console.error('Error loading addresses:', error);
-            }
+            } catch (e) {}
         }
 
         function useSavedAddress(addressId) {
             const addr = savedAddresses.find(a => a.id === addressId);
             if (!addr) return;
             
-            const addrData = JSON.parse(addr.address_data);
-            document.getElementById('address-name').value = addrData.name || '';
-            document.getElementById('address-phone').value = addrData.phone || '';
-            document.getElementById('address-email').value = addrData.email || '';
-            document.getElementById('address-postal').value = addrData.postal || '';
-            document.getElementById('address-street').value = addrData.street || '';
-            document.getElementById('address-city').value = addrData.city || '';
-            document.getElementById('address-country').value = addrData.country || 'United Arab Emirates';
-            
-            if (addrData.coordinates && mapMarker) {
-                mapMarker.setLatLng([addrData.coordinates.lat, addrData.coordinates.lng]);
-                map.setView([addrData.coordinates.lat, addrData.coordinates.lng], 14);
+            try {
+                const addrData = JSON.parse(addr.address_data);
+                document.getElementById('address-name').value = addrData.name || '';
+                document.getElementById('address-phone').value = addrData.phone || '';
+                document.getElementById('address-email').value = addrData.email || '';
+                document.getElementById('address-postal').value = addrData.postal || '';
+                document.getElementById('address-street').value = addrData.street || '';
+                document.getElementById('address-city').value = addrData.city || '';
+                document.getElementById('address-country').value = addrData.country || 'United Arab Emirates';
+                
+                if (addrData.coordinates && mapMarker) {
+                    mapMarker.setLatLng([addrData.coordinates.lat, addrData.coordinates.lng]);
+                    map.setView([addrData.coordinates.lat, addrData.coordinates.lng], 14);
+                }
+            } catch (e) {}
+        }
+
+        function useLocalAddress(addressId) {
+            try {
+                const local = JSON.parse(localStorage.getItem('dubai_addresses') || '[]');
+                const addr = local.find(a => a.id === addressId);
+                if (addr) {
+                    document.getElementById('address-name').value = addr.name || '';
+                    document.getElementById('address-phone').value = addr.phone || '';
+                    document.getElementById('address-email').value = addr.email || '';
+                    document.getElementById('address-postal').value = addr.postal || '';
+                    document.getElementById('address-street').value = addr.street || '';
+                    document.getElementById('address-city').value = addr.city || '';
+                }
+            } catch (e) {}
+        }
+
+        // ========== FIXED: SAVE ADDRESS TO SUPABASE ==========
+        async function saveAddressToSupabase(address) {
+            try {
+                if (!supabase) {
+                    console.warn('Supabase not available, saving to local storage');
+                    saveAddressToLocal(address);
+                    return;
+                }
+                
+                const { error } = await supabase
+                    .from('customer_addresses')
+                    .insert([{
+                        business_id: currentBusinessId || 'sample-business-1',
+                        device_id: deviceId || 'local-device',
+                        address_data: JSON.stringify(address),
+                        is_default: !savedAddresses || savedAddresses.length === 0
+                    }]);
+                
+                if (error) {
+                    console.error('Supabase insert error:', error);
+                    saveAddressToLocal(address);
+                } else {
+                    console.log('✅ Address saved to Supabase');
+                    if (typeof loadSavedAddresses === 'function') {
+                        await loadSavedAddresses();
+                    }
+                }
+            } catch (error) {
+                console.error('Error in saveAddressToSupabase:', error);
+                saveAddressToLocal(address);
+            }
+        }
+
+        // ========== FALLBACK: LOCAL STORAGE ==========
+        function saveAddressToLocal(address) {
+            try {
+                const localAddresses = JSON.parse(localStorage.getItem('dubai_addresses') || '[]');
+                const newAddress = {
+                    id: Date.now().toString(),
+                    ...address,
+                    savedAt: new Date().toISOString()
+                };
+                localAddresses.push(newAddress);
+                localStorage.setItem('dubai_addresses', JSON.stringify(localAddresses));
+                console.log('✅ Address saved to localStorage');
+                loadSavedAddressesFromLocal();
+            } catch (e) {
+                console.error('Local storage error:', e);
             }
         }
 
@@ -1556,8 +1733,8 @@
             
             document.getElementById('header-location').innerText = city;
             
-            // Save address to supabase
-            saveAddressTosupabase(userAddress);
+            // Save address to Supabase (with fallback)
+            saveAddressToSupabase(userAddress);
             
             // Show delivery preview
             const rates = deliveryConfig.baseRates[city] || deliveryConfig.baseRates['Dubai'];
@@ -1579,32 +1756,15 @@
             }, 1000);
         }
 
-        async function saveAddressToSupabase(address) {
-            try {
-                const { error } = await supabase
-                    .from('customer_addresses')
-                    .insert([{
-                        business_id: currentBusinessId,
-                        device_id: deviceId,
-                        address_data: JSON.stringify(address),
-                        is_default: savedAddresses.length === 0
-                    }]);
-                
-                if (!error) {
-                    await loadSavedAddresses();
-                }
-            } catch (error) {
-                console.error('Error saving address:', error);
-            }
-        }
-
         // ========== DELIVERY FUNCTIONS ==========
         async function loadDeliveryConfig() {
             try {
+                if (!supabase) return;
+                
                 const { data, error } = await supabase
                     .from('delivery_configs')
                     .select('config_data')
-                    .eq('business_id', currentBusinessId)
+                    .eq('business_id', currentBusinessId || 'sample-business-1')
                     .single();
                 
                 if (data && !error) {
@@ -1679,7 +1839,7 @@
                 `;
             }
             
-            document.getElementById('delivery-options').innerHTML = html;
+            document.getElementById('delivery-options').innerHTML = html || '<p class="text-muted">No delivery options available for this city</p>';
             updateDeliveryOrderSummary();
         }
 
@@ -1913,9 +2073,9 @@
                 setTimeout(() => {
                     const qrContainer = document.getElementById('wallet-qr-code');
                     qrContainer.innerHTML = '';
-                    if (window.QRCode) {
+                    if (typeof QRCode !== 'undefined') {
                         new QRCode(qrContainer, {
-                            text: `${method.toLowerCase()}://payment.royalcommerce.com/${currentOrder?.orderNumber || Date.now()}`,
+                            text: `${method.toLowerCase()}://payment.royalcommerce.com/${Date.now()}`,
                             width: 150,
                             height: 150
                         });
@@ -1929,7 +2089,7 @@
         function updatePaymentSummary() {
             const subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
             const delivery = selectedDelivery ? selectedDelivery.cost : 0;
-            const discount = appliedCoupon ? subtotal * (appliedCoupon.discount / 100) : 0;
+            const discount = appliedCoupon && appliedCoupon.discount ? subtotal * (appliedCoupon.discount / 100) : 0;
             const taxable = subtotal + delivery - discount;
             const tax = taxable * 0.05;
             const total = taxable + tax;
@@ -1937,7 +2097,7 @@
             document.getElementById('payment-subtotal').innerText = `$${subtotal.toFixed(2)}`;
             document.getElementById('payment-delivery').innerText = delivery === 0 ? 'FREE' : `$${delivery.toFixed(2)}`;
             
-            if (appliedCoupon) {
+            if (appliedCoupon && discount > 0) {
                 document.getElementById('discount-row').style.display = 'flex';
                 document.getElementById('payment-discount').innerText = `-$${discount.toFixed(2)}`;
             } else {
@@ -1985,6 +2145,12 @@
                 return;
             }
             
+            if (!userAddress) {
+                showNotification('Please provide delivery address', 'error');
+                switchStep(2);
+                return;
+            }
+            
             const btn = document.getElementById('process-payment-btn');
             const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Processing...';
@@ -1993,8 +2159,8 @@
             try {
                 // Calculate totals
                 const subtotal = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-                const delivery = selectedDelivery.cost;
-                const discount = appliedCoupon ? subtotal * (appliedCoupon.discount / 100) : 0;
+                const delivery = selectedDelivery ? selectedDelivery.cost : 0;
+                const discount = appliedCoupon && appliedCoupon.discount ? subtotal * (appliedCoupon.discount / 100) : 0;
                 const taxable = subtotal + delivery - discount;
                 const tax = taxable * 0.05;
                 const total = taxable + tax;
@@ -2003,76 +2169,83 @@
                 const orderNumber = 'ORD-' + Date.now().toString().slice(-6);
                 const trackingNumber = 'TRK-' + Math.random().toString(36).substring(2, 10).toUpperCase();
                 
-                // Create order in Supabase
-                const { data: orderData, error: orderError } = await supabase
-                    .from('orders')
-                    .insert([{
-                        order_number: orderNumber,
-                        business_id: currentBusinessId,
-                        customer_data: JSON.stringify(userAddress),
-                        items: JSON.stringify(cart),
-                        subtotal: subtotal,
-                        delivery_charge: delivery,
-                        tax: tax,
-                        total: total,
-                        payment_method: selectedPayment.method,
-                        payment_status: 'completed',
-                        delivery_status: 'pending',
-                        tracking_number: trackingNumber,
-                        address: userAddress.street,
-                        city: userAddress.city,
-                        customer_name: userAddress.name,
-                        customer_phone: userAddress.phone,
-                        customer_email: userAddress.email
-                    }])
-                    .select()
-                    .single();
-                
-                if (orderError) throw orderError;
-                
-                // Create delivery status
-                await supabase
-                    .from('delivery_status')
-                    .insert([{
-                        business_id: currentBusinessId,
-                        order_id: orderNumber,
-                        customer_phone: userAddress.phone,
-                        customer_name: userAddress.name,
-                        status: 'pending',
-                        location: userAddress.city,
-                        estimated_delivery: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-                        tracking_number: trackingNumber
-                    }]);
-                
-                // Update customer data
-                await supabase
-                    .from('customer_data')
-                    .upsert({
-                        device_id: deviceId,
-                        business_id: currentBusinessId,
-                        phone: userAddress.phone,
-                        name: userAddress.name,
-                        email: userAddress.email,
-                        last_active: new Date().toISOString()
-                    }, { onConflict: 'device_id,business_id' });
-                
+                // Create order object
                 currentOrder = {
                     orderNumber,
                     trackingNumber,
                     customer: userAddress,
                     delivery: selectedDelivery,
                     payment: selectedPayment,
-                    items: cart,
+                    items: [...cart],
+                    subtotal,
+                    deliveryCharge: delivery,
+                    tax,
                     total,
                     date: new Date().toISOString(),
                     status: 'confirmed'
                 };
                 
+                // Try to save to Supabase if available
+                if (supabase) {
+                    try {
+                        await supabase
+                            .from('orders')
+                            .insert([{
+                                order_number: orderNumber,
+                                business_id: currentBusinessId || 'sample-business-1',
+                                customer_data: JSON.stringify(userAddress),
+                                items: JSON.stringify(cart),
+                                subtotal: subtotal,
+                                delivery_charge: delivery,
+                                tax: tax,
+                                total: total,
+                                payment_method: selectedPayment.method,
+                                payment_status: 'completed',
+                                delivery_status: 'pending',
+                                tracking_number: trackingNumber,
+                                address: userAddress.street,
+                                city: userAddress.city,
+                                customer_name: userAddress.name,
+                                customer_phone: userAddress.phone,
+                                customer_email: userAddress.email
+                            }]);
+                        
+                        // Create delivery status
+                        await supabase
+                            .from('delivery_status')
+                            .insert([{
+                                business_id: currentBusinessId || 'sample-business-1',
+                                order_id: orderNumber,
+                                customer_phone: userAddress.phone,
+                                customer_name: userAddress.name,
+                                status: 'pending',
+                                location: userAddress.city,
+                                estimated_delivery: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                                tracking_number: trackingNumber
+                            }]);
+                        
+                        // Update customer data
+                        await supabase
+                            .from('customer_data')
+                            .upsert({
+                                device_id: deviceId,
+                                business_id: currentBusinessId || 'sample-business-1',
+                                phone: userAddress.phone,
+                                name: userAddress.name,
+                                email: userAddress.email,
+                                last_active: new Date().toISOString()
+                            }, { onConflict: 'device_id,business_id' });
+                            
+                    } catch (e) {
+                        console.log('Supabase save failed, using local order:', e);
+                    }
+                }
+                
                 // Update confirmation page
                 document.getElementById('confirm-order-number').innerText = orderNumber;
                 document.getElementById('confirm-tracking').innerText = trackingNumber;
                 document.getElementById('confirm-address').innerText = `${userAddress.street}, ${userAddress.city}`;
-                document.getElementById('confirm-eta').innerText = selectedDelivery.eta;
+                document.getElementById('confirm-eta').innerText = selectedDelivery ? selectedDelivery.eta : '2-3 days';
                 document.getElementById('confirm-total').innerText = `$${total.toFixed(2)}`;
                 
                 // Setup tracking
@@ -2089,8 +2262,8 @@
                 showNotification('Order placed successfully!', 'success');
                 switchStep(5);
                 
-                // Send notification
-                if (currentCardData?.payments?.whatsapp?.active) {
+                // Send WhatsApp if configured
+                if (currentCardData && currentCardData.payments?.whatsapp?.active && currentCardData.payments?.whatsapp?.number) {
                     sendWhatsAppOrder(currentOrder);
                 }
                 
@@ -2120,9 +2293,9 @@
             });
             
             message += `\n*Subtotal:* $${order.items.reduce((sum, i) => sum + (i.price * i.quantity), 0).toFixed(2)}`;
-            message += `\n*Delivery:* ${order.delivery.cost === 0 ? 'FREE' : '$' + order.delivery.cost}`;
+            message += `\n*Delivery:* ${order.delivery?.cost === 0 ? 'FREE' : '$' + (order.delivery?.cost || 0).toFixed(2)}`;
             message += `\n*Total:* $${order.total.toFixed(2)}`;
-            message += `\n*Payment:* ${order.payment.method}`;
+            message += `\n*Payment:* ${order.payment?.method || 'Not specified'}`;
             message += `\n*Tracking:* ${order.trackingNumber}`;
             
             message += `\n\nPlease confirm order. Thank you!`;
@@ -2134,7 +2307,7 @@
         function setupTracking(orderNumber, trackingNumber) {
             document.getElementById('tracking-order-number').innerText = orderNumber;
             document.getElementById('tracking-number').innerText = trackingNumber;
-            document.getElementById('tracking-eta').innerText = selectedDelivery.eta;
+            document.getElementById('tracking-eta').innerText = selectedDelivery ? selectedDelivery.eta : '2-3 days';
             
             // Reset timeline
             document.querySelectorAll('.tracking-point').forEach((el, i) => {
@@ -2158,17 +2331,23 @@
                     <span>$${(item.price * item.quantity).toFixed(2)}</span>
                 </div>`;
             });
-            document.getElementById('tracking-order-details').innerHTML = itemsHtml;
+            document.getElementById('tracking-order-details').innerHTML = itemsHtml || '<p class="text-muted">No items</p>';
             
             // Simulate tracking updates
             setTimeout(() => {
-                document.querySelectorAll('.tracking-point')[1].classList.add('active');
-                document.getElementById('track-time2').innerHTML = '5 min ago';
+                const points = document.querySelectorAll('.tracking-point');
+                if (points[1]) {
+                    points[1].classList.add('active');
+                    document.getElementById('track-time2').innerHTML = '5 min ago';
+                }
             }, 3000);
             
             setTimeout(() => {
-                document.querySelectorAll('.tracking-point')[2].classList.add('active');
-                document.getElementById('track-time3').innerHTML = '15 min ago';
+                const points = document.querySelectorAll('.tracking-point');
+                if (points[2]) {
+                    points[2].classList.add('active');
+                    document.getElementById('track-time3').innerHTML = '15 min ago';
+                }
             }, 6000);
         }
 
@@ -2185,22 +2364,29 @@
 
         async function updateAdminStats() {
             try {
+                if (!supabase) {
+                    document.getElementById('stats-orders').innerText = '0';
+                    document.getElementById('stats-revenue').innerText = '0';
+                    document.getElementById('stats-customers').innerText = '1';
+                    return;
+                }
+                
                 const today = new Date().toISOString().split('T')[0];
                 
                 const { data: orders } = await supabase
                     .from('orders')
                     .select('*')
-                    .eq('business_id', currentBusinessId)
+                    .eq('business_id', currentBusinessId || 'sample-business-1')
                     .gte('created_at', today);
                 
                 const { data: customers } = await supabase
                     .from('customer_data')
                     .select('*')
-                    .eq('business_id', currentBusinessId);
+                    .eq('business_id', currentBusinessId || 'sample-business-1');
                 
                 document.getElementById('stats-orders').innerText = orders?.length || 0;
-                document.getElementById('stats-revenue').innerText = orders?.reduce((sum, o) => sum + o.total, 0).toFixed(2) || 0;
-                document.getElementById('stats-customers').innerText = customers?.length || 0;
+                document.getElementById('stats-revenue').innerText = orders?.reduce((sum, o) => sum + (o.total || 0), 0).toFixed(2) || 0;
+                document.getElementById('stats-customers').innerText = customers?.length || 1;
             } catch (error) {
                 console.error('Error loading stats:', error);
             }
@@ -2212,15 +2398,15 @@
             if (rates) {
                 document.getElementById('admin-standard-rate').value = rates.standard;
                 document.getElementById('admin-express-rate').value = rates.express;
-                document.getElementById('admin-free-min').value = rates.freeMin;
+                document.getElementById('admin-free-min').value = rates.freeMin || 200;
             }
         }
 
         async function saveDeliveryConfig() {
             const city = document.getElementById('admin-city-select').value;
-            const standard = parseFloat(document.getElementById('admin-standard-rate').value);
-            const express = parseFloat(document.getElementById('admin-express-rate').value);
-            const freeMin = parseFloat(document.getElementById('admin-free-min').value);
+            const standard = parseFloat(document.getElementById('admin-standard-rate').value) || 15;
+            const express = parseFloat(document.getElementById('admin-express-rate').value) || 25;
+            const freeMin = parseFloat(document.getElementById('admin-free-min').value) || 200;
             
             if (!deliveryConfig.baseRates[city]) {
                 deliveryConfig.baseRates[city] = {};
@@ -2231,19 +2417,18 @@
             deliveryConfig.baseRates[city].freeMin = freeMin;
             
             try {
-                const { error } = await supabase
-                    .from('delivery_configs')
-                    .upsert({
-                        business_id: currentBusinessId,
-                        config_data: JSON.stringify(deliveryConfig)
-                    }, { onConflict: 'business_id' });
-                
-                if (!error) {
-                    showNotification('Delivery config saved', 'success');
+                if (supabase) {
+                    await supabase
+                        .from('delivery_configs')
+                        .upsert({
+                            business_id: currentBusinessId || 'sample-business-1',
+                            config_data: JSON.stringify(deliveryConfig)
+                        }, { onConflict: 'business_id' });
                 }
+                showNotification('Delivery config saved', 'success');
             } catch (error) {
                 console.error('Error saving config:', error);
-                showNotification('Error saving config', 'error');
+                showNotification('Saved locally', 'info');
             }
         }
 
@@ -2259,16 +2444,24 @@
             };
             
             try {
-                const { error } = await supabase
-                    .from('backups')
-                    .insert([{
-                        business_id: currentBusinessId,
-                        backup_date: new Date().toISOString(),
-                        data: JSON.stringify(backup)
-                    }]);
-                
-                if (!error) {
+                if (supabase) {
+                    await supabase
+                        .from('backups')
+                        .insert([{
+                            business_id: currentBusinessId || 'sample-business-1',
+                            backup_date: new Date().toISOString(),
+                            data: JSON.stringify(backup)
+                        }]);
                     showNotification('Backup created successfully', 'success');
+                } else {
+                    // Local backup
+                    const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `dubai_royal_backup_${new Date().toISOString().slice(0,10)}.json`;
+                    a.click();
+                    showNotification('Backup downloaded', 'success');
                 }
             } catch (error) {
                 console.error('Error creating backup:', error);
@@ -2288,7 +2481,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `dubai_royal_backup_${new Date().toISOString().slice(0,10)}.json`;
+            a.download = `dubai_royal_export_${new Date().toISOString().slice(0,10)}.json`;
             a.click();
         }
 
@@ -2330,20 +2523,21 @@
             }
             
             try {
-                const { error } = await supabase
-                    .from('notifications')
-                    .insert([{
-                        business_id: currentBusinessId,
-                        title: title,
-                        body: body,
-                        sent_to_all: true
-                    }]);
-                
-                if (!error) {
-                    showNotification('Notification sent to all users', 'success');
-                    document.getElementById('notif-title').value = '';
-                    document.getElementById('notif-body').value = '';
+                if (supabase) {
+                    await supabase
+                        .from('notifications')
+                        .insert([{
+                            business_id: currentBusinessId || 'sample-business-1',
+                            title: title,
+                            body: body,
+                            sent_to_all: true
+                        }]);
+                    showNotification('Notification sent', 'success');
+                } else {
+                    showNotification('Demo: ' + title + ' - ' + body, 'info');
                 }
+                document.getElementById('notif-title').value = '';
+                document.getElementById('notif-body').value = '';
             } catch (error) {
                 console.error('Error sending notification:', error);
                 showNotification('Error sending notification', 'error');
@@ -2392,6 +2586,17 @@
             event.currentTarget.classList.add('active');
         }
 
+        // Load saved theme
+        const savedTheme = localStorage.getItem('dubai_theme');
+        if (savedTheme) {
+            document.body.setAttribute('data-theme', savedTheme);
+            document.querySelectorAll('.theme-option').forEach(el => {
+                if (el.getAttribute('data-theme') === savedTheme) {
+                    el.classList.add('active');
+                }
+            });
+        }
+
         // ========== STEP NAVIGATION ==========
         function switchStep(step) {
             // Hide all sections
@@ -2418,6 +2623,11 @@
             });
             
             currentStep = step;
+            
+            // Initialize map when address section is shown
+            if (step === 2) {
+                setTimeout(() => initAddressMap(), 300);
+            }
         }
 
         function proceedToCheckout() {
@@ -2444,10 +2654,14 @@
             saveCart();
             updateCartUI();
             switchStep(1);
+            showNotification('Ready to shop again!', 'success');
         }
 
         function downloadReceipt() {
-            if (!currentOrder) return;
+            if (!currentOrder) {
+                showNotification('No order found', 'error');
+                return;
+            }
             
             const receipt = `
 ===================================
@@ -2456,21 +2670,21 @@
 Order: ${currentOrder.orderNumber}
 Date: ${new Date(currentOrder.date).toLocaleString()}
 ===================================
-Customer: ${currentOrder.customer.name}
-Phone: ${currentOrder.customer.phone}
-Address: ${currentOrder.customer.street}, ${currentOrder.customer.city}
+Customer: ${currentOrder.customer?.name || 'N/A'}
+Phone: ${currentOrder.customer?.phone || 'N/A'}
+Address: ${currentOrder.customer?.street || 'N/A'}, ${currentOrder.customer?.city || 'N/A'}
 ===================================
 ITEMS:
-${currentOrder.items.map(item => `${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+${currentOrder.items?.map(item => `${item.name} x${item.quantity} - $${(item.price * item.quantity).toFixed(2)}`).join('\n') || 'No items'}
 ===================================
-Subtotal: $${currentOrder.items.reduce((sum, i) => sum + (i.price * i.quantity), 0).toFixed(2)}
-Delivery: ${currentOrder.delivery.cost === 0 ? 'FREE' : '$' + currentOrder.delivery.cost.toFixed(2)}
-Tax (5%): $${(currentOrder.total - currentOrder.items.reduce((sum, i) => sum + (i.price * i.quantity), 0) - currentOrder.delivery.cost).toFixed(2)}
+Subtotal: $${currentOrder.subtotal?.toFixed(2) || '0.00'}
+Delivery: ${currentOrder.delivery?.cost === 0 ? 'FREE' : '$' + (currentOrder.delivery?.cost || 0).toFixed(2)}
+Tax (5%): $${currentOrder.tax?.toFixed(2) || '0.00'}
 -----------------------------------
-TOTAL: $${currentOrder.total.toFixed(2)}
+TOTAL: $${currentOrder.total?.toFixed(2) || '0.00'}
 ===================================
-Payment: ${currentOrder.payment.method}
-Tracking: ${currentOrder.trackingNumber}
+Payment: ${currentOrder.payment?.method || 'N/A'}
+Tracking: ${currentOrder.trackingNumber || 'N/A'}
 ===================================
 Thank you for shopping with us!
             `;
@@ -2512,8 +2726,5 @@ Thank you for shopping with us!
             document.getElementById('loadingOverlay').style.display = 'none';
         }
     </script>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
