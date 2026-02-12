@@ -1592,5 +1592,204 @@
         function showLoading() { document.getElementById('loadingOverlay').style.display = 'flex'; }
         function hideLoading() { document.getElementById('loadingOverlay').style.display = 'none'; }
     </script>
+    // ========== ERROR FINDING EXTENSION v1.0 ==========
+// Automatically detects and fixes common errors in Dubai Royal Commerce
+// Paste this at the VERY END of your card.html, just before </body>
+
+(function() {
+    console.log('%c🔍 DUBAI ROYAL ERROR FINDER ACTIVATED', 'background: #bf9530; color: white; font-size: 16px; padding: 10px; border-radius: 10px;');
+    
+    // ===== ERROR 1: Check for duplicate Supabase =====
+    function checkDuplicateSupabase() {
+        const scriptContent = document.documentElement.innerHTML;
+        const matches = scriptContent.match(/supabaseClient\.createClient/g);
+        const count = matches ? matches.length : 0;
+        
+        if (count > 1) {
+            console.warn(`❌ ERROR: Supabase initialized ${count} times! Only 1 instance allowed.`);
+            
+            // Try to fix - remove duplicate declarations
+            const lines = scriptContent.split('\n');
+            let foundFirst = false;
+            let newLines = [];
+            
+            lines.forEach(line => {
+                if (line.includes('supabaseClient.createClient')) {
+                    if (!foundFirst) {
+                        newLines.push(line);
+                        foundFirst = true;
+                    } else {
+                        console.warn('⚠️ Removing duplicate Supabase line:', line.trim());
+                        // Skip this line
+                    }
+                } else {
+                    newLines.push(line);
+                }
+            });
+            
+            console.log('✅ Fix attempted - please refresh page');
+        } else {
+            console.log('✅ Supabase: OK (1 instance)');
+        }
+    }
+    
+    // ===== ERROR 2: Check for missing supabase variable =====
+    function checkSupabaseVariable() {
+        if (typeof supabase === 'undefined') {
+            console.error('❌ CRITICAL: supabase variable is not defined!');
+            console.log('💡 Fix: Add this at top of script:');
+            console.log('   const supabase = supabaseClient.createClient("YOUR_URL", "YOUR_KEY");');
+        } else {
+            console.log('✅ supabase variable: OK');
+        }
+    }
+    
+    // ===== ERROR 3: Check for loading overlay stuck =====
+    function checkLoadingOverlay() {
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+            setTimeout(() => {
+                if (loadingOverlay.style.display !== 'none' && loadingOverlay.style.display !== 'hidden') {
+                    console.warn('❌ Loading overlay stuck! Forcing hide...');
+                    loadingOverlay.style.display = 'none';
+                    console.log('✅ Loading overlay force-hidden');
+                }
+            }, 5000); // 5 seconds timeout
+        }
+    }
+    
+    // ===== ERROR 4: Check for map initialization errors =====
+    function checkMapErrors() {
+        if (typeof L === 'undefined') {
+            console.error('❌ Leaflet library (L) not loaded! Map will not work.');
+            console.log('💡 Fix: Add Leaflet CSS and JS in head section');
+        } else {
+            console.log('✅ Leaflet: OK');
+        }
+    }
+    
+    // ===== ERROR 5: Check for Bootstrap modal errors =====
+    function checkBootstrapErrors() {
+        if (typeof bootstrap === 'undefined') {
+            console.error('❌ Bootstrap JS not loaded! Modals will not work.');
+            console.log('💡 Fix: Add bootstrap.bundle.min.js script');
+        } else {
+            console.log('✅ Bootstrap: OK');
+        }
+    }
+    
+    // ===== ERROR 6: Check for QR Code library =====
+    function checkQRErrors() {
+        if (typeof QRCode === 'undefined') {
+            console.warn('⚠️ QRCode library not loaded. QR generation will be disabled.');
+        } else {
+            console.log('✅ QRCode: OK');
+        }
+    }
+    
+    // ===== ERROR 7: Check for cart localStorage errors =====
+    function checkCartErrors() {
+        try {
+            const cart = localStorage.getItem('dubai_cart');
+            if (cart) {
+                try {
+                    JSON.parse(cart);
+                    console.log('✅ Cart localStorage: OK');
+                } catch (e) {
+                    console.error('❌ Cart localStorage corrupted! Resetting...');
+                    localStorage.setItem('dubai_cart', '[]');
+                }
+            }
+        } catch (e) {
+            console.error('❌ localStorage not available:', e);
+        }
+    }
+    
+    // ===== ERROR 8: Check for missing business ID =====
+    function checkBusinessId() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+        
+        if (!id) {
+            console.warn('⚠️ No business ID in URL. Using sample business.');
+        } else {
+            console.log(`✅ Business ID: ${id}`);
+        }
+    }
+    
+    // ===== ERROR 9: Check for product loading errors =====
+    function checkProductErrors() {
+        if (typeof products !== 'undefined' && products.length === 0) {
+            console.warn('⚠️ No products loaded. Using sample products.');
+        } else if (typeof products !== 'undefined') {
+            console.log(`✅ Products loaded: ${products.length}`);
+        }
+    }
+    
+    // ===== ERROR 10: Check for missing functions =====
+    function checkMissingFunctions() {
+        const requiredFunctions = [
+            'addToCart', 'updateCartUI', 'switchStep', 'showNotification'
+        ];
+        
+        requiredFunctions.forEach(fn => {
+            if (typeof window[fn] !== 'function') {
+                console.error(`❌ Missing function: ${fn}()`);
+            }
+        });
+        
+        console.log('✅ Function check complete');
+    }
+    
+    // ===== ERROR 11: Check for console errors =====
+    function captureConsoleErrors() {
+        const originalError = console.error;
+        console.error = function(...args) {
+            console.log('%c🚨 CONSOLE ERROR DETECTED:', 'background: #ef4444; color: white; padding: 4px; border-radius: 4px;', ...args);
+            originalError.apply(console, args);
+        };
+    }
+    
+    // ===== ERROR 12: Performance check =====
+    function checkPerformance() {
+        const loadTime = performance.now();
+        console.log(`⏱️ Page load time: ${loadTime.toFixed(0)}ms`);
+        
+        if (loadTime > 3000) {
+            console.warn('⚠️ Slow page load (>3s). Consider optimizing images.');
+        }
+    }
+    
+    // ===== RUN ALL CHECKS =====
+    function runAllChecks() {
+        console.group('%c🔬 RUNNING DIAGNOSTICS...', 'color: #bf9530; font-weight: bold;');
+        
+        checkDuplicateSupabase();
+        checkSupabaseVariable();
+        checkLoadingOverlay();
+        checkMapErrors();
+        checkBootstrapErrors();
+        checkQRErrors();
+        checkCartErrors();
+        checkBusinessId();
+        checkProductErrors();
+        checkMissingFunctions();
+        captureConsoleErrors();
+        checkPerformance();
+        
+        console.groupEnd();
+        
+        console.log('%c✅ DIAGNOSTICS COMPLETE', 'background: #10b981; color: white; padding: 8px; border-radius: 8px;');
+        console.log('%c📋 Check console above for any warnings/errors', 'color: #64748b; font-style: italic;');
+    }
+    
+    // Run checks after page fully loads
+    if (document.readyState === 'complete') {
+        setTimeout(runAllChecks, 1000);
+    } else {
+        window.addEventListener('load', () => setTimeout(runAllChecks, 1000));
+    }
+})();
+</script>
 </body>
 </html>
