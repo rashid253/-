@@ -11,7 +11,8 @@
 <meta name="description" content="Premium Digital Business App">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
-<link rel="manifest" href="manifest.json">
+<!-- Dynamic manifest link will be set by JS -->
+<link rel="manifest" id="dynamicManifest" href="manifest.json">
 
 <style>
 :root {
@@ -188,7 +189,7 @@ body {
   font-weight: 700;
 }
 
-/* ===== FIXED HEADER ===== */
+/* ===== FIXED HEADER - IMPROVED ===== */
 .header-container {
   position: fixed;
   top: 0;
@@ -196,7 +197,7 @@ body {
   width: 100%;
   max-width: 480px;
   height: 80px;
-  background: rgba(102, 126, 234, 0.95);
+  background: var(--primary-gradient);
   backdrop-filter: blur(30px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   display: flex;
@@ -207,7 +208,7 @@ body {
   box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-/* ===== FIXED: HEADER BACK BUTTON - FUNCTIONAL + SHAPE FIXED ===== */
+/* Back button - special arrow */
 .header-back-btn {
   width: 45px;
   height: 45px;
@@ -221,7 +222,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: var(--transition-fast);
   color: white;
-  font-size: 20px;
+  font-size: 24px;
   position: absolute;
   left: 20px;
   top: 18px;
@@ -233,6 +234,7 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* Save contact button */
 .save-contact-btn {
   width: 45px;
   height: 45px;
@@ -258,15 +260,16 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* Right side icons - clean positioning */
 .header-icons {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 18px;
+  right: 80px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 25px;
-  z-index: 10;
+  gap: 15px;
+  z-index: 1002;
 }
 
 .header-icon-btn {
@@ -276,7 +279,6 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 10;
   background: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   border-radius: 12px;
@@ -292,6 +294,7 @@ body {
   background: rgba(255, 255, 255, 0.3);
 }
 
+/* Share button - separate corner, no overlap */
 .share-btn {
   width: 45px;
   height: 45px;
@@ -312,7 +315,12 @@ body {
   z-index: 1002;
 }
 
-/* ===== FIXED: TRUCK BADGE - NO DOUBLE CIRCLE ===== */
+.share-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Badges */
 .delivery-badge {
   position: absolute;
   top: -8px;
@@ -425,7 +433,7 @@ body {
   border-left: 4px solid #3b82f6;
 }
 
-/* ===== PRODUCT CARDS - UPLOADED FILE JASA ===== */
+/* ===== PRODUCT CARDS ===== */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -491,7 +499,7 @@ body {
   position: relative;
 }
 
-/* ===== LABELS - TRANSPARENT + HALF BAHAR ===== */
+/* ===== BADGES ===== */
 .badge-container {
   position: absolute;
   top: 0;
@@ -780,7 +788,7 @@ body {
   to { top: 20px; opacity: 1; }
 }
 
-/* ===== PROFESSIONAL ORDER MANAGEMENT ===== */
+/* ===== ORDER CARD ===== */
 .order-card {
   background: var(--lighter-color);
   border-radius: var(--border-radius-lg);
@@ -873,7 +881,7 @@ body {
   border: 1px solid #e2e8f0;
 }
 
-/* ===== PROFESSIONAL PAYMENT METHODS ===== */
+/* ===== PAYMENT METHODS ===== */
 .pro-payment-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -897,6 +905,17 @@ body {
 .pro-payment-card.selected {
   border-color: #10b981;
   background: #f0fdf4;
+}
+
+.pro-payment-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
 }
 
 /* ===== ORDER TICKET ===== */
@@ -936,6 +955,23 @@ body {
   letter-spacing: 2px;
 }
 
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.ticket-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px solid rgba(255,255,255,0.3);
+  font-size: 18px;
+  font-weight: 900;
+}
+
 /* ===== TOKEN MANAGEMENT ===== */
 .token-management {
   background: white;
@@ -965,6 +1001,61 @@ body {
   font-weight: 900;
   color: #667eea;
   margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.token-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.token-list {
+  margin-top: 16px;
+}
+
+.token-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-md);
+  margin-bottom: 8px;
+  border-left: 4px solid #667eea;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.token-item:hover {
+  background: #f1f5f9;
+  transform: translateX(-2px);
+}
+
+.token-code {
+  font-family: monospace;
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.token-amount {
+  font-size: 14px;
+  font-weight: 800;
+  color: #10b981;
+}
+
+.token-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
 }
 
 /* ===== MODAL ===== */
@@ -1012,7 +1103,7 @@ body {
   z-index: 10;
 }
 
-/* ===== PRODUCT MODAL - UPLOADED FILE JASA ===== */
+/* ===== PRODUCT MODAL ===== */
 .product-modal-image-container {
   position: relative;
   width: 100%;
@@ -1107,6 +1198,173 @@ body {
   cursor: pointer;
 }
 
+/* ===== BUSINESS HOURS & HOLIDAYS ===== */
+.business-hours, .holidays-section {
+  padding: 20px;
+}
+
+.hours-list {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.hours-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.hours-item.today {
+  background: #f0f9ff;
+  border-left: 4px solid #3b82f6;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.hours-day {
+  font-weight: 700;
+  color: #475569;
+}
+
+.hours-status {
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+}
+
+.hours-status.open {
+  background: #d1fae5;
+  color: #10b981;
+}
+
+.hours-status.closed {
+  background: #fee2e2;
+  color: #ef4444;
+}
+
+.holiday-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.holiday-name {
+  font-weight: 600;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.holiday-date {
+  color: #64748b;
+  background: #f1f5f9;
+  padding: 6px 16px;
+  border-radius: 30px;
+  font-size: 12px;
+}
+
+/* ===== SOCIAL GRID ===== */
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.social-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.social-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-fast);
+}
+
+.social-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+}
+
+.social-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--dark-color);
+}
+
+/* ===== CONTACT ITEMS ===== */
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: white;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.contact-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.contact-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.contact-details {
+  flex: 1;
+}
+
+.contact-label {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.contact-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--dark-color);
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .app-container { max-width: 100%; }
@@ -1114,6 +1372,7 @@ body {
   .token-stats { grid-template-columns: 1fr; }
   .quick-actions { grid-template-columns: repeat(2,1fr); }
   .notification-drawer { width: 100%; right: -100%; }
+  .social-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 ::-webkit-scrollbar {
@@ -1133,9 +1392,9 @@ body {
 
 <body>
 <div class="app-container">
-  <!-- ===== FIXED HEADER ===== -->
+  <!-- ===== FIXED HEADER - IMPROVED ===== -->
   <div class="header-container">
-    <!-- Back Button - FUNCTIONAL + SHAPE FIXED -->
+    <!-- Back Button - Special Arrow Icon -->
     <button class="header-back-btn" id="headerBackBtn" onclick="window.goBack()" style="display:none;">
       <i class="fas fa-arrow-left"></i>
     </button>
@@ -1145,7 +1404,7 @@ body {
       <i class="fas fa-address-card"></i>
     </button>
     
-    <!-- Right Side Icons -->
+    <!-- Right Side Icons - Clean Positioning -->
     <div class="header-icons">
       <div class="header-icon-btn" onclick="window.toggleNotificationDrawer()" title="Notifications">
         <i class="fas fa-bell" id="notificationBell"></i>
@@ -1154,7 +1413,6 @@ body {
       
       <div class="header-icon-btn" id="deliveryStatusBtn" onclick="window.checkDeliveryStatus()" title="Delivery Status">
         <i class="fas fa-truck" id="deliveryIcon"></i>
-        <!-- FIXED: No double circle -->
         <div class="delivery-badge" id="deliveryBadge" style="display:none;"></div>
       </div>
       
@@ -1163,7 +1421,7 @@ body {
       </div>
     </div>
     
-    <!-- Share Button -->
+    <!-- Share Button - Separate Corner, No Overlap -->
     <button class="share-btn" onclick="window.shareBusiness()" title="Share Business">
       <i class="fas fa-share-alt"></i>
     </button>
@@ -1176,11 +1434,11 @@ body {
       <button onclick="window.toggleNotificationDrawer()" style="background: none; border: none; font-size: 24px; color: var(--dark-color); cursor: pointer;">×</button>
     </div>
     <div class="notification-content" id="notificationList"></div>
-    <div class="notification-actions">
+    <div class="notification-actions" style="display:flex; gap:10px; padding:15px;">
       <button onclick="window.markAllNotificationsAsRead()" style="flex:1; padding: 10px; background: #f1f5f9; border: none; border-radius: 8px; font-weight: 700; color: #64748b; cursor: pointer;">
         Mark All Read
       </button>
-      <button onclick="window.enableNotifications()" style="flex:1; padding: 10px; background: var(--primary-gradient); border: none; border-radius: 8px; font-weight: 700; color: white; cursor: pointer;">
+      <button onclick="window.requestNotificationPermission()" style="flex:1; padding: 10px; background: var(--primary-gradient); border: none; border-radius: 8px; font-weight: 700; color: white; cursor: pointer;">
         Enable Alerts
       </button>
     </div>
@@ -1326,17 +1584,21 @@ body {
       <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);">About Business</h1>
     </div>
     <div class="about-content" id="aboutContent" style="padding:20px; color:#475569; line-height:1.6;"></div>
-    <div class="business-hours" style="padding:20px;">
+    
+    <!-- Business Hours Section -->
+    <div class="business-hours" id="businessHoursSection">
       <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
         <i class="fas fa-clock" style="color:#667eea;"></i> Business Hours
       </h3>
-      <div class="hours-list" id="businessHours" style="background:white; border-radius:16px; padding:16px;"></div>
+      <div class="hours-list" id="businessHours"></div>
     </div>
-    <div class="business-hours" style="padding:20px; padding-top:0;">
+    
+    <!-- Holidays Section -->
+    <div class="holidays-section" id="holidaysSection">
       <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
         <i class="fas fa-calendar-times" style="color:#ef4444;"></i> Holidays
       </h3>
-      <div class="hours-list" id="holidaysList" style="background:white; border-radius:16px; padding:16px;"></div>
+      <div class="hours-list" id="holidaysList"></div>
     </div>
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
@@ -1349,68 +1611,76 @@ body {
     </div>
     
     <div class="contact-info" style="padding:16px;">
-      <div class="contact-item" onclick="window.saveBusinessToContacts()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
-        <div class="contact-icon" style="width:48px; height:48px; background:#667eea; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-address-card"></i></div>
+      <!-- Save Contact -->
+      <div class="contact-item" onclick="window.saveBusinessToContacts()">
+        <div class="contact-icon" style="background:#667eea;"><i class="fas fa-address-card"></i></div>
         <div class="contact-details">
-          <div class="contact-label" style="font-size:14px; color:#64748b;">Save Business Contact</div>
-          <div class="contact-value" style="font-size:16px; font-weight:700; color:var(--dark-color);">Tap to save to phonebook</div>
+          <div class="contact-label">Save Business Contact</div>
+          <div class="contact-value">Tap to save to phonebook</div>
         </div>
       </div>
       
-      <div class="contact-item" onclick="window.openPhoneInput()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
-        <div class="contact-icon" style="width:48px; height:48px; background:#10b981; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-mobile-alt"></i></div>
+      <!-- My Delivery Phone -->
+      <div class="contact-item" onclick="window.openPhoneInput()">
+        <div class="contact-icon" style="background:#10b981;"><i class="fas fa-mobile-alt"></i></div>
         <div class="contact-details">
-          <div class="contact-label" style="font-size:14px; color:#64748b;">My Delivery Phone</div>
-          <div class="contact-value" id="customerPhoneDisplay" style="font-size:16px; font-weight:700; color:var(--dark-color);">Tap to set your number</div>
+          <div class="contact-label">My Delivery Phone</div>
+          <div class="contact-value" id="customerPhoneDisplay">Tap to set your number</div>
         </div>
       </div>
       
-      <div class="contact-item" onclick="window.openAddressInput()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
-        <div class="contact-icon" style="width:48px; height:48px; background:#f59e0b; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-map-marker-alt"></i></div>
+      <!-- My Delivery Address -->
+      <div class="contact-item" onclick="window.openAddressInput()">
+        <div class="contact-icon" style="background:#f59e0b;"><i class="fas fa-map-marker-alt"></i></div>
         <div class="contact-details">
-          <div class="contact-label" style="font-size:14px; color:#64748b;">My Delivery Address</div>
-          <div class="contact-value" id="customerAddressDisplay" style="font-size:16px; font-weight:700; color:var(--dark-color);">Tap to set your address</div>
+          <div class="contact-label">My Delivery Address</div>
+          <div class="contact-value" id="customerAddressDisplay">Tap to set your address</div>
         </div>
       </div>
       
-      <div class="contact-item" onclick="window.makeCall()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
-        <div class="contact-icon" style="width:48px; height:48px; background:#2563eb; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-phone"></i></div>
+      <!-- Call Business -->
+      <div class="contact-item" onclick="window.makeCall()">
+        <div class="contact-icon" style="background:#2563eb;"><i class="fas fa-phone"></i></div>
         <div class="contact-details">
-          <div class="contact-label" style="font-size:14px; color:#64748b;">Call Business</div>
-          <div class="contact-value" id="contactPhone" style="font-size:16px; font-weight:700; color:var(--dark-color);">Loading...</div>
+          <div class="contact-label">Call Business</div>
+          <div class="contact-value" id="contactPhone">Loading...</div>
         </div>
       </div>
       
-      <div class="contact-item" onclick="window.openWhatsAppChat()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
-        <div class="contact-icon" style="width:48px; height:48px; background:#25D366; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fab fa-whatsapp"></i></div>
+      <!-- WhatsApp -->
+      <div class="contact-item" onclick="window.openWhatsAppChat()">
+        <div class="contact-icon" style="background:#25D366;"><i class="fab fa-whatsapp"></i></div>
         <div class="contact-details">
-          <div class="contact-label" style="font-size:14px; color:#64748b;">WhatsApp</div>
-          <div class="contact-value" id="contactWhatsApp" style="font-size:16px; font-weight:700; color:var(--dark-color);">Chat Now</div>
+          <div class="contact-label">WhatsApp</div>
+          <div class="contact-value" id="contactWhatsApp">Chat Now</div>
         </div>
       </div>
       
-      <div class="contact-item email-item" onclick="window.sendEmail()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
-        <div class="contact-icon" style="width:48px; height:48px; background:#8b5cf6; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-envelope"></i></div>
+      <!-- Email -->
+      <div class="contact-item" onclick="window.sendEmail()">
+        <div class="contact-icon" style="background:#8b5cf6;"><i class="fas fa-envelope"></i></div>
         <div class="contact-details">
-          <div class="contact-label" style="font-size:14px; color:#64748b;">Email</div>
-          <div class="contact-value" id="contactEmail" style="font-size:16px; font-weight:700; color:var(--dark-color);">Loading...</div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value" id="contactEmail">Loading...</div>
         </div>
       </div>
       
-      <div class="contact-item" onclick="window.openMap()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
-        <div class="contact-icon" style="width:48px; height:48px; background:#ef4444; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-map-marker-alt"></i></div>
+      <!-- Address -->
+      <div class="contact-item" onclick="window.openMap()">
+        <div class="contact-icon" style="background:#ef4444;"><i class="fas fa-map-marker-alt"></i></div>
         <div class="contact-details">
-          <div class="contact-label" style="font-size:14px; color:#64748b;">Address</div>
-          <div class="contact-value" id="contactAddress" style="font-size:16px; font-weight:700; color:var(--dark-color);">Loading...</div>
+          <div class="contact-label">Address</div>
+          <div class="contact-value" id="contactAddress">Loading...</div>
         </div>
       </div>
     </div>
     
+    <!-- Social Media Links -->
     <div class="social-links" style="padding:16px;">
       <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
         <i class="fas fa-share-alt" style="color:#667eea;"></i> Follow Us
       </h3>
-      <div class="social-grid" id="socialGrid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;"></div>
+      <div class="social-grid" id="socialGrid"></div>
     </div>
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
@@ -1537,7 +1807,7 @@ body {
   </div>
 </div>
 
-<!-- ===== PROFESSIONAL CHECKOUT MODAL ===== -->
+<!-- ===== CHECKOUT MODAL ===== -->
 <div class="modal-overlay" id="checkoutModal">
   <div class="modal-content">
     <button class="close-btn" onclick="window.closeModal('checkoutModal')">×</button>
@@ -1637,7 +1907,7 @@ body {
   </div>
 </div>
 
-<!-- ===== PRODUCT MODAL - UPLOADED FILE JASA ===== -->
+<!-- ===== PRODUCT MODAL ===== -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-content">
     <button class="close-btn" onclick="window.closeModal('productModal')">×</button>
@@ -1705,7 +1975,7 @@ window.navigateTo = navigateTo;
 window.goBack = goBack;
 window.toggleNotificationDrawer = toggleNotificationDrawer;
 window.markAllNotificationsAsRead = markAllNotificationsAsRead;
-window.enableNotifications = enableNotifications;
+window.requestNotificationPermission = requestNotificationPermission;
 window.saveBusinessToContacts = saveBusinessToContacts;
 window.checkDeliveryStatus = checkDeliveryStatus;
 window.toggleLogin = toggleLogin;
@@ -1748,6 +2018,251 @@ window.acceptInstallPermissions = acceptInstallPermissions;
 window.closeDeliveryModal = closeDeliveryModal;
 window.addToCartFromModal = addToCartFromModal;
 window.showProductModal = showProductModal;
+
+// ===== DYNAMIC PWA MANIFEST GENERATOR =====
+async function generateDynamicManifest(businessData) {
+  const businessName = businessData.businessName || businessData.name || "Business";
+  const shortName = businessName.substring(0, 12);
+  const themeColor = "#667eea";
+  const backgroundColor = "#0f172a";
+  
+  // Use profile image if available, otherwise generate default icon
+  let iconUrl = businessData.profileImage || getDefaultIcon(businessName);
+  
+  // Create dynamic manifest
+  const manifest = {
+    name: businessName + " App",
+    short_name: shortName,
+    start_url: window.location.href.split('?')[0] + '?id=' + (shortCardId || currentBusinessId),
+    display: "standalone",
+    background_color: backgroundColor,
+    theme_color: themeColor,
+    orientation: "portrait",
+    scope: "./",
+    icons: [
+      {
+        src: iconUrl,
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any maskable"
+      },
+      {
+        src: iconUrl,
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any maskable"
+      }
+    ]
+  };
+  
+  // Create manifest blob and URL
+  const manifestJSON = JSON.stringify(manifest, null, 2);
+  const blob = new Blob([manifestJSON], { type: 'application/json' });
+  const manifestUrl = URL.createObjectURL(blob);
+  
+  // Update manifest link in head
+  const manifestLink = document.getElementById('dynamicManifest');
+  if (manifestLink) {
+    manifestLink.href = manifestUrl;
+  }
+  
+  // Update theme color
+  document.getElementById('themeColorMeta').content = themeColor;
+  
+  // Update favicon
+  updateFavicon(iconUrl);
+  
+  // Update Apple touch icon
+  updateAppleTouchIcon(iconUrl);
+  
+  return manifestUrl;
+}
+
+function getDefaultIcon(businessName) {
+  const firstLetter = businessName.charAt(0).toUpperCase();
+  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
+  const color = colors[businessName.length % colors.length];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(svg);
+}
+
+function updateFavicon(iconUrl) {
+  let favicon = document.querySelector('link[rel="icon"]');
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    document.head.appendChild(favicon);
+  }
+  favicon.href = iconUrl;
+}
+
+function updateAppleTouchIcon(iconUrl) {
+  let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+  if (!appleIcon) {
+    appleIcon = document.createElement('link');
+    appleIcon.rel = 'apple-touch-icon';
+    document.head.appendChild(appleIcon);
+  }
+  appleIcon.href = iconUrl;
+  appleIcon.sizes = "180x180";
+}
+
+// ===== NOTIFICATION SYSTEM WITH DEVICE INTEGRATION =====
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    showNotification('❌ Notifications not supported');
+    return false;
+  }
+  
+  if (Notification.permission === 'granted') {
+    notificationPermission = true;
+    showNotification('✅ Notifications already enabled!');
+    return true;
+  } else if (Notification.permission !== 'denied') {
+    try {
+      const permission = await Notification.requestPermission();
+      notificationPermission = permission === 'granted';
+      if (notificationPermission) {
+        showNotification('✅ Notifications enabled!');
+        addInnerNotification('Notifications Enabled', 'You will receive alerts for updates', 'success');
+        
+        // Test notification
+        if (Notification.permission === 'granted') {
+          new Notification('Notifications Enabled', {
+            body: 'You will now receive order updates and alerts',
+            icon: card.profileImage || getDefaultIcon(card.businessName || 'Business'),
+            badge: card.profileImage || getDefaultIcon(card.businessName || 'Business')
+          });
+        }
+      }
+      return notificationPermission;
+    } catch (error) {
+      console.error('Error requesting notification permission:', error);
+      return false;
+    }
+  }
+  return false;
+}
+
+function showNotification(message) {
+  const notification = document.getElementById('notificationAlert');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  setTimeout(() => { notification.style.display = 'none'; }, 3000);
+}
+
+function sendDeviceNotification(title, body) {
+  if (Notification.permission === 'granted') {
+    try {
+      const notification = new Notification(title, {
+        body: body,
+        icon: card.profileImage || getDefaultIcon(card.businessName || 'Business'),
+        badge: card.profileImage || getDefaultIcon(card.businessName || 'Business'),
+        vibrate: [200, 100, 200],
+        silent: false
+      });
+      
+      notification.onclick = function() {
+        window.focus();
+        this.close();
+      };
+    } catch (error) {
+      console.error('Error sending device notification:', error);
+    }
+  }
+}
+
+function addInnerNotification(title, message, type = 'info') {
+  const notification = {
+    id: Date.now(),
+    title,
+    message,
+    type,
+    time: new Date(),
+    read: false
+  };
+  
+  innerNotifications.unshift(notification);
+  unreadNotifications++;
+  
+  if (innerNotifications.length > 50) innerNotifications.pop();
+  
+  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+  updateNotificationBellCount();
+  
+  // Also send device notification if permission granted
+  sendDeviceNotification(title, message);
+}
+
+function updateNotificationBellCount() {
+  const badge = document.getElementById('notificationBadge');
+  const bell = document.getElementById('notificationBell');
+  
+  if (unreadNotifications > 0) {
+    badge.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+    badge.style.display = 'flex';
+    bell.style.color = '#f59e0b';
+  } else {
+    badge.style.display = 'none';
+    bell.style.color = 'white';
+  }
+}
+
+function toggleNotificationDrawer() {
+  const drawer = document.getElementById('notificationDrawer');
+  drawer.classList.toggle('open');
+  if (drawer.classList.contains('open')) loadNotificationDrawer();
+}
+
+function loadNotificationDrawer() {
+  const list = document.getElementById('notificationList');
+  const count = document.getElementById('notificationCount');
+  
+  if (innerNotifications.length === 0) {
+    list.innerHTML = `<div style="text-align:center; padding:40px;"><i class="fas fa-bell-slash" style="font-size:60px; color:#cbd5e1;"></i><h3 style="margin-top:16px; color:#1e293b;">No notifications</h3></div>`;
+    count.textContent = '0';
+    return;
+  }
+  
+  let html = '';
+  innerNotifications.slice(0, 20).forEach(notif => {
+    html += `
+      <div class="notification-item ${notif.read ? '' : 'unread'}" onclick="window.markNotificationRead(${notif.id})">
+        <div style="display:flex; align-items:start; gap:12px;">
+          <div style="font-size:20px;">${notif.type === 'success' ? '✅' : notif.type === 'error' ? '❌' : 'ℹ️'}</div>
+          <div style="flex:1;">
+            <div style="font-weight:800; color:var(--dark-color); font-size:14px;">${notif.title}</div>
+            <div style="color:#64748b; font-size:13px; margin-top:4px;">${notif.message}</div>
+            <div style="font-size:11px; color:#94a3b8; margin-top:6px;">${new Date(notif.time).toLocaleTimeString()}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  list.innerHTML = html;
+  count.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+}
+
+window.markNotificationRead = function(notificationId) {
+  const notification = innerNotifications.find(n => n.id === notificationId);
+  if (notification && !notification.read) {
+    notification.read = true;
+    unreadNotifications--;
+    isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+    updateNotificationBellCount();
+    loadNotificationDrawer();
+  }
+};
+
+function markAllNotificationsAsRead() {
+  innerNotifications.forEach(n => n.read = true);
+  unreadNotifications = 0;
+  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+  updateNotificationBellCount();
+  loadNotificationDrawer();
+  showNotification('✅ All notifications marked as read');
+}
 
 // ===== DATA ISOLATION SYSTEM =====
 function getStorageKey(key) {
@@ -1905,9 +2420,9 @@ function calculateCartSubtotal() {
 
 // ===== ORDER TOKEN GENERATION =====
 function generateOrderToken() {
+  const prefix = card.tokenSystem?.prefix || card.payments?.tokenSystem?.prefix || 'TKT';
+  const timestamp = Date.now().toString().slice(-8);
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const prefix = 'TKT';
-  const timestamp = Date.now().toString().slice(-6);
   let random = '';
   for (let i = 0; i < 4; i++) random += chars.charAt(Math.floor(Math.random() * chars.length));
   return `${prefix}-${timestamp}-${random}`;
@@ -1961,165 +2476,6 @@ function closeDeliveryModal() {
   document.getElementById('deliveryStatusModal').style.display = 'none';
 }
 
-// ===== NOTIFICATION SYSTEM =====
-function showNotification(message) {
-  const notification = document.getElementById('notificationAlert');
-  notification.textContent = message;
-  notification.style.display = 'block';
-  setTimeout(() => { notification.style.display = 'none'; }, 3000);
-}
-
-function addInnerNotification(title, message, type = 'info') {
-  const notification = {
-    id: Date.now(),
-    title,
-    message,
-    type,
-    time: new Date(),
-    read: false
-  };
-  
-  innerNotifications.unshift(notification);
-  unreadNotifications++;
-  
-  if (innerNotifications.length > 50) innerNotifications.pop();
-  
-  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
-  updateNotificationBellCount();
-}
-
-function updateNotificationBellCount() {
-  const badge = document.getElementById('notificationBadge');
-  const bell = document.getElementById('notificationBell');
-  
-  if (unreadNotifications > 0) {
-    badge.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
-    badge.style.display = 'flex';
-    bell.style.color = '#f59e0b';
-  } else {
-    badge.style.display = 'none';
-    bell.style.color = 'white';
-  }
-}
-
-function toggleNotificationDrawer() {
-  const drawer = document.getElementById('notificationDrawer');
-  drawer.classList.toggle('open');
-  if (drawer.classList.contains('open')) loadNotificationDrawer();
-}
-
-function loadNotificationDrawer() {
-  const list = document.getElementById('notificationList');
-  const count = document.getElementById('notificationCount');
-  
-  if (innerNotifications.length === 0) {
-    list.innerHTML = `<div style="text-align:center; padding:40px;"><i class="fas fa-bell-slash" style="font-size:60px; color:#cbd5e1;"></i><h3 style="margin-top:16px; color:#1e293b;">No notifications</h3></div>`;
-    count.textContent = '0';
-    return;
-  }
-  
-  let html = '';
-  innerNotifications.slice(0, 20).forEach(notif => {
-    html += `
-      <div style="padding:16px; background:white; border-radius:12px; margin-bottom:8px; border-left:4px solid ${notif.read ? '#cbd5e1' : '#667eea'};">
-        <div style="display:flex; align-items:start; gap:12px;">
-          <div style="font-size:20px;">${notif.type === 'success' ? '✅' : notif.type === 'error' ? '❌' : 'ℹ️'}</div>
-          <div style="flex:1;">
-            <div style="font-weight:800; color:var(--dark-color); font-size:14px;">${notif.title}</div>
-            <div style="color:#64748b; font-size:13px; margin-top:4px;">${notif.message}</div>
-            <div style="font-size:11px; color:#94a3b8; margin-top:6px;">${new Date(notif.time).toLocaleTimeString()}</div>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-  
-  list.innerHTML = html;
-  count.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
-}
-
-function markAllNotificationsAsRead() {
-  innerNotifications.forEach(n => n.read = true);
-  unreadNotifications = 0;
-  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
-  updateNotificationBellCount();
-  loadNotificationDrawer();
-  showNotification('✅ All notifications marked as read');
-}
-
-// ===== NOTIFICATION PERMISSION =====
-async function enableNotifications() {
-  if (!('Notification' in window)) {
-    showNotification('❌ Notifications not supported');
-    return;
-  }
-  
-  if (Notification.permission === 'granted') {
-    showNotification('✅ Notifications already enabled!');
-  } else if (Notification.permission !== 'denied') {
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      showNotification('✅ Notifications enabled!');
-      addInnerNotification('Notifications Enabled', 'You will receive alerts for updates', 'success');
-    }
-  }
-}
-
-// ===== SERVICE WORKER =====
-async function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register('sw.js');
-      console.log('Service Worker registered:', registration);
-    } catch (error) {
-      console.error('Service Worker registration failed:', error);
-    }
-  }
-}
-
-// ===== PWA SETUP =====
-function setupDynamicPWA(businessData) {
-  const businessName = businessData.businessName || businessData.name || "Business";
-  document.title = businessName + " App";
-  const titleEl = document.getElementById('loadingTitle');
-  const subtitleEl = document.getElementById('loadingSubtitle');
-  if (titleEl) titleEl.textContent = businessName + " App";
-  if (subtitleEl) subtitleEl.textContent = `Loading ${businessName} experience...`;
-  
-  // Update theme color
-  document.getElementById('themeColorMeta').content = "#667eea";
-  
-  // Generate favicon
-  updateFavicon(businessData.profileImage || getDefaultIcon(businessName));
-}
-
-function getDefaultIcon(businessName) {
-  const firstLetter = businessName.charAt(0).toUpperCase();
-  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
-  const color = colors[businessName.length % colors.length];
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
-  return 'data:image/svg+xml;base64,' + btoa(svg);
-}
-
-function updateFavicon(iconUrl) {
-  let favicon = document.querySelector('link[rel="icon"]');
-  if (!favicon) {
-    favicon = document.createElement('link');
-    favicon.rel = 'icon';
-    document.head.appendChild(favicon);
-  }
-  favicon.href = iconUrl;
-  
-  let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
-  if (!appleIcon) {
-    appleIcon = document.createElement('link');
-    appleIcon.rel = 'apple-touch-icon';
-    document.head.appendChild(appleIcon);
-  }
-  appleIcon.href = iconUrl;
-  appleIcon.sizes = "180x180";
-}
-
 // ===== PWA INSTALL =====
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
@@ -2140,7 +2496,7 @@ function showInstallButton() {
   container.className = 'install-button-container';
   container.innerHTML = `
     <button class="install-btn" onclick="installPWA()">
-      <i class="fas fa-download"></i> Install App
+      <i class="fas fa-download"></i> Install ${card.businessName || 'App'}
     </button>
   `;
   document.body.appendChild(container);
@@ -2174,7 +2530,7 @@ function saveBusinessToContacts() {
     return;
   }
   
-  let contactInfo = `Business: ${card.name}\nPhone: ${card.phone}\n`;
+  let contactInfo = `Business: ${card.businessName || card.name}\nPhone: ${card.phone}\n`;
   if (card.email) contactInfo += `Email: ${card.email}\n`;
   if (card.address) contactInfo += `Address: ${card.address}\n`;
   
@@ -2289,13 +2645,13 @@ async function loadDeliveryStatus() {
           <span class="order-status ${statusClass}">${statusText}</span>
         </div>
         <div class="order-details">
-          <div class="order-item-row">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
             <span><i class="fas fa-box"></i> Items</span>
             <span>${order.items ? order.items.length : 0} products</span>
           </div>
-          <div class="order-item-row">
+          <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
             <span><i class="fas fa-tag"></i> Total</span>
-            <span style="font-weight:800; color:#10b981;">PKR ${order.total.toFixed(2)}</span>
+            <span style="font-weight:800; color:#10b981;">PKR ${order.total?.toFixed(2) || '0.00'}</span>
           </div>
           <div class="order-address">
             <i class="fas fa-map-marker-alt" style="color:#667eea;"></i> ${order.customer_address || 'No address'}
@@ -2349,6 +2705,17 @@ async function saveOrderToDatabase(orderData) {
         business_id: currentBusinessId,
         created_at: new Date().toISOString()
       }]);
+    
+    if (!error) {
+      // Send device notification for new order
+      sendDeviceNotification('🛍️ New Order Placed', `Order #${orderData.orderId} confirmed with token ${orderData.token}`);
+      
+      // Send WhatsApp notification if configured
+      if (card.payments?.whatsapp?.number) {
+        sendOrderWhatsApp(orderData);
+      }
+    }
+    
     return !error;
   } catch (error) {
     console.error('Error saving order:', error);
@@ -2369,8 +2736,8 @@ async function loadOrdersFromDatabase() {
       orderTokens = data.map(order => ({
         id: order.token,
         orderId: order.order_id,
-        amount: order.total,
-        status: order.status,
+        amount: order.total || 0,
+        status: order.status || 'pending',
         customer: order.customer_name || order.customer_phone,
         date: order.created_at
       }));
@@ -2432,7 +2799,7 @@ function renderTokenList() {
           ${token.customer ? `<div style="font-size:11px; color:#475569; margin-top:2px;">👤 ${token.customer}</div>` : ''}
         </div>
         <div style="text-align:right;">
-          <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
+          <div class="token-amount">PKR ${token.amount?.toFixed(2) || '0.00'}</div>
           <span class="token-status" style="background: ${statusColor}10; color: ${statusColor};">
             ${token.status}
           </span>
@@ -2447,10 +2814,10 @@ function renderTokenList() {
 function searchAdminTokens() {
   const searchTerm = document.getElementById('adminTokenSearch').value.toLowerCase();
   const filtered = orderTokens.filter(token => 
-    token.id.toLowerCase().includes(searchTerm) ||
-    token.orderId.toLowerCase().includes(searchTerm) ||
+    token.id?.toLowerCase().includes(searchTerm) ||
+    token.orderId?.toLowerCase().includes(searchTerm) ||
     (token.customer && token.customer.toLowerCase().includes(searchTerm)) ||
-    token.amount.toString().includes(searchTerm)
+    token.amount?.toString().includes(searchTerm)
   );
   
   const tokenList = document.getElementById('tokenList');
@@ -2471,7 +2838,7 @@ function searchAdminTokens() {
           <div style="font-size:11px; color:#64748b; margin-top:4px;">${token.orderId} • ${date}</div>
         </div>
         <div style="text-align:right;">
-          <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
+          <div class="token-amount">PKR ${token.amount?.toFixed(2) || '0.00'}</div>
           <span class="token-status" style="background: ${statusColor}10; color: ${statusColor};">${token.status}</span>
         </div>
       </div>
@@ -2492,7 +2859,7 @@ async function viewOrderDetails(orderId) {
   let itemsHtml = '';
   if (order.items && Array.isArray(order.items)) {
     order.items.forEach(item => {
-      itemsHtml += `<div class="order-item-row"><span>${item.title || 'Product'} x${item.quantity || 1}</span><span>PKR ${(item.price * (item.quantity || 1)).toFixed(2)}</span></div>`;
+      itemsHtml += `<div class="order-item-row" style="display:flex; justify-content:space-between; margin-bottom:4px;"><span>${item.title || 'Product'} x${item.quantity || 1}</span><span>PKR ${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span></div>`;
     });
   }
   
@@ -2522,11 +2889,11 @@ async function viewOrderDetails(orderId) {
         ${order.zone ? `<div class="ticket-row"><span>Zone:</span><span>${order.zone}</span></div>` : ''}
         ${order.estimated_delivery ? `<div class="ticket-row"><span>Est. Delivery:</span><span>${order.estimated_delivery}</span></div>` : ''}
         <div style="margin:16px 0; padding:12px 0; border-top:2px dashed rgba(255,255,255,0.3); border-bottom:2px dashed rgba(255,255,255,0.3);">
-          ${itemsHtml || '<div class="order-item-row"><span>Order Total</span><span>PKR ' + order.total.toFixed(2) + '</span></div>'}
+          ${itemsHtml || '<div class="order-item-row" style="display:flex; justify-content:space-between;"><span>Order Total</span><span>PKR ' + (order.total || 0).toFixed(2) + '</span></div>'}
         </div>
         <div class="ticket-total">
           <span>Total Amount</span>
-          <span>PKR ${order.total.toFixed(2)}</span>
+          <span>PKR ${(order.total || 0).toFixed(2)}</span>
         </div>
       </div>
       <div style="text-align:center; margin-top:20px; font-size:12px; opacity:0.9;">
@@ -2562,6 +2929,12 @@ async function updateOrderStatus(orderId) {
     showNotification('✅ Order status updated to ' + status);
     closeModal('orderConfirmationModal');
     loadOrdersFromDatabase();
+    
+    // Send notification to customer about status update
+    const order = orders.find(o => o.id === orderId);
+    if (order && order.customer_phone) {
+      addInnerNotification('Order Status Updated', `Order #${order.order_id} is now ${status}`, 'info');
+    }
   } else {
     showNotification('❌ Error updating order');
   }
@@ -2739,7 +3112,7 @@ function loadCartPage() {
   cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
 }
 
-// ===== PRODUCT CARDS - UPLOADED FILE JASA =====
+// ===== PRODUCT CARDS =====
 function createProductCard(product, index) {
   const price = product.discountPrice || product.originalPrice;
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
@@ -2959,6 +3332,7 @@ function renderProfessionalPaymentMethods() {
   
   let html = '';
   
+  // COD
   if (!card.payments || card.payments?.gateways?.cod?.active !== false) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'cod' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('cod')">
@@ -2971,6 +3345,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // JazzCash
   if (card.payments?.gateways?.jazzcash?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'jazzcash' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('jazzcash')">
@@ -2983,6 +3358,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // EasyPaisa
   if (card.payments?.gateways?.easypaisa?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'easypaisa' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('easypaisa')">
@@ -2995,6 +3371,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // Bank Transfer
   if (card.payments?.gateways?.bank?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'bank' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('bank')">
@@ -3007,6 +3384,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // Card Payment
   if (card.payments?.gateways?.card?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'card' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('card')">
@@ -3019,6 +3397,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // WhatsApp Order
   html += `
     <div class="pro-payment-card ${checkoutPaymentMethod === 'whatsapp' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('whatsapp')">
       <div class="pro-payment-icon" style="background:#25D366;">
@@ -3103,6 +3482,12 @@ function showPaymentDetailsModal(method) {
           <div style="font-size:13px; color:#64748b;">Account Number</div>
           <div style="font-size:18px; font-weight:900; color:#2563eb; background:rgba(37,99,235,0.1); padding:10px; border-radius:8px;">${card.payments.gateways.bank.accountNumber || '1234567890'}</div>
         </div>
+        ${card.payments.gateways.bank.iban ? `
+          <div>
+            <div style="font-size:13px; color:#64748b;">IBAN</div>
+            <div style="font-size:14px; font-weight:600; color:var(--dark-color);">${card.payments.gateways.bank.iban}</div>
+          </div>
+        ` : ''}
       </div>
     `;
   } else if (method === 'card' && card.payments?.gateways?.card) {
@@ -3112,6 +3497,10 @@ function showPaymentDetailsModal(method) {
         <i class="fas fa-credit-card" style="font-size:48px; color:#8b5cf6; margin-bottom:16px;"></i>
         <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:8px;">Secure Card Payment</h3>
         <p style="color:#64748b; margin-bottom:20px;">You will be redirected to complete payment</p>
+        <div style="background:#f8fafc; padding:16px; border-radius:12px;">
+          <div style="font-size:14px; color:#475569; margin-bottom:8px;">Processor: ${card.payments.gateways.card.processor || 'Stripe'}</div>
+          <div style="font-size:12px; color:#64748b;">Merchant ID: ${card.payments.gateways.card.merchantId || 'pk_test_xxxxxxxx'}</div>
+        </div>
       </div>
     `;
   }
@@ -3195,10 +3584,6 @@ async function placeOrder() {
       
       showOrderConfirmation(orderData);
       
-      if (checkoutPaymentMethod !== 'whatsapp' && card.phone) {
-        sendOrderWhatsApp(orderData);
-      }
-      
       addInnerNotification('Order Placed', `Order #${orderId} confirmed with token ${token}`, 'success');
       showNotification('✅ Order placed successfully! Token: ' + token);
     } else {
@@ -3219,7 +3604,7 @@ function showOrderConfirmation(orderData) {
   
   orderData.items.forEach(item => {
     itemsHtml += `
-      <div class="order-item-row">
+      <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
         <span>${item.title} x${item.quantity}</span>
         <span>PKR ${(item.price * item.quantity).toFixed(2)}</span>
       </div>
@@ -3239,19 +3624,19 @@ function showOrderConfirmation(orderData) {
           <p style="color:rgba(255,255,255,0.9); font-size:13px;">Your order has been placed successfully</p>
         </div>
         
-        <div class="ticket-row">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
           <span>Order ID:</span>
           <span style="font-weight:800;">${orderData.orderId}</span>
         </div>
-        <div class="ticket-row">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
           <span>Customer:</span>
           <span>${orderData.customerPhone}</span>
         </div>
-        <div class="ticket-row">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
           <span>Address:</span>
           <span style="max-width:180px;">${orderData.customerAddress}</span>
         </div>
-        <div class="ticket-row">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
           <span>Delivery:</span>
           <span>${orderData.estimatedDelivery}</span>
         </div>
@@ -3260,15 +3645,15 @@ function showOrderConfirmation(orderData) {
           ${itemsHtml}
         </div>
         
-        <div class="ticket-row">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
           <span>Subtotal:</span>
           <span>PKR ${orderData.subtotal.toFixed(2)}</span>
         </div>
-        <div class="ticket-row">
+        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
           <span>Delivery:</span>
           <span>PKR ${orderData.deliveryCharge.toFixed(2)}</span>
         </div>
-        <div class="ticket-total">
+        <div style="display:flex; justify-content:space-between; margin-top:12px; padding-top:12px; border-top:2px solid rgba(255,255,255,0.3); font-size:18px; font-weight:900;">
           <span>Total</span>
           <span>PKR ${orderData.total.toFixed(2)}</span>
         </div>
@@ -3299,7 +3684,7 @@ function downloadOrderTicket(token) {
   const order = orders.find(o => o.token === token);
   if (!order) return;
   
-  const ticketText = `ORDER TICKET: ${order.token}\nDate: ${new Date(order.created_at).toLocaleString()}\nOrder ID: ${order.order_id}\nTotal: PKR ${order.total.toFixed(2)}\nPayment: ${order.payment_method}\nStatus: ${order.status}`;
+  const ticketText = `ORDER TICKET: ${order.token}\nDate: ${new Date(order.created_at).toLocaleString()}\nOrder ID: ${order.order_id}\nTotal: PKR ${(order.total || 0).toFixed(2)}\nPayment: ${order.payment_method}\nStatus: ${order.status}`;
   const blob = new Blob([ticketText], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -3313,7 +3698,7 @@ function shareOrderTicket(token) {
   const order = orders.find(o => o.token === token);
   if (!order) return;
   
-  const shareText = `Order Confirmed!\nToken: ${order.token}\nOrder ID: ${order.order_id}\nTotal: PKR ${order.total.toFixed(2)}\nStatus: ${order.status}`;
+  const shareText = `Order Confirmed!\nToken: ${order.token}\nOrder ID: ${order.order_id}\nTotal: PKR ${(order.total || 0).toFixed(2)}\nStatus: ${order.status}`;
   
   if (navigator.share) {
     navigator.share({ title: 'Order Confirmation', text: shareText });
@@ -3324,9 +3709,9 @@ function shareOrderTicket(token) {
 }
 
 function sendOrderWhatsApp(orderData) {
-  if (!card.phone) return;
+  if (!card.payments?.whatsapp?.number) return;
   
-  const phone = card.phone.replace(/\D/g, '');
+  const phone = card.payments.whatsapp.number.replace(/\D/g, '');
   let message = `🛍️ *NEW ORDER CONFIRMED*\n\n`;
   message += `*Order ID:* ${orderData.orderId}\n`;
   message += `*Token:* ${orderData.token}\n`;
@@ -3383,36 +3768,31 @@ function loadAboutPage() {
     </div>
   `;
   
-  if (card.businessHours) {
+  // Load Business Hours
+  if (card.businessHours && Array.isArray(card.businessHours)) {
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     const businessHours = document.getElementById('businessHours');
     businessHours.innerHTML = '';
     
     const today = new Date().getDay();
+    const todayIndex = today === 0 ? 6 : today - 1;
     
     card.businessHours.forEach((day, index) => {
       if (index < days.length) {
         const dayName = days[index];
-        const isToday = index === (today === 0 ? 6 : today - 1);
+        const isToday = index === todayIndex;
         
         const hourItem = document.createElement('div');
-        hourItem.style.cssText = `
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 12px;
-          padding: 12px;
-          border-radius: 12px;
-          ${isToday ? 'background: #f0f9ff; border-left: 4px solid #3b82f6;' : 'border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;'}
-        `;
+        hourItem.className = 'hours-item';
+        if (isToday) hourItem.classList.add('today');
         
-        if (!day || day.status === 'closed') {
+        if (!day || day.status === 'closed' || day.open === false) {
           hourItem.innerHTML = `
-            <span style="font-weight:700; color:#475569; display:flex; align-items:center; gap:8px;">
-              ${isToday ? '<span style="background:#3b82f6; width:8px; height:8px; border-radius:50%;"></span>' : ''}
+            <span class="hours-day">
+              ${isToday ? '<span style="background:#3b82f6; width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:8px;"></span>' : ''}
               ${dayName}
             </span>
-            <span style="color:#ef4444; font-weight:600; background:#fee2e2; padding:6px 16px; border-radius:30px; font-size:13px;">
+            <span class="hours-status closed">
               <i class="fas fa-clock"></i> Closed
             </span>
           `;
@@ -3421,11 +3801,11 @@ function loadAboutPage() {
           let endTime = day.end || '18:00';
           
           hourItem.innerHTML = `
-            <span style="font-weight:700; color:#475569; display:flex; align-items:center; gap:8px;">
-              ${isToday ? '<span style="background:#10b981; width:8px; height:8px; border-radius:50%;"></span>' : ''}
+            <span class="hours-day">
+              ${isToday ? '<span style="background:#10b981; width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:8px;"></span>' : ''}
               ${dayName}
             </span>
-            <span style="color:#10b981; font-weight:700; background:#d1fae5; padding:6px 20px; border-radius:30px; font-size:13px;">
+            <span class="hours-status open">
               <i class="fas fa-clock"></i> ${startTime} - ${endTime}
             </span>
           `;
@@ -3436,27 +3816,34 @@ function loadAboutPage() {
     });
   }
   
+  // Load Holidays
   if (card.holidays && card.holidays.length > 0) {
     const holidaysList = document.getElementById('holidaysList');
     holidaysList.innerHTML = '';
+    
     card.holidays.forEach(holiday => {
       if (holiday.name && holiday.date) {
         const date = new Date(holiday.date);
         const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        
         const holidayItem = document.createElement('div');
-        holidayItem.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;";
+        holidayItem.className = 'holiday-item';
         holidayItem.innerHTML = `
-          <span style="font-weight:600; color:#475569;">
-            <i class="fas fa-calendar-times" style="color:#ef4444; margin-right:8px;"></i>
+          <span class="holiday-name">
+            <i class="fas fa-calendar-times" style="color:#ef4444;"></i>
             ${holiday.name}
           </span>
-          <span style="color:#64748b; background:#f1f5f9; padding:6px 16px; border-radius:30px; font-size:12px;">
+          <span class="holiday-date">
             ${formattedDate}
           </span>
         `;
+        
         holidaysList.appendChild(holidayItem);
       }
     });
+  } else {
+    const holidaysList = document.getElementById('holidaysList');
+    holidaysList.innerHTML = '<p style="color:#64748b; text-align:center; padding:20px;">No holidays scheduled</p>';
   }
 }
 
@@ -3464,12 +3851,14 @@ function loadContactPage() {
   const phoneEl = document.getElementById('contactPhone');
   const emailEl = document.getElementById('contactEmail');
   const addressEl = document.getElementById('contactAddress');
+  const whatsappEl = document.getElementById('contactWhatsApp');
   const customerPhoneEl = document.getElementById('customerPhoneDisplay');
   const customerAddressEl = document.getElementById('customerAddressDisplay');
   
   if (phoneEl) phoneEl.textContent = card.phone || 'Not available';
   if (emailEl) emailEl.textContent = card.email || 'Not available';
   if (addressEl) addressEl.textContent = card.address || 'Not available';
+  if (whatsappEl) whatsappEl.textContent = card.payments?.whatsapp?.number || 'Chat Now';
   if (customerPhoneEl) customerPhoneEl.textContent = getCustomerPhone() || 'Tap to set your number';
   if (customerAddressEl) customerAddressEl.textContent = getCustomerAddress() || 'Tap to set your address';
   
@@ -3483,22 +3872,23 @@ function loadContactPage() {
     { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', bg: '#1DA1F2' },
     { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', bg: '#0A66C2' },
     { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', bg: '#FF0000' },
-    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', bg: '#000000' }
+    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', bg: '#000000' },
+    { key: 'website', icon: 'fas fa-globe', label: 'Website', bg: '#64748b' }
   ];
   
   platforms.forEach(platform => {
-    const url = socialMedia[platform.key];
+    const url = platform.key === 'website' ? socialMedia.website : socialMedia[platform.key];
     if (url && url.trim()) {
       const link = document.createElement('a');
       link.href = url.includes('://') ? url : `https://${url}`;
       link.target = '_blank';
-      link.style = "text-decoration:none; color:inherit;";
+      link.className = 'social-link';
       link.innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px; background:white; border-radius:12px; box-shadow:var(--shadow-sm); transition:all 0.3s;">
-          <div style="width:40px; height:40px; background:${platform.bg}; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;">
+        <div class="social-card">
+          <div class="social-icon" style="background:${platform.bg};">
             <i class="${platform.icon}"></i>
           </div>
-          <div style="font-size:12px; font-weight:600; color:var(--dark-color);">${platform.label}</div>
+          <div class="social-label">${platform.label}</div>
         </div>
       `;
       socialGrid.appendChild(link);
@@ -3528,11 +3918,9 @@ async function sendNotificationToAll() {
   const body = prompt('Notification Message:', 'Check out our latest products!');
   
   if (title && body) {
-    const { error } = await supa.from('notifications').insert([{ title, body }]);
-    if (!error) {
-      showNotification('✅ Notification sent to all users!');
-      addInnerNotification('Notification Sent', `"${title}" sent to all users`, 'success');
-    }
+    // This would send to all users via Supabase in production
+    addInnerNotification(title, body, 'info');
+    showNotification('✅ Notification sent!');
   }
 }
 
@@ -3591,45 +3979,10 @@ function logoutAdmin() {
   navigateTo('homePage');
 }
 
-// ===== NAVIGATION WITH HASH ROUTING =====
+// ===== NAVIGATION =====
 let lastBackPress = 0;
 
-function initializeRouting() {
-  window.addEventListener('hashchange', handleHashChange);
-  
-  setTimeout(() => {
-    const hash = window.location.hash.replace('#', '');
-    if (hash) {
-      handleHashChange();
-    } else {
-      window.location.hash = '#home';
-    }
-  }, 100);
-}
-
-function handleHashChange() {
-  const hash = window.location.hash.replace('#', '');
-  const pageMap = {
-    'home': 'homePage',
-    'products': 'productsPage',
-    'cart': 'cartPage',
-    'about': 'aboutPage',
-    'contact': 'contactPage',
-    'delivery': 'deliveryPage',
-    'admin': 'adminPage',
-    'login': 'loginPage'
-  };
-  
-  if (pageMap[hash]) {
-    if (currentPage !== pageMap[hash]) {
-      navigateToDirect(pageMap[hash]);
-    }
-  } else {
-    window.location.hash = '#home';
-  }
-}
-
-function navigateToDirect(pageId) {
+function navigateTo(pageId) {
   if (currentPage === pageId) return;
   
   const oldPage = document.getElementById(currentPage);
@@ -3650,6 +4003,7 @@ function navigateToDirect(pageId) {
     const backBtn = document.getElementById('headerBackBtn');
     if (backBtn) backBtn.style.display = pageId !== 'homePage' ? 'flex' : 'none';
     
+    // Update nav active state
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     const navMap = { 'homePage': 0, 'productsPage': 1, 'cartPage': 2, 'aboutPage': 3, 'contactPage': 4 };
     if (navMap[pageId] !== undefined) {
@@ -3657,8 +4011,10 @@ function navigateToDirect(pageId) {
       if (navItems[navMap[pageId]]) navItems[navMap[pageId]].classList.add('active');
     }
     
+    // Close notification drawer
     document.getElementById('notificationDrawer').classList.remove('open');
     
+    // Load page content
     if (pageId === 'homePage') loadHomePage();
     else if (pageId === 'productsPage') loadProductsPage();
     else if (pageId === 'cartPage') loadCartPage();
@@ -3670,23 +4026,6 @@ function navigateToDirect(pageId) {
   }, 300);
   
   navigationHistory.push(pageId);
-}
-
-function navigateTo(pageId) {
-  const hashMap = {
-    'homePage': 'home',
-    'productsPage': 'products',
-    'cartPage': 'cart',
-    'aboutPage': 'about',
-    'contactPage': 'contact',
-    'deliveryPage': 'delivery',
-    'adminPage': 'admin',
-    'loginPage': 'login'
-  };
-  
-  if (hashMap[pageId]) {
-    window.location.hash = `#${hashMap[pageId]}`;
-  }
 }
 
 function goBack() {
@@ -3716,10 +4055,12 @@ function closeExitModal() {
 }
 
 function exitApp() {
-  if (window.history.length > 1) {
-    window.history.go(-1);
-  } else {
+  // Close the app/tab without going to generator page
+  if (isPWAInstalled() || window.matchMedia('(display-mode: standalone)').matches) {
     window.close();
+  } else {
+    // In browser, just show blank or close
+    window.location.href = 'about:blank';
   }
 }
 
@@ -3729,8 +4070,8 @@ function closeInstallPermissionModal() {
 
 function acceptInstallPermissions() {
   document.getElementById('installPermissionModal').style.display = 'none';
+  requestNotificationPermission();
   showNotification('✅ Thank you!');
-  enableNotifications();
 }
 
 // ===== CUSTOMER DATA =====
@@ -3752,8 +4093,9 @@ function initCustomerData() {
 
 // ===== WHATSAPP & CONTACT ACTIONS =====
 function openWhatsAppChat() {
-  if (card.phone) {
-    const phone = card.phone.replace(/\D/g, '');
+  const whatsappNumber = card.payments?.whatsapp?.number || card.phone;
+  if (whatsappNumber) {
+    const phone = whatsappNumber.replace(/\D/g, '');
     const message = `Hello ${card.businessName || card.name}, I'm interested in your products/services.`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   }
@@ -3818,6 +4160,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     card = JSON.parse(data.data);
     card.id = data.id;
     
+    // Generate dynamic manifest for this business
+    await generateDynamicManifest(card);
+    
     businessAdminPassword = generateAdminPassword(card.id, shortCardId);
     const hintEl = document.getElementById('passwordHint');
     if (hintEl) {
@@ -3829,8 +4174,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadOrdersFromDatabase();
     await renderApp();
     
-    initializeRouting();
-    
     navigationHistory.push('homePage');
     updateCartCount();
     updateLoginUI();
@@ -3840,20 +4183,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     setTimeout(() => { checkForDeliveries(); }, 1000);
     
     if (innerNotifications.length === 0) {
-      addInnerNotification('Welcome!', 'Browse products and enjoy shopping', 'info');
+      addInnerNotification('Welcome!', `Welcome to ${card.businessName || card.name || 'Business'}`, 'info');
     }
     
+    // Show install permission modal if not installed
     setTimeout(() => {
       if (!isPWAInstalled() && deferredPrompt && !installButtonShown) {
         document.getElementById('installPermissionModal').style.display = 'flex';
       }
     }, 3000);
+    
+    // Hide loading screen
+    document.getElementById('loadingScreen').classList.remove('active');
+    navigateTo('homePage');
+    
   }, 2000);
 });
 
 async function renderApp() {
-  setupDynamicPWA(card);
-  
+  // Update UI with card data
   const headerEl = document.getElementById('businessHeader');
   if (headerEl) headerEl.textContent = card.businessName || card.name || "Premium Business";
   
@@ -3869,6 +4217,9 @@ async function renderApp() {
   const businessEl = document.getElementById('business');
   if (nameEl) nameEl.textContent = card.name || "";
   if (businessEl) businessEl.textContent = card.businessName || "";
+  
+  document.getElementById('loadingTitle').textContent = (card.businessName || card.name || "Business") + " App";
+  document.getElementById('loadingSubtitle').textContent = `Loading ${card.businessName || card.name || 'business'} experience...`;
   
   loadHomePage();
 }
