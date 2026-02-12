@@ -1391,20 +1391,20 @@ body {
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
 // ===== SUPABASE CLIENT =====
-const supa = supabase.createClient(
+const supabase = supabase.createClient(
   "https://dfvnefbxgayxqgjjgtrr.supabase.co",
   "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
 
 // ===== MAIN APP VARIABLES =====
-let card = {};
-let currentProduct = null;
+let business = null;
+let products = [];
 let cart = [];
 let checkoutPaymentMethod = 'cod';
 let currentPage = 'loadingScreen';
 let deliveryStatusData = [];
 let businessAdminPassword = "";
-let shortCardId = "";
+let shortBusinessId = "";
 let isAdminLoggedIn = false;
 let currentBusinessId = '';
 let orders = [];
@@ -1561,9 +1561,9 @@ function calculateDeliveryCharge(address) {
   const addressLower = address.toLowerCase();
   let charge = 0, time = '', zone = 'Standard';
   
-  if (card.deliverySettings && card.deliverySettings.zones && card.deliverySettings.zones.length > 0) {
+  if (business?.delivery_settings?.zones && business.delivery_settings.zones.length > 0) {
     let zoneFound = false;
-    for (const zoneConfig of card.deliverySettings.zones) {
+    for (const zoneConfig of business.delivery_settings.zones) {
       if (addressLower.includes(zoneConfig.city.toLowerCase())) {
         charge = zoneConfig.charge || 0;
         time = zoneConfig.time || '2-3 business days';
@@ -1573,8 +1573,8 @@ function calculateDeliveryCharge(address) {
       }
     }
     if (!zoneFound) {
-      charge = card.deliverySettings?.default?.otherCities?.charge || 300;
-      time = card.deliverySettings?.default?.otherCities?.time || '3-5 business days';
+      charge = business.delivery_settings?.default?.otherCities?.charge || 300;
+      time = business.delivery_settings?.default?.otherCities?.time || '3-5 business days';
       zone = 'Other City';
     }
   } else {
@@ -1590,7 +1590,7 @@ function calculateDeliveryCharge(address) {
   }
   
   const subtotal = calculateCartSubtotal();
-  if (card.deliverySettings?.freeDeliveryMin && subtotal >= card.deliverySettings.freeDeliveryMin) {
+  if (business?.delivery_settings?.free_delivery_min && subtotal >= business.delivery_settings.free_delivery_min) {
     charge = 0;
     time += ' (Free Delivery)';
     zone += ' - Free';
@@ -1622,7 +1622,7 @@ function updateDeliveryUI() {
 
 function calculateCartSubtotal() {
   return cart.reduce((sum, item) => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const price = parseFloat(item.discount_price || item.original_price || 0);
     return sum + (price * (item.quantity || 1));
   }, 0);
 }
@@ -1646,8 +1646,8 @@ function generateShortId() {
 }
 
 // ===== PASSWORD GENERATOR =====
-function generateAdminPassword(cardId, shortId) {
-  const shortPart = shortId ? shortId.toLowerCase() : (cardId ? cardId.substring(0, 6).toLowerCase() : 'default');
+function generateAdminPassword(businessId, shortId) {
+  const shortPart = shortId ? shortId.toLowerCase() : (businessId ? businessId.substring(0, 6).toLowerCase() : 'default');
   return `business123_${shortPart}`;
 }
 
@@ -1801,9 +1801,9 @@ async function registerServiceWorker() {
   }
 }
 
-// ===== PWA SETUP - FIXED: No "App" word, proper icons =====
+// ===== PWA SETUP =====
 function setupDynamicPWA(businessData) {
-  const businessName = businessData.businessName || businessData.name || "Digital Business";
+  const businessName = businessData.business_name || businessData.businessName || "Digital Business";
   document.title = businessName;
   
   const titleEl = document.getElementById('loadingTitle');
@@ -1813,7 +1813,7 @@ function setupDynamicPWA(businessData) {
   
   document.getElementById('themeColorMeta').content = "#667eea";
   
-  updateFavicon(businessData.profileImage || getDefaultIcon(businessName));
+  updateFavicon(businessData.logo_url || getDefaultIcon(businessName));
   setupManifest(businessData, businessName);
 }
 
@@ -1844,9 +1844,8 @@ function updateFavicon(iconUrl) {
   appleIcon.sizes = "180x180";
 }
 
-// ===== FIXED: PWA MANIFEST - No "App" word, proper start_url =====
 function setupManifest(businessData, businessName) {
-  const profileImage = businessData.profileImage || getDefaultIcon(businessName);
+  const profileImage = businessData.logo_url || getDefaultIcon(businessName);
   const baseUrl = window.location.origin + window.location.pathname;
   
   const manifest = {
@@ -1937,14 +1936,14 @@ function isPWAInstalled() {
 
 // ===== SAVE TO CONTACTS =====
 function saveBusinessToContacts() {
-  if (!card.name || !card.phone) {
+  if (!business?.business_name || !business?.phone) {
     showNotification('❌ Business information incomplete');
     return;
   }
   
-  let contactInfo = `Business: ${card.name}\nPhone: ${card.phone}\n`;
-  if (card.email) contactInfo += `Email: ${card.email}\n`;
-  if (card.address) contactInfo += `Address: ${card.address}\n`;
+  let contactInfo = `Business: ${business.business_name}\nPhone: ${business.phone}\n`;
+  if (business.email) contactInfo += `Email: ${business.email}\n`;
+  if (business.address) contactInfo += `Address: ${business.address}\n`;
   
   navigator.clipboard.writeText(contactInfo);
   showNotification('📋 Business info copied! Paste in your contacts app');
@@ -1952,9 +1951,9 @@ function saveBusinessToContacts() {
 
 // ===== SHARE BUSINESS =====
 function shareBusiness() {
-  const businessName = card.businessName || card.name || "Business";
+  const businessName = business?.business_name || business?.name || "Business";
   const currentUrl = window.location.href.split('?')[0];
-  let shareUrl = shortCardId ? `${currentUrl}?id=${shortCardId}` : currentUrl;
+  let shareUrl = shortBusinessId ? `${currentUrl}?id=${shortBusinessId}` : currentUrl;
   const shareText = `Check out ${businessName} on their business app!\n\n${shareUrl}`;
   
   if (navigator.share) {
@@ -1971,7 +1970,7 @@ async function checkForDeliveries() {
   if (!phone) return;
   
   try {
-    const { data, error } = await supa
+    const { data, error } = await supabase
       .from('orders')
       .select('*')
       .eq('customer_phone', phone)
@@ -2022,7 +2021,7 @@ async function loadDeliveryStatus() {
     return;
   }
   
-  const { data, error } = await supa
+  const { data, error } = await supabase
     .from('orders')
     .select('*')
     .eq('customer_phone', phone)
@@ -2098,7 +2097,7 @@ function checkDeliveryStatus() {
 // ===== ORDERS DATABASE =====
 async function saveOrderToDatabase(orderData) {
   try {
-    const { error } = await supa
+    const { error } = await supabase
       .from('orders')
       .insert([{
         order_id: orderData.orderId,
@@ -2126,7 +2125,7 @@ async function saveOrderToDatabase(orderData) {
 
 async function loadOrdersFromDatabase() {
   try {
-    const { data, error } = await supa
+    const { data, error } = await supabase
       .from('orders')
       .select('*')
       .eq('business_id', currentBusinessId)
@@ -2321,7 +2320,7 @@ async function viewOrderDetails(orderId) {
 async function updateOrderStatus(orderId) {
   const status = document.getElementById('orderStatusSelect').value;
   
-  const { error } = await supa
+  const { error } = await supabase
     .from('orders')
     .update({ status: status, updated_at: new Date().toISOString() })
     .eq('id', orderId);
@@ -2381,17 +2380,15 @@ function updateCartCount() {
 }
 
 function addToCart(productIndex) {
-  const products = card.products || [];
   const product = products[productIndex];
   
   if (product) {
     const existingIndex = cart.findIndex(item => 
-      item.title === product.title && 
-      item.discountPrice === product.discountPrice
+      item.id === product.id
     );
     
     if (existingIndex === -1) {
-      cart.push({ ...product, index: productIndex, quantity: 1 });
+      cart.push({ ...product, quantity: 1 });
     } else {
       cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
     }
@@ -2403,8 +2400,7 @@ function addToCart(productIndex) {
 
 function addToCartFromModal() {
   if (currentProduct) {
-    const products = card.products || [];
-    const productIndex = products.findIndex(p => p.title === currentProduct.title);
+    const productIndex = products.findIndex(p => p.id === currentProduct.id);
     if (productIndex !== -1) {
       addToCart(productIndex);
       closeModal('productModal');
@@ -2453,13 +2449,13 @@ function loadCartPage() {
   let total = 0;
   
   cart.forEach((item, index) => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const price = parseFloat(item.discount_price || item.original_price || 0);
     const itemTotal = price * (item.quantity || 1);
     total += itemTotal;
     
     html += `
       <div style="display:flex; gap:12px; background:white; padding:16px; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm);">
-        <img src="${item.image || ''}" style="width:80px; height:80px; object-fit:cover; border-radius:12px; background:#f1f5f9;" loading="lazy" onerror="this.style.display='none'">
+        <img src="${item.image_url || ''}" style="width:80px; height:80px; object-fit:cover; border-radius:12px; background:#f1f5f9;" loading="lazy" onerror="this.style.display='none'">
         <div style="flex:1;">
           <div style="font-weight:700; color:var(--dark-color); margin-bottom:6px;">${item.title || 'Product'}</div>
           <div style="font-weight:800; color:#10b981; margin-bottom:8px;">PKR ${itemTotal.toFixed(2)}</div>
@@ -2507,10 +2503,10 @@ function loadCartPage() {
   cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
 }
 
-// ===== PRODUCT CARDS - FIXED BADGE POSITIONS =====
+// ===== PRODUCT CARDS =====
 function createProductCard(product, index) {
-  const price = product.discountPrice || product.originalPrice;
-  const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
+  const price = product.discount_price || product.original_price;
+  const originalPrice = product.original_price && product.discount_price ? product.original_price : null;
   const hasDiscount = originalPrice && price && originalPrice > price;
   
   let discountPercentage = '';
@@ -2520,8 +2516,8 @@ function createProductCard(product, index) {
   }
   
   let offerBadge = '';
-  if (product.offerTag) {
-    offerBadge = `<span class="offer-badge" onclick="event.stopPropagation();"><i class="fas fa-gift"></i> ${product.offerTag}</span>`;
+  if (product.offer_tag) {
+    offerBadge = `<span class="offer-badge" onclick="event.stopPropagation();"><i class="fas fa-gift"></i> ${product.offer_tag}</span>`;
   }
   
   let featureBadges = '';
@@ -2553,8 +2549,8 @@ function createProductCard(product, index) {
   cardElement.className = 'product-card';
   
   cardElement.innerHTML = `
-    <div class="product-image-container" onclick="window.zoomImage('${product.image || ''}', event)">
-      <img src="${product.image || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
+    <div class="product-image-container" onclick="window.zoomImage('${product.image_url || ''}', event)">
+      <img src="${product.image_url || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
       
       <div class="badge-container">
         ${discountPercentage}
@@ -2586,18 +2582,17 @@ function createProductCard(product, index) {
 }
 
 function showProductModal(productIndex) {
-  const products = card.products || [];
   currentProduct = products[productIndex];
   
   if (!currentProduct) return;
   
-  const price = currentProduct.discountPrice || currentProduct.originalPrice;
-  const originalPrice = currentProduct.originalPrice && currentProduct.discountPrice ? currentProduct.originalPrice : null;
+  const price = currentProduct.discount_price || currentProduct.original_price;
+  const originalPrice = currentProduct.original_price && currentProduct.discount_price ? currentProduct.original_price : null;
   const hasDiscount = originalPrice && price && originalPrice > price;
   
-  document.getElementById('modalImage').src = currentProduct.image || '';
+  document.getElementById('modalImage').src = currentProduct.image_url || '';
   document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
-  document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
+  document.getElementById('modalDescription').textContent = currentProduct.description || 'No description available';
   
   const modalPrice = document.getElementById('modalPrice');
   if (hasDiscount) {
@@ -2632,20 +2627,19 @@ function closeImageZoom() {
 
 function filterProducts() {
   const searchTerm = document.getElementById('productsSearch').value.toLowerCase();
-  const products = card.products || [];
   const allProducts = document.getElementById('allProducts');
   allProducts.innerHTML = '';
   
   products.filter(product => 
     product.title?.toLowerCase().includes(searchTerm) ||
-    product.desc?.toLowerCase().includes(searchTerm)
+    product.description?.toLowerCase().includes(searchTerm)
   ).forEach((product, index) => {
     allProducts.appendChild(createProductCard(product, index));
   });
 }
 
 function buyNow(productIndex) {
-  const product = card.products[productIndex];
+  const product = products[productIndex];
   if (product) {
     cart = [{ ...product, quantity: 1 }];
     updateCartCount();
@@ -2681,7 +2675,7 @@ async function openCheckoutModal() {
   let itemsHtml = '';
   
   cart.forEach((item, index) => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const price = parseFloat(item.discount_price || item.original_price || 0);
     const itemTotal = price * (item.quantity || 1);
     subtotal += itemTotal;
     
@@ -2727,7 +2721,7 @@ function renderProfessionalPaymentMethods() {
   
   let html = '';
   
-  if (!card.payments || card.payments?.gateways?.cod?.active !== false) {
+  if (!business?.payment_gateways || business?.payment_gateways?.cod?.active !== false) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'cod' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('cod')">
         <div class="pro-payment-icon" style="background:#10b981;">
@@ -2739,43 +2733,43 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
-  if (card.payments?.gateways?.jazzcash?.active) {
+  if (business?.payment_gateways?.jazzcash?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'jazzcash' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('jazzcash')">
         <div class="pro-payment-icon" style="background:#FF6B00;">
           <i class="fas fa-mobile-alt"></i>
         </div>
         <div style="font-weight:700; font-size:14px;">JazzCash</div>
-        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.jazzcash.number || 'Pay via app'}</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${business.payment_gateways.jazzcash.number || 'Pay via app'}</div>
       </div>
     `;
   }
   
-  if (card.payments?.gateways?.easypaisa?.active) {
+  if (business?.payment_gateways?.easypaisa?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'easypaisa' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('easypaisa')">
         <div class="pro-payment-icon" style="background:#0A5C36;">
           <i class="fas fa-wallet"></i>
         </div>
         <div style="font-weight:700; font-size:14px;">EasyPaisa</div>
-        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.easypaisa.number || 'Pay via app'}</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${business.payment_gateways.easypaisa.number || 'Pay via app'}</div>
       </div>
     `;
   }
   
-  if (card.payments?.gateways?.bank?.active) {
+  if (business?.payment_gateways?.bank?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'bank' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('bank')">
         <div class="pro-payment-icon" style="background:#2563eb;">
           <i class="fas fa-university"></i>
         </div>
         <div style="font-weight:700; font-size:14px;">Bank Transfer</div>
-        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.bank.bankName || 'Direct transfer'}</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${business.payment_gateways.bank.bankName || 'Direct transfer'}</div>
       </div>
     `;
   }
   
-  if (card.payments?.gateways?.card?.active) {
+  if (business?.payment_gateways?.card?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'card' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('card')">
         <div class="pro-payment-icon" style="background:#8b5cf6;">
@@ -2819,61 +2813,61 @@ function showPaymentDetailsModal(method) {
   const title = document.getElementById('paymentMethodTitle');
   const content = document.getElementById('paymentDetailsContent');
   
-  if (method === 'jazzcash' && card.payments?.gateways?.jazzcash) {
+  if (method === 'jazzcash' && business?.payment_gateways?.jazzcash) {
     title.innerHTML = 'JazzCash Payment';
     content.innerHTML = `
       <div style="text-align:center;">
         <div style="margin-bottom:20px;">
           <div style="font-size:15px; color:#64748b; margin-bottom:12px;">Send payment to:</div>
           <div style="font-size:24px; font-weight:900; color:#FF6B00; margin:15px 0; background:rgba(255,107,0,0.1); padding:15px; border-radius:16px;">
-            ${card.payments.gateways.jazzcash.number || '03001234567'}
+            ${business.payment_gateways.jazzcash.number || '03001234567'}
           </div>
         </div>
-        ${card.payments.gateways.jazzcash.barcode ? `
+        ${business.payment_gateways.jazzcash.barcode ? `
           <div style="margin:20px 0; text-align:center;">
             <div style="font-size:14px; color:#64748b; margin-bottom:12px; font-weight:700;">Scan QR Code to Pay</div>
-            <img src="${card.payments.gateways.jazzcash.barcode}" style="max-width:200px; max-height:200px; border-radius:16px; border:2px solid #e2e8f0; display:block; margin:0 auto; background:white; padding:12px;">
+            <img src="${business.payment_gateways.jazzcash.barcode}" style="max-width:200px; max-height:200px; border-radius:16px; border:2px solid #e2e8f0; display:block; margin:0 auto; background:white; padding:12px;">
           </div>
         ` : ''}
       </div>
     `;
-  } else if (method === 'easypaisa' && card.payments?.gateways?.easypaisa) {
+  } else if (method === 'easypaisa' && business?.payment_gateways?.easypaisa) {
     title.innerHTML = 'EasyPaisa Payment';
     content.innerHTML = `
       <div style="text-align:center;">
         <div style="margin-bottom:20px;">
           <div style="font-size:15px; color:#64748b; margin-bottom:12px;">Send payment to:</div>
           <div style="font-size:24px; font-weight:900; color:#0A5C36; margin:15px 0; background:rgba(10,92,54,0.1); padding:15px; border-radius:16px;">
-            ${card.payments.gateways.easypaisa.number || '03001234567'}
+            ${business.payment_gateways.easypaisa.number || '03001234567'}
           </div>
         </div>
-        ${card.payments.gateways.easypaisa.barcode ? `
+        ${business.payment_gateways.easypaisa.barcode ? `
           <div style="margin:20px 0; text-align:center;">
             <div style="font-size:14px; color:#64748b; margin-bottom:12px; font-weight:700;">Scan QR Code to Pay</div>
-            <img src="${card.payments.gateways.easypaisa.barcode}" style="max-width:200px; max-height:200px; border-radius:16px; border:2px solid #e2e8f0; display:block; margin:0 auto; background:white; padding:12px;">
+            <img src="${business.payment_gateways.easypaisa.barcode}" style="max-width:200px; max-height:200px; border-radius:16px; border:2px solid #e2e8f0; display:block; margin:0 auto; background:white; padding:12px;">
           </div>
         ` : ''}
       </div>
     `;
-  } else if (method === 'bank' && card.payments?.gateways?.bank) {
+  } else if (method === 'bank' && business?.payment_gateways?.bank) {
     title.innerHTML = 'Bank Transfer';
     content.innerHTML = `
       <div style="background:#f8fafc; border-radius:16px; padding:20px;">
         <div style="margin-bottom:16px;">
           <div style="font-size:13px; color:#64748b;">Bank Name</div>
-          <div style="font-size:18px; font-weight:800; color:var(--dark-color);">${card.payments.gateways.bank.bankName || 'HBL'}</div>
+          <div style="font-size:18px; font-weight:800; color:var(--dark-color);">${business.payment_gateways.bank.bankName || 'HBL'}</div>
         </div>
         <div style="margin-bottom:16px;">
           <div style="font-size:13px; color:#64748b;">Account Title</div>
-          <div style="font-size:16px; font-weight:700; color:var(--dark-color);">${card.payments.gateways.bank.accountTitle || 'Business Account'}</div>
+          <div style="font-size:16px; font-weight:700; color:var(--dark-color);">${business.payment_gateways.bank.accountTitle || 'Business Account'}</div>
         </div>
         <div style="margin-bottom:16px;">
           <div style="font-size:13px; color:#64748b;">Account Number</div>
-          <div style="font-size:18px; font-weight:900; color:#2563eb; background:rgba(37,99,235,0.1); padding:10px; border-radius:8px;">${card.payments.gateways.bank.accountNumber || '1234567890'}</div>
+          <div style="font-size:18px; font-weight:900; color:#2563eb; background:rgba(37,99,235,0.1); padding:10px; border-radius:8px;">${business.payment_gateways.bank.accountNumber || '1234567890'}</div>
         </div>
       </div>
     `;
-  } else if (method === 'card' && card.payments?.gateways?.card) {
+  } else if (method === 'card' && business?.payment_gateways?.card) {
     title.innerHTML = 'Card Payment';
     content.innerHTML = `
       <div style="text-align:center; padding:20px;">
@@ -2928,9 +2922,9 @@ async function placeOrder() {
     
     const orderItems = cart.map(item => ({
       title: item.title,
-      price: parseFloat(item.discountPrice || item.originalPrice || 0),
+      price: parseFloat(item.discount_price || item.original_price || 0),
       quantity: item.quantity || 1,
-      image: item.image || ''
+      image_url: item.image_url || ''
     }));
     
     const orderData = {
@@ -2955,6 +2949,18 @@ async function placeOrder() {
     if (saved) {
       await loadOrdersFromDatabase();
       
+      // Save user to users table
+      await supabase
+        .from('users')
+        .upsert([{
+          business_id: currentBusinessId,
+          device_id: customerData.deviceId,
+          phone: selectedCheckoutPhone,
+          name: customerData.name || '',
+          address: selectedCheckoutAddress,
+          last_active: new Date().toISOString()
+        }], { onConflict: 'business_id,phone' });
+      
       cart = [];
       updateCartCount();
       isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
@@ -2963,7 +2969,7 @@ async function placeOrder() {
       
       showOrderConfirmation(orderData);
       
-      if (checkoutPaymentMethod !== 'whatsapp' && card.phone) {
+      if (checkoutPaymentMethod !== 'whatsapp' && business?.phone) {
         sendOrderWhatsApp(orderData);
       }
       
@@ -3092,9 +3098,9 @@ function shareOrderTicket(token) {
 }
 
 function sendOrderWhatsApp(orderData) {
-  if (!card.phone) return;
+  if (!business?.phone) return;
   
-  const phone = card.phone.replace(/\D/g, '');
+  const phone = business.phone.replace(/\D/g, '');
   let message = `🛍️ *NEW ORDER CONFIRMED*\n\n`;
   message += `*Order ID:* ${orderData.orderId}\n`;
   message += `*Token:* ${orderData.token}\n`;
@@ -3118,17 +3124,15 @@ function sendOrderWhatsApp(orderData) {
 // ===== LOAD PAGES =====
 function loadHomePage() {
   const featuredProducts = document.getElementById('featuredProducts');
-  const products = card.products || [];
   featuredProducts.innerHTML = '';
   
-  products.slice(0, 4).forEach((product, index) => {
+  products.filter(p => p.is_featured).slice(0, 4).forEach((product, index) => {
     featuredProducts.appendChild(createProductCard(product, index));
   });
 }
 
 function loadProductsPage() {
   const allProducts = document.getElementById('allProducts');
-  const products = card.products || [];
   allProducts.innerHTML = '';
   products.forEach((product, index) => {
     allProducts.appendChild(createProductCard(product, index));
@@ -3143,22 +3147,23 @@ function loadAboutPage() {
           <i class="fas fa-store" style="font-size:24px; color:white;"></i>
         </div>
         <div>
-          <h2 style="font-size:20px; font-weight:800; color:var(--dark-color);">${card.businessName || card.name || 'Business'}</h2>
-          <p style="color:#64748b; font-size:14px;">${card.business?.type || 'Premium Business'}</p>
+          <h2 style="font-size:20px; font-weight:800; color:var(--dark-color);">${business?.business_name || business?.name || 'Business'}</h2>
+          <p style="color:#64748b; font-size:14px;">${business?.business_type || 'Premium Business'}</p>
         </div>
       </div>
-      <p style="color:#475569; line-height:1.7; font-size:15px;">${card.business?.about || 'Welcome to our business. We provide premium products and services with quality assurance.'}</p>
+      <p style="color:#475569; line-height:1.7; font-size:15px;">${business?.description || 'Welcome to our business. We provide premium products and services with quality assurance.'}</p>
     </div>
   `;
   
-  if (card.businessHours) {
+  if (business?.business_hours) {
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     const businessHours = document.getElementById('businessHours');
     businessHours.innerHTML = '';
     
     const today = new Date().getDay();
+    const hoursArray = business.business_hours;
     
-    card.businessHours.forEach((day, index) => {
+    hoursArray.forEach((day, index) => {
       if (index < days.length) {
         const dayName = days[index];
         const isToday = index === (today === 0 ? 6 : today - 1);
@@ -3204,10 +3209,10 @@ function loadAboutPage() {
     });
   }
   
-  if (card.holidays && card.holidays.length > 0) {
+  if (business?.holidays && business.holidays.length > 0) {
     const holidaysList = document.getElementById('holidaysList');
     holidaysList.innerHTML = '';
-    card.holidays.forEach(holiday => {
+    business.holidays.forEach(holiday => {
       if (holiday.name && holiday.date) {
         const date = new Date(holiday.date);
         const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -3235,14 +3240,14 @@ function loadContactPage() {
   const customerPhoneEl = document.getElementById('customerPhoneDisplay');
   const customerAddressEl = document.getElementById('customerAddressDisplay');
   
-  if (phoneEl) phoneEl.textContent = card.phone || 'Not available';
-  if (emailEl) emailEl.textContent = card.email || 'Not available';
-  if (addressEl) addressEl.textContent = card.address || 'Not available';
+  if (phoneEl) phoneEl.textContent = business?.phone || 'Not available';
+  if (emailEl) emailEl.textContent = business?.email || 'Not available';
+  if (addressEl) addressEl.textContent = business?.address || 'Not available';
   if (customerPhoneEl) customerPhoneEl.textContent = getCustomerPhone() || 'Tap to set your number';
   if (customerAddressEl) customerAddressEl.textContent = getCustomerAddress() || 'Tap to set your address';
   
   const socialGrid = document.getElementById('socialGrid');
-  const socialMedia = card.socialMedia || {};
+  const socialMedia = business?.social_media || {};
   socialGrid.innerHTML = '';
   
   const platforms = [
@@ -3296,7 +3301,11 @@ async function sendNotificationToAll() {
   const body = prompt('Notification Message:', 'Check out our latest products!');
   
   if (title && body) {
-    const { error } = await supa.from('notifications').insert([{ title, body }]);
+    const { error } = await supabase.from('notifications').insert([{ 
+      business_id: currentBusinessId,
+      title, 
+      body 
+    }]);
     if (!error) {
       showNotification('✅ Notification sent to all users!');
       addInnerNotification('Notification Sent', `"${title}" sent to all users`, 'success');
@@ -3520,48 +3529,39 @@ function initCustomerData() {
 
 // ===== WHATSAPP & CONTACT ACTIONS =====
 function openWhatsAppChat() {
-  if (card.phone) {
-    const phone = card.phone.replace(/\D/g, '');
-    const message = `Hello ${card.businessName || card.name}, I'm interested in your products/services.`;
+  if (business?.phone) {
+    const phone = business.phone.replace(/\D/g, '');
+    const message = `Hello ${business.business_name || business.name}, I'm interested in your products/services.`;
     window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   }
 }
 
 function makeCall() {
-  if (card.phone) window.open(`tel:${card.phone}`);
+  if (business?.phone) window.open(`tel:${business.phone}`);
 }
 
 function sendEmail() {
-  if (card.email) {
-    const subject = encodeURIComponent(`Inquiry - ${card.businessName || 'Business'}`);
-    window.open(`mailto:${card.email}?subject=${subject}`);
+  if (business?.email) {
+    const subject = encodeURIComponent(`Inquiry - ${business.business_name || 'Business'}`);
+    window.open(`mailto:${business.email}?subject=${subject}`);
   }
 }
 
 function openMap() {
-  if (card.address) window.open(`https://maps.google.com/?q=${encodeURIComponent(card.address)}`, '_blank');
+  if (business?.address) window.open(`https://maps.google.com/?q=${encodeURIComponent(business.address)}`, '_blank');
 }
 
 // ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(location.search);
-  let id = urlParams.get("id") || localStorage.getItem("lastCardId");
+  let shortId = urlParams.get("id");
   
-  if (id && id.length === 6) {
-    const { data: mapping } = await supa.from('short_urls').select('full_id').eq('short_id', id).single();
-    if (mapping) {
-      id = mapping.full_id;
-      shortCardId = mapping.short_id;
-    }
-  }
-  
-  if (!id) {
-    document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>";
+  if (!shortId) {
+    document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>❌ Business ID Required</h2><p>Please provide ?id=your-business-id</p></div>";
     return;
   }
   
-  localStorage.setItem("lastCardId", id);
-  currentBusinessId = id;
+  shortBusinessId = shortId;
   
   const savedCart = isolatedLocalStorage.getItem('cart');
   cart = savedCart ? JSON.parse(savedCart) : [];
@@ -3577,20 +3577,37 @@ document.addEventListener("DOMContentLoaded", async () => {
   initCustomerData();
   
   setTimeout(async () => {
-    const { data, error } = await supa.from("cards").select("*").eq("id", id).single();
-    if (error || !data) {
-      document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>";
+    // Get business by short_id
+    const { data: biz, error: bizError } = await supabase
+      .from('businesses')
+      .select('*')
+      .eq('short_id', shortId)
+      .eq('is_active', true)
+      .single();
+      
+    if (bizError || !biz) {
+      document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>❌ Business Not Found</h2><p>Invalid business ID: " + shortId + "</p></div>";
       return;
     }
     
-    card = JSON.parse(data.data);
-    card.id = data.id;
+    business = biz;
+    currentBusinessId = biz.id;
     
-    businessAdminPassword = generateAdminPassword(card.id, shortCardId);
+    // Get products
+    const { data: prods, error: prodError } = await supabase
+      .from('products')
+      .select('*')
+      .eq('business_id', biz.id)
+      .eq('is_available', true)
+      .order('created_at', { ascending: false });
+      
+    products = prods || [];
+    
+    businessAdminPassword = generateAdminPassword(biz.id, shortId);
     const hintEl = document.getElementById('passwordHint');
     if (hintEl) {
-      hintEl.textContent = shortCardId ? 
-        `Hint: Password is business123_${shortCardId.toLowerCase()}` : 
+      hintEl.textContent = shortId ? 
+        `Hint: Password is business123_${shortId.toLowerCase()}` : 
         `Hint: Password format is business123_{short_id}`;
     }
     
@@ -3620,14 +3637,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function renderApp() {
-  setupDynamicPWA(card);
+  setupDynamicPWA(business);
   
   const headerEl = document.getElementById('businessHeader');
-  if (headerEl) headerEl.textContent = card.businessName || card.name || "Premium Business";
+  if (headerEl) headerEl.textContent = business.business_name || business.name || "Premium Business";
   
   const photo = document.getElementById('photo');
-  if (card.profileImage) {
-    photo.src = card.profileImage;
+  if (business.logo_url) {
+    photo.src = business.logo_url;
     photo.style.display = 'block';
   } else {
     photo.style.display = 'none';
@@ -3635,8 +3652,13 @@ async function renderApp() {
   
   const nameEl = document.getElementById('name');
   const businessEl = document.getElementById('business');
-  if (nameEl) nameEl.textContent = card.name || "";
-  if (businessEl) businessEl.textContent = card.businessName || "";
+  if (nameEl) nameEl.textContent = business.owner_name || "Business Owner";
+  if (businessEl) businessEl.textContent = business.business_name || "";
+  
+  // Hide loading screen, show home page
+  document.getElementById('loadingScreen').classList.remove('active');
+  document.getElementById('homePage').classList.add('active');
+  currentPage = 'homePage';
   
   loadHomePage();
 }
