@@ -1,0 +1,5475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Digital Business App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- Dynamic Manifest will be injected by JavaScript -->
+<meta name="theme-color" content="#0f172a" id="themeColorMeta">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="description" content="Premium Digital Business App">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
+
+<!-- Add manifest link -->
+<link rel="manifest" href="manifest.json">
+
+<!-- All CSS styles remain exactly the same -->
+<style>
+/* ALL CSS FROM ORIGINAL FILE REMAINS EXACTLY THE SAME */
+:root {
+  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --whatsapp-gradient: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  --info-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --dark-color: #0f172a;
+  --darker-color: #020617;
+  --light-color: #f8fafc;
+  --lighter-color: #ffffff;
+  --glass-bg: rgba(255, 255, 255, 0.98);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+  --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
+  --shadow-sm: 0 4px 15px rgba(0,0,0,0.08);
+  --border-radius-xl: 32px;
+  --border-radius-lg: 24px;
+  --border-radius-md: 16px;
+  --border-radius-sm: 12px;
+  --border-radius-xs: 8px;
+  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--primary-gradient);
+  min-height: 100vh;
+  color: var(--dark-color);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.app-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  max-width: 480px;
+  margin: 0 auto;
+  background: var(--light-color);
+  overflow: hidden;
+  box-shadow: var(--shadow-xl);
+  border-radius: 0;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--light-color);
+  transform: translateX(100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-slow);
+  z-index: 1;
+}
+
+.page.active {
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+.page.slide-out {
+  transform: translateX(-100%);
+  opacity: 0;
+  visibility: hidden;
+}
+
+#loadingScreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-gradient);
+  z-index: 100;
+}
+
+.loader {
+  width: 80px;
+  height: 80px;
+  border: 4px solid rgba(255,255,255,0.3);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 30px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#loadingScreen h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 900;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+#loadingScreen p {
+  color: rgba(255,255,255,0.9);
+  font-size: 16px;
+  text-align: center;
+  max-width: 300px;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  max-width: 480px;
+  height: 70px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 15px;
+  z-index: 1000;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
+  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+  flex: 1;
+  position: relative;
+}
+
+.nav-item.active {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.nav-icon {
+  font-size: 22px;
+  color: #64748b;
+  transition: var(--transition);
+  position: relative;
+}
+
+.nav-item.active .nav-icon {
+  color: #667eea;
+  transform: scale(1.1);
+}
+
+.nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  transition: var(--transition);
+}
+
+.nav-item.active .nav-label {
+  color: #667eea;
+  font-weight: 700;
+}
+
+/* ===== UPDATED: FIXED HEADER WITH BACKGROUND ===== */
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 480px;
+  height: 80px;
+  background: rgba(102, 126, 234, 0.95);
+  backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1001;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+/* ===== UPDATED: CENTERED HEADER ICONS ===== */
+.header-icons {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  z-index: 10;
+  padding: 0 20px;
+}
+
+.header-icon-btn {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: var(--transition-fast);
+  position: relative;
+}
+
+.header-icon-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.header-icon-btn i {
+  color: white;
+  font-size: 20px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.delivery-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #10b981;
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255,255,255,0.5);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 11;
+}
+
+.delivery-badge.alert {
+  background: #ef4444;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* ===== FACEBOOK-STYLE NOTIFICATION DRAWER ===== */
+.notification-drawer {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 320px;
+  height: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.2);
+  z-index: 2000;
+  transition: var(--transition-slow);
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-drawer.open {
+  right: 0;
+}
+
+.notification-header {
+  padding: 25px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notification-header h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification-count {
+  background: var(--danger-gradient);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.notification-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+.notification-item {
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border-left: 4px solid #667eea;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.notification-item:hover {
+  background: #f1f5f9;
+  transform: translateX(-5px);
+}
+
+.notification-item.unread {
+  background: #e0f2fe;
+  border-left: 4px solid #3b82f6;
+}
+
+.notification-time {
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.notification-actions {
+  padding: 15px;
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  gap: 10px;
+}
+
+/* Status Modal */
+.delivery-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 20000;
+  padding: 20px;
+}
+
+.delivery-modal {
+  background: var(--glass-bg);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+/* FIXED: REMOVED WHITE SPACE IN PAGES */
+#homePage {
+  padding-top: 80px; /* Reduced from 100px to match header height */
+  padding-bottom: 100px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.app-header {
+  background: var(--primary-gradient);
+  padding: 30px 25px 30px; /* Reduced top padding */
+  border-radius: 0 0 50px 50px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-top: 0; /* Removed extra margin */
+}
+
+.welcome-text {
+  color: white;
+  margin-bottom: 30px;
+  position: relative;
+  z-index: 1;
+  padding-top: 0; /* Removed padding */
+}
+
+.welcome-text h1 {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  line-height: 1.2;
+}
+
+.welcome-text p {
+  font-size: 16px;
+  opacity: 0.95;
+  font-weight: 400;
+}
+
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+  padding: 0 5px;
+  position: relative;
+  z-index: 2;
+}
+
+.action-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-lg);
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+}
+
+.action-icon {
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: #667eea;
+}
+
+.action-card:nth-child(1) .action-icon { color: #3b82f6; }
+.action-card:nth-child(2) .action-icon { color: #8b5cf6; }
+.action-card:nth-child(3) .action-icon { color: #25D366; }
+.action-card:nth-child(4) .action-icon { color: #f59e0b; }
+
+.action-card h3 {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-bottom: 8px;
+}
+
+.action-card p {
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.profile-section {
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-xl);
+  padding: 30px;
+  margin: 30px 25px; /* Reduced from 40px */
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--glass-border);
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 5px solid white;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 20px;
+}
+
+.profile-name {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--dark-color);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.verified-badge {
+  color: #667eea;
+  font-size: 18px;
+}
+
+.profile-business {
+  font-size: 16px;
+  color: #764ba2;
+  font-weight: 700;
+  margin-bottom: 20px;
+  padding: 6px 18px;
+  background: rgba(118, 75, 162, 0.1);
+  border-radius: 50px;
+  display: inline-block;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 30px 25px 20px; /* Reduced from 40px */
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.section-header h2 {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.see-all {
+  color: #667eea;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: var(--border-radius-xs);
+}
+
+/* REDESIGNED PRODUCT CARDS - Daraz/Temu Style */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0 12px;
+  align-items: stretch;
+  margin-bottom: 20px;
+}
+
+.product-card {
+  height: 260px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--lighter-color);
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  padding: 8px;
+  overflow: hidden;
+  transition: var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+  min-height: 260px;
+  max-height: 260px;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.product-image-container {
+  position: relative;
+  width: 100%;
+  min-height: 140px;
+  max-height: 160px;
+  background: #f8fafc;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+  border: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-image {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
+  padding: 4px;
+}
+
+.product-card.clicked .product-image {
+  transform: scale(1.8);
+  z-index: 100;
+  position: relative;
+}
+
+.discount-badge {
+  position: absolute;
+  bottom: 6px;
+  right: 6px;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.95) 0%, rgba(220, 38, 38, 0.95) 100%);
+  color: white;
+  font-weight: 900;
+  font-size: 11px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  z-index: 3;
+  border: 1px solid rgba(255,255,255,0.3);
+  min-width: 45px;
+  text-align: center;
+  line-height: 1.2;
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+}
+
+.price-badge {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.95) 0%, rgba(5, 150, 105, 0.95) 100%);
+  color: white;
+  font-weight: 900;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  border: 1px solid rgba(255,255,255,0.3);
+  min-width: 60px;
+  text-align: center;
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+}
+
+.price-badge .current-price {
+  font-size: 14px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: -0.2px;
+}
+
+.price-badge .original-price {
+  text-decoration: line-through;
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.9;
+  line-height: 1;
+}
+
+.product-badges {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 2;
+  max-width: 70%;
+}
+
+.badge {
+  background: rgba(16, 185, 129, 0.95);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 3px;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1.2;
+  text-align: right;
+  align-self: flex-end;
+  backdrop-filter: blur(4px);
+}
+
+.badge.hot { background: rgba(239, 68, 68, 0.95); }
+.badge.best-seller { background: rgba(245, 158, 11, 0.95); }
+.badge.discount { background: rgba(16, 185, 129, 0.95); }
+.badge.limited { background: rgba(139, 92, 246, 0.95); }
+.badge.stock { background: rgba(59, 130, 246, 0.95); }
+.badge.delivery { background: rgba(20, 184, 166, 0.95); }
+
+.product-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 4px;
+  padding: 0 2px;
+  margin-top: 2px;
+}
+
+.product-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--dark-color);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 34px;
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+
+.product-actions {
+  display: flex;
+  gap: 6px;
+  height: 32px;
+  margin-top: auto;
+  flex-shrink: 0;
+  padding-top: 4px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.btn-primary, .btn-secondary {
+  flex: 1;
+  height: 28px;
+  border: none;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+  min-height: 28px;
+  padding: 0 6px;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--success-gradient);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0da271 0%, #047857 100%);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--info-gradient);
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  transform: translateY(-1px);
+}
+
+.btn-primary i, .btn-secondary i {
+  font-size: 11px;
+}
+
+@media (max-width: 400px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 10px;
+  }
+  
+  .product-card {
+    height: 250px;
+    min-height: 250px;
+    max-height: 250px;
+  }
+  
+  .product-image-container {
+    min-height: 130px;
+    max-height: 150px;
+  }
+  
+  .product-title {
+    font-size: 11px;
+    height: 32px;
+  }
+  
+  .price-badge {
+    min-width: 55px;
+    padding: 3px 6px;
+    font-size: 12px;
+  }
+  
+  .discount-badge {
+    min-width: 40px;
+    padding: 2px 4px;
+    font-size: 10px;
+  }
+  
+  .btn-primary, .btn-secondary {
+    height: 26px;
+    font-size: 10px;
+    min-height: 26px;
+  }
+}
+
+.modal-content .product-image-container {
+  min-height: 200px;
+  max-height: 300px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.modal-content .product-image {
+  max-height: 280px;
+  width: auto;
+  max-width: 100%;
+}
+
+.modal-price-container {
+  margin-bottom: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.modal-price-container .current-price {
+  font-size: 24px;
+  font-weight: 900;
+  color: #10b981;
+  margin-bottom: 4px;
+}
+
+.modal-price-container .original-price {
+  font-size: 16px;
+  color: #94a3b8;
+  text-decoration: line-through;
+  margin-right: 8px;
+  font-weight: 500;
+}
+
+.image-zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  animation: fadeIn 0.3s ease;
+}
+
+.image-zoom-content {
+  max-width: 90%;
+  max-height: 90%;
+  animation: zoomIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* FIXED: REDUCED PADDING IN OTHER PAGES */
+#productsPage {
+  padding-top: 80px; /* Reduced from 100px */
+  padding-bottom: 100px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.products-header {
+  background: var(--primary-gradient);
+  padding: 30px 25px; /* Reduced from 50px */
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.products-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  margin-top: 0; /* Removed extra margin */
+}
+
+.products-header p {
+  color: rgba(255,255,255,0.95);
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.products-search {
+  position: relative;
+  margin: 20px;
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-lg);
+  padding: 5px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--glass-border);
+}
+
+.products-search input {
+  width: 100%;
+  padding: 15px 50px 15px 20px;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 15px;
+  background: transparent;
+  color: var(--dark-color);
+}
+
+.products-search i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 20px;
+}
+
+/* FIXED: REDUCED PADDING */
+#cartPage {
+  padding-top: 80px; /* Reduced from 100px */
+  padding-bottom: 100px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.cart-header {
+  background: var(--primary-gradient);
+  padding: 30px 25px; /* Reduced from 50px */
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.cart-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  margin-top: 0; /* Removed extra margin */
+}
+
+.cart-header p {
+  color: rgba(255,255,255,0.95);
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.cart-empty {
+  text-align: center;
+  padding: 80px 25px;
+}
+
+.cart-empty i {
+  font-size: 80px;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.cart-empty h3 {
+  font-size: 22px;
+  color: var(--dark-color);
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.cart-empty p {
+  color: #64748b;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+.cart-empty button {
+  padding: 15px 30px;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-md);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+}
+
+.cart-item {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f1f5f9;
+}
+
+.cart-item-img {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--border-radius-md);
+  object-fit: contain;
+  background: white;
+  flex-shrink: 0;
+  padding: 8px;
+}
+
+.cart-item-details {
+  flex: 1;
+}
+
+.cart-item-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--dark-color);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.cart-item-price {
+  color: #ef4444;
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.cart-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 6px;
+  border-radius: var(--border-radius-md);
+  border: 1px solid #e2e8f0;
+}
+
+.quantity-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--border-radius-xs);
+  border: 2px solid #e2e8f0;
+  background: white;
+  color: var(--dark-color);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.quantity {
+  font-weight: 800;
+  color: var(--dark-color);
+  min-width: 25px;
+  text-align: center;
+}
+
+.remove-btn {
+  background: var(--danger-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-xs);
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  min-width: 60px;
+}
+
+.cart-summary {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 25px;
+  margin: 25px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f1f5f9;
+}
+
+.cart-summary h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #475569;
+  font-size: 15px;
+}
+
+.summary-total {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--dark-color);
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #f1f5f9;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 18px;
+  background: var(--success-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-lg);
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 25px;
+}
+
+/* FIXED: REDUCED PADDING */
+#aboutPage {
+  padding-top: 80px; /* Reduced from 100px */
+  padding-bottom: 100px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.about-header {
+  background: var(--primary-gradient);
+  padding: 30px 25px; /* Reduced from 50px */
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  margin-top: 0; /* Removed extra margin */
+}
+
+.about-content {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 25px;
+  box-shadow: var(--shadow-md);
+  margin: 25px;
+  border: 1px solid #f1f5f9;
+}
+
+.about-content p {
+  line-height: 1.8;
+  color: #475569;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.business-hours {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 25px;
+  box-shadow: var(--shadow-md);
+  margin: 20px;
+  border: 1px solid #f1f5f9;
+}
+
+.business-hours h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-bottom: 20px;
+}
+
+.hours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hour-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-md);
+  border: 1px solid #e2e8f0;
+}
+
+.day-name {
+  font-weight: 600;
+  color: #475569;
+  font-size: 14px;
+}
+
+.day-time {
+  font-weight: 800;
+  color: var(--dark-color);
+  font-size: 14px;
+}
+
+.day-time.closed {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+/* FIXED: REDUCED PADDING */
+#contactPage {
+  padding-top: 80px; /* Reduced from 100px */
+  padding-bottom: 100px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.contact-header {
+  background: var(--primary-gradient);
+  padding: 30px 25px; /* Reduced from 50px */
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  margin-top: 0; /* Removed extra margin */
+}
+
+.contact-header p {
+  color: rgba(255,255,255,0.95);
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.contact-info {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-md);
+  margin: 25px;
+  border: 1px solid #f1f5f9;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 18px;
+  margin-bottom: 15px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  border: 1px solid #e2e8f0;
+}
+
+.contact-item:last-child {
+  margin-bottom: 0;
+}
+
+.contact-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.contact-item:nth-child(1) .contact-icon { background: var(--primary-gradient); }
+.contact-item:nth-child(2) .contact-icon { background: var(--success-gradient); }
+.contact-item:nth-child(3) .contact-icon { background: var(--whatsapp-gradient); }
+.contact-item:nth-child(4) .contact-icon { background: var(--secondary-gradient); }
+.contact-item:nth-child(5) .contact-icon { background: var(--warning-gradient); }
+
+.contact-details {
+  flex: 1;
+}
+
+.contact-label {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.contact-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--dark-color);
+}
+
+.social-links {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 25px;
+  box-shadow: var(--shadow-md);
+  margin: 20px;
+  border: 1px solid #f1f5f9;
+}
+
+.social-links h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-bottom: 20px;
+}
+
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.social-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: #f8fafc;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid #e2e8f0;
+}
+
+.social-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--border-radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: white;
+}
+
+.social-label {
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--dark-color);
+}
+
+.social-icon.facebook { background: #1877F2; }
+.social-icon.instagram { background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); }
+.social-icon.twitter { background: #1DA1F2; }
+.social-icon.linkedin { background: #0A66C2; }
+.social-icon.youtube { background: #FF0000; }
+.social-icon.tiktok { background: #000000; }
+
+/* FIXED: BACK BUTTON MOVED TO HEADER */
+.back-btn {
+  position: absolute;
+  top: 20px; /* Now in header */
+  left: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.3);
+  z-index: 100;
+}
+
+.page-footer-spacer {
+  height: 30px;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: var(--danger-gradient);
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+  border: 2px solid var(--glass-bg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(15px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modal-content {
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-xl);
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--glass-border);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.1);
+  color: var(--dark-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+@media (max-width: 480px) {
+  .app-container {
+    max-width: 100%;
+  }
+  
+  .social-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .quick-actions {
+    grid-template-columns: 1fr;
+  }
+  
+  .header-icons {
+    gap: 20px;
+  }
+  
+  .header-icon-btn {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .notification-drawer {
+    width: 100%;
+    right: -100%;
+  }
+  
+  .back-btn {
+    top: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .social-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .header-icons {
+    gap: 15px;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --light-color: #0f172a;
+    --lighter-color: #1e293b;
+    --dark-color: #f8fafc;
+    --glass-bg: rgba(30, 41, 59, 0.95);
+    --glass-border: rgba(255, 255, 255, 0.1);
+  }
+  
+  body {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  }
+  
+  .app-container {
+    background: var(--light-color);
+  }
+  
+  .product-card,
+  .cart-item,
+  .cart-summary,
+  .about-content,
+  .business-hours,
+  .contact-info,
+  .social-links {
+    background: var(--lighter-color);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .header-container {
+    background: rgba(30, 41, 59, 0.95);
+  }
+}
+
+/* ===== DELIVERY PAGE STYLES ===== */
+.delivery-page-header {
+  background: var(--primary-gradient);
+  padding: 30px 25px 30px; /* Reduced from 50px */
+  border-radius: 0 0 50px 50px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.delivery-page-header h1 {
+  color: white;
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 1;
+  margin-top: 0; /* Removed extra margin */
+}
+
+.delivery-page-header p {
+  color: rgba(255,255,255,0.95);
+  font-size: 16px;
+  position: relative;
+  z-index: 1;
+}
+
+.delivery-card {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  margin: 15px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f1f5f9;
+  border-left: 5px solid #667eea;
+}
+
+.delivery-card.pending { border-left-color: #f59e0b; }
+.delivery-card.processing { border-left-color: #3b82f6; }
+.delivery-card.shipped { border-left-color: #8b5cf6; }
+.delivery-card.delivered { border-left-color: #10b981; }
+.delivery-card.cancelled { border-left-color: #ef4444; }
+
+.delivery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.delivery-order-id {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--dark-color);
+}
+
+.delivery-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.delivery-status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.delivery-status.processing {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.delivery-status.shipped {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.delivery-status.delivered {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.delivery-status.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.delivery-info {
+  color: #475569;
+  font-size: 14px;
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.delivery-timestamp {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-search {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin: 15px;
+  font-size: 14px;
+}
+
+.admin-order-card {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  margin: 15px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #f1f5f9;
+}
+
+.admin-order-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.admin-order-id {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--dark-color);
+}
+
+.admin-customer-info {
+  color: #64748b;
+  font-size: 13px;
+  margin-top: 5px;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.admin-select {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  background: white;
+}
+
+.admin-btn {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.admin-btn.success {
+  background: var(--success-gradient);
+}
+
+.no-deliveries {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-deliveries i {
+  font-size: 60px;
+  color: #cbd5e1;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.no-deliveries h3 {
+  font-size: 20px;
+  color: var(--dark-color);
+  margin-bottom: 15px;
+  font-weight: 800;
+}
+
+.no-deliveries p {
+  color: #64748b;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+.password-prompt {
+  background: var(--lighter-color);
+  padding: 30px;
+  border-radius: var(--border-radius-lg);
+  margin: 40px 20px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.password-input {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--border-radius-md);
+  font-size: 16px;
+  margin: 20px 0;
+  text-align: center;
+  letter-spacing: 2px;
+}
+
+.password-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 10px;
+}
+
+/* ===== NOTIFICATION ALERT ===== */
+.notification-alert {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--whatsapp-gradient);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-xl);
+  z-index: 3000;
+  max-width: 300px;
+  animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  display: none;
+}
+
+@keyframes slideIn {
+  from { top: 50px; opacity: 0; }
+  to { top: 100px; opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* ===== LOGOUT BUTTON ===== */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  background: rgba(239, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.logout-btn:hover {
+  background: rgba(220, 38, 38, 0.9);
+  transform: scale(1.05);
+}
+
+/* ===== SIMPLE LOGIN PAGE ===== */
+.login-page-content {
+  padding: 40px 25px;
+  text-align: center;
+}
+
+.login-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--dark-color);
+  margin-bottom: 10px;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.login-hint {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 20px;
+  font-style: italic;
+}
+
+/* ===== DOUBLE CLICK EXIT MODAL ===== */
+.exit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(20px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+  padding: 20px;
+}
+
+.exit-modal {
+  background: var(--glass-bg);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 350px;
+  padding: 30px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.exit-modal h2 {
+  color: var(--dark-color);
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.exit-modal p {
+  color: #64748b;
+  margin-bottom: 25px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.exit-modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.exit-modal-btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.exit-modal-btn.cancel {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.exit-modal-btn.exit {
+  background: var(--danger-gradient);
+  color: white;
+}
+
+.exit-modal-btn.cancel:hover {
+  background: #e2e8f0;
+}
+
+.exit-modal-btn.exit:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+/* ===== INSTALL BUTTON ===== */
+.install-button-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  animation: slideDown 0.5s ease;
+}
+
+.install-btn {
+  padding: 12px 24px;
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: var(--shadow-xl);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+.install-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+}
+
+@keyframes slideDown {
+  from { top: -100px; opacity: 0; }
+  to { top: 20px; opacity: 1; }
+}
+
+/* ===== SHARE BUTTON ===== */
+.share-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 100;
+  transition: var(--transition-fast);
+}
+
+.share-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== SAVE TO CONTACTS BUTTON ===== */
+.save-contact-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 100;
+  transition: var(--transition-fast);
+}
+
+.save-contact-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ===== ANIMATIONS FOR NOTIFICATIONS ===== */
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutRight {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* ===== INSTALL PERMISSION MODAL ===== */
+.install-permission-modal {
+  background: var(--glass-bg);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 380px;
+  padding: 30px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.install-permission-modal h2 {
+  color: var(--dark-color);
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.install-permission-modal p {
+  color: #64748b;
+  margin-bottom: 25px;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.permission-features {
+  text-align: left;
+  background: #f8fafc;
+  padding: 20px;
+  border-radius: 16px;
+  margin: 20px 0;
+}
+
+.permission-feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.permission-feature i {
+  color: #10b981;
+  font-size: 16px;
+}
+
+.permission-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.permission-btn {
+  flex: 1;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.permission-btn.cancel {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.permission-btn.accept {
+  background: var(--success-gradient);
+  color: white;
+}
+
+.permission-btn.cancel:hover {
+  background: #e2e8f0;
+}
+
+.permission-btn.accept:hover {
+  background: linear-gradient(135deg, #0da271 0%, #047857 100%);
+}
+</style>
+</head>
+
+<body>
+<div class="app-container">
+  <!-- Fixed Header -->
+  <div class="header-container">
+    <!-- Back Button in Header -->
+    <button class="back-btn" onclick="goBack()" id="headerBackBtn" style="display:none;">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <!-- Save to Contacts Button -->
+    <div class="save-contact-btn" onclick="saveBusinessToContacts()" title="Save to Contacts">
+      <i class="fas fa-address-card"></i>
+    </div>
+    
+    <!-- Centered Header Icons -->
+    <div class="header-icons">
+      <!-- Notification Bell -->
+      <div class="header-icon-btn" onclick="toggleNotificationDrawer()" title="Notifications">
+        <i class="fas fa-bell" id="notificationBell"></i>
+        <div class="delivery-badge" id="notificationBadge" style="display:none;">!</div>
+      </div>
+      
+      <!-- Delivery Status Icon -->
+      <div class="header-icon-btn" id="deliveryStatusBtn" onclick="checkDeliveryStatus()" title="Delivery Status">
+        <i class="fas fa-truck" id="deliveryIcon"></i>
+        <div class="delivery-badge" id="deliveryBadge" style="display:none;"></div>
+      </div>
+      
+      <!-- Login/Logout Icon -->
+      <div class="header-icon-btn" id="loginBtn" onclick="toggleLogin()" title="Login/Logout">
+        <i class="fas fa-sign-in-alt" id="loginIcon"></i>
+      </div>
+    </div>
+    
+    <!-- Share Button (Top Right) -->
+    <div class="share-btn" onclick="shareBusiness()" title="Share Business">
+      <i class="fas fa-share-alt"></i>
+    </div>
+  </div>
+
+  <!-- Facebook-style Notification Drawer -->
+  <div class="notification-drawer" id="notificationDrawer">
+    <div class="notification-header">
+      <h3><i class="fas fa-bell"></i> Notifications <span class="notification-count" id="notificationCount">0</span></h3>
+      <button onclick="toggleNotificationDrawer()" style="background: none; border: none; font-size: 24px; color: var(--dark-color); cursor: pointer;">×</button>
+    </div>
+    <div class="notification-content" id="notificationList">
+      <!-- Notifications will load here -->
+    </div>
+    <div class="notification-actions">
+      <button onclick="markAllNotificationsAsRead()" style="flex:1; padding: 10px; background: #f1f5f9; border: none; border-radius: 8px; font-weight: 700; color: #64748b; cursor: pointer;">
+        Mark All Read
+      </button>
+      <button onclick="enableNotifications()" style="flex:1; padding: 10px; background: var(--primary-gradient); border: none; border-radius: 8px; font-weight: 700; color: white; cursor: pointer;">
+        Enable Alerts
+      </button>
+    </div>
+  </div>
+
+  <!-- Image Zoom Overlay -->
+  <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="closeImageZoom()">
+    <img src="" class="image-zoom-content" id="zoomedImage">
+  </div>
+
+  <!-- Exit Confirmation Modal -->
+  <div class="exit-modal-overlay" id="exitModal">
+    <div class="exit-modal">
+      <h2><i class="fas fa-sign-out-alt"></i> Exit App?</h2>
+      <p>Are you sure you want to exit? Press back again to confirm.</p>
+      <div class="exit-modal-buttons">
+        <button class="exit-modal-btn cancel" onclick="closeExitModal()">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button class="exit-modal-btn exit" onclick="exitApp()">
+          <i class="fas fa-sign-out-alt"></i> Exit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Install Permission Modal -->
+  <div class="exit-modal-overlay" id="installPermissionModal" style="display:none;">
+    <div class="install-permission-modal">
+      <h2><i class="fas fa-download"></i> Enhance Your Experience</h2>
+      <p>To provide you with the best experience, we'd like to:</p>
+      
+      <div class="permission-features">
+        <div class="permission-feature">
+          <i class="fas fa-check-circle"></i>
+          <span>Save business details to your contacts</span>
+        </div>
+        <div class="permission-feature">
+          <i class="fas fa-check-circle"></i>
+          <span>Enable push notifications for orders</span>
+        </div>
+        <div class="permission-feature">
+          <i class="fas fa-check-circle"></i>
+          <span>Install app for quick access</span>
+        </div>
+        <div class="permission-feature">
+          <i class="fas fa-check-circle"></i>
+          <span>Auto-save your preferences</span>
+        </div>
+      </div>
+      
+      <p style="font-size: 14px; color: #94a3b8;">Your data is secure and never shared with third parties.</p>
+      
+      <div class="permission-buttons">
+        <button class="permission-btn cancel" onclick="closeInstallPermissionModal()">
+          <i class="fas fa-times"></i> Skip
+        </button>
+        <button class="permission-btn accept" onclick="acceptInstallPermissions()">
+          <i class="fas fa-check"></i> Accept & Continue
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="page active">
+    <div class="loader"></div>
+    <h1 id="loadingTitle">Digital Business App</h1>
+    <p id="loadingSubtitle">Loading your premium business experience...</p>
+  </div>
+
+  <!-- Home Page -->
+  <div id="homePage" class="page">
+    <div class="app-header">
+      <div class="welcome-text">
+        <h1 id="businessHeader">Welcome</h1>
+        <p>Premium business at your fingertips</p>
+      </div>
+      
+      <div class="quick-actions">
+        <div class="action-card" onclick="navigateTo('productsPage')">
+          <div class="action-icon">
+            <i class="fas fa-shopping-bag"></i>
+          </div>
+          <h3>Shop Now</h3>
+          <p>Browse products & offers</p>
+        </div>
+        
+        <div class="action-card" onclick="navigateTo('cartPage')">
+          <div class="action-icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <h3>My Cart</h3>
+          <p><span id="cartCountMini">0</span> items</p>
+        </div>
+        
+        <div class="action-card" onclick="openWhatsAppChat('greeting')">
+          <div class="action-icon">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <h3>Live Chat</h3>
+          <p>Instant support</p>
+        </div>
+        
+        <div class="action-card" onclick="navigateTo('contactPage')">
+          <div class="action-icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h3>Location</h3>
+          <p>Find us</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <img src="" id="photo" class="profile-avatar" loading="lazy">
+      <div class="profile-name">
+        <span id="name">Loading...</span>
+        <i class="fas fa-badge-check verified-badge"></i>
+      </div>
+      <div class="profile-business" id="business"></div>
+    </div>
+
+    <div class="section-header">
+      <h2><i class="fas fa-gift"></i> Featured Products</h2>
+      <div class="see-all" onclick="navigateTo('productsPage')">
+        See All <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+    
+    <div class="products-grid" id="featuredProducts">
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- Products Page -->
+  <div id="productsPage" class="page">
+    <div class="products-header">
+      <h1>Products & Offers</h1>
+      <p>Discover our premium collection</p>
+    </div>
+    
+    <div class="products-search">
+      <input type="text" id="productsSearch" placeholder="Search products..." onkeyup="filterProducts()">
+      <i class="fas fa-search"></i>
+    </div>
+    
+    <div class="products-grid" id="allProducts">
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- Cart Page -->
+  <div id="cartPage" class="page">
+    <div class="cart-header">
+      <h1>My Cart</h1>
+      <p id="cartItemsCount">0 items</p>
+    </div>
+    
+    <div id="cartContent">
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- About Page -->
+  <div id="aboutPage" class="page">
+    <div class="about-header">
+      <h1>About Business</h1>
+    </div>
+    
+    <div class="about-content" id="aboutContent">
+    </div>
+    
+    <div class="business-hours">
+      <h3><i class="fas fa-clock"></i> Business Hours</h3>
+      <div class="hours-list" id="businessHours">
+      </div>
+    </div>
+    
+    <div class="business-hours">
+      <h3><i class="fas fa-calendar-times"></i> Holidays</h3>
+      <div class="hours-list" id="holidaysList">
+      </div>
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- Contact Page -->
+  <div id="contactPage" class="page">
+    <div class="contact-header">
+      <h1>Contact Us</h1>
+      <p>Get in touch anytime</p>
+    </div>
+    
+    <div class="contact-info">
+      <!-- Save Business Contact -->
+      <div class="contact-item" onclick="saveBusinessToContacts()" style="cursor:pointer;">
+        <div class="contact-icon">
+          <i class="fas fa-address-card"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">Save Business Contact</div>
+          <div class="contact-value">Tap to save to phonebook</div>
+        </div>
+      </div>
+      
+      <!-- Customer Phone for Delivery -->
+      <div class="contact-item" onclick="openPhoneInput()" style="cursor:pointer;">
+        <div class="contact-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">My Delivery Phone</div>
+          <div class="contact-value" id="customerPhoneDisplay">
+            Tap to set your number
+          </div>
+        </div>
+      </div>
+      
+      <div class="contact-item" onclick="makeCall()">
+        <div class="contact-icon">
+          <i class="fas fa-phone"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">Call Business</div>
+          <div class="contact-value" id="contactPhone">Loading...</div>
+        </div>
+      </div>
+      
+      <div class="contact-item" onclick="openWhatsAppChat('greeting')">
+        <div class="contact-icon">
+          <i class="fab fa-whatsapp"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">WhatsApp</div>
+          <div class="contact-value" id="contactWhatsApp">Chat Now</div>
+        </div>
+      </div>
+      
+      <div class="contact-item email-item" onclick="sendEmail()">
+        <div class="contact-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">Email</div>
+          <div class="contact-value" id="contactEmail">Loading...</div>
+        </div>
+      </div>
+      
+      <div class="contact-item" onclick="openMap()">
+        <div class="contact-icon">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <div class="contact-details">
+          <div class="contact-label">Address</div>
+          <div class="contact-value" id="contactAddress">Loading...</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="social-links">
+      <h3><i class="fas fa-share-alt"></i> Follow Us</h3>
+      <div class="social-grid" id="socialGrid">
+      </div>
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- ===== DELIVERY STATUS PAGE ===== -->
+  <div id="deliveryPage" class="page">
+    <div class="delivery-page-header">
+      <h1><i class="fas fa-truck"></i> Delivery Status</h1>
+      <p>Track your orders in real-time</p>
+    </div>
+    
+    <div id="deliveryContent">
+      <!-- Delivery status will load here -->
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- ===== ADMIN DELIVERY PAGE ===== -->
+  <div id="adminPage" class="page">
+    <div class="delivery-page-header">
+      <h1><i class="fas fa-cog"></i> Delivery Admin</h1>
+      <p>Manage customer deliveries</p>
+    </div>
+    
+    <div id="adminContent">
+      <!-- Admin panel will load here -->
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- ===== SIMPLE LOGIN PAGE ===== -->
+  <div id="loginPage" class="page">
+    <div class="delivery-page-header">
+      <h1><i class="fas fa-lock"></i> Admin Login</h1>
+      <p>Enter password to access admin panel</p>
+    </div>
+    
+    <div class="login-page-content">
+      <div class="login-title">Admin Access</div>
+      <div class="login-subtitle">Enter the admin password to continue</div>
+      
+      <input type="password" class="password-input" id="adminPasswordInput" 
+             placeholder="Enter password" onkeypress="handleLoginKeypress(event)">
+      
+      <button onclick="attemptLogin()" class="admin-btn success" style="margin-top: 20px;">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
+      
+      <div class="password-hint" id="passwordHint">
+        Hint: Password format is business123_{short_id}
+      </div>
+      
+      <div id="logoutSection" style="display:none; margin-top: 30px;">
+        <button onclick="logoutAdmin()" class="logout-btn" style="margin: 0 auto;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+    
+    <div class="page-footer-spacer"></div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="navigateTo('homePage')">
+      <div class="nav-icon">
+        <i class="fas fa-home"></i>
+      </div>
+      <div class="nav-label">Home</div>
+    </div>
+    
+    <div class="nav-item" onclick="navigateTo('productsPage')">
+      <div class="nav-icon">
+        <i class="fas fa-shopping-bag"></i>
+      </div>
+      <div class="nav-label">Products</div>
+    </div>
+    
+    <div class="nav-item" onclick="navigateTo('cartPage')">
+      <div class="nav-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </div>
+      <div class="nav-label">Cart</div>
+    </div>
+    
+    <div class="nav-item" onclick="navigateTo('aboutPage')">
+      <div class="nav-icon">
+        <i class="fas fa-info-circle"></i>
+      </div>
+      <div class="nav-label">About</div>
+    </div>
+    
+    <div class="nav-item" onclick="navigateTo('contactPage')">
+      <div class="nav-icon">
+        <i class="fas fa-phone"></i>
+      </div>
+      <div class="nav-label">Contact</div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Alert -->
+<div class="notification-alert" id="notificationAlert"></div>
+
+<!-- Delivery Status Modal -->
+<div class="delivery-modal-overlay" id="deliveryStatusModal">
+  <div class="delivery-modal">
+    <button onclick="closeDeliveryModal()" style="position:absolute;top:15px;right:15px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.1);border:none;color:var(--dark-color);font-size:24px;cursor:pointer;">×</button>
+    <div id="deliveryStatusContent" style="padding:40px 25px;">
+      <h2 style="text-align:center;margin-bottom:25px;color:var(--dark-color);">
+        <i class="fas fa-truck"></i> Delivery Status
+      </h2>
+      <div id="deliveryStatusList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Other Modals -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('productModal')">×</button>
+    
+    <div class="product-image-container" style="background:white;">
+      <img src="" id="modalImage" class="product-image" loading="lazy">
+    </div>
+    
+    <div style="padding:25px;">
+      <!-- MODAL PRICE - Below image in content flow -->
+      <div id="modalPrice" class="modal-price-container"></div>
+      
+      <h2 id="modalTitle" style="font-size:20px;font-weight:800;color:var(--dark-color);margin-bottom:12px;"></h2>
+      <p id="modalDescription" style="color:#64748b;line-height:1.6;margin-bottom:20px;font-size:14px;"></p>
+      
+      <div id="directCheckoutSection" style="display:none; margin-top: 25px; padding-top: 25px; border-top: 2px solid #f1f5f9;">
+        <h3 style="font-size:17px;font-weight:800;color:var(--dark-color);margin-bottom:15px;">
+          Checkout Now
+        </h3>
+        
+        <div class="payment-options" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+          <div class="payment-option" onclick="selectBuyNowPayment('whatsapp')" id="whatsappBuyNowOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#25D366;">
+              <i class="fab fa-whatsapp"></i>
+            </div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">WhatsApp Order</div>
+              <div style="font-size:12px;color:#64748b;">Confirm via WhatsApp</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectBuyNowPayment('cod')" id="codBuyNowOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
+              <i class="fas fa-truck"></i>
+            </div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">Cash on Delivery</div>
+              <div style="font-size:12px;color:#64748b;">Pay when arrives</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectBuyNowPayment('jazzcash')" id="jazzcashBuyNowOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#FF6B00;">
+              <i class="fas fa-qrcode"></i>
+            </div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">JazzCash / EasyPaisa</div>
+              <div style="font-size:12px;color:#64748b;">Pay via QR Code</div>
+            </div>
+          </div>
+        </div>
+        
+        <button onclick="checkoutBuyNow()" style="width:100%;padding:18px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:16px;font-weight:800;cursor:pointer;">
+          Complete Purchase
+        </button>
+      </div>
+      
+      <div style="display:flex;gap:12px;margin-top:25px;">
+        <button onclick="showDirectCheckout()" style="flex:1;padding:15px;border:none;border-radius:var(--border-radius-md);font-size:15px;font-weight:800;cursor:pointer;background:var(--primary-gradient);color:white;">
+          <i class="fas fa-bolt"></i> Quick Buy
+        </button>
+        <button onclick="addToCartFromModal()" style="flex:1;padding:15px;border:none;border-radius:var(--border-radius-md);font-size:15px;font-weight:800;cursor:pointer;background:var(--secondary-gradient);color:white;">
+          <i class="fas fa-cart-plus"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('checkoutModal')">×</button>
+    
+    <div style="padding:25px;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;">
+        Checkout
+      </h2>
+      
+      <div id="checkoutItems" style="margin-bottom:25px;max-height:250px;overflow-y:auto;padding-right:10px;">
+      </div>
+      
+      <div style="margin:20px 0;">
+        <h3 style="font-size:17px;font-weight:800;color:var(--dark-color);margin-bottom:15px;">
+          Payment Method
+        </h3>
+        <div class="payment-options" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="payment-option" onclick="selectCheckoutPayment('whatsapp')" id="whatsappCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#25D366;">
+              <i class="fab fa-whatsapp"></i>
+            </div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">WhatsApp Order</div>
+              <div style="font-size:12px;color:#64748b;">Confirm via WhatsApp</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectCheckoutPayment('cod')" id="codCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#10b981;">
+              <i class="fas fa-truck"></i>
+            </div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">Cash on Delivery</div>
+              <div style="font-size:12px;color:#64748b;">Pay when arrives</div>
+            </div>
+          </div>
+          
+          <div class="payment-option" onclick="selectCheckoutPayment('jazzcash')" id="jazzcashCheckoutOption" style="padding:15px;border:2px solid #e2e8f0;border-radius:var(--border-radius-md);cursor:pointer;display:flex;align-items:center;gap:12px;background:white;">
+            <div class="payment-icon" style="width:45px;height:45px;border-radius:var(--border-radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;color:white;background:#FF6B00;">
+              <i class="fas fa-qrcode"></i>
+            </div>
+            <div>
+              <div style="font-weight:800;color:var(--dark-color);font-size:14px;">JazzCash / EasyPaisa</div>
+              <div style="font-size:12px;color:#64748b;">Pay via QR Code</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="background:#f8fafc;padding:20px;border-radius:var(--border-radius-md);margin:25px 0;border:1px solid #e2e8f0;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+          <span style="color:#64748b;font-size:14px;">Subtotal</span>
+          <span style="font-weight:800;color:var(--dark-color);font-size:16px;">PKR <span id="checkoutSubtotal">0</span></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;">
+          <span style="color:#64748b;font-size:14px;">Shipping</span>
+          <span style="font-weight:800;color:var(--dark-color);font-size:16px;">PKR 0</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:15px;padding-top:15px;border-top:2px solid #e2e8f0;">
+          <span style="font-size:18px;font-weight:800;color:var(--dark-color);">Total</span>
+          <span style="font-size:24px;font-weight:900;color:#10b981;">PKR <span id="checkoutTotal">0</span></span>
+        </div>
+      </div>
+      
+      <button onclick="proceedToPayment()" style="width:100%;padding:18px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:17px;font-weight:800;cursor:pointer;">
+        <i class="fas fa-lock"></i> Secure Checkout
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="paymentDetailsModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="closeModal('paymentDetailsModal')">×</button>
+    
+    <div style="padding:25px;">
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;" id="paymentMethodTitle">
+        Payment Details
+      </h2>
+      
+      <div id="paymentDetailsContent">
+      </div>
+      
+      <button onclick="confirmPayment()" style="width:100%;padding:18px;background:var(--success-gradient);color:white;border:none;border-radius:var(--border-radius-md);font-size:17px;font-weight:800;cursor:pointer;margin-top:25px;">
+        Confirm Payment
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+// ===== SUPABASE CLIENT INITIALIZATION =====
+const supa = supabase.createClient(
+  "https://dfvnefbxgayxqgjjgtrr.supabase.co",
+  "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
+);
+
+// ===== DUAL NOTIFICATION SYSTEM =====
+let notificationPermission = false;
+let innerNotifications = [];
+let unreadNotifications = 0;
+
+// ===== CUSTOMER DATA COLLECTION =====
+let customerData = {
+  deviceId: '',
+  phone: '',
+  name: '',
+  email: '',
+  installDate: '',
+  lastActive: '',
+  permissions: {}
+};
+
+// Generate unique device ID
+function generateDeviceId() {
+  let deviceId = localStorage.getItem('customer_device_id');
+  if (!deviceId) {
+    deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('customer_device_id', deviceId);
+  }
+  return deviceId;
+}
+
+// Initialize customer data
+function initCustomerData() {
+  customerData.deviceId = generateDeviceId();
+  customerData.installDate = new Date().toISOString();
+  customerData.lastActive = new Date().toISOString();
+  customerData.phone = getCustomerPhone() || '';
+  
+  // Load saved customer name and email
+  const savedName = isolatedLocalStorage.getItem('customerName');
+  const savedEmail = isolatedLocalStorage.getItem('customerEmail');
+  customerData.name = savedName || '';
+  customerData.email = savedEmail || '';
+  
+  // Save to Supabase
+  saveCustomerDataToBackend();
+}
+
+// Save customer data to Supabase
+async function saveCustomerDataToBackend() {
+  try {
+    // First check if customer already exists
+    const { data: existing } = await supa
+      .from('customer_data')
+      .select('id')
+      .eq('device_id', customerData.deviceId)
+      .maybeSingle();
+    
+    if (existing) {
+      // Update existing customer
+      const { error } = await supa
+        .from('customer_data')
+        .update({
+          phone: customerData.phone,
+          name: customerData.name,
+          email: customerData.email,
+          last_active: new Date().toISOString(),
+          permissions: customerData.permissions
+        })
+        .eq('device_id', customerData.deviceId);
+      
+      if (!error) {
+        console.log('Customer data updated');
+      }
+    } else {
+      // Insert new customer
+      const { error } = await supa
+        .from('customer_data')
+        .insert([{
+          device_id: customerData.deviceId,
+          phone: customerData.phone,
+          name: customerData.name,
+          email: customerData.email,
+          business_id: currentBusinessId,
+          install_date: customerData.installDate,
+          last_active: customerData.lastActive,
+          permissions: customerData.permissions
+        }]);
+      
+      if (!error) {
+        console.log('New customer data saved');
+      }
+    }
+  } catch (error) {
+    console.log('Error saving customer data:', error);
+  }
+}
+
+// Update customer permissions
+function updateCustomerPermissions(permissionType, granted) {
+  customerData.permissions[permissionType] = {
+    granted: granted,
+    date: new Date().toISOString()
+  };
+  saveCustomerDataToBackend();
+}
+
+// ===== INSTALL PERMISSIONS SYSTEM =====
+let installPermissionsShown = false;
+
+function showInstallPermissionModal() {
+  // Don't show if already shown in this session
+  if (installPermissionsShown || isolatedLocalStorage.getItem('installPermissionsShown') === 'true') {
+    return;
+  }
+  
+  // Wait 3 seconds after app loads
+  setTimeout(() => {
+    document.getElementById('installPermissionModal').style.display = 'flex';
+    installPermissionsShown = true;
+  }, 3000);
+}
+
+function closeInstallPermissionModal() {
+  document.getElementById('installPermissionModal').style.display = 'none';
+  isolatedLocalStorage.setItem('installPermissionsShown', 'true');
+  
+  // Update permission
+  updateCustomerPermissions('install_modal', false);
+}
+
+async function acceptInstallPermissions() {
+  // Save that permissions were accepted
+  isolatedLocalStorage.setItem('installPermissionsShown', 'true');
+  
+  // Update permissions
+  updateCustomerPermissions('install_modal', true);
+  updateCustomerPermissions('contacts', true);
+  updateCustomerPermissions('notifications', true);
+  updateCustomerPermissions('install_prompt', true);
+  
+  // Close modal
+  document.getElementById('installPermissionModal').style.display = 'none';
+  
+  // Show notification
+  showNotification('✅ Thank you! Enhancing your experience...');
+  
+  // Try to save business to contacts automatically
+  setTimeout(() => {
+    saveBusinessToContacts(true); // true = silent mode
+  }, 1000);
+  
+  // Enable notifications
+  setTimeout(() => {
+    enableNotifications();
+  }, 2000);
+  
+  // Show install prompt if available
+  setTimeout(() => {
+    showInstallPromptIfAvailable();
+  }, 3000);
+  
+  // Save customer data
+  saveCustomerDataToBackend();
+}
+
+// ===== SAVE BUSINESS TO CONTACTS =====
+async function saveBusinessToContacts(silent = false) {
+  if (!card.name || !card.phone) {
+    if (!silent) {
+      showNotification('❌ Business information incomplete');
+    }
+    return;
+  }
+  
+  // Check if contacts API is available
+  if (!('contacts' in navigator && 'ContactsManager' in window)) {
+    if (!silent) {
+      showSaveContactsFallback();
+    }
+    return;
+  }
+  
+  try {
+    // Request contacts permission
+    const granted = await navigator.permissions.query({ name: 'contacts' });
+    
+    if (granted.state === 'granted') {
+      // Create contact object
+      const contact = {
+        name: [card.name],
+        tel: [{
+          number: card.phone,
+          type: 'work'
+        }],
+        email: card.email ? [{
+          address: card.email,
+          type: 'work'
+        }] : [],
+        note: [card.businessName || 'Business Contact'],
+        url: card.website ? [{
+          url: card.website,
+          type: 'work'
+        }] : [],
+        address: card.address ? [{
+          streetAddress: card.address,
+          type: 'work'
+        }] : []
+      };
+      
+      // Save contact
+      const contacts = await navigator.contacts.select(['name', 'tel', 'email'], { multiple: false });
+      await navigator.contacts.save(contact);
+      
+      if (!silent) {
+        showNotification('✅ Business saved to contacts!');
+      }
+      
+      // Add inner notification
+      addInnerNotification('Contact Saved', `${card.name} saved to your phonebook`, 'success');
+      
+      // Update permission
+      updateCustomerPermissions('contacts_saved', true);
+      
+      // Log to backend
+      logContactSave();
+      
+    } else {
+      if (!silent) {
+        showSaveContactsFallback();
+      }
+    }
+  } catch (error) {
+    console.log('Error saving contact:', error);
+    if (!silent) {
+      showSaveContactsFallback();
+    }
+  }
+}
+
+function showSaveContactsFallback() {
+  const businessName = card.name || 'Business';
+  const phone = card.phone || '';
+  const email = card.email || '';
+  const address = card.address || '';
+  
+  let contactInfo = `Business: ${businessName}\n`;
+  contactInfo += `Phone: ${phone}\n`;
+  if (email) contactInfo += `Email: ${email}\n`;
+  if (address) contactInfo += `Address: ${address}\n`;
+  
+  // Copy to clipboard
+  navigator.clipboard.writeText(contactInfo).then(() => {
+    showNotification('📋 Contact info copied! Paste in your contacts app');
+  }).catch(() => {
+    prompt('Copy this contact information:', contactInfo);
+  });
+}
+
+async function logContactSave() {
+  try {
+    const { error } = await supa
+      .from('contact_saves')
+      .insert([{
+        business_id: currentBusinessId,
+        device_id: customerData.deviceId,
+        timestamp: new Date().toISOString()
+      }]);
+    
+    if (!error) {
+      console.log('Contact save logged');
+    }
+  } catch (error) {
+    console.log('Error logging contact save:', error);
+  }
+}
+
+// Register Service Worker
+async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('sw.js');
+      console.log('Service Worker registered:', registration);
+      return registration;
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
+    }
+  }
+  return null;
+}
+
+// Toggle Facebook-style notification drawer
+function toggleNotificationDrawer() {
+  const drawer = document.getElementById('notificationDrawer');
+  if (drawer.classList.contains('open')) {
+    drawer.classList.remove('open');
+  } else {
+    drawer.classList.add('open');
+    loadNotificationDrawer();
+  }
+}
+
+// Load notifications into drawer
+function loadNotificationDrawer() {
+  const list = document.getElementById('notificationList');
+  const count = document.getElementById('notificationCount');
+  
+  if (innerNotifications.length === 0) {
+    list.innerHTML = `
+      <div style="text-align: center; padding: 40px;">
+        <i class="fas fa-bell-slash" style="font-size: 60px; color: #cbd5e1; margin-bottom: 20px;"></i>
+        <h3 style="color: var(--dark-color); margin-bottom: 10px;">No notifications yet</h3>
+        <p style="color: #64748b;">Your notifications will appear here</p>
+        <button onclick="enableNotifications()" style="margin-top: 20px; padding: 10px 20px; background: var(--primary-gradient); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer;">
+          Enable Alerts
+        </button>
+      </div>
+    `;
+    count.textContent = '0';
+    return;
+  }
+  
+  let html = '';
+  innerNotifications.forEach(notif => {
+    const timeAgo = getTimeAgo(notif.time);
+    const icon = getNotificationIconByType(notif.type);
+    
+    html += `
+      <div class="notification-item ${notif.read ? '' : 'unread'}" onclick="markNotificationAsRead(${notif.id})">
+        <div style="display: flex; align-items: start; gap: 12px;">
+          <div style="font-size: 20px; color: ${getNotificationColorByType(notif.type)}">${icon}</div>
+          <div style="flex: 1;">
+            <div style="font-weight: 800; color: var(--dark-color); font-size: 13px; margin-bottom: 4px;">${notif.title}</div>
+            <div style="color: #64748b; font-size: 12px; line-height: 1.4;">${notif.message}</div>
+            <div class="notification-time">
+              <i class="fas fa-clock" style="font-size: 10px;"></i>
+              <span>${timeAgo}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  list.innerHTML = html;
+  count.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+}
+
+// Get time ago string
+function getTimeAgo(date) {
+  const now = new Date();
+  const diffMs = now - new Date(date);
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+  
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return new Date(date).toLocaleDateString();
+}
+
+// Get notification icon by type
+function getNotificationIconByType(type) {
+  const icons = {
+    'success': '✅',
+    'warning': '⚠️',
+    'error': '❌',
+    'info': 'ℹ️',
+    'delivery': '🚚',
+    'order': '📦',
+    'system': '🔔'
+  };
+  return icons[type] || icons.info;
+}
+
+// Get notification color by type
+function getNotificationColorByType(type) {
+  const colors = {
+    'success': '#10b981',
+    'warning': '#f59e0b',
+    'error': '#ef4444',
+    'info': '#3b82f6',
+    'delivery': '#8b5cf6',
+    'order': '#8b5cf6',
+    'system': '#667eea'
+  };
+  return colors[type] || colors.info;
+}
+
+// Mark notification as read
+function markNotificationAsRead(id) {
+  const index = innerNotifications.findIndex(n => n.id === id);
+  if (index !== -1 && !innerNotifications[index].read) {
+    innerNotifications[index].read = true;
+    unreadNotifications--;
+    saveInnerNotifications();
+    updateNotificationBellCount();
+    loadNotificationDrawer();
+  }
+}
+
+// Mark all notifications as read
+function markAllNotificationsAsRead() {
+  innerNotifications.forEach(n => n.read = true);
+  unreadNotifications = 0;
+  saveInnerNotifications();
+  updateNotificationBellCount();
+  loadNotificationDrawer();
+  showNotification('✅ All notifications marked as read');
+}
+
+// Save notifications to localStorage
+function saveInnerNotifications() {
+  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+}
+
+// Load notifications from localStorage
+function loadInnerNotifications() {
+  const saved = isolatedLocalStorage.getItem('innerNotifications');
+  if (saved) {
+    innerNotifications = JSON.parse(saved);
+    unreadNotifications = innerNotifications.filter(n => !n.read).length;
+    updateNotificationBellCount();
+  }
+}
+
+// Update bell icon with count
+function updateNotificationBellCount() {
+  const badge = document.getElementById('notificationBadge');
+  const bell = document.getElementById('notificationBell');
+  
+  if (unreadNotifications > 0) {
+    badge.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+    badge.style.display = 'flex';
+    badge.classList.add('alert');
+    bell.style.color = '#f59e0b';
+  } else {
+    badge.style.display = 'none';
+    badge.classList.remove('alert');
+    if (notificationPermission) {
+      bell.style.color = '#f59e0b';
+    } else {
+      bell.style.color = 'white';
+    }
+  }
+}
+
+// Add inner notification
+function addInnerNotification(title, message, type = 'info') {
+  const notification = {
+    id: Date.now(),
+    title,
+    message,
+    type,
+    time: new Date(),
+    read: false
+  };
+  
+  innerNotifications.unshift(notification);
+  unreadNotifications++;
+  
+  // Keep only last 50 notifications
+  if (innerNotifications.length > 50) {
+    innerNotifications.pop();
+  }
+  
+  saveInnerNotifications();
+  updateNotificationBellCount();
+  
+  // Update drawer if open
+  if (document.getElementById('notificationDrawer').classList.contains('open')) {
+    loadNotificationDrawer();
+  }
+  
+  return notification.id;
+}
+
+// Ask for notification permission
+async function enableNotifications() {
+  if (!('Notification' in window)) {
+    showNotification('❌ Notifications not supported on this device');
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    showNotification('✅ Notifications already enabled!');
+    notificationPermission = true;
+    updateNotificationBellCount();
+    addInnerNotification('Notifications Enabled', 'You will receive alerts for updates and deliveries', 'success');
+    updateCustomerPermissions('notifications', true);
+    return;
+  }
+  
+  if (Notification.permission === 'denied') {
+    showNotification('❌ Notifications blocked. Please enable in browser settings.');
+    updateCustomerPermissions('notifications', false);
+    return;
+  }
+  
+  const permission = await Notification.requestPermission();
+  
+  if (permission === 'granted') {
+    showNotification('✅ Notifications enabled! You will receive alerts.');
+    notificationPermission = true;
+    updateNotificationBellCount();
+    
+    // Register service worker
+    await registerServiceWorker();
+    
+    // Start listening for Supabase notifications
+    startNotificationListener();
+    
+    // Add inner notification
+    addInnerNotification('Notifications Enabled', 'You will receive alerts for updates and deliveries', 'success');
+    
+    // Update permission
+    updateCustomerPermissions('notifications', true);
+  } else {
+    showNotification('❌ Notifications disabled. You wont receive alerts.');
+    updateCustomerPermissions('notifications', false);
+  }
+}
+
+// Check current notification permission
+function checkNotificationPermission() {
+  if (Notification.permission === 'granted') {
+    notificationPermission = true;
+    updateNotificationBellCount();
+    registerServiceWorker().then(() => {
+      startNotificationListener();
+    });
+    updateCustomerPermissions('notifications', true);
+  } else {
+    notificationPermission = false;
+    updateNotificationBellCount();
+    updateCustomerPermissions('notifications', false);
+  }
+}
+
+// Listen for new notifications from Supabase
+function startNotificationListener() {
+  if (!notificationPermission) return;
+  
+  console.log('Starting notification listener...');
+  
+  // Subscribe to Supabase real-time notifications
+  supa
+    .channel('business-notifications')
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'notifications'
+      },
+      (payload) => {
+        console.log('New notification:', payload.new);
+        
+        // Show push notification (mobile top-bar)
+        showPushNotification(payload.new);
+        
+        // Add inner notification (Facebook-style drawer)
+        addInnerNotification(payload.new.title, payload.new.body, 'system');
+        
+        // Show toast notification
+        showNotification(`📢 ${payload.new.title}`);
+      }
+    )
+    .subscribe();
+}
+
+// Show push notification (mobile top-bar)
+function showPushNotification(data) {
+  if (!notificationPermission || !('serviceWorker' in navigator)) return;
+  
+  navigator.serviceWorker.ready.then(registration => {
+    registration.showNotification(data.title || 'Business Alert', {
+      body: data.body || 'New notification',
+      icon: 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png',
+      badge: 'https://cdn-icons-png.flaticon.com/512/1006/1006771.png',
+      vibrate: [200, 100, 200],
+      data: {
+        url: '/',
+        id: data.id
+      }
+    });
+  });
+}
+
+// ===== ADMIN: SEND NOTIFICATION =====
+async function sendNotificationToAll(title, body) {
+  if (!isAdminLoggedIn) {
+    showNotification('❌ Admin access required');
+    return;
+  }
+  
+  if (!title || !body) {
+    title = prompt('Notification Title:', 'New Update');
+    body = prompt('Notification Message:', 'Check out our latest products!');
+    
+    if (!title || !body) return;
+  }
+  
+  const { error } = await supa
+    .from('notifications')
+    .insert([{ title, body }]);
+    
+  if (!error) {
+    showNotification('✅ Notification sent to all users!');
+    
+    // Add inner notification for admin
+    addInnerNotification('Notification Sent', `"${title}" sent to all users`, 'success');
+    
+    // Also trigger for current user if permission granted
+    if (notificationPermission) {
+      showPushNotification({ title, body });
+    }
+  } else {
+    showNotification('❌ Error sending notification');
+  }
+}
+
+// Test notification
+function testNotification() {
+  if (notificationPermission) {
+    showPushNotification({
+      title: 'Test Notification',
+      body: 'This is a test notification from your business app!'
+    });
+    
+    addInnerNotification('Test Notification', 'This is a test notification from your business app!', 'info');
+    
+    showNotification('✅ Test notification sent');
+  } else {
+    showNotification('❌ Enable notifications first');
+  }
+}
+
+// ===== DELIVERY STATUS NOTIFICATIONS =====
+function addDeliveryNotification(delivery) {
+  const statusText = delivery.status.charAt(0).toUpperCase() + delivery.status.slice(1);
+  const title = `Delivery ${statusText}`;
+  const message = `Order #${delivery.order_id} is now ${delivery.status}`;
+  
+  let type = 'info';
+  switch(delivery.status) {
+    case 'delivered': type = 'success'; break;
+    case 'cancelled': type = 'error'; break;
+    case 'pending': type = 'warning'; break;
+    case 'shipped': type = 'delivery'; break;
+  }
+  
+  addInnerNotification(title, message, type);
+  
+  // Also show push notification if enabled
+  if (notificationPermission) {
+    showPushNotification({
+      title: `🚚 ${title}`,
+      body: message
+    });
+  }
+}
+
+// ===== SHORT ID SYSTEM (6 CHARACTERS) =====
+function generateShortId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let shortId = '';
+  for (let i = 0; i < 6; i++) {
+    shortId += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return shortId;
+}
+
+// ===== PASSWORD GENERATOR SYSTEM =====
+function generateAdminPassword(cardId, shortId) {
+  if (!cardId) return "admin123_default";
+  const shortPart = shortId ? shortId.toLowerCase() : cardId.substring(0, 6).toLowerCase();
+  return `business123_${shortPart}`;
+}
+
+// ===== SHARE FUNCTIONALITY =====
+function shareBusiness() {
+  const businessName = card.businessName || card.name || "Business";
+  const currentUrl = window.location.href.split('?')[0]; // Get base URL
+  
+  let shareUrl = currentUrl;
+  
+  // If we have a short ID, use it in the share URL
+  if (shortCardId) {
+    shareUrl = `${currentUrl}?id=${shortCardId}`;
+  } else if (card.id) {
+    // If no short ID but we have full ID, try to get short ID first
+    checkAndCreateShortId(card.id).then(shortId => {
+      if (shortId) {
+        shareUrl = `${currentUrl}?id=${shortId}`;
+        showShareDialog(businessName, shareUrl);
+      } else {
+        shareUrl = `${currentUrl}?id=${card.id}`;
+        showShareDialog(businessName, shareUrl);
+      }
+    });
+  } else {
+    showShareDialog(businessName, shareUrl);
+  }
+}
+
+async function checkAndCreateShortId(fullId) {
+  // Check if short ID already exists for this full ID
+  const { data: existing } = await supa
+    .from('short_urls')
+    .select('short_id')
+    .eq('full_id', fullId)
+    .single();
+  
+  if (existing) {
+    return existing.short_id;
+  }
+  
+  // Create new short ID
+  const shortId = generateShortId();
+  const { error } = await supa
+    .from('short_urls')
+    .insert([{ short_id: shortId, full_id: fullId }]);
+  
+  if (!error) {
+    shortCardId = shortId;
+    return shortId;
+  }
+  
+  return null;
+}
+
+function showShareDialog(businessName, shareUrl) {
+  const shareText = `Check out ${businessName} on their business app!`;
+  const fullText = `${shareText}\n\n${shareUrl}`;
+  
+  if (navigator.share) {
+    // Use Web Share API if available
+    navigator.share({
+      title: businessName,
+      text: shareText,
+      url: shareUrl
+    })
+    .then(() => console.log('Share successful'))
+    .catch((error) => {
+      console.log('Share failed:', error);
+      fallbackShare(fullText);
+    });
+  } else {
+    // Fallback for browsers without Web Share API
+    fallbackShare(fullText);
+  }
+}
+
+function fallbackShare(fullText) {
+  // Create a temporary input to copy the text
+  const tempInput = document.createElement('input');
+  tempInput.value = fullText;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  tempInput.setSelectionRange(0, 99999); // For mobile devices
+  
+  try {
+    const successful = document.execCommand('copy');
+    if (successful) {
+      showNotification('✅ Link copied to clipboard!');
+    } else {
+      prompt('Copy this link to share:', fullText);
+    }
+  } catch (err) {
+    prompt('Copy this link to share:', fullText);
+  }
+  
+  document.body.removeChild(tempInput);
+}
+
+// ===== FIXED PWA MANIFEST SYSTEM =====
+function setupDynamicPWA(businessData) {
+  // Generate app name from business name
+  const businessName = businessData.businessName || businessData.name || "Business";
+  const appName = businessName + " App";
+  const shortName = businessName.length > 12 ? businessName.substring(0, 10) + ".." : businessName;
+  
+  // Use profile image as app icon (or default)
+  const profileImage = businessData.profileImage || '';
+  
+  // Create FIXED manifest object with proper structure
+  const manifest = {
+    "name": appName,
+    "short_name": shortName + " App",
+    "description": "Premium business app for " + businessName,
+    "theme_color": "#667eea",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "orientation": "portrait",
+    "scope": "/",
+    "start_url": window.location.origin + window.location.pathname + "?source=pwa",
+    "icons": [
+      {
+        "src": profileImage || getDefaultIcon(businessName),
+        "sizes": "192x192",
+        "type": "image/png",
+        "purpose": "any maskable"
+      },
+      {
+        "src": profileImage || getDefaultIcon(businessName),
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  };
+  
+  // Remove any existing manifest
+  const oldManifest = document.querySelector('link[rel="manifest"]');
+  if (oldManifest) {
+    oldManifest.remove();
+  }
+  
+  // Create manifest link with proper URL
+  const manifestLink = document.createElement('link');
+  manifestLink.rel = 'manifest';
+  manifestLink.href = 'manifest.json'; // Use static manifest file
+  document.head.appendChild(manifestLink);
+  
+  // Also create a static manifest.json file dynamically
+  createStaticManifest(manifest);
+  
+  // Update page title
+  document.title = appName;
+  
+  // Update loading screen
+  document.getElementById('loadingTitle').textContent = appName;
+  document.getElementById('loadingSubtitle').textContent = `Loading ${businessName} experience...`;
+  
+  // Update theme color meta tag
+  document.getElementById('themeColorMeta').content = "#667eea";
+  
+  // Update favicon
+  updateFavicon(profileImage || getDefaultIcon(businessName));
+  
+  console.log("Dynamic PWA setup for:", businessName);
+  
+  // Trigger PWA install prompt after 3 seconds
+  setTimeout(() => {
+    showInstallPromptIfAvailable();
+  }, 3000);
+}
+
+function createStaticManifest(manifest) {
+  // Create a static manifest.json file
+  const manifestData = JSON.stringify(manifest, null, 2);
+  const blob = new Blob([manifestData], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(blob);
+  
+  // Store in localStorage for service worker to use
+  localStorage.setItem('pwa_manifest', manifestData);
+  
+  // Update the manifest link
+  const manifestLink = document.querySelector('link[rel="manifest"]');
+  if (manifestLink) {
+    manifestLink.href = manifestURL;
+  }
+}
+
+function getDefaultIcon(businessName) {
+  // Create a colored icon with first letter of business name
+  const firstLetter = businessName.charAt(0).toUpperCase();
+  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
+  const color = colors[businessName.length % colors.length];
+  
+  // Return data URL for SVG icon
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(svg);
+}
+
+function updateFavicon(iconUrl) {
+  // Update favicon
+  let favicon = document.querySelector('link[rel="icon"]');
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    document.head.appendChild(favicon);
+  }
+  favicon.href = iconUrl;
+  
+  // Update Apple touch icon
+  let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+  if (!appleIcon) {
+    appleIcon = document.createElement('link');
+    appleIcon.rel = 'apple-touch-icon';
+    document.head.appendChild(appleIcon);
+  }
+  appleIcon.href = iconUrl;
+  appleIcon.sizes = "180x180";
+}
+
+// ===== DATA ISOLATION SYSTEM =====
+let currentBusinessId = '';
+
+function getStorageKey(key) {
+  const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
+  return `business_${businessKey}_${key}`;
+}
+
+const isolatedLocalStorage = {
+  setItem: function(key, value) {
+    const storageKey = getStorageKey(key);
+    return localStorage.setItem(storageKey, value);
+  },
+  
+  getItem: function(key) {
+    const storageKey = getStorageKey(key);
+    return localStorage.getItem(storageKey);
+  },
+  
+  removeItem: function(key) {
+    const storageKey = getStorageKey(key);
+    return localStorage.removeItem(storageKey);
+  },
+  
+  clear: function() {
+    const prefix = getStorageKey('');
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(prefix)) {
+        localStorage.removeItem(key);
+      }
+    }
+  },
+  
+  getAllKeys: function() {
+    const prefix = getStorageKey('');
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(prefix)) {
+        keys.push(key.replace(prefix, ''));
+      }
+    }
+    return keys;
+  }
+};
+
+// ===== CUSTOMER PHONE MANAGEMENT =====
+function getCustomerPhone() {
+  const phone = isolatedLocalStorage.getItem('customerPhone');
+  
+  if (!phone && card.phone) {
+    const savedBusinessPhone = isolatedLocalStorage.getItem('businessPhone');
+    if (savedBusinessPhone === card.phone) {
+      return card.phone;
+    }
+  }
+  
+  return phone;
+}
+
+function saveCustomerPhone(phone) {
+  isolatedLocalStorage.setItem('customerPhone', phone);
+  customerData.phone = phone;
+  saveCustomerDataToBackend();
+}
+
+function saveBusinessPhone(phone) {
+  isolatedLocalStorage.setItem('businessPhone', phone);
+}
+
+// ===== FIXED PWA INSTALLATION HANDLER =====
+let deferredPrompt = null;
+let installButtonShown = false;
+
+// Listen for beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('PWA install prompt available');
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  if (!installButtonShown) {
+    setTimeout(() => {
+      showInstallButton();
+      installButtonShown = true;
+    }, 5000);
+  }
+});
+
+// Show install button
+function showInstallButton() {
+  if (!deferredPrompt) return;
+  
+  const existingContainer = document.querySelector('.install-button-container');
+  if (existingContainer) {
+    existingContainer.remove();
+  }
+  
+  const installContainer = document.createElement('div');
+  installContainer.className = 'install-button-container';
+  installContainer.innerHTML = `
+    <button class="install-btn" onclick="installPWA()">
+      <i class="fas fa-download"></i> Install App
+    </button>
+  `;
+  
+  document.body.appendChild(installContainer);
+  
+  setTimeout(() => {
+    if (installContainer.parentNode) {
+      installContainer.remove();
+      installButtonShown = false;
+    }
+  }, 30000);
+}
+
+// Install PWA
+function installPWA() {
+  if (!deferredPrompt) return;
+  
+  deferredPrompt.prompt();
+  
+  deferredPrompt.userChoice.then((choiceResult) => {
+    if (choiceResult.outcome === 'accepted') {
+      console.log('User accepted the install prompt');
+      showNotification('✅ App installed successfully!');
+      
+      const installContainer = document.querySelector('.install-button-container');
+      if (installContainer) {
+        installContainer.remove();
+      }
+      
+      // Hide install button permanently for this session
+      installButtonShown = true;
+      
+      // Update permission
+      updateCustomerPermissions('app_installed', true);
+    } else {
+      console.log('User dismissed the install prompt');
+      updateCustomerPermissions('app_installed', false);
+    }
+    
+    deferredPrompt = null;
+  });
+}
+
+// Check if PWA is already installed
+function isPWAInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches || 
+         window.navigator.standalone === true;
+}
+
+// Show install prompt if available
+function showInstallPromptIfAvailable() {
+  if (isPWAInstalled()) {
+    console.log('PWA already installed');
+    return;
+  }
+  
+  if (deferredPrompt && !installButtonShown) {
+    showInstallButton();
+  }
+}
+
+// ===== FIXED BACK BUTTON SYSTEM =====
+let lastBackPress = 0;
+let backPressCount = 0;
+let navigationHistory = [];
+
+// Initialize hash-based routing
+function initializeRouting() {
+  window.addEventListener('hashchange', handleHashChange);
+  
+  setTimeout(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      handleHashChange();
+    } else {
+      window.location.hash = '#home';
+    }
+  }, 100);
+}
+
+// Handle hash changes
+function handleHashChange() {
+  const hash = window.location.hash.replace('#', '');
+  const pageMap = {
+    'home': 'homePage',
+    'products': 'productsPage',
+    'cart': 'cartPage',
+    'about': 'aboutPage',
+    'contact': 'contactPage',
+    'delivery': 'deliveryPage',
+    'admin': 'adminPage',
+    'login': 'loginPage'
+  };
+  
+  if (pageMap[hash]) {
+    if (currentPage !== pageMap[hash]) {
+      navigateToDirect(pageMap[hash]);
+    }
+  } else {
+    window.location.hash = '#home';
+  }
+}
+
+// Direct navigation function
+function navigateToDirect(pageId) {
+  if(currentPage === pageId) return;
+  
+  const oldPage = document.getElementById(currentPage);
+  const newPage = document.getElementById(pageId);
+  
+  if(oldPage) {
+    oldPage.classList.remove('active');
+    oldPage.classList.add('slide-out');
+  }
+  
+  setTimeout(() => {
+    if(oldPage) oldPage.classList.remove('slide-out');
+    newPage.classList.add('active');
+    currentPage = pageId;
+    
+    // Show/hide back button in header
+    const backBtn = document.getElementById('headerBackBtn');
+    if (pageId !== 'homePage') {
+      backBtn.style.display = 'flex';
+    } else {
+      backBtn.style.display = 'none';
+    }
+    
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.classList.remove('active');
+    });
+    
+    const navMap = {
+      'homePage': 0,
+      'productsPage': 1,
+      'cartPage': 2,
+      'aboutPage': 3,
+      'contactPage': 4,
+      'deliveryPage': 0,
+      'adminPage': 0,
+      'loginPage': 0
+    };
+    
+    if(navMap[pageId] !== undefined) {
+      document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
+    }
+    
+    // Close notification drawer when navigating
+    document.getElementById('notificationDrawer').classList.remove('open');
+    
+    switch(pageId) {
+      case 'homePage':
+        loadHomePage();
+        break;
+      case 'productsPage':
+        loadProductsPage();
+        break;
+      case 'cartPage':
+        loadCartPage();
+        break;
+      case 'aboutPage':
+        loadAboutPage();
+        break;
+      case 'contactPage':
+        loadContactPage();
+        break;
+      case 'deliveryPage':
+        loadDeliveryStatus();
+        break;
+      case 'adminPage':
+        if (isAdminLoggedIn) {
+          loadAdminPanel();
+        } else {
+          navigateTo('loginPage');
+        }
+        break;
+    }
+  }, 300);
+}
+
+// Main navigation function
+function navigateTo(pageId) {
+  const hashMap = {
+    'homePage': 'home',
+    'productsPage': 'products',
+    'cartPage': 'cart',
+    'aboutPage': 'about',
+    'contactPage': 'contact',
+    'deliveryPage': 'delivery',
+    'adminPage': 'admin',
+    'loginPage': 'login'
+  };
+  
+  if (hashMap[pageId]) {
+    window.location.hash = `#${hashMap[pageId]}`;
+    navigationHistory.push(pageId);
+  }
+}
+
+// Back navigation
+function goBack() {
+  // Close notification drawer first if open
+  if (document.getElementById('notificationDrawer').classList.contains('open')) {
+    toggleNotificationDrawer();
+    return;
+  }
+  
+  if (navigationHistory.length > 1) {
+    navigationHistory.pop();
+    const previousPage = navigationHistory[navigationHistory.length - 1];
+    
+    const hashMap = {
+      'homePage': 'home',
+      'productsPage': 'products',
+      'cartPage': 'cart',
+      'aboutPage': 'about',
+      'contactPage': 'contact',
+      'deliveryPage': 'delivery',
+      'adminPage': 'admin',
+      'loginPage': 'login'
+    };
+    
+    if (hashMap[previousPage]) {
+      window.history.back();
+    } else {
+      navigateTo('homePage');
+    }
+  } else {
+    navigateTo('homePage');
+  }
+}
+
+// Handle browser back button
+window.addEventListener('popstate', function(event) {
+  // Let the hashchange handler deal with it
+});
+
+// ===== EXIT MODAL FUNCTIONS =====
+function showExitModal() {
+  document.getElementById('exitModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeExitModal() {
+  document.getElementById('exitModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+  backPressCount = 0;
+}
+
+function exitApp() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  }
+  
+  if (window.history.length > 1) {
+    window.history.go(-1);
+  } else {
+    window.close();
+  }
+}
+
+// ===== DELIVERY SYSTEM FUNCTIONS =====
+async function checkForDeliveries() {
+  try {
+    const customerPhone = getCustomerPhone();
+    
+    if(!customerPhone) {
+      console.log('No customer phone found for business', currentBusinessId.substring(0, 8));
+      updateDeliveryIcon();
+      return;
+    }
+    
+    const { data, error } = await supa
+      .from('delivery_status')
+      .select('*')
+      .eq('customer_phone', customerPhone)
+      .order('last_updated', { ascending: false });
+      
+    if(error) {
+      console.error('Delivery check error:', error);
+      updateDeliveryIcon();
+      return;
+    }
+    
+    if(data && data.length > 0) {
+      // Check for status changes
+      const oldDeliveryData = deliveryStatusData;
+      deliveryStatusData = data;
+      
+      // Find new or updated deliveries
+      data.forEach(newDelivery => {
+        const oldDelivery = oldDeliveryData.find(d => d.order_id === newDelivery.order_id);
+        
+        if (!oldDelivery) {
+          // New delivery
+          addDeliveryNotification(newDelivery);
+        } else if (oldDelivery.status !== newDelivery.status) {
+          // Status changed
+          addDeliveryNotification(newDelivery);
+        }
+      });
+      
+      updateDeliveryIcon();
+      
+      const pendingOrders = data.filter(order => order.status === 'pending');
+      if (pendingOrders.length > 0) {
+        showNotification(`🚚 You have ${pendingOrders.length} pending delivery${pendingOrders.length > 1 ? 's' : ''}`);
+      }
+    } else {
+      deliveryStatusData = [];
+      updateDeliveryIcon();
+    }
+  } catch(err) {
+    console.log('Delivery check failed:', err);
+    updateDeliveryIcon();
+  }
+}
+
+function updateDeliveryIcon() {
+  const icon = document.getElementById('deliveryIcon');
+  const badge = document.getElementById('deliveryBadge');
+  
+  if(deliveryStatusData.length > 0) {
+    icon.style.color = '#10b981';
+    badge.textContent = deliveryStatusData.length;
+    badge.style.display = 'flex';
+    
+    const hasPending = deliveryStatusData.some(order => order.status === 'pending');
+    if (hasPending) {
+      badge.classList.add('alert');
+    } else {
+      badge.classList.remove('alert');
+    }
+  } else {
+    icon.style.color = 'white';
+    badge.style.display = 'none';
+    badge.classList.remove('alert');
+  }
+}
+
+function checkDeliveryStatus() {
+  const customerPhone = getCustomerPhone();
+  
+  if(!customerPhone) {
+    openPhoneInput();
+    showNotification('Please add your phone number to track deliveries');
+    return;
+  }
+  
+  navigateTo('deliveryPage');
+}
+
+async function loadDeliveryStatus() {
+  const phone = getCustomerPhone();
+  
+  if(!phone) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div class="no-deliveries">
+        <i class="fas fa-phone"></i>
+        <h3>Phone Number Needed</h3>
+        <p>Please save your phone number to track deliveries.</p>
+        <button onclick="openPhoneInput()" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
+          Add Phone Number
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  const { data, error } = await supa
+    .from('delivery_status')
+    .select('*')
+    .eq('customer_phone', phone)
+    .order('last_updated', { ascending: false });
+    
+  if(error) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div style="text-align:center;padding:40px;color:#ef4444;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Error loading deliveries</p>
+        <button onclick="loadDeliveryStatus()" style="margin-top:15px;padding:10px 20px;background:#667eea;color:white;border:none;border-radius:8px;cursor:pointer;">
+          Try Again
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  if(!data || data.length === 0) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div class="no-deliveries">
+        <i class="fas fa-truck" style="color:#10b981;"></i>
+        <h3>No Active Deliveries</h3>
+        <p>Your delivery status will appear here once you place an order.</p>
+        <button onclick="navigateTo('productsPage')" style="padding:12px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;font-weight:700;cursor:pointer;">
+          <i class="fas fa-shopping-bag"></i> Shop Now
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  data.forEach(order => {
+    const statusClass = order.status;
+    const statusText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+    const updatedTime = new Date(order.last_updated).toLocaleString();
+    
+    html += `
+      <div class="delivery-card ${statusClass}">
+        <div class="delivery-header">
+          <div class="delivery-order-id">Order #${order.order_id}</div>
+          <div class="delivery-status ${statusClass}">${statusText}</div>
+        </div>
+        
+        <div class="delivery-info">
+          <i class="fas fa-user"></i>
+          <span>${order.customer_name || 'Customer'}</span>
+        </div>
+        
+        ${order.location ? `
+          <div class="delivery-info">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>${order.location}</span>
+          </div>
+        ` : ''}
+        
+        ${order.delivery_person ? `
+          <div class="delivery-info">
+            <i class="fas fa-user-tag"></i>
+            <span>${order.delivery_person}</span>
+          </div>
+        ` : ''}
+        
+        <div class="delivery-timestamp">
+          <i class="fas fa-clock"></i>
+          <span>Updated: ${updatedTime}</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('deliveryContent').innerHTML = html;
+}
+
+// ===== CUSTOMER PHONE FUNCTIONS =====
+function openPhoneInput() {
+  const currentPhone = getCustomerPhone();
+  const phone = prompt("Enter your phone number for delivery tracking:", currentPhone || "");
+  
+  if (phone) {
+    const cleanedPhone = phone.replace(/\D/g, '');
+    if (cleanedPhone.length >= 10) {
+      saveCustomerPhone(cleanedPhone);
+      updateCustomerPhoneDisplay();
+      showNotification('✅ Phone number saved successfully!');
+      
+      // Add notification
+      addInnerNotification('Phone Number Saved', 'Your phone number has been saved for delivery tracking', 'success');
+      
+      checkForDeliveries();
+      
+      if (currentPage === 'deliveryPage') {
+        loadDeliveryStatus();
+      }
+    } else {
+      showNotification('❌ Please enter a valid phone number');
+    }
+  }
+}
+
+function updateCustomerPhoneDisplay() {
+  const phone = getCustomerPhone();
+  const displayElement = document.getElementById('customerPhoneDisplay');
+  
+  if (phone) {
+    displayElement.textContent = phone;
+    displayElement.style.color = '#10b981';
+    displayElement.style.fontWeight = '800';
+  } else {
+    displayElement.textContent = 'Tap to set your number';
+    displayElement.style.color = '';
+    displayElement.style.fontWeight = '';
+  }
+}
+
+// ===== LOGIN/LOGOUT SYSTEM =====
+function toggleLogin() {
+  if (isAdminLoggedIn) {
+    if (confirm("Are you sure you want to logout?")) {
+      logoutAdmin();
+    }
+  } else {
+    navigateTo('loginPage');
+  }
+}
+
+function updateLoginUI() {
+  const loginIcon = document.getElementById('loginIcon');
+  const loginBtn = document.getElementById('loginBtn');
+  
+  if (isAdminLoggedIn) {
+    loginIcon.className = 'fas fa-sign-out-alt';
+    loginBtn.title = 'Logout';
+  } else {
+    loginIcon.className = 'fas fa-sign-in-alt';
+    loginBtn.title = 'Login';
+  }
+}
+
+function attemptLogin() {
+  const passwordInput = document.getElementById('adminPasswordInput');
+  const enteredPassword = passwordInput.value;
+  
+  if (enteredPassword === businessAdminPassword) {
+    isAdminLoggedIn = true;
+    isolatedLocalStorage.setItem('isAdminLoggedIn', 'true');
+    updateLoginUI();
+    showNotification('✅ Login successful!');
+    
+    // Add notification
+    addInnerNotification('Admin Login', 'You have logged in as administrator', 'success');
+    
+    navigateTo('adminPage');
+  } else {
+    showNotification('❌ Incorrect password. Try again.');
+    passwordInput.value = '';
+    passwordInput.focus();
+  }
+}
+
+function handleLoginKeypress(event) {
+  if (event.key === 'Enter') {
+    attemptLogin();
+  }
+}
+
+function logoutAdmin() {
+  isAdminLoggedIn = false;
+  isolatedLocalStorage.removeItem('isAdminLoggedIn');
+  updateLoginUI();
+  showNotification('👋 Logged out successfully');
+  
+  // Add notification
+  addInnerNotification('Logged Out', 'You have been logged out from admin panel', 'info');
+  
+  navigateTo('homePage');
+}
+
+// ===== ADMIN FUNCTIONS =====
+async function loadAdminPanel() {
+  const { data, error } = await supa
+    .from('delivery_status')
+    .select('*')
+    .order('last_updated', { ascending: false });
+    
+  if(error || !data) {
+    document.getElementById('adminContent').innerHTML = '<p style="padding:20px;color:#ef4444;">Error loading data</p>';
+    return;
+  }
+  
+  let html = `
+    <div style="padding: 15px; display: flex; justify-content: flex-end;">
+      <button onclick="logoutAdmin()" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
+    
+    <input type="text" class="admin-search" id="adminSearch" placeholder="Search orders by ID, phone, name..." onkeyup="searchAdminOrders()">
+    
+    <div style="margin: 15px; display: flex; gap: 10px;">
+      <button onclick="sendNotificationToAll()" style="flex:1;padding:12px;background:var(--warning-gradient);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">
+        <i class="fas fa-bell"></i> Send Alert to All
+      </button>
+      <button onclick="testNotification()" style="flex:1;padding:12px;background:var(--info-gradient);color:white;border:none;border-radius:8px;font-weight:700;cursor:pointer;">
+        <i class="fas fa-bell"></i> Test Alert
+      </button>
+    </div>
+    
+    <button onclick="addNewOrder()" class="admin-btn">
+      <i class="fas fa-plus"></i> Add New Order
+    </button>
+  `;
+  
+  if(data.length === 0) {
+    html += '<p style="text-align:center;padding:40px;color:#64748b;">No orders found</p>';
+  } else {
+    data.forEach(order => {
+      const statusClass = order.status;
+      const updatedTime = new Date(order.last_updated).toLocaleString();
+      
+      html += `
+        <div class="admin-order-card" data-order-id="${order.order_id}" data-phone="${order.customer_phone}">
+          <div class="admin-order-header">
+            <div>
+              <div class="admin-order-id">Order #${order.order_id}</div>
+              <div class="admin-customer-info">${order.customer_name || 'No name'}</div>
+              <div class="admin-customer-info">${order.customer_phone}</div>
+            </div>
+            <div style="font-size:12px;color:#94a3b8;">${updatedTime}</div>
+          </div>
+          
+          <select class="admin-select" data-id="${order.id}">
+            <option value="pending" ${statusClass === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+            <option value="processing" ${statusClass === 'processing' ? 'selected' : ''}>🔄 Processing</option>
+            <option value="shipped" ${statusClass === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
+            <option value="delivered" ${statusClass === 'delivered' ? 'selected' : ''}>✅ Delivered</option>
+            <option value="cancelled" ${statusClass === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+          </select>
+          
+          <input type="text" class="admin-input" data-id="${order.id}" 
+                 placeholder="Location" value="${order.location || ''}">
+                 
+          <input type="text" class="admin-input" data-id="${order.id}" 
+                 placeholder="Delivery Person" value="${order.delivery_person || ''}">
+                 
+          <button onclick="updateOrder('${order.id}')" class="admin-btn success">
+            Update Order
+          </button>
+        </div>
+      `;
+    });
+  }
+  
+  document.getElementById('adminContent').innerHTML = html;
+}
+
+function searchAdminOrders() {
+  const searchTerm = document.getElementById('adminSearch').value.toLowerCase();
+  const cards = document.querySelectorAll('.admin-order-card');
+  
+  cards.forEach(card => {
+    const orderId = card.getAttribute('data-order-id').toLowerCase();
+    const phone = card.getAttribute('data-phone').toLowerCase();
+    const text = card.textContent.toLowerCase();
+    
+    if(orderId.includes(searchTerm) || phone.includes(searchTerm) || text.includes(searchTerm)) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+async function updateOrder(orderId) {
+  const status = document.querySelector(`.admin-select[data-id="${orderId}"]`).value;
+  const location = document.querySelector(`.admin-input[data-id="${orderId}"]`).value;
+  const deliveryPerson = document.querySelectorAll(`.admin-input[data-id="${orderId}"]`)[1]?.value;
+  
+  const { error } = await supa
+    .from('delivery_status')
+    .update({
+      status: status,
+      location: location,
+      delivery_person: deliveryPerson,
+      last_updated: new Date().toISOString()
+    })
+    .eq('id', orderId);
+    
+  if(!error) {
+    showNotification('✅ Order updated successfully!');
+    
+    // Add notification
+    addInnerNotification('Order Updated', `Order #${document.querySelector(`.admin-order-card [data-order-id]`).textContent} updated to ${status}`, 'success');
+    
+    loadAdminPanel();
+    if(currentPage === 'deliveryPage') {
+      loadDeliveryStatus();
+    }
+  } else {
+    showNotification('❌ Error updating order');
+  }
+}
+
+function addNewOrder() {
+  const orderId = prompt("Enter Order ID:");
+  const customerPhone = prompt("Enter Customer Phone:");
+  const customerName = prompt("Enter Customer Name (optional):");
+  
+  if(!orderId || !customerPhone) {
+    showNotification('❌ Order ID and Phone are required');
+    return;
+  }
+  
+  supa
+    .from('delivery_status')
+    .insert([{
+      order_id: orderId,
+      customer_phone: customerPhone,
+      customer_name: customerName || '',
+      status: 'pending',
+      location: '',
+      delivery_person: '',
+      last_updated: new Date().toISOString()
+    }])
+    .then(({ error }) => {
+      if(!error) {
+        showNotification('✅ Order added successfully!');
+        
+        // Add notification
+        addInnerNotification('New Order', `Order #${orderId} added for ${customerName || customerPhone}`, 'success');
+        
+        loadAdminPanel();
+      } else {
+        showNotification('❌ Error adding order: ' + error.message);
+      }
+    });
+}
+
+// ===== NOTIFICATION SYSTEM =====
+function showNotification(message) {
+  const notification = document.getElementById('notificationAlert');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  
+  setTimeout(() => {
+    notification.style.display = 'none';
+  }, 3000);
+}
+
+// ===== AUTO-REFRESH DELIVERIES =====
+setInterval(checkForDeliveries, 30000);
+
+// ===== MAIN APP VARIABLES =====
+let card = {};
+let currentProduct = null;
+let cart = [];
+let buyNowPaymentMethod = 'whatsapp';
+let checkoutPaymentMethod = 'whatsapp';
+let currentPage = 'loadingScreen';
+let deliveryStatusData = [];
+let businessAdminPassword = "";
+let shortCardId = "";
+let isAdminLoggedIn = false;
+
+// ===== RENDER APP =====
+async function renderApp() {
+  setupDynamicPWA(card);
+  
+  document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
+  
+  const photo = document.getElementById('photo');
+  if(card.profileImage) {
+    photo.src = card.profileImage;
+  } else {
+    photo.style.display = 'none';
+  }
+  
+  document.getElementById('name').textContent = card.name || "";
+  document.getElementById('business').textContent = card.businessName || "";
+  
+  document.getElementById('contactPhone').textContent = card.phone || "Not available";
+  document.getElementById('contactEmail').textContent = card.email || "Not available";
+  document.getElementById('contactAddress').textContent = card.address || "Not available";
+  
+  loadHomePage();
+}
+
+// ===== CART MANAGEMENT FUNCTIONS =====
+function updateCartCount() {
+  const count = cart.length;
+  document.getElementById('cartCountMini').textContent = count;
+  document.getElementById('cartBadge').textContent = count;
+  
+  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+  
+  if(currentPage === 'cartPage') {
+    loadCartPage();
+  }
+}
+
+function addToCart(productIndex) {
+  const products = card.products || [];
+  const product = products[productIndex];
+  
+  if(product) {
+    const existingIndex = cart.findIndex(item => 
+      item.title === product.title && 
+      item.discountPrice === product.discountPrice
+    );
+    
+    if(existingIndex === -1) {
+      cart.push({
+        ...product,
+        index: productIndex,
+        quantity: 1
+      });
+    } else {
+      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+    }
+    updateCartCount();
+    showNotification('Product added to cart!');
+    
+    // Add notification
+    addInnerNotification('Cart Updated', `${product.title} added to cart`, 'info');
+  }
+}
+
+function removeFromCart(index) {
+  if(cart[index]) {
+    const productName = cart[index].title;
+    cart.splice(index, 1);
+    updateCartCount();
+    showNotification('Product removed from cart!');
+    
+    // Add notification
+    addInnerNotification('Cart Updated', `${productName} removed from cart`, 'info');
+  }
+}
+
+function updateQuantity(index, change) {
+  if(cart[index]) {
+    const oldQty = cart[index].quantity || 1;
+    cart[index].quantity = Math.max(1, oldQty + change);
+    loadCartPage();
+    
+    if (change > 0) {
+      addInnerNotification('Cart Updated', `Increased quantity of ${cart[index].title}`, 'info');
+    }
+  }
+}
+
+function loadHomePage() {
+  const featuredProducts = document.getElementById('featuredProducts');
+  const products = card.products || [];
+  
+  featuredProducts.innerHTML = '';
+  
+  const featuredProductsList = products.filter(product => 
+    product.badges && product.badges.length > 0
+  ).slice(0, 4);
+  
+  featuredProductsList.forEach((product, index) => {
+    const originalIndex = products.findIndex(p => p.title === product.title);
+    featuredProducts.appendChild(createProductCard(product, originalIndex));
+  });
+  
+  if(featuredProductsList.length === 0) {
+    products.slice(0, 4).forEach((product, index) => {
+      featuredProducts.appendChild(createProductCard(product, index));
+    });
+  }
+}
+
+function loadProductsPage() {
+  const allProducts = document.getElementById('allProducts');
+  const products = card.products || [];
+  
+  allProducts.innerHTML = '';
+  
+  products.forEach((product, index) => {
+    allProducts.appendChild(createProductCard(product, index));
+  });
+}
+
+function createProductCard(product, index) {
+  const price = product.discountPrice || product.originalPrice;
+  const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
+  const hasDiscount = originalPrice && price && originalPrice > price;
+  
+  let discountPercentage = '';
+  if(hasDiscount && originalPrice && price) {
+    const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
+    if(discount > 0) {
+      discountPercentage = `<div class="discount-badge">${discount}% OFF</div>`;
+    }
+  }
+  
+  let priceBadgeHtml = '';
+  if(price) {
+    priceBadgeHtml = `<div class="price-badge">`;
+    if(hasDiscount && originalPrice) {
+      priceBadgeHtml += `<div class="original-price">PKR ${originalPrice}</div>`;
+      priceBadgeHtml += `<div class="current-price">PKR ${price}</div>`;
+    } else {
+      priceBadgeHtml += `<div class="current-price">PKR ${price}</div>`;
+    }
+    priceBadgeHtml += `</div>`;
+  }
+  
+  const badgeClasses = {
+    '🔥 Hot Deal': 'hot',
+    '⭐ Best Seller': 'best-seller',
+    '💸 Discount': 'discount',
+    '⏳ Limited Stock': 'limited',
+    '🛒 In Stock': 'stock',
+    '🚚 Free Delivery': 'delivery'
+  };
+  
+  let badgesHtml = '';
+  if(product.badges && product.badges.length > 0) {
+    badgesHtml = `<div class="product-badges">`;
+    product.badges.slice(0, 2).forEach(badge => {
+      const badgeClass = badgeClasses[badge] || 'discount';
+      badgesHtml += `<span class="badge ${badgeClass}">${badge}</span>`;
+    });
+    badgesHtml += `</div>`;
+  }
+  
+  const cardElement = document.createElement('div');
+  cardElement.className = 'product-card';
+  
+  cardElement.innerHTML = `
+    <div class="product-image-container" onclick="zoomImage('${product.image || ''}', event)">
+      <img src="${product.image || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
+      ${discountPercentage}
+      ${priceBadgeHtml}
+      ${badgesHtml}
+    </div>
+    <div class="product-content">
+      <div class="product-title">${product.title || 'Product'}</div>
+      <div class="product-actions">
+        <button class="btn-primary" onclick="showProductModal(${index}); event.stopPropagation();">
+          <i class="fas fa-bolt"></i> Quick Buy
+        </button>
+        <button class="btn-secondary" onclick="addToCart(${index}); event.stopPropagation();">
+          <i class="fas fa-cart-plus"></i> Add to Cart
+        </button>
+      </div>
+    </div>
+  `;
+  
+  cardElement.onclick = (e) => {
+    if (!e.target.closest('button')) {
+      showProductModal(index);
+    }
+  };
+  
+  return cardElement;
+}
+
+function zoomImage(imageUrl, event) {
+  event.stopPropagation();
+  
+  const overlay = document.getElementById('imageZoomOverlay');
+  const zoomedImage = document.getElementById('zoomedImage');
+  
+  if (imageUrl) {
+    zoomedImage.src = imageUrl;
+    overlay.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeImageZoom() {
+  const overlay = document.getElementById('imageZoomOverlay');
+  overlay.style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+function filterProducts() {
+  const searchTerm = document.getElementById('productsSearch').value.toLowerCase();
+  const products = card.products || [];
+  const allProducts = document.getElementById('allProducts');
+  
+  allProducts.innerHTML = '';
+  
+  const filteredProducts = products.filter(product => 
+    product.title?.toLowerCase().includes(searchTerm) ||
+    product.desc?.toLowerCase().includes(searchTerm) ||
+    (product.badges && product.badges.some(badge => badge.toLowerCase().includes(searchTerm)))
+  );
+  
+  filteredProducts.forEach((product, index) => {
+    const originalIndex = products.findIndex(p => p.title === product.title);
+    allProducts.appendChild(createProductCard(product, originalIndex));
+  });
+}
+
+function loadCartPage() {
+  const cartContent = document.getElementById('cartContent');
+  const cartItemsCount = document.getElementById('cartItemsCount');
+  
+  if(cart.length === 0) {
+    cartContent.innerHTML = `
+      <div class="cart-empty">
+        <i class="fas fa-shopping-cart"></i>
+        <h3>Your cart is empty</h3>
+        <p>Add some products to get started</p>
+        <button onclick="navigateTo('productsPage')">
+          Browse Products
+        </button>
+      </div>
+    `;
+    cartItemsCount.textContent = '0 items';
+    return;
+  }
+  
+  let html = '<div class="cart-items">';
+  let total = 0;
+  
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const itemTotal = price * (item.quantity || 1);
+    total += itemTotal;
+    
+    html += `
+      <div class="cart-item">
+        <img src="${item.image || ''}" class="cart-item-img" loading="lazy" onerror="this.style.display='none'">
+        <div class="cart-item-details">
+          <div class="cart-item-title">${item.title || 'Product'}</div>
+          <div class="cart-item-price">PKR ${itemTotal.toFixed(2)}</div>
+          <div class="cart-item-actions">
+            <div class="quantity-control">
+              <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">-</button>
+              <span class="quantity">${item.quantity || 1}</span>
+              <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">+</button>
+            </div>
+            <button class="remove-btn" onclick="removeFromCart(${index})">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  
+  html += `
+    <div class="cart-summary">
+      <h3><i class="fas fa-receipt"></i> Order Summary</h3>
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span>PKR ${total.toFixed(2)}</span>
+      </div>
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span>PKR 0</span>
+      </div>
+      <div class="summary-row summary-total">
+        <span>Total</span>
+        <span>PKR ${total.toFixed(2)}</span>
+      </div>
+      <button class="checkout-btn" onclick="openCheckoutModal()">
+        <i class="fas fa-lock"></i> Proceed to Checkout
+      </button>
+    </div>
+  `;
+  
+  cartContent.innerHTML = html;
+  cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
+}
+
+function loadAboutPage() {
+  const aboutContent = document.getElementById('aboutContent');
+  const businessHours = document.getElementById('businessHours');
+  const holidaysList = document.getElementById('holidaysList');
+  
+  aboutContent.innerHTML = `
+    <p>${card.business?.about || 'No information available'}</p>
+  `;
+  
+  if(card.businessHours && card.businessHours.length > 0) {
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    businessHours.innerHTML = '';
+    
+    card.businessHours.forEach((day, index) => {
+      if(day) {
+        const hourItem = document.createElement('div');
+        hourItem.className = 'hour-item';
+        
+        if(!day.open || day.status === 'closed') {
+          hourItem.innerHTML = `
+            <span class="day-name">${days[index]}</span>
+            <span class="day-time closed">Closed</span>
+          `;
+        } else {
+          hourItem.innerHTML = `
+            <span class="day-name">${days[index]}</span>
+            <span class="day-time">${day.start || ''} - ${day.end || ''}</span>
+          `;
+        }
+        
+        businessHours.appendChild(hourItem);
+      }
+    });
+  }
+  
+  if(card.holidays && card.holidays.length > 0) {
+    holidaysList.innerHTML = '';
+    
+    card.holidays.forEach(holiday => {
+      if(holiday.name && holiday.date) {
+        const date = new Date(holiday.date);
+        const formattedDate = date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+        
+        const holidayItem = document.createElement('div');
+        holidayItem.className = 'hour-item';
+        holidayItem.innerHTML = `
+          <span class="day-name">${holiday.name}</span>
+          <span class="day-time">${formattedDate}</span>
+        `;
+        holidaysList.appendChild(holidayItem);
+      }
+    });
+  }
+}
+
+function loadContactPage() {
+  const socialGrid = document.getElementById('socialGrid');
+  const socialMedia = card.socialMedia || {};
+  
+  socialGrid.innerHTML = '';
+  
+  const socialPlatforms = [
+    { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Facebook', className: 'facebook' },
+    { key: 'instagram', icon: 'fab fa-instagram', label: 'Instagram', className: 'instagram' },
+    { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', className: 'twitter' },
+    { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', className: 'linkedin' },
+    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', className: 'youtube' },
+    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', className: 'tiktok' }
+  ];
+  
+  socialPlatforms.forEach(platform => {
+    const url = socialMedia[platform.key];
+    if(url && url.trim()) {
+      const socialLink = document.createElement('a');
+      socialLink.className = 'social-link';
+      socialLink.href = url.includes('://') ? url : `https://${url}`;
+      socialLink.target = '_blank';
+      socialLink.innerHTML = `
+        <div class="social-icon ${platform.className}">
+          <i class="${platform.icon}"></i>
+        </div>
+        <div class="social-label">${platform.label}</div>
+      `;
+      socialGrid.appendChild(socialLink);
+    }
+  });
+}
+
+function showProductModal(productIndex) {
+  const products = card.products || [];
+  currentProduct = products[productIndex];
+  
+  if(!currentProduct) return;
+  
+  const price = currentProduct.discountPrice || currentProduct.originalPrice;
+  const originalPrice = currentProduct.originalPrice && currentProduct.discountPrice ? currentProduct.originalPrice : null;
+  const hasDiscount = originalPrice && price && originalPrice > price;
+  
+  document.getElementById('modalImage').src = currentProduct.image || '';
+  document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
+  document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
+  
+  const modalPrice = document.getElementById('modalPrice');
+  if(hasDiscount) {
+    const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
+    modalPrice.innerHTML = `
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <div style="text-decoration:line-through;color:#94a3b8;font-size:16px;font-weight:500;">PKR ${originalPrice}</div>
+        <div style="color:#10b981;font-size:24px;font-weight:900;">PKR ${price}</div>
+        <div style="background:var(--danger-gradient);color:white;padding:4px 8px;border-radius:4px;font-size:13px;font-weight:800;">${discount}% OFF</div>
+      </div>
+    `;
+  } else {
+    modalPrice.innerHTML = `
+      <div style="color:#10b981;font-size:24px;font-weight:900;">PKR ${price || 'N/A'}</div>
+    `;
+  }
+  
+  document.getElementById('directCheckoutSection').style.display = 'none';
+  selectBuyNowPayment('whatsapp');
+  
+  openModal('productModal');
+}
+
+function showDirectCheckout() {
+  document.getElementById('directCheckoutSection').style.display = 'block';
+}
+
+function addToCartFromModal() {
+  if(currentProduct) {
+    const products = card.products || [];
+    const productIndex = products.findIndex(p => p.title === currentProduct.title);
+    
+    if(productIndex !== -1) {
+      addToCart(productIndex);
+      closeModal('productModal');
+    }
+  }
+}
+
+function selectBuyNowPayment(method) {
+  buyNowPaymentMethod = method;
+  
+  const whatsappOption = document.getElementById('whatsappBuyNowOption');
+  const codOption = document.getElementById('codBuyNowOption');
+  const jazzcashOption = document.getElementById('jazzcashBuyNowOption');
+  
+  [whatsappOption, codOption, jazzcashOption].forEach(option => {
+    if(option) {
+      option.style.borderColor = '#e2e8f0';
+    }
+  });
+  
+  if(method === 'whatsapp' && whatsappOption) {
+    whatsappOption.style.borderColor = '#25D366';
+  } else if(method === 'cod' && codOption) {
+    codOption.style.borderColor = '#10b981';
+  } else if(method === 'jazzcash' && jazzcashOption) {
+    jazzcashOption.style.borderColor = '#FF6B00';
+  }
+}
+
+function checkoutBuyNow() {
+  if(!currentProduct) return;
+  
+  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    showPaymentDetailsModal('buyNow');
+  } else {
+    sendBuyNowOrder();
+  }
+}
+
+function sendBuyNowOrder() {
+  if(!currentProduct) return;
+  
+  const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
+  const businessName = card.businessName || card.name || "Your Business";
+  
+  let message = `Hello ${businessName} Team,\n\n`;
+  message += `I would like to place an order for the following product:\n\n`;
+  message += `🛒 **Product:** ${currentProduct.title || 'Product'}\n`;
+  message += `💰 **Price:** PKR ${price}\n`;
+  
+  if(currentProduct.desc) {
+    message += `📝 **Description:** ${currentProduct.desc}\n`;
+  }
+  
+  message += `\n---\n`;
+  message += `💳 **Payment Method:** ${getPaymentMethodName(buyNowPaymentMethod)}\n`;
+  
+  if(buyNowPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    message += `📱 **Payment Details:** Amount sent to ${card.payments.jazzcash.number || ''}\n`;
+    message += `💸 **Via:** ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
+  } else if(buyNowPaymentMethod === 'cod') {
+    message += `📦 **Delivery:** I prefer Cash on Delivery\n`;
+  }
+  
+  message += `\nPlease confirm product availability and share estimated delivery time.\n`;
+  message += `Thank you!\n`;
+  
+  if(card.phone) {
+    const phone = card.phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+  }
+  
+  // Add notification
+  addInnerNotification('Order Placed', `Order placed for ${currentProduct.title}`, 'success');
+  
+  closeModal('productModal');
+}
+
+function openCheckoutModal() {
+  const checkoutItems = document.getElementById('checkoutItems');
+  let subtotal = 0;
+  
+  checkoutItems.innerHTML = '';
+  
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const itemTotal = price * (item.quantity || 1);
+    subtotal += itemTotal;
+    
+    checkoutItems.innerHTML += `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:12px;background:#f8fafc;border-radius:12px;border:1px solid #e2e8f0;">
+        <div>
+          <div style="font-weight:800;color:var(--dark-color);margin-bottom:4px;">${item.title || 'Product'}</div>
+          <div style="font-size:12px;color:#64748b;">Qty: ${item.quantity || 1}</div>
+        </div>
+        <div style="font-weight:800;color:var(--dark-color);font-size:16px;">PKR ${itemTotal.toFixed(2)}</div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('checkoutSubtotal').textContent = subtotal.toFixed(2);
+  document.getElementById('checkoutTotal').textContent = subtotal.toFixed(2);
+  selectCheckoutPayment('whatsapp');
+  
+  openModal('checkoutModal');
+}
+
+function selectCheckoutPayment(method) {
+  checkoutPaymentMethod = method;
+  
+  const whatsappOption = document.getElementById('whatsappCheckoutOption');
+  const codOption = document.getElementById('codCheckoutOption');
+  const jazzcashOption = document.getElementById('jazzcashCheckoutOption');
+  
+  [whatsappOption, codOption, jazzcashOption].forEach(option => {
+    if(option) {
+      option.style.borderColor = '#e2e8f0';
+    }
+  });
+  
+  if(method === 'whatsapp' && whatsappOption) {
+    whatsappOption.style.borderColor = '#25D366';
+  } else if(method === 'cod' && codOption) {
+    codOption.style.borderColor = '#10b981';
+  } else if(method === 'jazzcash' && jazzcashOption) {
+    jazzcashOption.style.borderColor = '#FF6B00';
+  }
+}
+
+function proceedToPayment() {
+  if(cart.length === 0) return;
+  
+  if(checkoutPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    showPaymentDetailsModal('checkout');
+  } else {
+    sendCheckoutOrder();
+  }
+}
+
+function showPaymentDetailsModal(context) {
+  const paymentMethodTitle = document.getElementById('paymentMethodTitle');
+  const paymentDetailsContent = document.getElementById('paymentDetailsContent');
+  const businessName = card.businessName || card.name || "Your Business";
+  
+  if(context === 'buyNow' && currentProduct) {
+    const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
+    paymentMethodTitle.innerHTML = `JazzCash Payment`;
+    
+    paymentDetailsContent.innerHTML = `
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px;color:#64748b;margin-bottom:12px;">Send <strong style="color:#10b981;font-size:20px;">PKR ${price}</strong> to:</div>
+          <div style="font-size:24px;font-weight:900;color:#FF6B00;margin:15px 0;background:rgba(255,107,0,0.1);padding:15px;border-radius:16px;">
+            ${card.payments.jazzcash.number || ''}
+          </div>
+          <div style="font-size:13px;color:#64748b;margin-top:10px;">For: ${currentProduct.title || 'Product'}</div>
+        </div>
+        
+        ${card.payments.jazzcash.barcode ? `
+          <div style="margin:20px 0;text-align:center;">
+            <div style="font-size:14px;color:#64748b;margin-bottom:12px;font-weight:700;">Scan QR Code to Pay</div>
+            <img src="${card.payments.jazzcash.barcode}" style="max-width:200px;max-height:200px;border-radius:16px;border:2px solid #e2e8f0;display:block;margin:0 auto;background:white;padding:12px;">
+          </div>
+        ` : ''}
+        
+        <div style="background:#f0f9ff;padding:15px;border-radius:16px;margin-top:20px;">
+          <div style="font-size:14px;color:#64748b;margin-bottom:10px;font-weight:800;">Instructions:</div>
+          <ol style="text-align:left;padding-left:20px;margin:12px 0;color:#475569;line-height:1.6;">
+            <li style="margin-bottom:8px;">Complete payment using the QR code or number above</li>
+            <li style="margin-bottom:8px;">Take screenshot of payment confirmation</li>
+            <li>Share screenshot via WhatsApp for order verification</li>
+          </ol>
+        </div>
+      </div>
+    `;
+  } else if(context === 'checkout') {
+    const total = cart.reduce((sum, item) => {
+      const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+      return sum + (price * (item.quantity || 1));
+    }, 0);
+    
+    paymentMethodTitle.innerHTML = `JazzCash Payment`;
+    
+    paymentDetailsContent.innerHTML = `
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px;color:#64748b;margin-bottom:12px;">Send <strong style="color:#10b981;font-size:20px;">PKR ${total.toFixed(2)}</strong> to:</div>
+          <div style="font-size:24px;font-weight:900;color:#FF6B00;margin:15px 0;background:rgba(255,107,0,0.1);padding:15px;border-radius:16px;">
+            ${card.payments.jazzcash.number || ''}
+          </div>
+          <div style="font-size:13px;color:#64748b;margin-top:10px;">For: ${businessName} - Order (${cart.length} items)</div>
+        </div>
+        
+        ${card.payments.jazzcash.barcode ? `
+          <div style="margin:20px 0;text-align:center;">
+            <div style="font-size:14px;color:#64748b;margin-bottom:12px;font-weight:700;">Scan QR Code to Pay</div>
+            <img src="${card.payments.jazzcash.barcode}" style="max-width:200px;max-height:200px;border-radius:16px;border:2px solid #e2e8f0;display:block;margin:0 auto;background:white;padding:12px;">
+          </div>
+        ` : ''}
+        
+        <div style="background:#f0f9ff;padding:15px;border-radius:16px;margin-top:20px;">
+          <div style="font-size:14px;color:#64748b;margin-bottom:10px;font-weight:800;">Instructions:</div>
+          <ol style="text-align:left;padding-left:20px;margin:12px 0;color:#475569;line-height:1.6;">
+            <li style="margin-bottom:8px;">Complete payment using the QR code or number above</li>
+            <li style="margin-bottom:8px;">Take screenshot of payment confirmation</li>
+            <li>Share screenshot via WhatsApp for order verification</li>
+          </ol>
+        </div>
+      </div>
+    `;
+  }
+  
+  openModal('paymentDetailsModal');
+  closeModal(context === 'buyNow' ? 'productModal' : 'checkoutModal');
+}
+
+function confirmPayment() {
+  if(currentPage === 'checkoutModal' || checkoutPaymentMethod === 'jazzcash') {
+    sendCheckoutOrder();
+  } else {
+    sendBuyNowOrder();
+  }
+  closeModal('paymentDetailsModal');
+}
+
+function sendCheckoutOrder() {
+  if(cart.length === 0) return;
+  
+  const businessName = card.businessName || card.name || "Your Business";
+  
+  let message = `Hello ${businessName} Team,\n\n`;
+  message += `I would like to place an order:\n\n`;
+  message += `🛒 **Order Details:**\n`;
+  
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const total = price * (item.quantity || 1);
+    message += `${index + 1}. ${item.title || 'Product'} - Qty: ${item.quantity || 1} - PKR ${total.toFixed(2)}\n`;
+  });
+  
+  const orderTotal = cart.reduce((sum, item) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    return sum + (price * (item.quantity || 1));
+  }, 0);
+  
+  message += `\n---\n`;
+  message += `💰 **Subtotal:** PKR ${orderTotal.toFixed(2)}\n`;
+  message += `📦 **Shipping:** PKR 0\n`;
+  message += `🎯 **Total:** PKR ${orderTotal.toFixed(2)}\n\n`;
+  
+  message += `💳 **Payment Method:** ${getPaymentMethodName(checkoutPaymentMethod)}\n`;
+  
+  if(checkoutPaymentMethod === 'jazzcash' && card.payments?.jazzcash?.active) {
+    message += `📱 **Payment Details:** Amount sent to ${card.payments.jazzcash.number || ''}\n`;
+    message += `💸 **Via:** ${card.payments.jazzcash.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash'}\n`;
+  } else if(checkoutPaymentMethod === 'cod') {
+    message += `📦 **Delivery:** I prefer Cash on Delivery\n`;
+  }
+  
+  message += `\nPlease confirm all items are available and share estimated delivery time.\n`;
+  message += `Delivery address will be shared in next message.\n`;
+  message += `Thank you!\n`;
+  
+  if(card.phone) {
+    const phone = card.phone.replace(/\D/g, '');
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+  }
+  
+  // Add notification
+  addInnerNotification('Order Placed', `Order placed for ${cart.length} items (Total: PKR ${orderTotal.toFixed(2)})`, 'success');
+  
+  cart = [];
+  updateCartCount();
+  closeModal('checkoutModal');
+  navigateTo('homePage');
+}
+
+function getPaymentMethodName(method) {
+  switch(method) {
+    case 'whatsapp': return 'WhatsApp Order';
+    case 'cod': return 'Cash on Delivery';
+    case 'jazzcash': return card.payments?.jazzcash?.type === 'easypaisa' ? 'EasyPaisa' : 'JazzCash';
+    default: return 'WhatsApp Order';
+  }
+}
+
+function openWhatsAppChat(context) {
+  if(!card.phone) {
+    showNotification('WhatsApp number not available');
+    return;
+  }
+  
+  const phone = card.phone.replace(/\D/g, '');
+  const businessName = card.businessName || card.name || "Your Business";
+  
+  let message = `Hello ${businessName} Team,\n\n`;
+  message += `I came across your business and I'm interested in your products/services.\n`;
+  message += `Could you please share more information about:\n`;
+  message += `1. Current offers/discounts\n`;
+  message += `2. Product availability\n`;
+  message += `3. Delivery options and charges\n\n`;
+  message += `Thank you!`;
+  
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function makeCall() {
+  if(card.phone) {
+    window.open(`tel:${card.phone}`);
+  }
+}
+
+function sendEmail() {
+  if(card.email) {
+    const subject = encodeURIComponent(`Inquiry - ${card.businessName || 'Business'}`);
+    const body = encodeURIComponent(`Hello,\n\nI would like to know more about your products/services.\n\nPlease share more information.\n\nThank you!`);
+    window.open(`mailto:${card.email}?subject=${subject}&body=${body}`);
+  }
+}
+
+function openMap() {
+  if(card.address) {
+    window.open(`https://maps.google.com/?q=${encodeURIComponent(card.address)}`, '_blank');
+  }
+}
+
+function openModal(modalId) {
+  document.getElementById(modalId).style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+function openDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+// ===== INITIALIZE APP =====
+document.addEventListener("DOMContentLoaded", async () => {
+  // Check for short ID in URL
+  const urlParams = new URLSearchParams(location.search);
+  let id = urlParams.get("id") || localStorage.getItem("lastCardId");
+  
+  console.log("Initial ID from URL:", id);
+  
+  // If it's a short ID (6 characters), map it to full UUID
+  if (id && id.length === 6) {
+    console.log("Detected short ID (6 chars), looking up full ID...");
+    const { data: mapping } = await supa
+      .from('short_urls')
+      .select('full_id')
+      .eq('short_id', id)
+      .single();
+    
+    if (mapping) {
+      id = mapping.full_id;
+      shortCardId = mapping.short_id;
+      console.log("Found mapping: short", shortCardId, "-> full", id.substring(0, 8) + "...");
+    } else {
+      console.log("No mapping found for short ID:", id);
+    }
+  } else if (id && id.length === 36) { // UUID length
+    // Generate short ID for new cards (6 characters)
+    console.log("Detected full UUID, generating short ID...");
+    const shortId = generateShortId();
+    const { error } = await supa
+      .from('short_urls')
+      .insert([{ short_id: shortId, full_id: id }]);
+    
+    if (!error) {
+      shortCardId = shortId;
+      console.log("Generated short ID:", shortCardId);
+    } else {
+      console.log("Error creating short ID:", error);
+      // Try to get existing short ID
+      const { data: existing } = await supa
+        .from('short_urls')
+        .select('short_id')
+        .eq('full_id', id)
+        .single();
+      
+      if (existing) {
+        shortCardId = existing.short_id;
+        console.log("Found existing short ID:", shortCardId);
+      }
+    }
+  }
+  
+  if(!id) {
+    document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+    return;
+  }
+
+  // Save the card ID globally (for backward compatibility)
+  localStorage.setItem("lastCardId", id);
+  
+  // Set current business ID for isolation
+  currentBusinessId = id;
+  
+  // Load cart from isolated storage
+  const savedCart = isolatedLocalStorage.getItem('cart');
+  cart = savedCart ? JSON.parse(savedCart) : [];
+  
+  // Load admin login status from isolated storage
+  isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
+  
+  // Load notifications
+  loadInnerNotifications();
+  
+  // Initialize customer data
+  initCustomerData();
+  
+  // Show install permission modal after delay
+  setTimeout(() => {
+    showInstallPermissionModal();
+  }, 5000);
+  
+  setTimeout(async () => {
+    const {data, error} = await supa.from("cards").select("*").eq("id", id).single();
+    if(error || !data) {
+      document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>";
+      return;
+    }
+
+    card = JSON.parse(data.data);
+    card.id = data.id;
+    
+    // Save business phone for admin check
+    if (card.phone) {
+      saveBusinessPhone(card.phone);
+    }
+    
+    // Generate unique admin password for this business using short ID
+    businessAdminPassword = generateAdminPassword(card.id, shortCardId);
+    console.log("Admin password generated:", businessAdminPassword);
+    console.log("Short ID for this business:", shortCardId);
+    
+    // Update password hint with short ID
+    if (shortCardId) {
+      document.getElementById('passwordHint').textContent = 
+        `Hint: Password format is business123_${shortCardId.toLowerCase()}`;
+    } else {
+      document.getElementById('passwordHint').textContent = 
+        `Hint: Password format is business123_{short_id}`;
+    }
+    
+    await renderApp();
+    
+    // Initialize routing after render
+    initializeRouting();
+    
+    // Start with home page
+    navigationHistory.push('homePage');
+    
+    updateCartCount();
+    updateLoginUI();
+    updateCustomerPhoneDisplay();
+    updateNotificationBellCount();
+    
+    // Initialize notifications
+    setTimeout(() => {
+      checkNotificationPermission();
+    }, 1000);
+    
+    // Check for deliveries
+    setTimeout(() => {
+      checkForDeliveries();
+    }, 1000);
+    
+    // Add welcome notification
+    setTimeout(() => {
+      if (innerNotifications.length === 0) {
+        addInnerNotification('Welcome!', 'Get started by browsing products or enabling notifications', 'info');
+      }
+    }, 2000);
+  }, 2000);
+});
+
+// Initialize notifications when app starts
+document.addEventListener('DOMContentLoaded', function() {
+  // Check notification permission after app loads
+  setTimeout(() => {
+    checkNotificationPermission();
+  }, 3000);
+});
+</script>
+</body>
+</html>
