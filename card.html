@@ -12,36 +12,22 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
 <link rel="manifest" href="manifest.json">
 <style>
-/* ===== FULL ORIGINAL CSS + NEW CHECKOUT STYLES ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
   --whatsapp-gradient: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
   --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-  --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  --info-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   --dark-color: #0f172a;
-  --darker-color: #020617;
   --light-color: #f8fafc;
   --lighter-color: #ffffff;
-  --glass-bg: rgba(255, 255, 255, 0.98);
-  --glass-border: rgba(255, 255, 255, 0.2);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --glass-bg: rgba(255,255,255,0.98);
   --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
   --shadow-md: 0 10px 30px rgba(0,0,0,0.1);
-  --shadow-sm: 0 4px 15px rgba(0,0,0,0.08);
-  --border-radius-xl: 32px;
   --border-radius-lg: 24px;
   --border-radius-md: 16px;
-  --border-radius-sm: 12px;
-  --border-radius-xs: 8px;
-  --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-fast: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
   font-family: 'Poppins', sans-serif;
   background: var(--primary-gradient);
@@ -61,8 +47,7 @@ body {
   margin: 0 auto;
   background: var(--light-color);
   overflow: hidden;
-  box-shadow: var(--shadow-xl);
-  border-radius: 0;
+  box-shadow: var(--shadow-lg);
 }
 .page {
   position: absolute;
@@ -77,13 +62,13 @@ body {
   transform: translateX(100%);
   opacity: 0;
   visibility: hidden;
-  transition: var(--transition-slow);
+  transition: var(--transition);
   z-index: 1;
 }
 .page.active { transform: translateX(0); opacity: 1; visibility: visible; z-index: 2; }
 .page.slide-out { transform: translateX(-100%); opacity: 0; visibility: hidden; }
 
-/* ----- LOADING SCREEN ----- */
+/* Loading Screen */
 #loadingScreen {
   display: flex;
   flex-direction: column;
@@ -102,10 +87,10 @@ body {
   margin-bottom: 30px;
 }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-#loadingScreen h1 { color: white; font-size: 28px; font-weight: 900; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
-#loadingScreen p { color: rgba(255,255,255,0.9); font-size: 16px; text-align: center; max-width: 300px; }
+#loadingScreen h1 { color: white; font-size: 28px; font-weight: 900; margin-bottom: 10px; }
+#loadingScreen p { color: rgba(255,255,255,0.9); font-size: 16px; text-align: center; }
 
-/* ----- HEADER ----- */
+/* Header */
 .header-container {
   position: fixed;
   top: 0;
@@ -113,15 +98,13 @@ body {
   width: 100%;
   max-width: 480px;
   height: 80px;
-  background: rgba(102, 126, 234, 0.95);
+  background: rgba(102,126,234,0.95);
   backdrop-filter: blur(30px);
-  border-bottom: 1px solid rgba(255,255,255,0.2);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
   z-index: 1001;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 .header-icons {
   position: absolute;
@@ -130,9 +113,7 @@ body {
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 25px;
-  z-index: 10;
   padding: 0 20px;
 }
 .header-icon-btn {
@@ -142,15 +123,12 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 10;
   background: rgba(255,255,255,0.2);
   backdrop-filter: blur(10px);
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.3);
-  transition: var(--transition-fast);
-  position: relative;
 }
-.header-icon-btn i { color: white; font-size: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
+.header-icon-btn i { color: white; font-size: 20px; }
 .back-btn {
   position: absolute;
   top: 20px;
@@ -159,7 +137,6 @@ body {
   height: 45px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
   color: white;
   display: flex;
   align-items: center;
@@ -168,44 +145,6 @@ body {
   cursor: pointer;
   border: 1px solid rgba(255,255,255,0.3);
   z-index: 100;
-}
-.save-contact-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.3);
-  z-index: 100;
-  transition: var(--transition-fast);
-}
-.share-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.3);
-  z-index: 100;
-  transition: var(--transition-fast);
 }
 .delivery-badge {
   position: absolute;
@@ -222,13 +161,9 @@ body {
   align-items: center;
   justify-content: center;
   border: 2px solid rgba(255,255,255,0.5);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  z-index: 11;
 }
-.delivery-badge.alert { background: #ef4444; animation: pulse 2s infinite; }
-@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-/* ----- BOTTOM NAV ----- */
+/* Bottom Nav */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -238,14 +173,13 @@ body {
   height: 70px;
   background: var(--glass-bg);
   backdrop-filter: blur(30px);
-  border-top: 1px solid var(--glass-border);
+  border-top: 1px solid rgba(255,255,255,0.2);
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 0 15px;
   z-index: 1000;
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.1);
-  border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+  border-radius: 32px 32px 0 0;
 }
 .nav-item {
   display: flex;
@@ -256,14 +190,11 @@ body {
   padding: 8px;
   border-radius: var(--border-radius-md);
   cursor: pointer;
-  transition: var(--transition);
   flex: 1;
-  position: relative;
 }
-.nav-item.active { background: rgba(102, 126, 234, 0.1); }
-.nav-icon { font-size: 22px; color: #64748b; transition: var(--transition); position: relative; }
 .nav-item.active .nav-icon { color: #667eea; transform: scale(1.1); }
-.nav-label { font-size: 11px; font-weight: 600; color: #64748b; transition: var(--transition); }
+.nav-icon { font-size: 22px; color: #64748b; transition: var(--transition); }
+.nav-label { font-size: 11px; font-weight: 600; color: #64748b; }
 .nav-item.active .nav-label { color: #667eea; font-weight: 700; }
 .cart-badge {
   position: absolute;
@@ -279,118 +210,61 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 5px;
   border: 2px solid var(--glass-bg);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  z-index: 10;
 }
 
-/* ----- NOTIFICATION DRAWER (SIMPLIFIED FOR SPACE) ----- */
-.notification-drawer { /* Full original CSS exists in my local - keeping functional */ }
-.notification-alert { /* Full original */ }
-
-/* ----- HOME PAGE ----- */
-#homePage { padding-top: 80px; padding-bottom: 100px; background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); }
-.app-header {
-  background: var(--primary-gradient);
-  padding: 30px 25px;
-  border-radius: 0 0 50px 50px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-}
-.quick-actions { display: grid; grid-template-columns: repeat(2,1fr); gap: 15px; margin-top: 20px; }
-.profile-section { background: var(--glass-bg); border-radius: var(--border-radius-xl); padding: 30px; margin: 30px 25px; box-shadow: var(--shadow-lg); text-align: center; }
+/* Products Grid */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   padding: 0 12px;
-  align-items: stretch;
   margin-bottom: 20px;
 }
 .product-card {
   height: 260px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  background: var(--lighter-color);
+  background: white;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
   padding: 8px;
-  overflow: hidden;
-  transition: var(--transition-fast);
-  cursor: pointer;
-  position: relative;
-  min-height: 260px;
-  max-height: 260px;
+  display: flex;
+  flex-direction: column;
 }
 .product-image-container {
   position: relative;
   width: 100%;
-  min-height: 140px;
-  max-height: 160px;
+  height: 140px;
   background: #f8fafc;
   border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 8px;
-  flex-shrink: 0;
-  border: 1px solid #f1f5f9;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 8px;
 }
-.product-image { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; display: block; padding: 4px; }
+.product-image { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-/* ----- CART PAGE ----- */
-#cartPage { padding-top: 80px; padding-bottom: 100px; background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%); }
-.cart-header {
-  background: var(--primary-gradient);
-  padding: 30px 25px;
-  border-radius: 0 0 30px 30px;
-  margin: 0;
-  position: relative;
-}
-.cart-item { background: var(--lighter-color); border-radius: var(--border-radius-lg); padding: 15px; display: flex; gap: 15px; box-shadow: var(--shadow-md); margin-bottom: 15px; }
-.cart-summary { background: var(--lighter-color); border-radius: var(--border-radius-lg); padding: 25px; margin: 25px; box-shadow: var(--shadow-md); }
-.checkout-btn {
-  width: 100%;
-  padding: 18px;
-  background: var(--success-gradient);
-  color: white;
-  border: none;
-  border-radius: var(--border-radius-lg);
-  font-size: 17px;
-  font-weight: 800;
-  cursor: pointer;
-  margin-top: 25px;
-}
-
-/* ===== NEW CHECKOUT PAGE ===== */
-#checkoutPage {
+/* Cart Page */
+#cartPage, #homePage, #productsPage, #checkoutPage, #orderConfirmationPage, #deliveryPage, #adminPage {
   padding-top: 80px;
   padding-bottom: 100px;
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
-.checkout-header {
+.cart-header, .checkout-header, .delivery-page-header, .products-header {
   background: var(--primary-gradient);
   padding: 30px 25px;
   border-radius: 0 0 30px 30px;
 }
 .checkout-form-container {
-  background: var(--lighter-color);
-  border-radius: var(--border-radius-lg);
+  background: white;
+  border-radius: 24px;
   margin: 20px;
   padding: 25px;
   box-shadow: var(--shadow-md);
-  border: 1px solid #f1f5f9;
 }
 .form-group { margin-bottom: 20px; }
 .form-group label {
   display: block;
   font-weight: 700;
-  color: var(--dark-color);
   margin-bottom: 8px;
   font-size: 14px;
 }
@@ -401,9 +275,6 @@ body {
   border-radius: 12px;
   font-size: 15px;
   font-family: 'Poppins', sans-serif;
-  background: white;
-  color: var(--dark-color);
-  transition: var(--transition-fast);
 }
 .delivery-calc-info {
   background: #dbeafe;
@@ -411,10 +282,6 @@ body {
   padding: 15px;
   margin: 15px 0;
   color: #1e40af;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
   border-left: 5px solid #3b82f6;
 }
 .order-summary-card {
@@ -424,44 +291,32 @@ body {
   margin: 20px 0;
   border: 1px solid #e2e8f0;
 }
-.summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; color: #475569; }
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
 .summary-item.total {
   font-size: 20px;
   font-weight: 900;
-  color: var(--dark-color);
   border-top: 2px solid #e2e8f0;
   margin-top: 12px;
   padding-top: 15px;
 }
-.place-order-btn {
+.place-order-btn, .checkout-btn, .whatsapp-order-btn {
   width: 100%;
   padding: 18px;
   background: var(--success-gradient);
   color: white;
   border: none;
-  border-radius: var(--border-radius-lg);
+  border-radius: 24px;
   font-size: 18px;
   font-weight: 800;
   cursor: pointer;
   margin-top: 15px;
-  transition: var(--transition);
 }
-
-/* ===== ORDER CONFIRMATION PAGE ===== */
-#orderConfirmationPage {
-  padding-top: 80px;
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-  text-align: center;
-}
-.confirmation-card {
-  background: white;
-  border-radius: 32px;
-  margin: 20px;
-  padding: 30px 25px;
-  box-shadow: var(--shadow-lg);
-}
-.success-icon { font-size: 80px; color: #10b981; margin-bottom: 20px; }
+.whatsapp-order-btn { background: var(--whatsapp-gradient); }
 .tracking-id {
   background: #f1f5f9;
   padding: 15px;
@@ -469,142 +324,163 @@ body {
   font-size: 22px;
   font-weight: 900;
   letter-spacing: 2px;
-  color: var(--dark-color);
-  margin: 20px 0;
   border: 2px dashed #667eea;
 }
-.whatsapp-order-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  background: var(--whatsapp-gradient);
-  color: white;
-  padding: 16px;
-  border-radius: 50px;
-  font-weight: 800;
-  margin: 25px 0 15px;
-  cursor: pointer;
-  border: none;
-  width: 100%;
-  font-size: 16px;
+.confirmation-card {
+  background: white;
+  border-radius: 32px;
+  margin: 20px;
+  padding: 30px 25px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
 }
-
-/* ----- DELIVERY & ADMIN PAGES (base styles) ----- */
-#deliveryPage { padding-top: 80px; padding-bottom: 100px; }
-#adminPage { padding-top: 80px; padding-bottom: 100px; }
-.delivery-card { background: var(--lighter-color); border-radius: var(--border-radius-lg); padding: 20px; margin: 15px; box-shadow: var(--shadow-md); border-left: 5px solid #667eea; }
-.admin-order-card { background: var(--lighter-color); border-radius: var(--border-radius-lg); padding: 20px; margin: 15px; box-shadow: var(--shadow-md); }
-.admin-select { width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; background: white; }
+.success-icon { font-size: 80px; color: #10b981; margin-bottom: 20px; }
+.delivery-card, .admin-order-card {
+  background: white;
+  border-radius: 24px;
+  padding: 20px;
+  margin: 15px;
+  box-shadow: var(--shadow-md);
+  border-left: 5px solid #667eea;
+}
+.admin-select { width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; margin-bottom: 10px; }
 .admin-btn { width: 100%; padding: 12px; background: var(--primary-gradient); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 10px; }
-
-/* ----- OTHER PAGES (about, contact, login) - keeping original styles, abbreviated ----- */
-#aboutPage, #contactPage, #loginPage { padding-top: 80px; padding-bottom: 100px; }
-/* ===== END CSS ===== */
 </style>
 </head>
 <body>
-
 <div class="app-container">
-  <!-- ========== FIXED HEADER ========== -->
+  <!-- Header -->
   <div class="header-container">
     <button class="back-btn" onclick="goBack()" id="headerBackBtn" style="display:none;"><i class="fas fa-arrow-left"></i></button>
-    <div class="save-contact-btn" onclick="saveBusinessToContacts()" title="Save to Contacts"><i class="fas fa-address-card"></i></div>
     <div class="header-icons">
-      <div class="header-icon-btn" onclick="toggleNotificationDrawer()" title="Notifications"><i class="fas fa-bell" id="notificationBell"></i><div class="delivery-badge" id="notificationBadge" style="display:none;">!</div></div>
-      <div class="header-icon-btn" id="deliveryStatusBtn" onclick="checkDeliveryStatus()" title="Delivery Status"><i class="fas fa-truck" id="deliveryIcon"></i><div class="delivery-badge" id="deliveryBadge" style="display:none;"></div></div>
-      <div class="header-icon-btn" id="loginBtn" onclick="toggleLogin()" title="Login/Logout"><i class="fas fa-sign-in-alt" id="loginIcon"></i></div>
+      <div class="header-icon-btn" onclick="toggleNotificationDrawer()"><i class="fas fa-bell" id="notificationBell"></i><div class="delivery-badge" id="notificationBadge" style="display:none;">!</div></div>
+      <div class="header-icon-btn" id="deliveryStatusBtn" onclick="checkDeliveryStatus()"><i class="fas fa-truck" id="deliveryIcon"></i><div class="delivery-badge" id="deliveryBadge" style="display:none;"></div></div>
+      <div class="header-icon-btn" id="loginBtn" onclick="toggleLogin()"><i class="fas fa-sign-in-alt" id="loginIcon"></i></div>
     </div>
-    <div class="share-btn" onclick="shareBusiness()" title="Share Business"><i class="fas fa-share-alt"></i></div>
   </div>
 
-  <!-- ========== NOTIFICATION DRAWER (keep original structure) ========== -->
-  <div class="notification-drawer" id="notificationDrawer">
-    <div class="notification-header"><h3><i class="fas fa-bell"></i> Notifications <span class="notification-count" id="notificationCount">0</span></h3><button onclick="toggleNotificationDrawer()" style="background:none;border:none;font-size:24px;color:var(--dark-color);">×</button></div>
-    <div class="notification-content" id="notificationList"></div>
-    <div class="notification-actions"><button onclick="markAllNotificationsAsRead()">Mark All Read</button><button onclick="enableNotifications()">Enable Alerts</button></div>
-  </div>
-
-  <!-- ========== IMAGE ZOOM OVERLAY ========== -->
-  <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="closeImageZoom()"><img src="" class="image-zoom-content" id="zoomedImage"></div>
-
-  <!-- ========== EXIT MODAL ========== -->
-  <div class="exit-modal-overlay" id="exitModal"><div class="exit-modal"><h2><i class="fas fa-sign-out-alt"></i> Exit App?</h2><p>Are you sure you want to exit? Press back again to confirm.</p><div class="exit-modal-buttons"><button class="exit-modal-btn cancel" onclick="closeExitModal()">Cancel</button><button class="exit-modal-btn exit" onclick="exitApp()">Exit</button></div></div></div>
-
-  <!-- ========== INSTALL PERMISSION MODAL ========== -->
-  <div class="exit-modal-overlay" id="installPermissionModal" style="display:none;"><div class="install-permission-modal"><h2><i class="fas fa-download"></i> Enhance Your Experience</h2><p>To provide you with the best experience, we'd like to:</p><div class="permission-features"><div class="permission-feature"><i class="fas fa-check-circle"></i><span>Save business details to your contacts</span></div><div class="permission-feature"><i class="fas fa-check-circle"></i><span>Enable push notifications for orders</span></div><div class="permission-feature"><i class="fas fa-check-circle"></i><span>Install app for quick access</span></div><div class="permission-feature"><i class="fas fa-check-circle"></i><span>Auto-save your preferences</span></div></div><p style="font-size:14px;color:#94a3b8;">Your data is secure and never shared with third parties.</p><div class="permission-buttons"><button class="permission-btn cancel" onclick="closeInstallPermissionModal()">Skip</button><button class="permission-btn accept" onclick="acceptInstallPermissions()">Accept & Continue</button></div></div></div>
-
-  <!-- ========== LOADING SCREEN ========== -->
+  <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
     <h1 id="loadingTitle">Digital Business App</h1>
     <p id="loadingSubtitle">Loading your premium business experience...</p>
   </div>
 
-  <!-- ========== HOME PAGE ========== -->
+  <!-- Home Page -->
   <div id="homePage" class="page">
-    <div class="app-header">
-      <div class="welcome-text"><h1 id="businessHeader">Welcome</h1><p>Premium business at your fingertips</p></div>
-      <div class="quick-actions">
-        <div class="action-card" onclick="navigateTo('productsPage')"><div class="action-icon"><i class="fas fa-shopping-bag"></i></div><h3>Shop Now</h3><p>Browse products & offers</p></div>
-        <div class="action-card" onclick="navigateTo('cartPage')"><div class="action-icon"><i class="fas fa-shopping-cart"></i></div><h3>My Cart</h3><p><span id="cartCountMini">0</span> items</p></div>
-        <div class="action-card" onclick="openWhatsAppChat('greeting')"><div class="action-icon"><i class="fab fa-whatsapp"></i></div><h3>Live Chat</h3><p>Instant support</p></div>
-        <div class="action-card" onclick="navigateTo('contactPage')"><div class="action-icon"><i class="fas fa-map-marker-alt"></i></div><h3>Location</h3><p>Find us</p></div>
+    <div class="cart-header" style="background:var(--primary-gradient);">
+      <h1 style="color:white;" id="businessHeader">Welcome</h1>
+      <p style="color:white;">Premium business at your fingertips</p>
+    </div>
+    <div style="padding:20px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:20px;">
+        <div onclick="navigateTo('productsPage')" style="background:white;padding:20px;border-radius:16px;box-shadow:var(--shadow-md);text-align:center;">
+          <i class="fas fa-shopping-bag" style="font-size:28px;color:#667eea;margin-bottom:10px;"></i>
+          <h3 style="font-size:16px;">Shop Now</h3>
+          <p style="font-size:12px;color:#64748b;">Browse products</p>
+        </div>
+        <div onclick="navigateTo('cartPage')" style="background:white;padding:20px;border-radius:16px;box-shadow:var(--shadow-md);text-align:center;">
+          <i class="fas fa-shopping-cart" style="font-size:28px;color:#667eea;margin-bottom:10px;"></i>
+          <h3 style="font-size:16px;">My Cart</h3>
+          <p style="font-size:12px;color:#64748b;"><span id="cartCountMini">0</span> items</p>
+        </div>
       </div>
+      <div style="background:white;border-radius:24px;padding:20px;margin-bottom:20px;text-align:center;">
+        <img src="" id="photo" style="width:100px;height:100px;border-radius:50%;object-fit:cover;margin-bottom:15px;" onerror="this.style.display='none'">
+        <h2 id="name" style="font-size:22px;font-weight:900;">Loading...</h2>
+        <p id="business" style="color:#764ba2;font-weight:700;"></p>
+      </div>
+      <h3 style="margin-bottom:15px;"><i class="fas fa-gift"></i> Featured Products</h3>
+      <div class="products-grid" id="featuredProducts"></div>
     </div>
-    <div class="profile-section">
-      <img src="" id="photo" class="profile-avatar" loading="lazy">
-      <div class="profile-name"><span id="name">Loading...</span><i class="fas fa-badge-check verified-badge"></i></div>
-      <div class="profile-business" id="business"></div>
-    </div>
-    <div class="section-header"><h2><i class="fas fa-gift"></i> Featured Products</h2><div class="see-all" onclick="navigateTo('productsPage')">See All <i class="fas fa-arrow-right"></i></div></div>
-    <div class="products-grid" id="featuredProducts"></div>
-    <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- ========== PRODUCTS PAGE ========== -->
+  <!-- Products Page -->
   <div id="productsPage" class="page">
-    <div class="products-header"><h1>Products & Offers</h1><p>Discover our premium collection</p></div>
-    <div class="products-search"><input type="text" id="productsSearch" placeholder="Search products..." onkeyup="filterProducts()"><i class="fas fa-search"></i></div>
-    <div class="products-grid" id="allProducts"></div>
-    <div class="page-footer-spacer"></div>
+    <div class="products-header">
+      <h1 style="color:white;">Products & Offers</h1>
+      <p style="color:white;">Discover our premium collection</p>
+    </div>
+    <div style="padding:20px;">
+      <div style="position:relative;margin-bottom:20px;">
+        <input type="text" id="productsSearch" placeholder="Search products..." onkeyup="filterProducts()" style="width:100%;padding:15px 50px 15px 20px;border:2px solid #e2e8f0;border-radius:16px;font-size:15px;">
+        <i class="fas fa-search" style="position:absolute;right:20px;top:50%;transform:translateY(-50%);color:#64748b;"></i>
+      </div>
+      <div class="products-grid" id="allProducts"></div>
+    </div>
   </div>
 
-  <!-- ========== CART PAGE ========== -->
+  <!-- Cart Page -->
   <div id="cartPage" class="page">
-    <div class="cart-header"><h1>My Cart</h1><p id="cartItemsCount">0 items</p></div>
-    <div id="cartContent"></div>
-    <div class="page-footer-spacer"></div>
+    <div class="cart-header">
+      <h1 style="color:white;">My Cart</h1>
+      <p style="color:white;" id="cartItemsCount">0 items</p>
+    </div>
+    <div id="cartContent" style="padding:20px;"></div>
   </div>
 
-  <!-- ========== CHECKOUT PAGE (NEW) ========== -->
+  <!-- Checkout Page -->
   <div id="checkoutPage" class="page">
-    <div class="checkout-header"><h1><i class="fas fa-map-marker-alt"></i> Checkout</h1><p>Enter delivery details</p></div>
+    <div class="checkout-header">
+      <h1 style="color:white;"><i class="fas fa-map-marker-alt"></i> Checkout</h1>
+      <p style="color:white;">Enter delivery details</p>
+    </div>
     <div class="checkout-form-container">
       <div id="checkoutOrderItems" style="margin-bottom:20px;"></div>
-      <div class="form-group"><label><i class="fas fa-user"></i> Full Name</label><input type="text" id="checkoutName" placeholder="Your full name"></div>
-      <div class="form-group"><label><i class="fas fa-phone"></i> Phone Number</label><input type="tel" id="checkoutPhone" placeholder="03xx xxxxxxx"></div>
-      <div class="form-group"><label><i class="fas fa-map-marker-alt"></i> Delivery Address</label><textarea id="checkoutAddress" rows="2" placeholder="House/Office, Street, Area" oninput="calculateDeliveryCharges()"></textarea></div>
-      <div class="form-group"><label><i class="fas fa-city"></i> City / Area</label><input type="text" id="checkoutCity" placeholder="e.g., Karachi, Lahore" oninput="calculateDeliveryCharges()"></div>
-      <div class="delivery-calc-info" id="deliveryCalcDisplay"><i class="fas fa-info-circle"></i><span id="deliveryCalcText">Enter your city to see delivery charges & time.</span></div>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="checkoutName" placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="checkoutPhone" placeholder="03xx xxxxxxx">
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea id="checkoutAddress" rows="2" placeholder="House/Office, Street, Area" oninput="calculateDeliveryCharges()"></textarea>
+      </div>
+      <div class="form-group">
+        <label>City / Area</label>
+        <input type="text" id="checkoutCity" placeholder="e.g., Karachi, Lahore" oninput="calculateDeliveryCharges()">
+      </div>
+      <div class="delivery-calc-info" id="deliveryCalcDisplay">
+        <i class="fas fa-info-circle"></i>
+        <span id="deliveryCalcText">Enter your city to see delivery charges & time.</span>
+      </div>
       <div class="order-summary-card">
         <h3 style="margin-bottom:15px;font-weight:800;">Order Summary</h3>
         <div id="checkoutSummaryDetails"></div>
-        <div class="summary-item"><span>Subtotal</span><span>PKR <span id="checkoutSubtotal">0</span></span></div>
-        <div class="summary-item"><span>Delivery Charges</span><span>PKR <span id="checkoutDeliveryCharge">0</span></span></div>
-        <div class="summary-item total"><span>Total Amount</span><span>PKR <span id="checkoutTotalAmount">0</span></span></div>
+        <div class="summary-item">
+          <span>Subtotal</span>
+          <span>PKR <span id="checkoutSubtotal">0</span></span>
+        </div>
+        <div class="summary-item">
+          <span>Delivery Charges</span>
+          <span>PKR <span id="checkoutDeliveryCharge">0</span></span>
+        </div>
+        <div class="summary-item total">
+          <span>Total Amount</span>
+          <span>PKR <span id="checkoutTotalAmount">0</span></span>
+        </div>
       </div>
-      <div class="form-group"><label><i class="fas fa-credit-card"></i> Payment Method</label>
-        <select id="checkoutPaymentMethod"><option value="cod">Cash on Delivery (COD)</option><option value="jazzcash">JazzCash / EasyPaisa</option><option value="whatsapp">WhatsApp Order</option></select>
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select id="checkoutPaymentMethod">
+          <option value="cod">Cash on Delivery (COD)</option>
+          <option value="jazzcash">JazzCash / EasyPaisa</option>
+          <option value="whatsapp">WhatsApp Order</option>
+        </select>
       </div>
       <button class="place-order-btn" onclick="placeOrder()"><i class="fas fa-check-circle"></i> Place Order</button>
     </div>
-    <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- ========== ORDER CONFIRMATION PAGE ========== -->
+  <!-- Order Confirmation Page -->
   <div id="orderConfirmationPage" class="page">
-    <div class="checkout-header" style="background:var(--success-gradient);"><h1><i class="fas fa-check-circle"></i> Order Confirmed!</h1><p>Thank you for your purchase</p></div>
+    <div class="checkout-header" style="background:var(--success-gradient);">
+      <h1 style="color:white;"><i class="fas fa-check-circle"></i> Order Confirmed!</h1>
+      <p style="color:white;">Thank you for your purchase</p>
+    </div>
     <div class="confirmation-card">
       <div class="success-icon"><i class="fas fa-circle-check"></i></div>
       <h2 style="margin-bottom:10px;font-weight:800;">Order Placed Successfully</h2>
@@ -612,75 +488,70 @@ body {
       <div style="background:#f1f5f9;padding:15px;border-radius:16px;margin-bottom:20px;">
         <div style="font-size:14px;color:#475569;">Your Tracking ID</div>
         <div class="tracking-id" id="confirmationTrackingId">ABC123</div>
-        <div style="font-size:13px;color:#64748b;margin-top:5px;">Use this ID to track your order.</div>
       </div>
       <div style="margin-bottom:25px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="color:#475569;">Estimated Delivery Time</span><span style="font-weight:800;" id="confirmationDeliveryTime">1-2 days</span></div>
-        <div style="display:flex;justify-content:space-between;"><span style="color:#475569;">Total Paid</span><span style="font-weight:900;color:#10b981;font-size:22px;" id="confirmationTotal">PKR 0</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="color:#475569;">Estimated Delivery Time</span>
+          <span style="font-weight:800;" id="confirmationDeliveryTime">1-2 days</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#475569;">Total Paid</span>
+          <span style="font-weight:900;color:#10b981;font-size:22px;" id="confirmationTotal">PKR 0</span>
+        </div>
       </div>
-      <button class="whatsapp-order-btn" onclick="shareOrderOnWhatsApp()"><i class="fab fa-whatsapp"></i> Share Order Details on WhatsApp</button>
-      <button onclick="navigateTo('deliveryPage')" style="width:100%;padding:16px;background:var(--primary-gradient);color:white;border:none;border-radius:50px;font-weight:700;margin-top:15px;cursor:pointer;"><i class="fas fa-truck"></i> Track Your Order</button>
-      <button onclick="navigateTo('homePage')" style="width:100%;padding:16px;background:transparent;color:var(--dark-color);border:2px solid #e2e8f0;border-radius:50px;font-weight:700;margin-top:12px;cursor:pointer;">Continue Shopping</button>
+      <button class="whatsapp-order-btn" onclick="shareOrderOnWhatsApp()"><i class="fab fa-whatsapp"></i> Share on WhatsApp</button>
+      <button onclick="navigateTo('deliveryPage')" style="width:100%;padding:16px;background:var(--primary-gradient);color:white;border:none;border-radius:50px;font-weight:700;margin-top:15px;cursor:pointer;">
+        <i class="fas fa-truck"></i> Track Your Order
+      </button>
     </div>
-    <div class="page-footer-spacer"></div>
   </div>
 
-  <!-- ========== ABOUT PAGE ========== -->
-  <div id="aboutPage" class="page">
-    <div class="about-header"><h1>About Business</h1></div>
-    <div class="about-content" id="aboutContent"></div>
-    <div class="business-hours"><h3><i class="fas fa-clock"></i> Business Hours</h3><div class="hours-list" id="businessHours"></div></div>
-    <div class="business-hours"><h3><i class="fas fa-calendar-times"></i> Holidays</h3><div class="hours-list" id="holidaysList"></div></div>
-    <div class="page-footer-spacer"></div>
-  </div>
-
-  <!-- ========== CONTACT PAGE ========== -->
-  <div id="contactPage" class="page">
-    <div class="contact-header"><h1>Contact Us</h1><p>Get in touch anytime</p></div>
-    <div class="contact-info"><!-- original contact items --></div>
-    <div class="social-links"><h3><i class="fas fa-share-alt"></i> Follow Us</h3><div class="social-grid" id="socialGrid"></div></div>
-    <div class="page-footer-spacer"></div>
-  </div>
-
-  <!-- ========== DELIVERY STATUS PAGE ========== -->
+  <!-- Delivery Status Page -->
   <div id="deliveryPage" class="page">
-    <div class="delivery-page-header"><h1><i class="fas fa-truck"></i> Delivery Status</h1><p>Track your orders in real-time</p></div>
-    <div id="deliveryContent"></div>
-    <div class="page-footer-spacer"></div>
-  </div>
-
-  <!-- ========== ADMIN PAGE ========== -->
-  <div id="adminPage" class="page">
-    <div class="delivery-page-header"><h1><i class="fas fa-cog"></i> Delivery Admin</h1><p>Confirm orders & manage deliveries</p></div>
-    <div id="adminContent"></div>
-    <div class="page-footer-spacer"></div>
-  </div>
-
-  <!-- ========== LOGIN PAGE ========== -->
-  <div id="loginPage" class="page">
-    <div class="delivery-page-header"><h1><i class="fas fa-lock"></i> Admin Login</h1><p>Enter password to access admin panel</p></div>
-    <div class="login-page-content">
-      <div class="login-title">Admin Access</div>
-      <div class="login-subtitle">Enter the admin password to continue</div>
-      <input type="password" class="password-input" id="adminPasswordInput" placeholder="Enter password" onkeypress="handleLoginKeypress(event)">
-      <button onclick="attemptLogin()" class="admin-btn success" style="margin-top:20px;"><i class="fas fa-sign-in-alt"></i> Login</button>
-      <div class="password-hint" id="passwordHint">Hint: Password format is business123_{short_id}</div>
+    <div class="delivery-page-header">
+      <h1 style="color:white;"><i class="fas fa-truck"></i> Delivery Status</h1>
+      <p style="color:white;">Track your orders in real-time</p>
     </div>
-    <div class="page-footer-spacer"></div>
+    <div id="deliveryContent" style="padding:20px;"></div>
   </div>
 
-  <!-- ========== BOTTOM NAVIGATION ========== -->
+  <!-- Admin Page -->
+  <div id="adminPage" class="page">
+    <div class="delivery-page-header">
+      <h1 style="color:white;"><i class="fas fa-cog"></i> Delivery Admin</h1>
+      <p style="color:white;">Confirm orders & manage deliveries</p>
+    </div>
+    <div id="adminContent" style="padding:20px;"></div>
+  </div>
+
+  <!-- Login Page -->
+  <div id="loginPage" class="page">
+    <div class="delivery-page-header">
+      <h1 style="color:white;"><i class="fas fa-lock"></i> Admin Login</h1>
+      <p style="color:white;">Enter password to access admin panel</p>
+    </div>
+    <div style="padding:20px;">
+      <div style="background:white;border-radius:24px;padding:30px;box-shadow:var(--shadow-md);">
+        <h3 style="text-align:center;margin-bottom:20px;">Admin Access</h3>
+        <input type="password" id="adminPasswordInput" placeholder="Enter password" style="width:100%;padding:15px;border:2px solid #e2e8f0;border-radius:12px;margin-bottom:20px;" onkeypress="handleLoginKeypress(event)">
+        <button onclick="attemptLogin()" style="width:100%;padding:15px;background:var(--success-gradient);color:white;border:none;border-radius:12px;font-weight:700;">Login</button>
+        <p style="font-size:12px;color:#94a3b8;margin-top:20px;text-align:center;" id="passwordHint">Hint: Password format is business123_xxxxxx</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
   <div class="bottom-nav">
     <div class="nav-item active" onclick="navigateTo('homePage')"><div class="nav-icon"><i class="fas fa-home"></i></div><div class="nav-label">Home</div></div>
     <div class="nav-item" onclick="navigateTo('productsPage')"><div class="nav-icon"><i class="fas fa-shopping-bag"></i></div><div class="nav-label">Products</div></div>
     <div class="nav-item" onclick="navigateTo('cartPage')"><div class="nav-icon"><i class="fas fa-shopping-cart"></i><span class="cart-badge" id="cartBadge">0</span></div><div class="nav-label">Cart</div></div>
-    <div class="nav-item" onclick="navigateTo('aboutPage')"><div class="nav-icon"><i class="fas fa-info-circle"></i></div><div class="nav-label">About</div></div>
-    <div class="nav-item" onclick="navigateTo('contactPage')"><div class="nav-icon"><i class="fas fa-phone"></i></div><div class="nav-label">Contact</div></div>
+    <div class="nav-item" onclick="navigateTo('deliveryPage')"><div class="nav-icon"><i class="fas fa-truck"></i></div><div class="nav-label">Delivery</div></div>
+    <div class="nav-item" onclick="navigateTo('loginPage')"><div class="nav-icon"><i class="fas fa-lock"></i></div><div class="nav-label">Admin</div></div>
   </div>
 </div>
 
 <!-- Notification Alert -->
-<div class="notification-alert" id="notificationAlert"></div>
+<div id="notificationAlert" style="position:fixed;top:100px;left:50%;transform:translateX(-50%);background:var(--whatsapp-gradient);color:white;padding:15px 25px;border-radius:12px;box-shadow:var(--shadow-lg);z-index:3000;display:none;font-weight:700;text-align:center;max-width:300px;"></div>
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
@@ -693,44 +564,116 @@ const supa = supabase.createClient(
 // ========== GLOBAL VARIABLES ==========
 let card = {};
 let cart = [];
-let currentProduct = null;
 let currentPage = 'loadingScreen';
 let currentBusinessId = '';
 let shortCardId = '';
 let isAdminLoggedIn = false;
 let businessAdminPassword = "";
-let notificationPermission = false;
-let innerNotifications = [];
-let unreadNotifications = 0;
-let deferredPrompt = null;
-let installButtonShown = false;
-let deliveryStatusData = [];
 let navigationHistory = [];
-let customerData = { deviceId: '', phone: '', name: '', email: '', installDate: '', lastActive: '', permissions: {} };
 
-// ========== DATA ISOLATION ==========
-function getStorageKey(key) { const businessKey = currentBusinessId ? currentBusinessId.substring(0,8) : 'default'; return `business_${businessKey}_${key}`; }
+// ========== STORAGE ISOLATION ==========
+function getStorageKey(key) {
+  const businessKey = currentBusinessId ? currentBusinessId.substring(0,8) : 'default';
+  return `business_${businessKey}_${key}`;
+}
 const isolatedLocalStorage = {
   setItem: function(k,v) { localStorage.setItem(getStorageKey(k), v); },
-  getItem: function(k) { return localStorage.getItem(getStorageKey(k)); },
-  removeItem: function(k) { localStorage.removeItem(getStorageKey(k)); },
-  clear: function() { const p = getStorageKey(''); for(let i=localStorage.length-1;i>=0;i--) { const key=localStorage.key(i); if(key.startsWith(p)) localStorage.removeItem(key); } }
+  getItem: function(k) { return localStorage.getItem(getStorageKey(k)); }
 };
 
-// ========== NOTIFICATION FUNCTIONS (KEEP ORIGINAL) ==========
-function toggleNotificationDrawer() { /* full original */ drawer.classList.toggle('open'); loadNotificationDrawer(); }
-function loadNotificationDrawer() { /* full original */ }
-function addInnerNotification(t,m,ty='info') { /* full original */ unreadNotifications++; updateNotificationBellCount(); }
-function updateNotificationBellCount() { /* full original */ }
-function enableNotifications() { /* full original */ }
-// ... all other notification functions remain (saveInnerNotifications, loadInnerNotifications, markAllNotificationsAsRead, etc.)
+// ========== NOTIFICATION ==========
+function showNotification(message) {
+  const n = document.getElementById('notificationAlert');
+  n.textContent = message;
+  n.style.display = 'block';
+  setTimeout(() => n.style.display = 'none', 3000);
+}
+
+// ========== NAVIGATION ==========
+function navigateTo(pageId) {
+  if(currentPage === pageId) return;
+  const oldPage = document.getElementById(currentPage);
+  const newPage = document.getElementById(pageId);
+  if(oldPage) {
+    oldPage.classList.remove('active');
+    oldPage.classList.add('slide-out');
+    setTimeout(() => oldPage.classList.remove('slide-out'), 300);
+  }
+  newPage.classList.add('active');
+  currentPage = pageId;
+  document.getElementById('headerBackBtn').style.display = pageId === 'homePage' ? 'none' : 'flex';
+  document.querySelectorAll('.nav-item').forEach((item,i) => {
+    item.classList.remove('active');
+    if(pageId === 'homePage' && i===0) item.classList.add('active');
+    if(pageId === 'productsPage' && i===1) item.classList.add('active');
+    if(pageId === 'cartPage' && i===2) item.classList.add('active');
+    if(pageId === 'deliveryPage' && i===3) item.classList.add('active');
+    if(pageId === 'loginPage' && i===4) item.classList.add('active');
+  });
+  navigationHistory.push(pageId);
+}
+function goBack() {
+  if(navigationHistory.length > 1) {
+    navigationHistory.pop();
+    navigateTo(navigationHistory[navigationHistory.length-1]);
+  } else navigateTo('homePage');
+}
+
+// ========== CART FUNCTIONS ==========
+function updateCartCount() {
+  document.getElementById('cartCountMini').innerText = cart.length;
+  document.getElementById('cartBadge').innerText = cart.length;
+  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+}
+function addToCart(index) {
+  const product = card.products?.[index];
+  if(!product) return;
+  const existing = cart.findIndex(i => i.title === product.title);
+  if(existing === -1) cart.push({...product, quantity:1});
+  else cart[existing].quantity += 1;
+  updateCartCount();
+  showNotification('✅ Added to cart');
+}
+function loadCartPage() {
+  const content = document.getElementById('cartContent');
+  if(cart.length === 0) {
+    content.innerHTML = '<div style="text-align:center;padding:60px 20px;"><i class="fas fa-shopping-cart" style="font-size:80px;color:#cbd5e1;margin-bottom:20px;"></i><h3>Your cart is empty</h3><button onclick="navigateTo(\'productsPage\')" style="margin-top:20px;padding:15px 30px;background:var(--primary-gradient);color:white;border:none;border-radius:12px;">Browse Products</button></div>';
+    document.getElementById('cartItemsCount').innerText = '0 items';
+    return;
+  }
+  let html = '<div class="cart-items">';
+  let total = 0;
+  cart.forEach((item, idx) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const itemTotal = price * (item.quantity || 1);
+    total += itemTotal;
+    html += `<div style="background:white;border-radius:16px;padding:15px;display:flex;gap:15px;margin-bottom:15px;box-shadow:var(--shadow-md);">
+      <img src="${item.image || ''}" style="width:80px;height:80px;border-radius:12px;object-fit:contain;background:white;" onerror="this.style.display='none'">
+      <div style="flex:1;"><div style="font-weight:700;margin-bottom:8px;">${item.title || 'Product'}</div>
+      <div style="color:#ef4444;font-weight:800;margin-bottom:12px;">PKR ${itemTotal.toFixed(2)}</div>
+      <div style="display:flex;gap:10px;"><div style="display:flex;align-items:center;gap:10px;background:#f8fafc;padding:6px;border-radius:12px;">
+        <button onclick="cart[${idx}].quantity = Math.max(1, (cart[${idx}].quantity||1)-1); updateCartCount(); loadCartPage();" style="width:28px;height:28px;border-radius:6px;border:2px solid #e2e8f0;background:white;font-size:18px;cursor:pointer;">-</button>
+        <span style="font-weight:800;min-width:25px;text-align:center;">${item.quantity || 1}</span>
+        <button onclick="cart[${idx}].quantity = (cart[${idx}].quantity||1)+1; updateCartCount(); loadCartPage();" style="width:28px;height:28px;border-radius:6px;border:2px solid #e2e8f0;background:white;font-size:18px;cursor:pointer;">+</button>
+      </div>
+      <button onclick="cart.splice(${idx},1); updateCartCount(); loadCartPage();" style="background:var(--danger-gradient);color:white;border:none;border-radius:6px;padding:0 12px;font-weight:700;cursor:pointer;">Remove</button></div></div></div>`;
+  });
+  html += `</div><div style="background:white;border-radius:24px;padding:25px;margin:25px;box-shadow:var(--shadow-md);">
+    <h3 style="margin-bottom:20px;">Order Summary</h3>
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px;"><span>Subtotal</span><span>PKR ${total.toFixed(2)}</span></div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px;"><span>Shipping</span><span>Calculated at checkout</span></div>
+    <div style="display:flex;justify-content:space-between;margin-top:15px;padding-top:15px;border-top:2px solid #f1f5f9;font-size:22px;font-weight:900;"><span>Total</span><span>PKR ${total.toFixed(2)}</span></div>
+    <button onclick="loadCheckoutPage()" style="width:100%;padding:18px;background:var(--success-gradient);color:white;border:none;border-radius:24px;font-size:17px;font-weight:800;margin-top:25px;cursor:pointer;">Proceed to Checkout</button>
+  </div>`;
+  content.innerHTML = html;
+  document.getElementById('cartItemsCount').innerText = `${cart.length} items`;
+}
 
 // ========== CUSTOMER PHONE ==========
 function getCustomerPhone() { return isolatedLocalStorage.getItem('customerPhone'); }
-function saveCustomerPhone(p) { isolatedLocalStorage.setItem('customerPhone', p); customerData.phone = p; }
-function updateCustomerPhoneDisplay() { /* original */ }
+function saveCustomerPhone(p) { isolatedLocalStorage.setItem('customerPhone', p); }
 
-// ========== DELIVERY SETTINGS FROM BUSINESS CARD ==========
+// ========== DELIVERY SETTINGS ==========
 function getDeliverySettings() {
   return card.deliverySettings || {
     deliveryChargeCity: 150,
@@ -741,50 +684,44 @@ function getDeliverySettings() {
   };
 }
 
-// ========== LIVE DELIVERY CALCULATION ==========
+// ========== CALCULATE DELIVERY ==========
 function calculateDeliveryCharges() {
-  const cityInput = document.getElementById('checkoutCity')?.value.toLowerCase().trim() || '';
+  const city = document.getElementById('checkoutCity')?.value.toLowerCase().trim() || '';
   const settings = getDeliverySettings();
-  const subtotal = cart.reduce((sum, item) => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    return sum + (price * (item.quantity || 1));
-  }, 0);
-
-  let deliveryCharge = 0, deliveryTime = '', isWithinCity = false;
-  const majorCities = ['karachi', 'lahore', 'islamabad', 'rawalpindi', 'faisalabad', 'multan', 'hyderabad', 'peshawar', 'quetta', 'gujranwala', 'sialkot'];
-  if (cityInput) {
-    isWithinCity = majorCities.some(city => cityInput.includes(city));
-    deliveryCharge = isWithinCity ? settings.deliveryChargeCity : settings.deliveryChargeOther;
-    deliveryTime = isWithinCity ? settings.deliveryTimeCity : settings.deliveryTimeOther;
+  const subtotal = cart.reduce((s,i) => s + (parseFloat(i.discountPrice||i.originalPrice||0) * (i.quantity||1)), 0);
+  let charge = 0, time = '', within = false;
+  const cities = ['karachi','lahore','islamabad','rawalpindi','faisalabad','multan','hyderabad','peshawar','quetta'];
+  if(city) {
+    within = cities.some(c => city.includes(c));
+    charge = within ? settings.deliveryChargeCity : settings.deliveryChargeOther;
+    time = within ? settings.deliveryTimeCity : settings.deliveryTimeOther;
   }
-  if (subtotal >= (settings.freeDeliveryMin || 2000)) { deliveryCharge = 0; }
-
-  document.getElementById('checkoutDeliveryCharge').innerText = deliveryCharge;
-  document.getElementById('checkoutTotalAmount').innerText = (subtotal + deliveryCharge).toFixed(2);
-  let calcText = cityInput ? `🚚 Delivery: PKR ${deliveryCharge} (Est. ${deliveryTime})` : '🏙️ Enter your city to calculate delivery.';
-  if (subtotal >= settings.freeDeliveryMin && cityInput) calcText += ' 🎉 Free Delivery Applied!';
-  document.getElementById('deliveryCalcText').innerText = calcText;
-  return { charge: deliveryCharge, time: deliveryTime };
+  if(subtotal >= (settings.freeDeliveryMin||2000)) charge = 0;
+  document.getElementById('checkoutDeliveryCharge').innerText = charge;
+  document.getElementById('checkoutTotalAmount').innerText = (subtotal + charge).toFixed(2);
+  let text = city ? `🚚 Delivery: PKR ${charge} (Est. ${time})` : 'Enter your city to calculate delivery.';
+  if(subtotal >= settings.freeDeliveryMin && city) text += ' 🎉 Free Delivery!';
+  document.getElementById('deliveryCalcText').innerText = text;
+  return { charge, time };
 }
 
-// ========== LOAD CHECKOUT PAGE ==========
+// ========== LOAD CHECKOUT ==========
 function loadCheckoutPage() {
-  if (cart.length === 0) { showNotification('Your cart is empty.'); navigateTo('cartPage'); return; }
-  const customerPhone = getCustomerPhone();
-  if (customerPhone) document.getElementById('checkoutPhone').value = customerPhone;
-  
-  let itemsHtml = '<div style="border-bottom:1px solid #e2e8f0; padding-bottom:12px; margin-bottom:12px;"><h3 style="font-size:16px; font-weight:700;">Your Items</h3></div>';
-  let subtotal = 0;
-  cart.forEach(item => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    const itemTotal = price * (item.quantity || 1);
-    subtotal += itemTotal;
-    itemsHtml += `<div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;"><span>${item.title} x${item.quantity || 1}</span><span>PKR ${itemTotal.toFixed(2)}</span></div>`;
+  if(cart.length === 0) { showNotification('Cart empty'); navigateTo('cartPage'); return; }
+  const phone = getCustomerPhone();
+  if(phone) document.getElementById('checkoutPhone').value = phone;
+  let html = '<div style="border-bottom:1px solid #e2e8f0;padding-bottom:12px;margin-bottom:12px;"><h3 style="font-weight:700;">Your Items</h3></div>';
+  let sub = 0;
+  cart.forEach(i => {
+    const p = parseFloat(i.discountPrice||i.originalPrice||0);
+    const t = p * (i.quantity||1);
+    sub += t;
+    html += `<div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span>${i.title} x${i.quantity||1}</span><span>PKR ${t.toFixed(2)}</span></div>`;
   });
-  document.getElementById('checkoutOrderItems').innerHTML = itemsHtml;
-  document.getElementById('checkoutSubtotal').innerText = subtotal.toFixed(2);
+  document.getElementById('checkoutOrderItems').innerHTML = html;
+  document.getElementById('checkoutSubtotal').innerText = sub.toFixed(2);
   document.getElementById('checkoutDeliveryCharge').innerText = '0';
-  document.getElementById('checkoutTotalAmount').innerText = subtotal.toFixed(2);
+  document.getElementById('checkoutTotalAmount').innerText = sub.toFixed(2);
   calculateDeliveryCharges();
   navigateTo('checkoutPage');
 }
@@ -793,169 +730,209 @@ function loadCheckoutPage() {
 async function placeOrder() {
   const name = document.getElementById('checkoutName').value.trim();
   const phone = document.getElementById('checkoutPhone').value.trim();
-  const address = document.getElementById('checkoutAddress').value.trim();
+  const addr = document.getElementById('checkoutAddress').value.trim();
   const city = document.getElementById('checkoutCity').value.trim();
-  const paymentMethod = document.getElementById('checkoutPaymentMethod').value;
-  if (!name || !phone || !address || !city) { showNotification('Please fill all fields.'); return; }
+  const pay = document.getElementById('checkoutPaymentMethod').value;
+  if(!name || !phone || !addr || !city) { showNotification('Please fill all fields'); return; }
   saveCustomerPhone(phone);
-  
-  const delivery = calculateDeliveryCharges();
-  const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.discountPrice || item.originalPrice || 0) * (item.quantity || 1)), 0);
-  const totalAmount = subtotal + delivery.charge;
-  const trackingId = 'ORD-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
-  
+  const del = calculateDeliveryCharges();
+  const sub = cart.reduce((s,i) => s + (parseFloat(i.discountPrice||i.originalPrice||0) * (i.quantity||1)), 0);
+  const total = sub + del.charge;
+  const tracking = 'ORD-' + Date.now().toString().slice(-8) + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
   const orderData = {
-    tracking_id: trackingId,
-    customer_name: name, customer_phone: phone, delivery_address: address, delivery_city: city,
-    items: cart.map(item => ({ title: item.title, quantity: item.quantity || 1, price: parseFloat(item.discountPrice || item.originalPrice || 0) })),
-    subtotal, delivery_charge: delivery.charge, total: totalAmount, payment_method: paymentMethod,
-    status: 'pending', order_date: new Date().toISOString(), estimated_delivery_time: delivery.time, business_id: currentBusinessId
+    tracking_id: tracking, customer_name: name, customer_phone: phone, delivery_address: addr, delivery_city: city,
+    items: cart.map(i => ({ title: i.title, quantity: i.quantity||1, price: parseFloat(i.discountPrice||i.originalPrice||0) })),
+    subtotal: sub, delivery_charge: del.charge, total, payment_method: pay, status: 'pending',
+    order_date: new Date().toISOString(), estimated_delivery_time: del.time, business_id: currentBusinessId
   };
-
   try {
     const { error } = await supa.from('orders').insert([orderData]);
-    if (error) throw error;
+    if(error) throw error;
     cart = []; updateCartCount(); isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
-    document.getElementById('confirmationTrackingId').innerText = trackingId;
-    document.getElementById('confirmationDeliveryTime').innerText = delivery.time || 'N/A';
-    document.getElementById('confirmationTotal').innerText = `PKR ${totalAmount.toFixed(2)}`;
+    document.getElementById('confirmationTrackingId').innerText = tracking;
+    document.getElementById('confirmationDeliveryTime').innerText = del.time || 'N/A';
+    document.getElementById('confirmationTotal').innerText = `PKR ${total.toFixed(2)}`;
     localStorage.setItem('lastOrderDetails', JSON.stringify(orderData));
-    addInnerNotification('New Order Pending', `Order ${trackingId} from ${name}`, 'order');
-    showNotification('✅ Order placed! Awaiting confirmation.');
+    showNotification('✅ Order placed!');
     navigateTo('orderConfirmationPage');
-  } catch(err) { console.error(err); showNotification('❌ Order failed. Try again.'); }
+  } catch(e) { console.error(e); showNotification('❌ Order failed'); }
 }
 
-// ========== SHARE ORDER WHATSAPP ==========
+// ========== SHARE ORDER ==========
 function shareOrderOnWhatsApp() {
-  const orderStr = localStorage.getItem('lastOrderDetails'); if(!orderStr) return;
-  const order = JSON.parse(orderStr);
-  let msg = `🛒 *Order Confirmation* \n*Tracking:* ${order.tracking_id}\n*Name:* ${order.customer_name}\n*Phone:* ${order.customer_phone}\n*Address:* ${order.delivery_address}\n*City:* ${order.delivery_city}\n\n*Items:*\n`;
-  order.items.forEach((i,idx)=> msg += `${idx+1}. ${i.title} x${i.quantity} - PKR ${(i.price*i.quantity).toFixed(2)}\n`);
-  msg += `\n*Subtotal:* PKR ${order.subtotal.toFixed(2)}\n*Delivery:* PKR ${order.delivery_charge.toFixed(2)}\n*Total:* PKR ${order.total.toFixed(2)}\n*Payment:* ${order.payment_method}\n*Est. Delivery:* ${order.estimated_delivery_time}\n\n_Please confirm order._`;
+  const o = localStorage.getItem('lastOrderDetails');
+  if(!o) return;
+  const order = JSON.parse(o);
+  let msg = `🛒 *Order Confirmation*\n*Tracking:* ${order.tracking_id}\n*Name:* ${order.customer_name}\n*Phone:* ${order.customer_phone}\n*Address:* ${order.delivery_address}\n*City:* ${order.delivery_city}\n\n*Items:*\n`;
+  order.items.forEach((i,idx) => msg += `${idx+1}. ${i.title} x${i.quantity} - PKR ${(i.price*i.quantity).toFixed(2)}\n`);
+  msg += `\n*Subtotal:* PKR ${order.subtotal.toFixed(2)}\n*Delivery:* PKR ${order.delivery_charge.toFixed(2)}\n*Total:* PKR ${order.total.toFixed(2)}\n*Payment:* ${order.payment_method}\n*Est. Delivery:* ${order.estimated_delivery_time}`;
   if(card.phone) window.open(`https://wa.me/${card.phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// ========== ADMIN: LOAD ORDERS ==========
+// ========== ADMIN PANEL ==========
 async function loadAdminPanel() {
-  const { data, error } = await supa.from('orders').select('*').eq('business_id', currentBusinessId).order('order_date', { ascending: false });
-  let html = `<div style="padding:15px;"><h2>Manage Orders</h2></div><input type="text" id="adminSearch" class="admin-search" placeholder="Search orders..." onkeyup="searchAdminOrders()">`;
-  if (!data || data.length===0) html += '<p style="text-align:center;padding:40px;">No orders found.</p>';
-  else data.forEach(o => { html += `<div class="admin-order-card" data-order-id="${o.tracking_id}"><div class="admin-order-header"><div><div class="admin-order-id">${o.tracking_id}</div><div class="admin-customer-info">${o.customer_name} | ${o.customer_phone}</div><div>${o.delivery_city}</div></div><div>${new Date(o.order_date).toLocaleDateString()}</div></div><div><strong>Total:</strong> PKR ${o.total}</div><select class="admin-select" data-id="${o.id}"><option value="pending" ${o.status==='pending'?'selected':''}>⏳ Pending</option><option value="confirmed" ${o.status==='confirmed'?'selected':''}>✅ Confirmed</option><option value="shipped" ${o.status==='shipped'?'selected':''}>🚚 Shipped</option><option value="delivered" ${o.status==='delivered'?'selected':''}>📦 Delivered</option><option value="cancelled" ${o.status==='cancelled'?'selected':''}>❌ Cancelled</option></select><button onclick="updateOrderStatus('${o.id}')" class="admin-btn success">Update Status</button><button onclick="notifyCustomer('${o.tracking_id}','${o.customer_phone}')" class="admin-btn" style="background:var(--whatsapp-gradient);">Notify via WhatsApp</button></div>`; });
+  if(!isAdminLoggedIn) { navigateTo('loginPage'); return; }
+  const { data } = await supa.from('orders').select('*').eq('business_id', currentBusinessId).order('order_date', {ascending:false});
+  let html = '<h2 style="margin-bottom:20px;">Manage Orders</h2>';
+  if(!data || data.length===0) html += '<p style="text-align:center;padding:40px;">No orders found.</p>';
+  else data.forEach(o => {
+    html += `<div class="admin-order-card">
+      <div style="display:flex;justify-content:space-between;"><div><div style="font-weight:800;">${o.tracking_id}</div><div style="font-size:13px;color:#64748b;">${o.customer_name} | ${o.customer_phone}</div></div><div style="font-size:12px;">${new Date(o.order_date).toLocaleDateString()}</div></div>
+      <div style="margin:10px 0;"><strong>Total:</strong> PKR ${o.total}</div>
+      <select class="admin-select" data-id="${o.id}">
+        <option value="pending" ${o.status==='pending'?'selected':''}>⏳ Pending</option>
+        <option value="confirmed" ${o.status==='confirmed'?'selected':''}>✅ Confirmed</option>
+        <option value="shipped" ${o.status==='shipped'?'selected':''}>🚚 Shipped</option>
+        <option value="delivered" ${o.status==='delivered'?'selected':''}>📦 Delivered</option>
+        <option value="cancelled" ${o.status==='cancelled'?'selected':''}>❌ Cancelled</option>
+      </select>
+      <button onclick="updateOrderStatus('${o.id}')" class="admin-btn success">Update Status</button>
+      <button onclick="notifyCustomer('${o.tracking_id}','${o.customer_phone}')" class="admin-btn" style="background:var(--whatsapp-gradient);">Notify Customer</button>
+    </div>`;
+  });
   document.getElementById('adminContent').innerHTML = html;
 }
 async function updateOrderStatus(id) {
   const status = document.querySelector(`.admin-select[data-id="${id}"]`).value;
-  const { error } = await supa.from('orders').update({ status, last_updated: new Date().toISOString() }).eq('id',id);
-  if(!error) { showNotification(`✅ Order ${status}`); loadAdminPanel(); loadDeliveryStatus(); } else showNotification('❌ Failed');
+  await supa.from('orders').update({status, last_updated: new Date().toISOString()}).eq('id',id);
+  showNotification(`✅ Status updated to ${status}`);
+  loadAdminPanel();
+  loadDeliveryStatus();
 }
 function notifyCustomer(tracking, phone) {
   const msg = `Your order (${tracking}) has been confirmed! Track here: ${window.location.href.split('?')[0]}?id=${shortCardId}#delivery`;
   window.open(`https://wa.me/${phone.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// ========== LOAD DELIVERY STATUS FOR CUSTOMER ==========
+// ========== DELIVERY STATUS ==========
 async function loadDeliveryStatus() {
   const phone = getCustomerPhone();
-  if(!phone) { document.getElementById('deliveryContent').innerHTML = '<div class="no-deliveries">Add phone number to track.</div>'; return; }
-  const { data, error } = await supa.from('orders').select('*').eq('customer_phone', phone).eq('business_id', currentBusinessId).order('order_date', {ascending:false});
-  if(!data || data.length===0) { document.getElementById('deliveryContent').innerHTML = '<div class="no-deliveries">No orders yet.</div>'; return; }
-  let html = ''; data.forEach(o => { html += `<div class="delivery-card ${o.status}"><div class="delivery-header"><div class="delivery-order-id">${o.tracking_id}</div><div class="delivery-status ${o.status}">${o.status}</div></div><div><i class="fas fa-user"></i> ${o.customer_name}</div><div><i class="fas fa-map-marker-alt"></i> ${o.delivery_address}</div><div><i class="fas fa-clock"></i> Est: ${o.estimated_delivery_time||'N/A'}</div><div class="delivery-timestamp"><i class="fas fa-calendar"></i> ${new Date(o.order_date).toLocaleString()}</div></div>`; });
+  if(!phone) { document.getElementById('deliveryContent').innerHTML = '<div style="text-align:center;padding:40px;"><p>Please add your phone number to track orders.</p></div>'; return; }
+  const { data } = await supa.from('orders').select('*').eq('customer_phone', phone).eq('business_id', currentBusinessId).order('order_date', {ascending:false});
+  if(!data || data.length===0) { document.getElementById('deliveryContent').innerHTML = '<div style="text-align:center;padding:40px;"><p>No orders found.</p></div>'; return; }
+  let html = '';
+  data.forEach(o => html += `<div class="delivery-card ${o.status}"><div style="display:flex;justify-content:space-between;"><div style="font-weight:800;">${o.tracking_id}</div><div style="padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;background:${o.status==='delivered'?'#d1fae5':o.status==='confirmed'?'#dbeafe':'#fef3c7'}">${o.status}</div></div><div style="margin-top:10px;"><i class="fas fa-user"></i> ${o.customer_name}</div><div><i class="fas fa-map-marker-alt"></i> ${o.delivery_address}</div><div><i class="fas fa-clock"></i> Est: ${o.estimated_delivery_time||'N/A'}</div><div style="font-size:12px;color:#94a3b8;margin-top:15px;"><i class="fas fa-calendar"></i> ${new Date(o.order_date).toLocaleString()}</div></div>`);
   document.getElementById('deliveryContent').innerHTML = html;
 }
 
-// ========== OVERRIDE CART PAGE CHECKOUT BUTTON ==========
-function loadCartPage() {
-  const cartContent = document.getElementById('cartContent');
-  if(cart.length === 0) { cartContent.innerHTML = `<div class="cart-empty"><i class="fas fa-shopping-cart"></i><h3>Your cart is empty</h3><p>Add some products to get started</p><button onclick="navigateTo('productsPage')">Browse Products</button></div>`; document.getElementById('cartItemsCount').innerText='0 items'; return; }
-  let html = '<div class="cart-items">', total = 0;
-  cart.forEach((item,idx) => { const price = parseFloat(item.discountPrice || item.originalPrice || 0); const itemTotal = price * (item.quantity || 1); total += itemTotal; html += `<div class="cart-item">... (keep original cart item HTML) ...</div>`; });
-  html += '</div><div class="cart-summary"><h3>Order Summary</h3><div class="summary-row"><span>Subtotal</span><span>PKR ${total.toFixed(2)}</span></div><div class="summary-row"><span>Shipping</span><span>Calculated at checkout</span></div><div class="summary-row summary-total"><span>Total</span><span>PKR ${total.toFixed(2)}</span></div><button class="checkout-btn" onclick="loadCheckoutPage()"><i class="fas fa-lock"></i> Proceed to Checkout</button></div>`;
-  cartContent.innerHTML = html; document.getElementById('cartItemsCount').innerText = `${cart.length} items`;
+// ========== PRODUCTS ==========
+function loadHomePage() {
+  const prods = card.products || [];
+  const f = prods.slice(0,4);
+  let html = '';
+  f.forEach((p,i) => html += createProductCard(p, i));
+  document.getElementById('featuredProducts').innerHTML = html || '<p>No products</p>';
 }
-function updateCartCount() { document.getElementById('cartCountMini').innerText = cart.length; document.getElementById('cartBadge').innerText = cart.length; isolatedLocalStorage.setItem('cart', JSON.stringify(cart)); }
+function loadProductsPage() {
+  const prods = card.products || [];
+  let html = '';
+  prods.forEach((p,i) => html += createProductCard(p, i));
+  document.getElementById('allProducts').innerHTML = html || '<p>No products</p>';
+}
+function createProductCard(p, i) {
+  return `<div class="product-card" onclick="showProductModal(${i})">
+    <div class="product-image-container"><img src="${p.image||''}" class="product-image" onerror="this.style.display='none'"></div>
+    <div style="display:flex;flex-direction:column;flex:1;">
+      <div style="font-size:12px;font-weight:500;margin-bottom:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${p.title||'Product'}</div>
+      <div style="margin-top:auto;display:flex;gap:6px;">
+        <button onclick="addToCart(${i}); event.stopPropagation();" style="flex:1;background:var(--success-gradient);color:white;border:none;border-radius:4px;padding:6px;font-size:11px;font-weight:700;"><i class="fas fa-cart-plus"></i> Add</button>
+      </div>
+    </div>
+  </div>`;
+}
+function filterProducts() {
+  const term = document.getElementById('productsSearch').value.toLowerCase();
+  const prods = card.products || [];
+  const filtered = prods.filter(p => p.title?.toLowerCase().includes(term) || p.desc?.toLowerCase().includes(term));
+  let html = '';
+  filtered.forEach((p,i) => html += createProductCard(p, i));
+  document.getElementById('allProducts').innerHTML = html || '<p>No products found</p>';
+}
+function showProductModal(i) {
+  const p = card.products[i];
+  if(!p) return;
+  alert(`${p.title}\nPKR ${p.discountPrice||p.originalPrice}\n\n${p.desc||''}`);
+}
 
-// ========== ORIGINAL FUNCTIONS (ABBREVIATED BUT MUST EXIST) ==========
-function navigateTo(pageId) { /* full original navigation */ }
-function goBack() { /* full original */ }
-function showNotification(m) { const n=document.getElementById('notificationAlert'); n.textContent=m; n.style.display='block'; setTimeout(()=>n.style.display='none',3000); }
-function toggleLogin() { /* original */ }
-function attemptLogin() { /* original */ }
-function logoutAdmin() { /* original */ }
-function checkDeliveryStatus() { /* original */ }
-function saveBusinessToContacts(silent=false) { /* original */ }
-function shareBusiness() { /* original */ }
-function generateShortId() { return Math.random().toString(36).substring(2,8); }
-function addToCart(i) { /* original */ }
-function showProductModal(i) { /* original */ }
-function closeModal(id) { document.getElementById(id).style.display='none'; document.body.style.overflow='auto'; }
-function filterProducts() { /* original */ }
-function loadHomePage() { /* original - loads featured products from card */ }
-function loadProductsPage() { /* original - loads all products */ }
-function loadAboutPage() { /* original */ }
-function loadContactPage() { /* original */ }
-function openWhatsAppChat() { /* original */ }
-function makeCall() { /* original */ }
-function sendEmail() { /* original */ }
-function openMap() { /* original */ }
-function zoomImage(url, e) { e.stopPropagation(); document.getElementById('zoomedImage').src=url; document.getElementById('imageZoomOverlay').style.display='flex'; }
-function closeImageZoom() { document.getElementById('imageZoomOverlay').style.display='none'; }
-function showInstallPermissionModal() { /* original */ }
-function closeInstallPermissionModal() { /* original */ }
-function acceptInstallPermissions() { /* original */ }
-// ... plus all other original helper functions (product card creation, etc.)
+// ========== LOGIN ==========
+function toggleLogin() {
+  if(isAdminLoggedIn) logoutAdmin();
+  else navigateTo('loginPage');
+}
+function attemptLogin() {
+  const pwd = document.getElementById('adminPasswordInput').value;
+  if(pwd === businessAdminPassword) {
+    isAdminLoggedIn = true;
+    isolatedLocalStorage.setItem('isAdminLoggedIn', 'true');
+    showNotification('✅ Login successful');
+    navigateTo('adminPage');
+    loadAdminPanel();
+  } else showNotification('❌ Incorrect password');
+}
+function logoutAdmin() {
+  isAdminLoggedIn = false;
+  isolatedLocalStorage.removeItem('isAdminLoggedIn');
+  showNotification('👋 Logged out');
+  navigateTo('homePage');
+}
+function handleLoginKeypress(e) { if(e.key === 'Enter') attemptLogin(); }
 
-// ========== INITIALIZE APP ==========
-document.addEventListener("DOMContentLoaded", async () => {
-  const urlParams = new URLSearchParams(location.search);
-  let id = urlParams.get("id") || localStorage.getItem("lastCardId");
-  if (!id) { document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>"; return; }
-
-  if (id.length === 6) {
-    const { data: mapping } = await supa.from('short_urls').select('full_id').eq('short_id', id).single();
-    if (mapping) { id = mapping.full_id; shortCardId = mapping.short_id; }
-  } else if (id.length === 36) {
-    const shortId = generateShortId();
-    await supa.from('short_urls').insert([{ short_id: shortId, full_id: id }]).catch(()=>{});
-    shortCardId = shortId;
+// ========== CHECK DELIVERY STATUS ==========
+function checkDeliveryStatus() {
+  const phone = getCustomerPhone();
+  if(!phone) {
+    const p = prompt('Enter your phone number for delivery tracking:');
+    if(p) { saveCustomerPhone(p); loadDeliveryStatus(); }
   }
+  navigateTo('deliveryPage');
+  loadDeliveryStatus();
+}
 
+// ========== GENERATE SHORT ID ==========
+function generateShortId() {
+  return Math.random().toString(36).substring(2,8);
+}
+
+// ========== INITIALIZATION ==========
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(location.search);
+  let id = params.get("id") || localStorage.getItem("lastCardId");
+  if(!id) { document.body.innerHTML = "<div style='padding:40px;text-align:center;'><h2>Card not found</h2></div>"; return; }
+  
+  if(id.length === 6) {
+    const { data: map } = await supa.from('short_urls').select('full_id').eq('short_id', id).single();
+    if(map) { id = map.full_id; shortCardId = map.short_id; }
+  } else if(id.length === 36) {
+    shortCardId = generateShortId();
+    await supa.from('short_urls').insert([{ short_id: shortCardId, full_id: id }]).catch(()=>{});
+  }
+  
   localStorage.setItem("lastCardId", id);
   currentBusinessId = id;
-  const savedCart = isolatedLocalStorage.getItem('cart'); cart = savedCart ? JSON.parse(savedCart) : [];
+  const savedCart = isolatedLocalStorage.getItem('cart');
+  cart = savedCart ? JSON.parse(savedCart) : [];
   isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
-  loadInnerNotifications();
-
+  
   setTimeout(async () => {
     const { data, error } = await supa.from("cards").select("*").eq("id", id).single();
-    if (error || !data) { document.body.innerHTML = "<div style='padding:40px;text-align:center;color:white;'><h2>Card not found</h2></div>"; return; }
-    card = JSON.parse(data.data); card.id = data.id;
+    if(error || !data) { document.body.innerHTML = "<div style='padding:40px;text-align:center;'><h2>Card not found</h2></div>"; return; }
+    card = JSON.parse(data.data);
+    card.id = data.id;
     businessAdminPassword = `business123_${shortCardId?.toLowerCase() || card.id.substring(0,6).toLowerCase()}`;
-    if (shortCardId) document.getElementById('passwordHint').innerText = `Hint: Password is business123_${shortCardId.toLowerCase()}`;
-
-    document.getElementById('businessHeader').innerText = card.businessName || card.name || "Premium Business";
+    if(shortCardId) document.getElementById('passwordHint').innerHTML = `Hint: Password is business123_${shortCardId.toLowerCase()}`;
+    
+    document.getElementById('businessHeader').innerText = card.businessName || card.name || "Business";
     if(card.profileImage) document.getElementById('photo').src = card.profileImage;
     document.getElementById('name').innerText = card.name || "";
     document.getElementById('business').innerText = card.businessName || "";
-    // ... populate contact info
-
-    await renderApp();
-    initializeRouting();
-    navigationHistory.push('homePage');
-    updateCartCount(); updateLoginUI(); updateCustomerPhoneDisplay(); updateNotificationBellCount();
-    setTimeout(() => { checkNotificationPermission(); checkForDeliveries(); }, 1000);
+    
+    loadHomePage();
+    loadProductsPage();
+    updateCartCount();
     document.getElementById('loadingScreen').classList.remove('active');
     navigateTo('homePage');
   }, 2000);
 });
-
-function renderApp() { /* calls loadHomePage etc. */ }
-function initializeRouting() { /* hashchange handler */ }
-function updateLoginUI() { /* original */ }
-function checkNotificationPermission() { /* original */ }
-function checkForDeliveries() { /* original */ }
-function loadInnerNotifications() { /* original */ }
-console.log("✅ card.html FULLY LOADED with complete order flow");
 </script>
 </body>
 </html>
