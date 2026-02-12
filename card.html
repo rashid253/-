@@ -10,6 +10,7 @@
 <meta name="description" content="Premium Digital Business App">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
+<link rel="manifest" href="manifest.json">
 
 <style>
 :root {
@@ -186,6 +187,24 @@ body {
   font-weight: 700;
 }
 
+.header-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 480px;
+  height: 80px;
+  background: rgba(102, 126, 234, 0.95);
+  backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1001;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
 .header-icons {
   position: absolute;
   top: 20px;
@@ -234,101 +253,120 @@ body {
   z-index: 11;
 }
 
-/* ===== MODERN ECOMMERCE LABELS - HALF BAHAR, TOP CORNERS ===== */
+.notification-drawer {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 320px;
+  height: 100%;
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.2);
+  z-index: 2000;
+  transition: var(--transition-slow);
+  display: flex;
+  flex-direction: column;
+}
+
+.notification-drawer.open {
+  right: 0;
+}
+
+/* ========== FIX 1: CART RED BADGE ========== */
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ef4444;
+  color: white;
+  font-size: 11px;
+  font-weight: 900;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+  z-index: 12;
+  padding: 0 4px;
+}
+
+/* ========== FIX 2: PRODUCT LABELS - TRANSPARENT + HALF BAHAR ========== */
 .discount-badge {
   position: absolute;
   top: -8px;
   left: -8px;
-  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  background: rgba(239, 68, 68, 0.85);
+  backdrop-filter: blur(4px);
   color: white;
-  font-size: 12px;
-  font-weight: 900;
   padding: 6px 12px;
   border-radius: 30px;
-  box-shadow: 0 6px 14px rgba(239, 68, 68, 0.3);
-  display: flex;
+  font-size: 12px;
+  font-weight: 800;
+  box-shadow: 0 6px 14px rgba(239, 68, 68, 0.25);
+  letter-spacing: 0.5px;
+  display: inline-flex;
   align-items: center;
   gap: 4px;
-  border: 1px solid rgba(255,255,255,0.4);
-  z-index: 20;
-  letter-spacing: 0.5px;
-  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 15;
 }
 
 .offer-badge {
   position: absolute;
   top: -8px;
   right: -8px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  background: rgba(16, 185, 129, 0.85);
+  backdrop-filter: blur(4px);
   color: white;
-  font-size: 11px;
-  font-weight: 800;
   padding: 6px 14px;
   border-radius: 30px;
-  box-shadow: 0 6px 14px rgba(16, 185, 129, 0.3);
-  display: flex;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 6px 14px rgba(16, 185, 129, 0.25);
+  display: inline-flex;
   align-items: center;
   gap: 4px;
-  border: 1px solid rgba(255,255,255,0.4);
-  z-index: 20;
-  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 15;
 }
 
 .feature-badge {
   position: absolute;
   top: -8px;
   right: -8px;
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  background: rgba(139, 92, 246, 0.85);
+  backdrop-filter: blur(4px);
   color: white;
-  font-size: 11px;
-  font-weight: 800;
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: 30px;
-  box-shadow: 0 6px 14px rgba(139, 92, 246, 0.3);
-  border: 1px solid rgba(255,255,255,0.4);
-  z-index: 20;
-  backdrop-filter: blur(2px);
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 6px 14px rgba(139, 92, 246, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  z-index: 15;
 }
 
-/* ===== PRICE BADGE - BOTTOM LEFT CORNER ===== */
 .price-badge {
   position: absolute;
-  bottom: -6px;
-  left: -6px;
-  background: rgba(15, 23, 42, 0.9);
+  bottom: 12px;
+  left: 12px;
+  background: rgba(15, 23, 42, 0.8);
   backdrop-filter: blur(4px);
   color: white;
   padding: 8px 16px;
   border-radius: 30px;
   font-weight: 800;
   font-size: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-  display: flex;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  z-index: 20;
-}
-
-/* ===== PERCENTAGE DISCOUNT - BOTTOM RIGHT CORNER ===== */
-.percentage-badge {
-  position: absolute;
-  bottom: -6px;
-  right: -6px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-  color: white;
-  font-size: 13px;
-  font-weight: 900;
-  padding: 8px 16px;
-  border-radius: 30px;
-  box-shadow: 0 6px 14px rgba(245, 158, 11, 0.3);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  border: 1px solid rgba(255,255,255,0.4);
-  z-index: 20;
-  letter-spacing: 0.5px;
-  backdrop-filter: blur(2px);
+  gap: 6px;
+  z-index: 15;
 }
 
 .original-price {
@@ -344,112 +382,397 @@ body {
   color: #10b981;
 }
 
-/* ===== CART BADGE ===== */
-.cart-badge {
+.badge-container {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  background: var(--danger-gradient);
-  color: white;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Professional Order Management Styles */
+.order-card {
+  background: var(--lighter-color);
+  border-radius: var(--border-radius-lg);
+  padding: 16px;
+  margin: 12px 16px;
+  box-shadow: var(--shadow-md);
+  border: 1px solid #e2e8f0;
+  border-left: 5px solid #667eea;
+  transition: var(--transition-fast);
+}
+
+.order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.order-id {
+  font-size: 14px;
+  font-weight: 700;
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.order-token {
+  font-size: 12px;
+  font-weight: 800;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.order-status {
+  padding: 4px 12px;
+  border-radius: 20px;
   font-size: 11px;
-  font-weight: 900;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.order-status.pending { background: #fef3c7; color: #92400e; }
+.order-status.confirmed { background: #dbeafe; color: #1e40af; }
+.order-status.processing { background: #ede9fe; color: #5b21b6; }
+.order-status.shipped { background: #d1fae5; color: #065f46; }
+.order-status.delivered { background: #10b981; color: white; }
+.order-status.cancelled { background: #fee2e2; color: #991b1b; }
+
+.order-details {
+  margin-bottom: 12px;
+}
+
+.order-item-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+  padding: 4px 0;
+}
+
+.order-total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--dark-color);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 2px solid #e2e8f0;
+}
+
+.order-address {
+  background: #f8fafc;
+  padding: 12px;
+  border-radius: var(--border-radius-sm);
+  margin: 8px 0;
+  font-size: 12px;
+  border-left: 3px solid #667eea;
+}
+
+.delivery-info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #f1f5f9;
+  border-radius: 20px;
+  font-size: 11px;
+  color: #475569;
+  margin-right: 8px;
+}
+
+/* Address Auto-detect */
+.address-auto-detect {
+  background: var(--light-color);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  margin: 16px 0;
+  border: 2px dashed #667eea;
+  position: relative;
+}
+
+.delivery-charge-calculator {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  margin: 16px 0;
+  border: 1px solid #e2e8f0;
+}
+
+.zone-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #667eea;
+  color: white;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  margin: 4px;
+}
+
+/* Professional Payment Methods */
+.pro-payment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.pro-payment-card {
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.pro-payment-card:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+}
+
+.pro-payment-card.selected {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.pro-payment-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 5px;
-  border: 2px solid var(--glass-bg);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  z-index: 10;
+  font-size: 24px;
+  color: white;
 }
 
-/* ===== PRODUCT CARD STYLES ===== */
+/* Order Confirmation Ticket */
+.order-ticket {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  margin: 20px 0;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.order-ticket::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 150px;
+  height: 150px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+}
+
+.order-ticket::after {
+  content: '✓';
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 80px;
+  opacity: 0.1;
+  color: white;
+}
+
+.ticket-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 2px dashed rgba(255,255,255,0.3);
+}
+
+.ticket-id {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.ticket-date {
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.ticket-body {
+  margin-bottom: 20px;
+}
+
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.ticket-total {
+  font-size: 20px;
+  font-weight: 900;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 2px solid rgba(255,255,255,0.3);
+}
+
+/* Admin Token Management */
+.token-management {
+  background: white;
+  border-radius: var(--border-radius-lg);
+  padding: 20px;
+  margin: 16px;
+  box-shadow: var(--shadow-md);
+}
+
+.token-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.token-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 900;
+  color: #667eea;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.token-list {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.token-item {
+  background: #f8fafc;
+  border-radius: var(--border-radius-sm);
+  padding: 12px;
+  margin-bottom: 8px;
+  border-left: 4px solid #10b981;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.token-item:hover {
+  background: #f1f5f9;
+}
+
+.token-code {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  font-family: monospace;
+}
+
+.token-amount {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.token-status {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+#homePage, #productsPage, #cartPage, #aboutPage, #contactPage, #deliveryPage, #adminPage, #loginPage {
+  padding-top: 80px;
+  padding-bottom: 100px;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.app-header {
+  background: var(--primary-gradient);
+  padding: 30px 25px;
+  border-radius: 0 0 50px 50px;
+  margin: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  padding: 0 16px;
+  gap: 12px;
+  padding: 0 12px;
   align-items: stretch;
   margin-bottom: 20px;
 }
 
 .product-card {
+  height: 260px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   background: var(--lighter-color);
-  border-radius: 16px;
+  border-radius: 8px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  padding: 8px;
+  overflow: hidden;
   transition: var(--transition-fast);
   cursor: pointer;
   position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.08);
-}
-
-.product-image-container {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1 / 1;
-  background: #f8fafc;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 12px;
-  border: 1px solid #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.product-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  transition: transform 0.3s ease;
-  padding: 8px;
-}
-
-.product-card.clicked .product-image {
-  transform: scale(1.8);
-}
-
-.product-content {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 4px 0;
-}
-
-.product-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--dark-color);
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 36px;
-}
-
-.product-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
+  min-height: 260px;
+  max-height: 260px;
 }
 
 .btn-primary, .btn-secondary {
   flex: 1;
-  padding: 10px 0;
+  height: 28px;
   border: none;
-  border-radius: 8px;
-  font-size: 12px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -457,6 +780,10 @@ body {
   justify-content: center;
   gap: 4px;
   transition: var(--transition-fast);
+  white-space: nowrap;
+  min-height: 28px;
+  padding: 0 6px;
+  overflow: hidden;
 }
 
 .btn-primary {
@@ -469,7 +796,50 @@ body {
   color: white;
 }
 
-/* ===== MODAL STYLES ===== */
+/* Address Input Styles */
+.address-input-group {
+  position: relative;
+  margin: 20px 0;
+}
+
+.address-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #e2e8f0;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+  display: none;
+}
+
+.address-suggestion-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.address-suggestion-item:hover {
+  background: #f8fafc;
+}
+
+.delivery-estimate {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: #f0f9ff;
+  border-radius: 8px;
+  margin: 12px 0;
+  border-left: 4px solid #3b82f6;
+}
+
+/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -487,7 +857,7 @@ body {
 
 .modal-content {
   background: var(--glass-bg);
-  border-radius: 24px;
+  border-radius: var(--border-radius-xl);
   width: 100%;
   max-width: 420px;
   max-height: 90vh;
@@ -514,265 +884,104 @@ body {
   z-index: 10;
 }
 
-/* ===== IMAGE ZOOM OVERLAY ===== */
-.image-zoom-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.95);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 3000;
-  animation: fadeIn 0.3s ease;
-}
-
-.image-zoom-content {
-  max-width: 90%;
-  max-height: 90%;
-  animation: zoomIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes zoomIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* ===== BACK BUTTON FIX ===== */
-.back-btn {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.3);
-  z-index: 100;
-  transition: var(--transition-fast);
-}
-
-.back-btn:hover {
-  transform: scale(1.1);
-  background: rgba(255,255,255,0.3);
-}
-
-/* ===== EXIT MODAL ===== */
-.exit-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(20px);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 5000;
-  padding: 20px;
-}
-
-.exit-modal {
-  background: var(--glass-bg);
-  border-radius: 24px;
-  width: 100%;
-  max-width: 350px;
-  padding: 30px;
-  text-align: center;
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-}
-
-.exit-modal h2 {
-  color: var(--dark-color);
-  margin-bottom: 15px;
-  font-size: 22px;
-  font-weight: 800;
-}
-
-.exit-modal p {
-  color: #64748b;
-  margin-bottom: 25px;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.exit-modal-buttons {
-  display: flex;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.exit-modal-btn {
-  flex: 1;
-  padding: 15px;
-  border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.exit-modal-btn.cancel {
-  background: #f1f5f9;
-  color: #64748b;
-}
-
-.exit-modal-btn.exit {
-  background: var(--danger-gradient);
-  color: white;
-}
-
-/* ===== NOTIFICATION ALERT ===== */
-.notification-alert {
-  position: fixed;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--whatsapp-gradient);
-  color: white;
-  padding: 15px 25px;
-  border-radius: 12px;
-  box-shadow: var(--shadow-xl);
-  z-index: 3000;
-  max-width: 300px;
-  animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
-  font-weight: 700;
-  font-size: 14px;
-  text-align: center;
-  display: none;
-}
-
-@keyframes slideIn {
-  from { top: 50px; opacity: 0; }
-  to { top: 100px; opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-/* ===== PAGE HEADERS ===== */
-#homePage, #productsPage, #cartPage, #aboutPage, #contactPage, #deliveryPage, #adminPage, #loginPage {
-  padding-top: 80px;
-  padding-bottom: 100px;
-  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
-}
-
-.app-header {
-  background: var(--primary-gradient);
-  padding: 80px 25px 30px;
-  border-radius: 0 0 50px 50px;
-  margin: 0;
-  position: relative;
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-}
-
-.welcome-text h1 {
-  color: white;
-  font-size: 32px;
-  font-weight: 900;
-  margin-bottom: 8px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-
-.products-header, .cart-header, .about-header, .contact-header, .delivery-page-header {
-  background: var(--primary-gradient);
-  padding: 50px 25px 30px;
-  margin: 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.products-header h1, .cart-header h1, .about-header h1, .contact-header h1, .delivery-page-header h1 {
-  color: white;
-  font-size: 28px;
-  font-weight: 800;
-  margin-bottom: 12px;
-  position: relative;
-  z-index: 1;
-  margin-top: 20px;
-}
-
-.share-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  z-index: 100;
-}
-
-/* ===== RESPONSIVE ===== */
+/* Responsive */
 @media (max-width: 480px) {
   .app-container { max-width: 100%; }
-  .products-grid { gap: 12px; padding: 0 12px; }
-  .product-card { padding: 10px; }
-  .discount-badge, .offer-badge, .feature-badge { font-size: 10px; padding: 5px 10px; }
-  .price-badge { font-size: 12px; padding: 6px 12px; }
-  .percentage-badge { font-size: 11px; padding: 6px 12px; }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --light-color: #0f172a;
-    --lighter-color: #1e293b;
-    --dark-color: #f8fafc;
-    --glass-bg: rgba(30, 41, 59, 0.95);
-  }
-  body { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
-  .app-container { background: var(--light-color); }
-  .product-card { background: var(--lighter-color); border-color: rgba(255,255,255,0.1); }
+  .pro-payment-grid { grid-template-columns: 1fr; }
+  .token-stats { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 
 <body>
 <div class="app-container">
-  <!-- Image Zoom Overlay -->
-  <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="closeImageZoom()">
-    <img src="" class="image-zoom-content" id="zoomedImage">
+  <!-- Fixed Header -->
+  <div class="header-container">
+    <button class="header-icon-btn back-btn" onclick="window.goBack()" id="headerBackBtn" style="display:none;">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <div class="header-icon-btn save-contact-btn" onclick="window.saveBusinessToContacts()" title="Save to Contacts">
+      <i class="fas fa-address-card"></i>
+    </div>
+    
+    <div class="header-icons">
+      <div class="header-icon-btn" onclick="window.toggleNotificationDrawer()" title="Notifications">
+        <i class="fas fa-bell" id="notificationBell"></i>
+        <div class="delivery-badge" id="notificationBadge" style="display:none;">!</div>
+      </div>
+      
+      <div class="header-icon-btn" id="deliveryStatusBtn" onclick="window.checkDeliveryStatus()" title="Delivery Status">
+        <i class="fas fa-truck" id="deliveryIcon"></i>
+        <div class="delivery-badge" id="deliveryBadge" style="display:none;"></div>
+      </div>
+      
+      <div class="header-icon-btn" id="loginBtn" onclick="window.toggleLogin()" title="Login/Logout">
+        <i class="fas fa-sign-in-alt" id="loginIcon"></i>
+      </div>
+    </div>
+    
+    <div class="header-icon-btn share-btn" onclick="window.shareBusiness()" title="Share Business">
+      <i class="fas fa-share-alt"></i>
+    </div>
   </div>
 
-  <!-- Exit Confirmation Modal -->
-  <div class="exit-modal-overlay" id="exitModal">
-    <div class="exit-modal">
-      <h2><i class="fas fa-sign-out-alt"></i> Exit App?</h2>
-      <p>Are you sure you want to exit? Press back again to confirm.</p>
-      <div class="exit-modal-buttons">
-        <button class="exit-modal-btn cancel" onclick="closeExitModal()">
+  <!-- Notification Drawer -->
+  <div class="notification-drawer" id="notificationDrawer">
+    <div class="notification-header" style="display:flex; justify-content:space-between; align-items:center; padding:20px; border-bottom:1px solid #e2e8f0;">
+      <h3 style="display:flex; align-items:center; gap:8px;"><i class="fas fa-bell"></i> Notifications <span class="notification-count" id="notificationCount" style="background:#667eea; color:white; padding:2px 8px; border-radius:12px; font-size:12px;">0</span></h3>
+      <button onclick="window.toggleNotificationDrawer()" style="background: none; border: none; font-size: 24px; color: var(--dark-color); cursor: pointer;">×</button>
+    </div>
+    <div class="notification-content" id="notificationList" style="flex:1; overflow-y:auto; padding:16px;"></div>
+    <div class="notification-actions" style="display:flex; gap:8px; padding:16px; border-top:1px solid #e2e8f0;">
+      <button onclick="window.markAllNotificationsAsRead()" style="flex:1; padding: 10px; background: #f1f5f9; border: none; border-radius: 8px; font-weight: 700; color: #64748b; cursor: pointer;">
+        Mark All Read
+      </button>
+      <button onclick="window.enableNotifications()" style="flex:1; padding: 10px; background: var(--primary-gradient); border: none; border-radius: 8px; font-weight: 700; color: white; cursor: pointer;">
+        Enable Alerts
+      </button>
+    </div>
+  </div>
+
+  <!-- Image Zoom Overlay -->
+  <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="window.closeImageZoom()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:3000; justify-content:center; align-items:center;">
+    <img src="" class="image-zoom-content" id="zoomedImage" style="max-width:90%; max-height:90%; border-radius:12px;">
+  </div>
+
+  <!-- Exit Modal -->
+  <div class="exit-modal-overlay" id="exitModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:4000; justify-content:center; align-items:center;">
+    <div class="exit-modal" style="background:white; max-width:320px; padding:24px; border-radius:24px; text-align:center;">
+      <h2 style="margin-bottom:12px;"><i class="fas fa-sign-out-alt" style="color:#ef4444;"></i> Exit App?</h2>
+      <p style="margin-bottom:20px; color:#64748b;">Are you sure you want to exit? Press back again to confirm.</p>
+      <div class="exit-modal-buttons" style="display:flex; gap:12px;">
+        <button class="exit-modal-btn cancel" onclick="window.closeExitModal()" style="flex:1; padding:12px; background:#f1f5f9; border:none; border-radius:12px; font-weight:700; color:#475569; cursor:pointer;">
           <i class="fas fa-times"></i> Cancel
         </button>
-        <button class="exit-modal-btn exit" onclick="exitApp()">
+        <button class="exit-modal-btn exit" onclick="window.exitApp()" style="flex:1; padding:12px; background:#ef4444; border:none; border-radius:12px; font-weight:700; color:white; cursor:pointer;">
           <i class="fas fa-sign-out-alt"></i> Exit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Install Permission Modal -->
+  <div class="exit-modal-overlay" id="installPermissionModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:4000; justify-content:center; align-items:center;">
+    <div class="install-permission-modal" style="background:white; max-width:340px; padding:24px; border-radius:24px;">
+      <h2 style="margin-bottom:12px;"><i class="fas fa-download" style="color:#667eea;"></i> Enhance Your Experience</h2>
+      <p style="margin-bottom:16px; color:#64748b;">To provide you with the best experience, we'd like to:</p>
+      <div class="permission-features" style="margin-bottom:20px;">
+        <div class="permission-feature" style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#10b981;"></i><span>Save business details to your contacts</span></div>
+        <div class="permission-feature" style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#10b981;"></i><span>Enable push notifications for orders</span></div>
+        <div class="permission-feature" style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#10b981;"></i><span>Install app for quick access</span></div>
+        <div class="permission-feature" style="display:flex; align-items:center; gap:8px; margin-bottom:8px;"><i class="fas fa-check-circle" style="color:#10b981;"></i><span>Auto-save your preferences</span></div>
+      </div>
+      <p style="font-size: 14px; color: #94a3b8; margin-bottom:20px;">Your data is secure and never shared with third parties.</p>
+      <div class="permission-buttons" style="display:flex; gap:12px;">
+        <button class="permission-btn cancel" onclick="window.closeInstallPermissionModal()" style="flex:1; padding:12px; background:#f1f5f9; border:none; border-radius:12px; font-weight:700; color:#475569; cursor:pointer;">
+          <i class="fas fa-times"></i> Skip
+        </button>
+        <button class="permission-btn accept" onclick="window.acceptInstallPermissions()" style="flex:1; padding:12px; background:var(--success-gradient); border:none; border-radius:12px; font-weight:700; color:white; cursor:pointer;">
+          <i class="fas fa-check"></i> Accept & Continue
         </button>
       </div>
     </div>
@@ -781,299 +990,298 @@ body {
   <!-- Loading Screen -->
   <div id="loadingScreen" class="page active">
     <div class="loader"></div>
-    <h1 id="loadingTitle">Digital Business App</h1>
-    <p id="loadingSubtitle">Loading your premium business experience...</p>
+    <h1 id="loadingTitle" style="color:white; margin-bottom:10px;">Digital Business App</h1>
+    <p id="loadingSubtitle" style="color:rgba(255,255,255,0.9);">Loading your premium business experience...</p>
   </div>
 
   <!-- Home Page -->
   <div id="homePage" class="page">
-    <div class="share-btn" onclick="shareBusiness()" title="Share Business">
-      <i class="fas fa-share-alt"></i>
-    </div>
-    
     <div class="app-header">
-      <div class="header-icons">
-        <div class="header-icon-btn" id="deliveryStatusBtn" onclick="checkDeliveryStatus()">
-          <i class="fas fa-truck" id="deliveryIcon"></i>
-          <div class="delivery-badge" id="deliveryBadge" style="display:none;"></div>
-        </div>
-        
-        <div class="header-icon-btn" id="loginBtn" onclick="toggleLogin()">
-          <i class="fas fa-sign-in-alt" id="loginIcon"></i>
-        </div>
-      </div>
-      
       <div class="welcome-text">
-        <h1 id="businessHeader">Welcome</h1>
-        <p>Premium business at your fingertips</p>
+        <h1 id="businessHeader" style="color:white;">Welcome</h1>
+        <p style="color:rgba(255,255,255,0.9);">Premium business at your fingertips</p>
       </div>
       
-      <div class="quick-actions" style="display:grid; grid-template-columns:repeat(2,1fr); gap:15px; margin-top:20px;">
-        <div class="action-card" onclick="navigateTo('productsPage')" style="background:rgba(255,255,255,0.2); padding:20px; border-radius:24px; text-align:center; color:white; cursor:pointer;">
-          <div style="font-size:28px; margin-bottom:15px;"><i class="fas fa-shopping-bag"></i></div>
-          <h3 style="font-size:17px; font-weight:800;">Shop Now</h3>
-          <p style="font-size:13px; opacity:0.9;">Browse products</p>
+      <div class="quick-actions" style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:30px;">
+        <div class="action-card" onclick="window.navigateTo('productsPage')" style="background:rgba(255,255,255,0.2); padding:12px; border-radius:16px; text-align:center; color:white; cursor:pointer;">
+          <div class="action-icon"><i class="fas fa-shopping-bag" style="font-size:24px;"></i></div>
+          <h3 style="font-size:14px; margin-top:8px;">Shop Now</h3>
+          <p style="font-size:11px; opacity:0.9;">Browse products</p>
         </div>
-        <div class="action-card" onclick="navigateTo('cartPage')" style="background:rgba(255,255,255,0.2); padding:20px; border-radius:24px; text-align:center; color:white; cursor:pointer;">
-          <div style="font-size:28px; margin-bottom:15px; position:relative;">
-            <i class="fas fa-shopping-cart"></i>
+        <div class="action-card" onclick="window.navigateTo('cartPage')" style="background:rgba(255,255,255,0.2); padding:12px; border-radius:16px; text-align:center; color:white; cursor:pointer;">
+          <div class="action-icon"><i class="fas fa-shopping-cart" style="font-size:24px; position:relative;" id="cartIcon">
             <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
-          </div>
-          <h3 style="font-size:17px; font-weight:800;">My Cart</h3>
-          <p style="font-size:13px; opacity:0.9;"><span id="cartCountMini">0</span> items</p>
+          </i></div>
+          <h3 style="font-size:14px; margin-top:8px;">My Cart</h3>
+          <p style="font-size:11px; opacity:0.9;"><span id="cartCountMini">0</span> items</p>
         </div>
-        <div class="action-card" onclick="openWhatsAppChat('greeting')" style="background:rgba(255,255,255,0.2); padding:20px; border-radius:24px; text-align:center; color:white; cursor:pointer;">
-          <div style="font-size:28px; margin-bottom:15px;"><i class="fab fa-whatsapp"></i></div>
-          <h3 style="font-size:17px; font-weight:800;">Live Chat</h3>
-          <p style="font-size:13px; opacity:0.9;">Instant support</p>
+        <div class="action-card" onclick="window.openWhatsAppChat()" style="background:rgba(255,255,255,0.2); padding:12px; border-radius:16px; text-align:center; color:white; cursor:pointer;">
+          <div class="action-icon"><i class="fab fa-whatsapp" style="font-size:24px;"></i></div>
+          <h3 style="font-size:14px; margin-top:8px;">Live Chat</h3>
+          <p style="font-size:11px; opacity:0.9;">Instant support</p>
         </div>
-        <div class="action-card" onclick="navigateTo('contactPage')" style="background:rgba(255,255,255,0.2); padding:20px; border-radius:24px; text-align:center; color:white; cursor:pointer;">
-          <div style="font-size:28px; margin-bottom:15px;"><i class="fas fa-map-marker-alt"></i></div>
-          <h3 style="font-size:17px; font-weight:800;">Location</h3>
-          <p style="font-size:13px; opacity:0.9;">Find us</p>
+        <div class="action-card" onclick="window.navigateTo('contactPage')" style="background:rgba(255,255,255,0.2); padding:12px; border-radius:16px; text-align:center; color:white; cursor:pointer;">
+          <div class="action-icon"><i class="fas fa-map-marker-alt" style="font-size:24px;"></i></div>
+          <h3 style="font-size:14px; margin-top:8px;">Location</h3>
+          <p style="font-size:11px; opacity:0.9;">Find us</p>
         </div>
       </div>
     </div>
 
-    <div class="profile-section" style="background:white; border-radius:32px; padding:30px; margin:40px 25px; box-shadow:var(--shadow-lg); text-align:center;">
-      <img src="" id="photo" class="profile-avatar" loading="lazy" style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:5px solid white; margin-bottom:20px;">
-      <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:8px;">
-        <span id="name" style="font-size:22px; font-weight:900; color:var(--dark-color);">Loading...</span>
-        <i class="fas fa-badge-check verified-badge" style="color:#667eea; font-size:18px;"></i>
+    <div class="profile-section" style="display:flex; align-items:center; gap:16px; padding:20px; background:white; margin:20px; border-radius:20px; box-shadow:var(--shadow-md);">
+      <img src="" id="photo" class="profile-avatar" loading="lazy" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:3px solid var(--primary-gradient);">
+      <div>
+        <div class="profile-name" style="display:flex; align-items:center; gap:6px;">
+          <span id="name" style="font-size:18px; font-weight:800; color:var(--dark-color);">Loading...</span>
+          <i class="fas fa-badge-check verified-badge" style="color:#10b981;"></i>
+        </div>
+        <div class="profile-business" id="business" style="font-size:14px; color:#64748b; margin-top:4px;"></div>
       </div>
-      <div id="business" style="font-size:16px; color:#764ba2; font-weight:700; padding:6px 18px; background:rgba(118,75,162,0.1); border-radius:50px; display:inline-block;"></div>
     </div>
 
-    <div class="section-header" style="display:flex; align-items:center; justify-content:space-between; margin:40px 25px 20px; padding-bottom:15px; border-bottom:2px solid #f1f5f9;">
-      <h2 style="font-size:20px; font-weight:900; color:var(--dark-color); display:flex; align-items:center; gap:10px;">
+    <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; padding:0 16px; margin-bottom:16px;">
+      <h2 style="font-size:18px; font-weight:800; color:var(--dark-color); display:flex; align-items:center; gap:8px;">
         <i class="fas fa-gift" style="color:#667eea;"></i> Featured Products
       </h2>
-      <div class="see-all" onclick="navigateTo('productsPage')" style="color:#667eea; font-weight:700; font-size:14px; cursor:pointer; display:flex; align-items:center; gap:6px; padding:6px 12px; background:rgba(102,126,234,0.1); border-radius:8px;">
+      <div class="see-all" onclick="window.navigateTo('productsPage')" style="font-size:14px; color:#667eea; font-weight:600; cursor:pointer;">
         See All <i class="fas fa-arrow-right"></i>
       </div>
     </div>
     
     <div class="products-grid" id="featuredProducts"></div>
-    <div class="page-footer-spacer" style="height:30px;"></div>
+    <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
   <!-- Products Page -->
   <div id="productsPage" class="page">
-    <button class="back-btn" onclick="goBack()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-    
-    <div class="products-header">
-      <h1>Products & Offers</h1>
-      <p style="color:rgba(255,255,255,0.95); font-size:16px;">Discover our premium collection</p>
+    <div class="products-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
+      <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);">Products & Offers</h1>
+      <p style="color:#64748b; margin-top:4px;">Discover our premium collection</p>
     </div>
     
-    <div class="products-search" style="position:relative; margin:20px; background:white; border-radius:24px; padding:5px; box-shadow:var(--shadow-md);">
-      <input type="text" id="productsSearch" placeholder="Search products..." onkeyup="filterProducts()" style="width:100%; padding:15px 50px 15px 20px; border:none; border-radius:16px; font-size:15px; background:transparent;">
-      <i class="fas fa-search" style="position:absolute; right:20px; top:50%; transform:translateY(-50%); color:#64748b; font-size:20px;"></i>
+    <div class="products-search" style="position:relative; margin:16px; padding:0 4px;">
+      <input type="text" id="productsSearch" placeholder="Search products..." onkeyup="window.filterProducts()" style="width:100%; padding:14px 20px; padding-left:50px; border:2px solid #e2e8f0; border-radius:30px; font-size:15px;">
+      <i class="fas fa-search" style="position:absolute; left:24px; top:50%; transform:translateY(-50%); color:#94a3b8;"></i>
     </div>
     
     <div class="products-grid" id="allProducts"></div>
-    <div class="page-footer-spacer"></div>
+    <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
   <!-- Cart Page -->
   <div id="cartPage" class="page">
-    <button class="back-btn" onclick="goBack()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-    
-    <div class="cart-header">
-      <h1>My Cart</h1>
-      <p id="cartItemsCount">0 items</p>
+    <div class="cart-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
+      <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);">My Cart</h1>
+      <p id="cartItemsCount" style="color:#64748b; margin-top:4px;">0 items</p>
     </div>
-    
-    <div id="cartContent"></div>
-    <div class="page-footer-spacer"></div>
+    <div id="cartContent" style="padding:16px;"></div>
+    <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
   <!-- About Page -->
   <div id="aboutPage" class="page">
-    <button class="back-btn" onclick="goBack()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-    
-    <div class="about-header">
-      <h1>About Business</h1>
+    <div class="about-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
+      <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);">About Business</h1>
     </div>
-    
-    <div class="about-content" id="aboutContent" style="background:white; border-radius:24px; padding:25px; margin:25px; box-shadow:var(--shadow-md);"></div>
-    
-    <div class="business-hours" style="background:white; border-radius:24px; padding:25px; margin:20px; box-shadow:var(--shadow-md);">
-      <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:20px;"><i class="fas fa-clock" style="color:#667eea;"></i> Business Hours</h3>
-      <div class="hours-list" id="businessHours"></div>
+    <div class="about-content" id="aboutContent" style="padding:20px; color:#475569; line-height:1.6;"></div>
+    <div class="business-hours" style="padding:20px;">
+      <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-clock" style="color:#667eea;"></i> Business Hours
+      </h3>
+      <div class="hours-list" id="businessHours" style="background:white; border-radius:16px; padding:16px;"></div>
     </div>
-    
-    <div class="business-hours" style="background:white; border-radius:24px; padding:25px; margin:20px; box-shadow:var(--shadow-md);">
-      <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:20px;"><i class="fas fa-calendar-times" style="color:#ef4444;"></i> Holidays</h3>
-      <div class="hours-list" id="holidaysList"></div>
+    <div class="business-hours" style="padding:20px; padding-top:0;">
+      <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-calendar-times" style="color:#ef4444;"></i> Holidays
+      </h3>
+      <div class="hours-list" id="holidaysList" style="background:white; border-radius:16px; padding:16px;"></div>
     </div>
-    
-    <div class="page-footer-spacer"></div>
+    <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
   <!-- Contact Page -->
   <div id="contactPage" class="page">
-    <button class="back-btn" onclick="goBack()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-    
-    <div class="contact-header">
-      <h1>Contact Us</h1>
-      <p>Get in touch anytime</p>
+    <div class="contact-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
+      <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);">Contact Us</h1>
+      <p style="color:#64748b; margin-top:4px;">Get in touch anytime</p>
     </div>
     
-    <div class="contact-info" style="background:white; border-radius:24px; padding:20px; margin:25px; box-shadow:var(--shadow-md);">
-      <div class="contact-item" onclick="openPhoneInput()" style="display:flex; align-items:center; gap:15px; padding:18px; margin-bottom:15px; background:#f8fafc; border-radius:16px; cursor:pointer;">
-        <div class="contact-icon" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:var(--primary-gradient); flex-shrink:0;">
-          <i class="fas fa-user-plus"></i>
-        </div>
-        <div class="contact-details" style="flex:1;">
-          <div class="contact-label" style="font-size:11px; color:#64748b; margin-bottom:4px; font-weight:700;">Your Phone Number</div>
-          <div class="contact-value" id="customerPhoneDisplay" style="font-size:14px; font-weight:700; color:var(--dark-color);">Tap to add your number</div>
+    <div class="contact-info" style="padding:16px;">
+      <div class="contact-item" onclick="window.saveBusinessToContacts()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
+        <div class="contact-icon" style="width:48px; height:48px; background:#667eea; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-address-card"></i></div>
+        <div class="contact-details">
+          <div class="contact-label" style="font-size:14px; color:#64748b;">Save Business Contact</div>
+          <div class="contact-value" style="font-size:16px; font-weight:700; color:var(--dark-color);">Tap to save to phonebook</div>
         </div>
       </div>
       
-      <div class="contact-item" onclick="makeCall()" style="display:flex; align-items:center; gap:15px; padding:18px; margin-bottom:15px; background:#f8fafc; border-radius:16px; cursor:pointer;">
-        <div class="contact-icon" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:var(--success-gradient); flex-shrink:0;">
-          <i class="fas fa-phone"></i>
-        </div>
-        <div class="contact-details" style="flex:1;">
-          <div class="contact-label" style="font-size:11px; color:#64748b; margin-bottom:4px; font-weight:700;">Call Us</div>
-          <div class="contact-value" id="contactPhone" style="font-size:14px; font-weight:700; color:var(--dark-color);">Loading...</div>
+      <div class="contact-item" onclick="window.openPhoneInput()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
+        <div class="contact-icon" style="width:48px; height:48px; background:#10b981; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-mobile-alt"></i></div>
+        <div class="contact-details">
+          <div class="contact-label" style="font-size:14px; color:#64748b;">My Delivery Phone</div>
+          <div class="contact-value" id="customerPhoneDisplay" style="font-size:16px; font-weight:700; color:var(--dark-color);">Tap to set your number</div>
         </div>
       </div>
       
-      <div class="contact-item" onclick="openWhatsAppChat('greeting')" style="display:flex; align-items:center; gap:15px; margin-bottom:15px; padding:18px; background:#f8fafc; border-radius:16px; cursor:pointer;">
-        <div class="contact-icon" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:#25D366; flex-shrink:0;">
-          <i class="fab fa-whatsapp"></i>
-        </div>
-        <div class="contact-details" style="flex:1;">
-          <div class="contact-label" style="font-size:11px; color:#64748b; margin-bottom:4px; font-weight:700;">WhatsApp</div>
-          <div class="contact-value" id="contactWhatsApp" style="font-size:14px; font-weight:700; color:var(--dark-color);">Chat Now</div>
+      <div class="contact-item" onclick="window.openAddressInput()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
+        <div class="contact-icon" style="width:48px; height:48px; background:#f59e0b; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="contact-details">
+          <div class="contact-label" style="font-size:14px; color:#64748b;">My Delivery Address</div>
+          <div class="contact-value" id="customerAddressDisplay" style="font-size:16px; font-weight:700; color:var(--dark-color);">Tap to set your address</div>
         </div>
       </div>
       
-      <div class="contact-item email-item" onclick="sendEmail()" style="display:flex; align-items:center; gap:15px; margin-bottom:15px; padding:18px; background:#f8fafc; border-radius:16px; cursor:pointer;">
-        <div class="contact-icon" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:var(--secondary-gradient); flex-shrink:0;">
-          <i class="fas fa-envelope"></i>
-        </div>
-        <div class="contact-details" style="flex:1;">
-          <div class="contact-label" style="font-size:11px; color:#64748b; margin-bottom:4px; font-weight:700;">Email</div>
-          <div class="contact-value" id="contactEmail" style="font-size:14px; font-weight:700; color:var(--dark-color);">Loading...</div>
+      <div class="contact-item" onclick="window.makeCall()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
+        <div class="contact-icon" style="width:48px; height:48px; background:#2563eb; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-phone"></i></div>
+        <div class="contact-details">
+          <div class="contact-label" style="font-size:14px; color:#64748b;">Call Business</div>
+          <div class="contact-value" id="contactPhone" style="font-size:16px; font-weight:700; color:var(--dark-color);">Loading...</div>
         </div>
       </div>
       
-      <div class="contact-item" onclick="openMap()" style="display:flex; align-items:center; gap:15px; padding:18px; background:#f8fafc; border-radius:16px; cursor:pointer;">
-        <div class="contact-icon" style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:var(--warning-gradient); flex-shrink:0;">
-          <i class="fas fa-map-marker-alt"></i>
+      <div class="contact-item" onclick="window.openWhatsAppChat()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
+        <div class="contact-icon" style="width:48px; height:48px; background:#25D366; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fab fa-whatsapp"></i></div>
+        <div class="contact-details">
+          <div class="contact-label" style="font-size:14px; color:#64748b;">WhatsApp</div>
+          <div class="contact-value" id="contactWhatsApp" style="font-size:16px; font-weight:700; color:var(--dark-color);">Chat Now</div>
         </div>
-        <div class="contact-details" style="flex:1;">
-          <div class="contact-label" style="font-size:11px; color:#64748b; margin-bottom:4px; font-weight:700;">Address</div>
-          <div class="contact-value" id="contactAddress" style="font-size:14px; font-weight:700; color:var(--dark-color);">Loading...</div>
+      </div>
+      
+      <div class="contact-item email-item" onclick="window.sendEmail()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
+        <div class="contact-icon" style="width:48px; height:48px; background:#8b5cf6; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-envelope"></i></div>
+        <div class="contact-details">
+          <div class="contact-label" style="font-size:14px; color:#64748b;">Email</div>
+          <div class="contact-value" id="contactEmail" style="font-size:16px; font-weight:700; color:var(--dark-color);">Loading...</div>
+        </div>
+      </div>
+      
+      <div class="contact-item" onclick="window.openMap()" style="display:flex; align-items:center; gap:16px; padding:16px; background:white; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm); cursor:pointer;">
+        <div class="contact-icon" style="width:48px; height:48px; background:#ef4444; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="contact-details">
+          <div class="contact-label" style="font-size:14px; color:#64748b;">Address</div>
+          <div class="contact-value" id="contactAddress" style="font-size:16px; font-weight:700; color:var(--dark-color);">Loading...</div>
         </div>
       </div>
     </div>
     
-    <div class="social-links" style="background:white; border-radius:24px; padding:25px; margin:20px; box-shadow:var(--shadow-md);">
-      <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:20px;"><i class="fas fa-share-alt" style="color:#667eea;"></i> Follow Us</h3>
-      <div class="social-grid" id="socialGrid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:15px;"></div>
+    <div class="social-links" style="padding:16px;">
+      <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-share-alt" style="color:#667eea;"></i> Follow Us
+      </h3>
+      <div class="social-grid" id="socialGrid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:12px;"></div>
     </div>
-    
-    <div class="page-footer-spacer"></div>
+    <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
   <!-- Delivery Status Page -->
   <div id="deliveryPage" class="page">
-    <button class="back-btn" onclick="goBack()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-    
-    <div class="delivery-page-header">
-      <h1><i class="fas fa-truck"></i> Delivery Status</h1>
-      <p>Track your orders in real-time</p>
+    <div class="delivery-page-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
+      <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-truck" style="color:#10b981;"></i> My Orders</h1>
+      <p style="color:#64748b; margin-top:4px;">Track your orders in real-time</p>
     </div>
-    
-    <div id="deliveryContent"></div>
-    <div class="page-footer-spacer"></div>
+    <div id="deliveryContent" style="padding:16px;"></div>
+    <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
-  <!-- Admin Page -->
+  <!-- Admin Page with Token Management -->
   <div id="adminPage" class="page">
-    <button class="back-btn" onclick="goBack()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
+    <div class="delivery-page-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
+      <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-cog" style="color:#667eea;"></i> Business Admin</h1>
+      <p style="color:#64748b; margin-top:4px;">Manage orders, tokens & deliveries</p>
+    </div>
     
-    <div class="delivery-page-header">
-      <h1><i class="fas fa-cog"></i> Delivery Admin</h1>
-      <p>Manage customer deliveries</p>
+    <!-- Token Management Section -->
+    <div class="token-management">
+      <div class="token-header">
+        <h3 style="font-size:18px; font-weight:800; color:var(--dark-color);">
+          <i class="fas fa-ticket-alt" style="color:#667eea;"></i> Order Tokens
+        </h3>
+        <button onclick="window.generateNewToken()" style="background:var(--success-gradient); color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;">
+          <i class="fas fa-plus"></i> Generate Token
+        </button>
+      </div>
+      
+      <div class="token-stats" id="tokenStats">
+        <div class="stat-card">
+          <div class="stat-number" id="totalTokensCount">0</div>
+          <div class="stat-label">Total Tokens</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="activeTokensCount">0</div>
+          <div class="stat-label">Active</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="todayTokensCount">0</div>
+          <div class="stat-label">Today</div>
+        </div>
+      </div>
+      
+      <div style="margin-bottom:16px;">
+        <input type="text" id="adminTokenSearch" placeholder="Search tokens, orders, customers..." 
+               style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;"
+               onkeyup="window.searchAdminTokens()">
+      </div>
+      
+      <div class="token-list" id="tokenList">
+        <!-- Tokens will be loaded here -->
+      </div>
     </div>
     
     <div id="adminContent"></div>
-    <div class="page-footer-spacer"></div>
+    <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
   <!-- Login Page -->
   <div id="loginPage" class="page">
-    <button class="back-btn" onclick="goBack()">
-      <i class="fas fa-arrow-left"></i>
-    </button>
-    
-    <div class="delivery-page-header">
-      <h1><i class="fas fa-lock"></i> Admin Login</h1>
-      <p>Enter password to access admin panel</p>
+    <div class="delivery-page-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
+      <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-lock" style="color:#667eea;"></i> Admin Login</h1>
+      <p style="color:#64748b; margin-top:4px;">Enter password to access admin panel</p>
     </div>
     
-    <div class="login-page-content" style="padding:40px 25px; text-align:center;">
-      <div class="login-title" style="font-size:24px; font-weight:900; color:var(--dark-color); margin-bottom:10px;">Admin Access</div>
-      <div class="login-subtitle" style="font-size:14px; color:#64748b; margin-bottom:30px;">Enter the admin password to continue</div>
+    <div class="login-page-content" style="padding:24px;">
+      <div class="login-title" style="font-size:20px; font-weight:800; color:var(--dark-color); margin-bottom:8px;">Admin Access</div>
+      <div class="login-subtitle" style="color:#64748b; margin-bottom:24px;">Enter the admin password to continue</div>
       
       <input type="password" class="password-input" id="adminPasswordInput" 
-             placeholder="Enter password" onkeypress="handleLoginKeypress(event)"
-             style="width:100%; padding:15px; border:2px solid #e2e8f0; border-radius:16px; font-size:16px; margin-bottom:20px; text-align:center; letter-spacing:2px;">
+             placeholder="Enter password" onkeypress="window.handleLoginKeypress(event)"
+             style="width:100%; padding:16px; border:2px solid #e2e8f0; border-radius:12px; font-size:16px;">
       
-      <button onclick="attemptLogin()" class="admin-btn success" style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-size:16px; font-weight:700; cursor:pointer;">
+      <button onclick="window.attemptLogin()" class="admin-btn success" style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:700; font-size:16px; margin-top:20px; cursor:pointer;">
         <i class="fas fa-sign-in-alt"></i> Login
       </button>
       
-      <div class="password-hint" id="passwordHint" style="font-size:12px; color:#94a3b8; margin-top:20px;">
+      <div class="password-hint" id="passwordHint" style="margin-top:20px; padding:16px; background:#f1f5f9; border-radius:12px; color:#64748b; font-size:14px;">
         Hint: Password format is business123_{short_id}
       </div>
       
-      <div id="logoutSection" style="display:none; margin-top:30px;">
-        <button onclick="logoutAdmin()" class="logout-btn" style="display:flex; align-items:center; gap:8px; padding:8px 15px; background:rgba(239,68,68,0.9); color:white; border:none; border-radius:20px; font-size:13px; font-weight:700; cursor:pointer; margin:0 auto;">
+      <div id="logoutSection" style="display:none; margin-top: 30px;">
+        <button onclick="window.logoutAdmin()" class="logout-btn" style="margin: 0 auto; padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
           <i class="fas fa-sign-out-alt"></i> Logout
         </button>
       </div>
     </div>
-    
-    <div class="page-footer-spacer"></div>
+    <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
-    <div class="nav-item active" onclick="navigateTo('homePage')">
+    <div class="nav-item active" onclick="window.navigateTo('homePage')">
       <div class="nav-icon"><i class="fas fa-home"></i></div>
       <div class="nav-label">Home</div>
     </div>
-    <div class="nav-item" onclick="navigateTo('productsPage')">
+    <div class="nav-item" onclick="window.navigateTo('productsPage')">
       <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
       <div class="nav-label">Products</div>
     </div>
-    <div class="nav-item" onclick="navigateTo('cartPage')">
+    <div class="nav-item" onclick="window.navigateTo('cartPage')">
       <div class="nav-icon"><i class="fas fa-shopping-cart"></i></div>
       <div class="nav-label">Cart</div>
     </div>
-    <div class="nav-item" onclick="navigateTo('aboutPage')">
+    <div class="nav-item" onclick="window.navigateTo('aboutPage')">
       <div class="nav-icon"><i class="fas fa-info-circle"></i></div>
       <div class="nav-label">About</div>
     </div>
-    <div class="nav-item" onclick="navigateTo('contactPage')">
+    <div class="nav-item" onclick="window.navigateTo('contactPage')">
       <div class="nav-icon"><i class="fas fa-phone"></i></div>
       <div class="nav-label">Contact</div>
     </div>
@@ -1081,98 +1289,110 @@ body {
 </div>
 
 <!-- Notification Alert -->
-<div class="notification-alert" id="notificationAlert"></div>
+<div class="notification-alert" id="notificationAlert" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); max-width:320px; width:90%; background:var(--dark-color); color:white; padding:12px 20px; border-radius:50px; box-shadow:var(--shadow-xl); z-index:5000; text-align:center; font-weight:600;"></div>
 
 <!-- Delivery Status Modal -->
-<div class="delivery-modal-overlay" id="deliveryStatusModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); backdrop-filter:blur(10px); z-index:20000; padding:20px;">
-  <div class="delivery-modal" style="background:white; border-radius:24px; width:100%; max-width:400px; max-height:80vh; overflow-y:auto; position:relative;">
-    <button onclick="closeDeliveryModal()" style="position:absolute;top:15px;right:15px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.1);border:none;color:var(--dark-color);font-size:24px;cursor:pointer;">×</button>
+<div class="delivery-modal-overlay" id="deliveryStatusModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:4500; justify-content:center; align-items:center;">
+  <div class="delivery-modal" style="background:white; max-width:340px; width:90%; border-radius:24px; position:relative; padding:20px;">
+    <button onclick="window.closeDeliveryModal()" style="position:absolute;top:15px;right:15px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.1);border:none;color:var(--dark-color);font-size:24px;cursor:pointer;">×</button>
     <div id="deliveryStatusContent" style="padding:40px 25px;"></div>
   </div>
 </div>
 
-<!-- Product Modal -->
-<div class="modal-overlay" id="productModal">
-  <div class="modal-content">
-    <button class="close-btn" onclick="closeModal('productModal')">×</button>
-    
-    <div style="padding:25px;">
-      <!-- Image Container - Zoomable -->
-      <div style="position:relative; width:100%; aspect-ratio:1/1; background:#f8fafc; border-radius:16px; margin-bottom:20px; display:flex; align-items:center; justify-content:center; cursor:pointer; overflow:hidden;" onclick="zoomImage(document.getElementById('modalImage').src, event)">
-        <img src="" id="modalImage" class="product-image" style="width:100%; height:100%; object-fit:contain; padding:16px;">
-      </div>
-      
-      <!-- Product Details -->
-      <h2 id="modalTitle" style="font-size:20px; font-weight:800; color:var(--dark-color); margin-bottom:8px;"></h2>
-      <p id="modalDescription" style="color:#64748b; line-height:1.6; margin-bottom:16px; font-size:14px;"></p>
-      
-      <!-- Price Container -->
-      <div id="modalPrice" style="margin-bottom:20px; padding-bottom:20px; border-bottom:2px solid #f1f5f9;"></div>
-      
-      <!-- Action Buttons -->
-      <div style="display:flex; gap:12px; margin-bottom:20px;">
-        <button onclick="buyNowFromModal()" style="flex:1; padding:16px; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; background:var(--primary-gradient); color:white;">
-          <i class="fas fa-bolt"></i> Buy Now
-        </button>
-        <button onclick="addToCartFromModal()" style="flex:1; padding:16px; border:none; border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; background:var(--secondary-gradient); color:white;">
-          <i class="fas fa-cart-plus"></i> Add to Cart
-        </button>
-      </div>
-      
-      <!-- Payment Options (Hidden by Default) -->
-      <div id="directCheckoutSection" style="display:none; margin-top:20px; padding-top:20px; border-top:2px solid #f1f5f9;">
-        <h3 style="font-size:17px; font-weight:800; color:var(--dark-color); margin-bottom:15px;">Select Payment Method</h3>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div class="payment-option" onclick="selectBuyNowPayment('whatsapp')" id="whatsappBuyNowOption" style="padding:15px; border:2px solid #e2e8f0; border-radius:16px; cursor:pointer; display:flex; align-items:center; gap:12px; background:white;">
-            <div style="width:45px; height:45px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:#25D366;"><i class="fab fa-whatsapp"></i></div>
-            <div><div style="font-weight:800; font-size:14px;">WhatsApp Order</div><div style="font-size:12px; color:#64748b;">Confirm via WhatsApp</div></div>
-          </div>
-          <div class="payment-option" onclick="selectBuyNowPayment('cod')" id="codBuyNowOption" style="padding:15px; border:2px solid #e2e8f0; border-radius:16px; cursor:pointer; display:flex; align-items:center; gap:12px; background:white;">
-            <div style="width:45px; height:45px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:#10b981;"><i class="fas fa-truck"></i></div>
-            <div><div style="font-weight:800; font-size:14px;">Cash on Delivery</div><div style="font-size:12px; color:#64748b;">Pay when arrives</div></div>
-          </div>
-        </div>
-        <button onclick="checkoutBuyNow()" style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-size:16px; font-weight:800; cursor:pointer; margin-top:20px;">
-          Complete Purchase
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Checkout Modal -->
+<!-- Professional Checkout Modal -->
 <div class="modal-overlay" id="checkoutModal">
   <div class="modal-content">
-    <button class="close-btn" onclick="closeModal('checkoutModal')">×</button>
+    <button class="close-btn" onclick="window.closeModal('checkoutModal')">×</button>
+    
     <div style="padding:25px;">
-      <h2 style="font-size:22px; font-weight:800; color:var(--dark-color); margin-bottom:20px;">Checkout</h2>
-      <div id="checkoutItems" style="margin-bottom:25px; max-height:250px; overflow-y:auto; padding-right:10px;"></div>
-      <div style="margin:20px 0;">
-        <h3 style="font-size:17px; font-weight:800; color:var(--dark-color); margin-bottom:15px;">Payment Method</h3>
-        <div style="display:flex; flex-direction:column; gap:12px;">
-          <div class="payment-option" onclick="selectCheckoutPayment('whatsapp')" id="whatsappCheckoutOption" style="padding:15px; border:2px solid #e2e8f0; border-radius:16px; cursor:pointer; display:flex; align-items:center; gap:12px; background:white;">
-            <div style="width:45px; height:45px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:#25D366;"><i class="fab fa-whatsapp"></i></div>
-            <div><div style="font-weight:800; font-size:14px;">WhatsApp Order</div><div style="font-size:12px; color:#64748b;">Confirm via WhatsApp</div></div>
-          </div>
-          <div class="payment-option" onclick="selectCheckoutPayment('cod')" id="codCheckoutOption" style="padding:15px; border:2px solid #e2e8f0; border-radius:16px; cursor:pointer; display:flex; align-items:center; gap:12px; background:white;">
-            <div style="width:45px; height:45px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; color:white; background:#10b981;"><i class="fas fa-truck"></i></div>
-            <div><div style="font-weight:800; font-size:14px;">Cash on Delivery</div><div style="font-size:12px; color:#64748b;">Pay when arrives</div></div>
-          </div>
+      <h2 style="font-size:22px;font-weight:800;color:var(--dark-color);margin-bottom:20px;">
+        <i class="fas fa-shopping-cart"></i> Secure Checkout
+      </h2>
+      
+      <!-- Order Summary -->
+      <div id="checkoutItems" style="margin-bottom:20px; max-height:200px; overflow-y:auto; padding-right:10px;"></div>
+      
+      <!-- Delivery Address Section -->
+      <div class="address-auto-detect">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+          <h3 style="font-size:16px; font-weight:800; color:var(--dark-color);">
+            <i class="fas fa-map-marker-alt" style="color:#667eea;"></i> Delivery Address
+          </h3>
+          <button onclick="window.openAddressInput(true)" style="background:#667eea; color:white; border:none; padding:6px 12px; border-radius:6px; font-size:12px; font-weight:700; cursor:pointer;">
+            <i class="fas fa-pencil-alt"></i> Change
+          </button>
+        </div>
+        
+        <div id="checkoutAddressDisplay" style="padding:12px; background:#f8fafc; border-radius:8px; font-size:14px; color:#475569; border-left:4px solid #667eea;">
+          <i class="fas fa-spinner fa-spin"></i> Loading your address...
+        </div>
+        
+        <div id="checkoutPhoneDisplay" style="margin-top:8px; padding:8px 12px; background:#f1f5f9; border-radius:8px; font-size:13px; color:#475569;">
+          <i class="fas fa-phone-alt"></i> <span id="checkoutPhoneText">No phone number</span>
         </div>
       </div>
-      <div style="background:#f8fafc; padding:20px; border-radius:16px; margin:25px 0;">
+      
+      <!-- Delivery Calculator -->
+      <div class="delivery-charge-calculator" id="deliveryCalculator">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span style="font-weight:700; color:var(--dark-color);">
+            <i class="fas fa-truck"></i> Delivery Estimate
+          </span>
+          <span id="deliveryZoneBadge" style="background:#667eea; color:white; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:700;">Calculating...</span>
+        </div>
+        
+        <div class="delivery-estimate" id="deliveryEstimate">
+          <i class="fas fa-clock" style="color:#3b82f6;"></i>
+          <span id="deliveryTimeEstimate">Calculating delivery time...</span>
+        </div>
+        
+        <div style="display:flex; justify-content:space-between; margin-top:12px; padding-top:12px; border-top:1px dashed #e2e8f0;">
+          <span style="font-weight:600; color:#475569;">Delivery Charge</span>
+          <span id="deliveryChargeAmount" style="font-weight:800; color:#10b981;">PKR 0</span>
+        </div>
+      </div>
+      
+      <!-- Professional Payment Methods -->
+      <h3 style="font-size:16px; font-weight:800; color:var(--dark-color); margin:20px 0 12px;">
+        <i class="fas fa-credit-card"></i> Payment Method
+      </h3>
+      
+      <div class="pro-payment-grid" id="proPaymentGrid"></div>
+      
+      <!-- Order Total -->
+      <div style="background:#f8fafc; padding:20px; border-radius:var(--border-radius-md); margin:20px 0; border:1px solid #e2e8f0;">
         <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
           <span style="color:#64748b;">Subtotal</span>
           <span style="font-weight:800; color:var(--dark-color);">PKR <span id="checkoutSubtotal">0</span></span>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-top:15px; padding-top:15px; border-top:2px solid #e2e8f0;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+          <span style="color:#64748b;">Delivery</span>
+          <span style="font-weight:800; color:var(--dark-color);">PKR <span id="checkoutDelivery">0</span></span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:12px; padding-top:12px; border-top:2px solid #e2e8f0;">
           <span style="font-size:18px; font-weight:800; color:var(--dark-color);">Total</span>
           <span style="font-size:24px; font-weight:900; color:#10b981;">PKR <span id="checkoutTotal">0</span></span>
         </div>
       </div>
-      <button onclick="proceedToPayment()" style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:16px; font-size:17px; font-weight:800; cursor:pointer;">
-        <i class="fas fa-lock"></i> Secure Checkout
+      
+      <button onclick="window.placeOrder()" style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:var(--border-radius-md); font-size:17px; font-weight:800; cursor:pointer;">
+        <i class="fas fa-lock"></i> Place Order & Generate Token
       </button>
+      
+      <p style="text-align:center; font-size:12px; color:#94a3b8; margin-top:16px;">
+        <i class="fas fa-shield-alt"></i> Your order is secure and encrypted
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Order Confirmation Modal with Ticket -->
+<div class="modal-overlay" id="orderConfirmationModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="window.closeModal('orderConfirmationModal')">×</button>
+    
+    <div style="padding:25px;" id="orderConfirmationContent">
+      <!-- Dynamic order ticket will be inserted here -->
     </div>
   </div>
 </div>
@@ -1180,12 +1400,17 @@ body {
 <!-- Payment Details Modal -->
 <div class="modal-overlay" id="paymentDetailsModal">
   <div class="modal-content">
-    <button class="close-btn" onclick="closeModal('paymentDetailsModal')">×</button>
+    <button class="close-btn" onclick="window.closeModal('paymentDetailsModal')">×</button>
+    
     <div style="padding:25px;">
-      <h2 style="font-size:22px; font-weight:800; color:var(--dark-color); margin-bottom:20px;" id="paymentMethodTitle">Payment Details</h2>
+      <h2 style="font-size:22px; font-weight:800; color:var(--dark-color); margin-bottom:20px;" id="paymentMethodTitle">
+        Payment Details
+      </h2>
+      
       <div id="paymentDetailsContent"></div>
-      <button onclick="confirmPayment()" style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:16px; font-size:17px; font-weight:800; cursor:pointer; margin-top:25px;">
-        Confirm Payment
+      
+      <button onclick="window.completePaymentAndConfirmOrder()" style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:var(--border-radius-md); font-size:17px; font-weight:800; cursor:pointer; margin-top:25px;">
+        <i class="fas fa-check-circle"></i> Confirm Payment
       </button>
     </div>
   </div>
@@ -1203,8 +1428,7 @@ const supa = supabase.createClient(
 let card = {};
 let currentProduct = null;
 let cart = [];
-let buyNowPaymentMethod = 'whatsapp';
-let checkoutPaymentMethod = 'whatsapp';
+let checkoutPaymentMethod = 'cod';
 let currentPage = 'loadingScreen';
 let deliveryStatusData = [];
 let businessAdminPassword = "";
@@ -1213,46 +1437,1449 @@ let isAdminLoggedIn = false;
 let currentBusinessId = '';
 let orders = [];
 let orderTokens = [];
+let selectedCheckoutAddress = '';
+let selectedCheckoutPhone = '';
+let deliveryCharge = 0;
+let deliveryTime = '';
+let detectedZone = '';
+let notificationPermission = false;
+let innerNotifications = [];
+let unreadNotifications = 0;
+let customerData = { deviceId: '', name: '', phone: '', email: '' };
 let navigationHistory = [];
-let lastBackPress = 0;
-let backPressCount = 0;
 
-// ===== FIXED HASH ROUTING SYSTEM - PAGE BACK FIX =====
-window.addEventListener('load', function() {
-  if (!window.location.hash) {
-    window.location.hash = '#home';
-  } else {
-    handleHashChange();
+// ===== ATTACH ALL FUNCTIONS TO WINDOW =====
+window.navigateTo = navigateTo;
+window.goBack = goBack;
+window.toggleNotificationDrawer = toggleNotificationDrawer;
+window.markAllNotificationsAsRead = markAllNotificationsAsRead;
+window.enableNotifications = enableNotifications;
+window.saveBusinessToContacts = saveBusinessToContacts;
+window.checkDeliveryStatus = checkDeliveryStatus;
+window.toggleLogin = toggleLogin;
+window.shareBusiness = shareBusiness;
+window.openWhatsAppChat = openWhatsAppChat;
+window.makeCall = makeCall;
+window.sendEmail = sendEmail;
+window.openMap = openMap;
+window.openPhoneInput = openPhoneInput;
+window.openAddressInput = openAddressInput;
+window.zoomImage = zoomImage;
+window.closeImageZoom = closeImageZoom;
+window.filterProducts = filterProducts;
+window.addToCart = addToCart;
+window.buyNow = buyNow;
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
+window.openCheckoutModal = openCheckoutModal;
+window.selectProPaymentMethod = selectProPaymentMethod;
+window.placeOrder = placeOrder;
+window.downloadOrderTicket = downloadOrderTicket;
+window.shareOrderTicket = shareOrderTicket;
+window.closeModal = closeModal;
+window.openModal = openModal;
+window.completePaymentAndConfirmOrder = completePaymentAndConfirmOrder;
+window.selectProPaymentMethodForCheckout = selectProPaymentMethodForCheckout;
+window.attemptLogin = attemptLogin;
+window.handleLoginKeypress = handleLoginKeypress;
+window.logoutAdmin = logoutAdmin;
+window.generateNewToken = generateNewToken;
+window.searchAdminTokens = searchAdminTokens;
+window.viewOrderDetails = viewOrderDetails;
+window.updateOrderStatus = updateOrderStatus;
+window.sendNotificationToAll = sendNotificationToAll;
+window.closeExitModal = closeExitModal;
+window.exitApp = exitApp;
+window.closeInstallPermissionModal = closeInstallPermissionModal;
+window.acceptInstallPermissions = acceptInstallPermissions;
+window.closeDeliveryModal = closeDeliveryModal;
+
+// ===== DATA ISOLATION SYSTEM =====
+function getStorageKey(key) {
+  const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
+  return `business_${businessKey}_${key}`;
+}
+
+const isolatedLocalStorage = {
+  setItem: function(key, value) {
+    localStorage.setItem(getStorageKey(key), value);
+  },
+  getItem: function(key) {
+    return localStorage.getItem(getStorageKey(key));
+  },
+  removeItem: function(key) {
+    localStorage.removeItem(getStorageKey(key));
   }
-});
+};
 
-window.addEventListener('hashchange', handleHashChange);
+// ===== CUSTOMER DATA MANAGEMENT =====
+function getCustomerPhone() {
+  return isolatedLocalStorage.getItem('customerPhone') || '';
+}
 
-function handleHashChange() {
-  const hash = window.location.hash.replace('#', '');
-  const pageMap = {
-    'home': 'homePage',
-    'products': 'productsPage',
-    'cart': 'cartPage',
-    'about': 'aboutPage',
-    'contact': 'contactPage',
-    'delivery': 'deliveryPage',
-    'admin': 'adminPage',
-    'login': 'loginPage'
-  };
+function saveCustomerPhone(phone) {
+  isolatedLocalStorage.setItem('customerPhone', phone);
+  document.getElementById('customerPhoneDisplay').textContent = phone || 'Tap to set your number';
+  document.getElementById('checkoutPhoneText').textContent = phone || 'No phone number';
+  selectedCheckoutPhone = phone;
+}
+
+function getCustomerAddress() {
+  return isolatedLocalStorage.getItem('customerAddress') || '';
+}
+
+function saveCustomerAddress(address) {
+  isolatedLocalStorage.setItem('customerAddress', address);
+  document.getElementById('customerAddressDisplay').textContent = address || 'Tap to set your address';
+  document.getElementById('checkoutAddressDisplay').innerHTML = `<i class="fas fa-home"></i> ${address || 'No address saved'}`;
+  selectedCheckoutAddress = address;
   
-  if (pageMap[hash]) {
-    navigateToDirect(pageMap[hash]);
-  } else {
-    window.location.hash = '#home';
+  if (currentPage === 'checkoutModal' && address) {
+    calculateDeliveryCharge(address);
   }
 }
 
-function navigateToDirect(pageId) {
-  if (currentPage === pageId) return;
+// ===== FIX 3: CONTACT PAGE GUIDE HINT =====
+function openAddressInput(fromCheckout = false) {
+  const currentAddress = getCustomerAddress();
+  const address = prompt("Enter your complete delivery address:", currentAddress || "");
   
+  if (address && address.trim()) {
+    saveCustomerAddress(address.trim());
+    showNotification('✅ Delivery address saved!');
+    
+    // PROFESSIONAL HINT - CONTACT PAGE GUIDE
+    setTimeout(() => {
+      showNotification('💡 You can also update your address in Contact Page → My Delivery Address');
+    }, 1500);
+    
+    if (fromCheckout) {
+      calculateDeliveryCharge(address);
+    }
+  }
+}
+
+function openPhoneInput() {
+  const currentPhone = getCustomerPhone();
+  const phone = prompt("Enter your phone number for delivery:", currentPhone || "");
+  
+  if (phone) {
+    const cleanedPhone = phone.replace(/\D/g, '');
+    if (cleanedPhone.length >= 10) {
+      saveCustomerPhone(cleanedPhone);
+      showNotification('✅ Phone number saved!');
+      
+      // PROFESSIONAL HINT - CONTACT PAGE GUIDE
+      setTimeout(() => {
+        showNotification('📱 You can also update your phone in Contact Page → My Delivery Phone');
+      }, 1500);
+      
+    } else {
+      showNotification('❌ Please enter a valid phone number');
+    }
+  }
+}
+
+// ===== PROFESSIONAL DELIVERY CHARGE CALCULATOR =====
+function calculateDeliveryCharge(address) {
+  if (!address) {
+    deliveryCharge = 0;
+    deliveryTime = 'Enter address to calculate';
+    detectedZone = 'Unknown';
+    updateDeliveryUI();
+    return;
+  }
+  
+  const addressLower = address.toLowerCase();
+  let charge = 0;
+  let time = '';
+  let zone = 'Standard';
+  
+  if (card.deliverySettings && card.deliverySettings.zones && card.deliverySettings.zones.length > 0) {
+    let zoneFound = false;
+    
+    for (const zoneConfig of card.deliverySettings.zones) {
+      if (addressLower.includes(zoneConfig.city.toLowerCase())) {
+        charge = zoneConfig.charge || 0;
+        time = zoneConfig.time || '2-3 business days';
+        zone = zoneConfig.city;
+        zoneFound = true;
+        break;
+      }
+    }
+    
+    if (!zoneFound) {
+      charge = card.deliverySettings?.default?.otherCities?.charge || 300;
+      time = card.deliverySettings?.default?.otherCities?.time || '3-5 business days';
+      zone = 'Other City';
+    }
+  } else {
+    if (addressLower.includes('karachi') || addressLower.includes('lahore') || addressLower.includes('islamabad')) {
+      charge = 150;
+      time = '1-2 business days';
+      zone = 'Metro City';
+    } else {
+      charge = 300;
+      time = '3-5 business days';
+      zone = 'Other City';
+    }
+  }
+  
+  const subtotal = calculateCartSubtotal();
+  if (card.deliverySettings?.freeDeliveryMin && subtotal >= card.deliverySettings.freeDeliveryMin) {
+    charge = 0;
+    time += ' (Free Delivery)';
+    zone += ' - Free';
+  }
+  
+  deliveryCharge = charge;
+  deliveryTime = time;
+  detectedZone = zone;
+  
+  updateDeliveryUI();
+  return { charge, time, zone };
+}
+
+function updateDeliveryUI() {
+  document.getElementById('deliveryZoneBadge').textContent = detectedZone || 'Standard';
+  document.getElementById('deliveryTimeEstimate').innerHTML = `<i class="fas fa-clock"></i> ${deliveryTime || 'Calculating...'}`;
+  document.getElementById('deliveryChargeAmount').textContent = `PKR ${deliveryCharge || 0}`;
+  document.getElementById('checkoutDelivery').textContent = deliveryCharge || 0;
+  
+  const subtotal = parseFloat(document.getElementById('checkoutSubtotal').textContent) || 0;
+  const total = subtotal + deliveryCharge;
+  document.getElementById('checkoutTotal').textContent = total.toFixed(2);
+}
+
+function calculateCartSubtotal() {
+  return cart.reduce((sum, item) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    return sum + (price * (item.quantity || 1));
+  }, 0);
+}
+
+// ===== ORDER TOKEN GENERATION SYSTEM =====
+function generateOrderToken() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const prefix = 'TKT';
+  const timestamp = Date.now().toString().slice(-6);
+  let random = '';
+  for (let i = 0; i < 4; i++) {
+    random += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return `${prefix}-${timestamp}-${random}`;
+}
+
+async function saveOrderToDatabase(orderData) {
+  try {
+    const { error } = await supa
+      .from('orders')
+      .insert([{
+        order_id: orderData.orderId,
+        token: orderData.token,
+        customer_name: orderData.customerName || customerData.name || 'Customer',
+        customer_phone: orderData.customerPhone,
+        customer_address: orderData.customerAddress,
+        items: orderData.items,
+        subtotal: orderData.subtotal,
+        delivery_charge: orderData.deliveryCharge,
+        total: orderData.total,
+        payment_method: orderData.paymentMethod,
+        status: 'confirmed',
+        zone: orderData.zone,
+        estimated_delivery: orderData.estimatedDelivery,
+        business_id: currentBusinessId,
+        created_at: new Date().toISOString()
+      }]);
+    
+    if (!error) {
+      console.log('Order saved to database');
+      return true;
+    } else {
+      console.error('Error saving order:', error);
+      return false;
+    }
+  } catch (error) {
+    console.error('Error saving order:', error);
+    return false;
+  }
+}
+
+async function loadOrdersFromDatabase() {
+  try {
+    const { data, error } = await supa
+      .from('orders')
+      .select('*')
+      .eq('business_id', currentBusinessId)
+      .order('created_at', { ascending: false });
+    
+    if (!error && data) {
+      orders = data;
+      
+      orderTokens = data.map(order => ({
+        id: order.token,
+        orderId: order.order_id,
+        amount: order.total,
+        status: order.status,
+        customer: order.customer_name || order.customer_phone,
+        date: order.created_at
+      }));
+      
+      updateTokenStats();
+      return data;
+    }
+    return [];
+  } catch (error) {
+    console.error('Error loading orders:', error);
+    return [];
+  }
+}
+
+function updateTokenStats() {
+  const totalEl = document.getElementById('totalTokensCount');
+  const activeEl = document.getElementById('activeTokensCount');
+  const todayEl = document.getElementById('todayTokensCount');
+  
+  if (totalEl) totalEl.textContent = orderTokens.length;
+  
+  const activeTokens = orderTokens.filter(t => ['confirmed', 'processing', 'shipped'].includes(t.status)).length;
+  if (activeEl) activeEl.textContent = activeTokens;
+  
+  const today = new Date().toDateString();
+  const todayTokens = orderTokens.filter(t => new Date(t.date).toDateString() === today).length;
+  if (todayEl) todayEl.textContent = todayTokens;
+}
+
+function generateNewToken() {
+  if (!isAdminLoggedIn) {
+    showNotification('❌ Admin login required');
+    return;
+  }
+  
+  const token = generateOrderToken();
+  const orderId = 'ORD-' + Date.now().toString().slice(-8);
+  
+  orderTokens.unshift({
+    id: token,
+    orderId: orderId,
+    amount: 0,
+    status: 'pending',
+    customer: 'Manual Entry',
+    date: new Date().toISOString()
+  });
+  
+  updateTokenStats();
+  renderTokenList();
+  showNotification('✅ New token generated: ' + token);
+}
+
+function renderTokenList() {
+  const tokenList = document.getElementById('tokenList');
+  if (!tokenList) return;
+  
+  if (orderTokens.length === 0) {
+    tokenList.innerHTML = `
+      <div style="text-align:center; padding:40px;">
+        <i class="fas fa-ticket-alt" style="font-size:48px; color:#cbd5e1; margin-bottom:16px;"></i>
+        <p style="color:#64748b;">No tokens generated yet</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  orderTokens.slice(0, 20).forEach(token => {
+    const date = new Date(token.date).toLocaleDateString();
+    const statusColor = 
+      token.status === 'delivered' ? '#10b981' : 
+      token.status === 'cancelled' ? '#ef4444' : 
+      token.status === 'confirmed' ? '#3b82f6' : '#f59e0b';
+    
+    html += `
+      <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
+        <div>
+          <div class="token-code">${token.id}</div>
+          <div style="font-size:11px; color:#64748b; margin-top:4px;">
+            <i class="fas fa-box"></i> ${token.orderId} • ${date}
+          </div>
+          ${token.customer ? `<div style="font-size:11px; color:#475569; margin-top:2px;">👤 ${token.customer}</div>` : ''}
+        </div>
+        <div style="text-align:right;">
+          <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
+          <span class="token-status" style="background: ${statusColor}10; color: ${statusColor};">
+            ${token.status}
+          </span>
+        </div>
+      </div>
+    `;
+  });
+  
+  tokenList.innerHTML = html;
+}
+
+function searchAdminTokens() {
+  const searchTerm = document.getElementById('adminTokenSearch').value.toLowerCase();
+  const filtered = orderTokens.filter(token => 
+    token.id.toLowerCase().includes(searchTerm) ||
+    token.orderId.toLowerCase().includes(searchTerm) ||
+    (token.customer && token.customer.toLowerCase().includes(searchTerm)) ||
+    token.amount.toString().includes(searchTerm)
+  );
+  
+  const tokenList = document.getElementById('tokenList');
+  if (filtered.length === 0) {
+    tokenList.innerHTML = '<p style="text-align:center; padding:20px; color:#64748b;">No matching tokens found</p>';
+    return;
+  }
+  
+  let html = '';
+  filtered.slice(0, 20).forEach(token => {
+    const date = new Date(token.date).toLocaleDateString();
+    const statusColor = token.status === 'delivered' ? '#10b981' : token.status === 'cancelled' ? '#ef4444' : '#3b82f6';
+    
+    html += `
+      <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
+        <div>
+          <div class="token-code">${token.id}</div>
+          <div style="font-size:11px; color:#64748b; margin-top:4px;">${token.orderId} • ${date}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
+          <span class="token-status" style="background: ${statusColor}10; color: ${statusColor};">${token.status}</span>
+        </div>
+      </div>
+    `;
+  });
+  
+  tokenList.innerHTML = html;
+}
+
+async function viewOrderDetails(orderId) {
+  const order = orders.find(o => o.order_id === orderId);
+  if (!order) return;
+  
+  const modal = document.getElementById('orderConfirmationModal');
+  const content = document.getElementById('orderConfirmationContent');
+  
+  const date = new Date(order.created_at).toLocaleString();
+  let itemsHtml = '';
+  if (order.items && Array.isArray(order.items)) {
+    order.items.forEach(item => {
+      itemsHtml += `<div class="order-item-row"><span>${item.title || 'Product'} x${item.quantity || 1}</span><span>PKR ${(item.price * (item.quantity || 1)).toFixed(2)}</span></div>`;
+    });
+  }
+  
+  content.innerHTML = `
+    <div class="order-ticket" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+      <div class="ticket-header">
+        <span class="ticket-id">${order.token || order.order_id}</span>
+        <span class="ticket-date">${date}</span>
+      </div>
+      <div class="ticket-body">
+        <div class="ticket-row">
+          <span>Order ID:</span>
+          <span style="font-weight:800;">${order.order_id}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Customer:</span>
+          <span>${order.customer_name || order.customer_phone}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Phone:</span>
+          <span>${order.customer_phone}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Address:</span>
+          <span style="max-width:180px;">${order.customer_address || 'N/A'}</span>
+        </div>
+        ${order.zone ? `<div class="ticket-row"><span>Zone:</span><span>${order.zone}</span></div>` : ''}
+        ${order.estimated_delivery ? `<div class="ticket-row"><span>Est. Delivery:</span><span>${order.estimated_delivery}</span></div>` : ''}
+        <div style="margin:16px 0; padding:12px 0; border-top:2px dashed rgba(255,255,255,0.3); border-bottom:2px dashed rgba(255,255,255,0.3);">
+          ${itemsHtml || '<div class="order-item-row"><span>Order Total</span><span>PKR ' + order.total.toFixed(2) + '</span></div>'}
+        </div>
+        <div class="ticket-total">
+          <span>Total Amount</span>
+          <span>PKR ${order.total.toFixed(2)}</span>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:20px; font-size:12px; opacity:0.9;">
+        <i class="fas fa-shield-alt"></i> Payment: ${order.payment_method || 'COD'}
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:20px;">
+      <select id="orderStatusSelect" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;">
+        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>✅ Confirmed</option>
+        <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>🔄 Processing</option>
+        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
+        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>📦 Delivered</option>
+        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+      </select>
+      <button onclick="window.updateOrderStatus('${order.id}')" style="padding:12px 20px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        Update
+      </button>
+    </div>
+  `;
+  
+  openModal('orderConfirmationModal');
+}
+
+async function updateOrderStatus(orderId) {
+  const status = document.getElementById('orderStatusSelect').value;
+  
+  const { error } = await supa
+    .from('orders')
+    .update({ status: status, updated_at: new Date().toISOString() })
+    .eq('id', orderId);
+  
+  if (!error) {
+    showNotification('✅ Order status updated to ' + status);
+    closeModal('orderConfirmationModal');
+    loadOrdersFromDatabase();
+  } else {
+    showNotification('❌ Error updating order');
+  }
+}
+
+// ===== PROFESSIONAL CHECKOUT & ORDER PLACEMENT =====
+async function openCheckoutModal() {
+  if (cart.length === 0) {
+    showNotification('Your cart is empty');
+    return;
+  }
+  
+  selectedCheckoutPhone = getCustomerPhone();
+  selectedCheckoutAddress = getCustomerAddress();
+  
+  document.getElementById('checkoutPhoneText').textContent = selectedCheckoutPhone || 'No phone number';
+  document.getElementById('checkoutAddressDisplay').innerHTML = selectedCheckoutAddress ? 
+    `<i class="fas fa-home"></i> ${selectedCheckoutAddress}` : 
+    `<span style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i> No address saved - please add address</span>`;
+  
+  let subtotal = 0;
+  let itemsHtml = '';
+  
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const itemTotal = price * (item.quantity || 1);
+    subtotal += itemTotal;
+    
+    itemsHtml += `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding:8px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span style="font-weight:800; color:var(--dark-color);">${item.quantity || 1}x</span>
+          <span style="font-size:13px; color:#475569; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.title || 'Product'}</span>
+        </div>
+        <span style="font-weight:800; color:#10b981;">PKR ${itemTotal.toFixed(2)}</span>
+      </div>
+    `;
+  });
+  
+  document.getElementById('checkoutItems').innerHTML = itemsHtml;
+  document.getElementById('checkoutSubtotal').textContent = subtotal.toFixed(2);
+  
+  renderProfessionalPaymentMethods();
+  
+  if (selectedCheckoutAddress) {
+    calculateDeliveryCharge(selectedCheckoutAddress);
+  } else {
+    deliveryCharge = 0;
+    deliveryTime = 'Enter address to calculate';
+    detectedZone = 'Not Set';
+    document.getElementById('deliveryZoneBadge').textContent = 'Address Required';
+    document.getElementById('deliveryTimeEstimate').innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> Please add delivery address';
+    document.getElementById('deliveryChargeAmount').textContent = 'PKR 0';
+    document.getElementById('checkoutDelivery').textContent = '0';
+    document.getElementById('checkoutTotal').textContent = subtotal.toFixed(2);
+  }
+  
+  checkoutPaymentMethod = 'cod';
+  
+  openModal('checkoutModal');
+}
+
+function renderProfessionalPaymentMethods() {
+  const grid = document.getElementById('proPaymentGrid');
+  if (!grid) return;
+  
+  let html = '';
+  
+  if (!card.payments || card.payments?.gateways?.cod?.active !== false) {
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'cod' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('cod')">
+        <div class="pro-payment-icon" style="background:#10b981;">
+          <i class="fas fa-truck"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">Cash on Delivery</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">Pay when order arrives</div>
+      </div>
+    `;
+  }
+  
+  if (card.payments?.gateways?.jazzcash?.active) {
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'jazzcash' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('jazzcash')">
+        <div class="pro-payment-icon" style="background:#FF6B00;">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">JazzCash</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.jazzcash.number || 'Pay via app'}</div>
+      </div>
+    `;
+  }
+  
+  if (card.payments?.gateways?.easypaisa?.active) {
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'easypaisa' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('easypaisa')">
+        <div class="pro-payment-icon" style="background:#0A5C36;">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">EasyPaisa</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.easypaisa.number || 'Pay via app'}</div>
+      </div>
+    `;
+  }
+  
+  if (card.payments?.gateways?.bank?.active) {
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'bank' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('bank')">
+        <div class="pro-payment-icon" style="background:#2563eb;">
+          <i class="fas fa-university"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">Bank Transfer</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.bank.bankName || 'Direct transfer'}</div>
+      </div>
+    `;
+  }
+  
+  if (card.payments?.gateways?.card?.active) {
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'card' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('card')">
+        <div class="pro-payment-icon" style="background:#8b5cf6;">
+          <i class="fas fa-credit-card"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">Card Payment</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">Visa / Mastercard</div>
+      </div>
+    `;
+  }
+  
+  html += `
+    <div class="pro-payment-card ${checkoutPaymentMethod === 'whatsapp' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('whatsapp')">
+      <div class="pro-payment-icon" style="background:#25D366;">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+      <div style="font-weight:700; font-size:14px;">WhatsApp Order</div>
+      <div style="font-size:11px; color:#64748b; text-align:center;">Order via chat</div>
+    </div>
+  `;
+  
+  grid.innerHTML = html;
+}
+
+function selectProPaymentMethod(method) {
+  checkoutPaymentMethod = method;
+  
+  document.querySelectorAll('.pro-payment-card').forEach(card => {
+    card.classList.remove('selected');
+  });
+  
+  const selectedCards = document.querySelectorAll(`.pro-payment-card[onclick*="${method}"]`);
+  selectedCards.forEach(card => card.classList.add('selected'));
+}
+
+async function placeOrder() {
+  if (!selectedCheckoutPhone) {
+    showNotification('❌ Please add your phone number');
+    openPhoneInput();
+    return;
+  }
+  
+  if (!selectedCheckoutAddress) {
+    showNotification('❌ Please add your delivery address');
+    openAddressInput(true);
+    return;
+  }
+  
+  if (cart.length === 0) {
+    showNotification('❌ Your cart is empty');
+    closeModal('checkoutModal');
+    return;
+  }
+  
+  showLoading();
+  
+  try {
+    const subtotal = calculateCartSubtotal();
+    const total = subtotal + deliveryCharge;
+    
+    const orderId = 'ORD-' + Date.now().toString().slice(-8);
+    const token = generateOrderToken();
+    
+    const orderItems = cart.map(item => ({
+      title: item.title,
+      price: parseFloat(item.discountPrice || item.originalPrice || 0),
+      quantity: item.quantity || 1,
+      image: item.image || ''
+    }));
+    
+    const orderData = {
+      orderId: orderId,
+      token: token,
+      customerName: customerData.name || '',
+      customerPhone: selectedCheckoutPhone,
+      customerAddress: selectedCheckoutAddress,
+      items: orderItems,
+      subtotal: subtotal,
+      deliveryCharge: deliveryCharge,
+      total: total,
+      paymentMethod: getPaymentMethodName(checkoutPaymentMethod),
+      zone: detectedZone,
+      estimatedDelivery: deliveryTime,
+      status: 'confirmed',
+      created_at: new Date().toISOString()
+    };
+    
+    const saved = await saveOrderToDatabase(orderData);
+    
+    if (saved) {
+      await loadOrdersFromDatabase();
+      
+      cart = [];
+      updateCartCount();
+      isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+      
+      closeModal('checkoutModal');
+      
+      showOrderConfirmation(orderData);
+      
+      if (checkoutPaymentMethod !== 'whatsapp' && card.phone) {
+        sendOrderWhatsApp(orderData);
+      }
+      
+      addInnerNotification('Order Placed', `Order #${orderId} confirmed with token ${token}`, 'success');
+      
+      showNotification('✅ Order placed successfully! Token: ' + token);
+    } else {
+      showNotification('❌ Error placing order. Please try again.');
+    }
+  } catch (error) {
+    console.error('Order error:', error);
+    showNotification('❌ Error placing order');
+  } finally {
+    hideLoading();
+  }
+}
+
+function showOrderConfirmation(orderData) {
+  const modal = document.getElementById('orderConfirmationModal');
+  const content = document.getElementById('orderConfirmationContent');
+  
+  const date = new Date().toLocaleString();
+  let itemsHtml = '';
+  
+  orderData.items.forEach(item => {
+    itemsHtml += `
+      <div class="order-item-row">
+        <span>${item.title} x${item.quantity}</span>
+        <span>PKR ${(item.price * item.quantity).toFixed(2)}</span>
+      </div>
+    `;
+  });
+  
+  content.innerHTML = `
+    <div class="order-ticket">
+      <div class="ticket-header">
+        <span class="ticket-id">${orderData.token}</span>
+        <span class="ticket-date">${date}</span>
+      </div>
+      <div class="ticket-body">
+        <div style="text-align:center; margin-bottom:20px;">
+          <i class="fas fa-check-circle" style="font-size:48px; color:#10b981;"></i>
+          <h3 style="color:white; margin-top:12px;">Order Confirmed!</h3>
+          <p style="color:rgba(255,255,255,0.9); font-size:13px;">Your order has been placed successfully</p>
+        </div>
+        
+        <div class="ticket-row">
+          <span>Order ID:</span>
+          <span style="font-weight:800;">${orderData.orderId}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Customer:</span>
+          <span>${orderData.customerPhone}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Address:</span>
+          <span style="max-width:180px;">${orderData.customerAddress}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Delivery:</span>
+          <span>${orderData.estimatedDelivery}</span>
+        </div>
+        
+        <div style="margin:16px 0; padding:12px 0; border-top:2px dashed rgba(255,255,255,0.3); border-bottom:2px dashed rgba(255,255,255,0.3);">
+          ${itemsHtml}
+        </div>
+        
+        <div class="ticket-row">
+          <span>Subtotal:</span>
+          <span>PKR ${orderData.subtotal.toFixed(2)}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Delivery:</span>
+          <span>PKR ${orderData.deliveryCharge.toFixed(2)}</span>
+        </div>
+        <div class="ticket-total">
+          <span>Total</span>
+          <span>PKR ${orderData.total.toFixed(2)}</span>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:20px; font-size:12px; opacity:0.9;">
+        <i class="fas fa-shield-alt"></i> Payment: ${orderData.paymentMethod}
+      </div>
+    </div>
+    
+    <div style="display:flex; gap:12px; margin-top:20px;">
+      <button onclick="window.downloadOrderTicket('${orderData.token}')" style="flex:1; padding:14px; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-download"></i> Save Ticket
+      </button>
+      <button onclick="window.shareOrderTicket('${orderData.token}')" style="flex:1; padding:14px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-share-alt"></i> Share
+      </button>
+    </div>
+    
+    <button onclick="window.navigateTo('deliveryPage')" style="width:100%; padding:14px; background:var(--whatsapp-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer; margin-top:12px;">
+      <i class="fas fa-truck"></i> Track Order
+    </button>
+  `;
+  
+  openModal('orderConfirmationModal');
+}
+
+function downloadOrderTicket(token) {
+  const order = orders.find(o => o.token === token);
+  if (!order) return;
+  
+  const ticketText = `ORDER TICKET: ${order.token}\nDate: ${new Date(order.created_at).toLocaleString()}\nOrder ID: ${order.order_id}\nTotal: PKR ${order.total.toFixed(2)}\nPayment: ${order.payment_method}\nStatus: ${order.status}`;
+  
+  const blob = new Blob([ticketText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `order-${order.token}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function shareOrderTicket(token) {
+  const order = orders.find(o => o.token === token);
+  if (!order) return;
+  
+  const shareText = `Order Confirmed!\nToken: ${order.token}\nOrder ID: ${order.order_id}\nTotal: PKR ${order.total.toFixed(2)}\nStatus: ${order.status}`;
+  
+  if (navigator.share) {
+    navigator.share({
+      title: 'Order Confirmation',
+      text: shareText
+    });
+  } else {
+    navigator.clipboard.writeText(shareText);
+    showNotification('📋 Ticket copied to clipboard');
+  }
+}
+
+function sendOrderWhatsApp(orderData) {
+  if (!card.phone) return;
+  
+  const phone = card.phone.replace(/\D/g, '');
+  let message = `🛍️ *NEW ORDER CONFIRMED*\n\n`;
+  message += `*Order ID:* ${orderData.orderId}\n`;
+  message += `*Token:* ${orderData.token}\n`;
+  message += `*Customer:* ${orderData.customerPhone}\n`;
+  message += `*Address:* ${orderData.customerAddress}\n\n`;
+  message += `*Items:*\n`;
+  
+  orderData.items.forEach(item => {
+    message += `• ${item.title} x${item.quantity} - PKR ${(item.price * item.quantity).toFixed(2)}\n`;
+  });
+  
+  message += `\n*Subtotal:* PKR ${orderData.subtotal.toFixed(2)}`;
+  message += `\n*Delivery:* PKR ${orderData.deliveryCharge.toFixed(2)}`;
+  message += `\n*Total:* PKR ${orderData.total.toFixed(2)}`;
+  message += `\n*Payment:* ${orderData.paymentMethod}`;
+  message += `\n*Delivery:* ${orderData.estimatedDelivery}`;
+  message += `\n\nTrack order: Track delivery status in app.`;
+  
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+function completePaymentAndConfirmOrder() {
+  placeOrder();
+  closeModal('paymentDetailsModal');
+}
+
+function selectProPaymentMethodForCheckout(method) {
+  checkoutPaymentMethod = method;
+  
+  if (method === 'jazzcash' || method === 'easypaisa' || method === 'bank' || method === 'card') {
+    showPaymentDetailsModal(method);
+  }
+}
+
+function showPaymentDetailsModal(method) {
+  const title = document.getElementById('paymentMethodTitle');
+  const content = document.getElementById('paymentDetailsContent');
+  
+  if (method === 'jazzcash' && card.payments?.gateways?.jazzcash) {
+    title.innerHTML = 'JazzCash Payment';
+    content.innerHTML = `
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px; color:#64748b; margin-bottom:12px;">Send payment to:</div>
+          <div style="font-size:24px; font-weight:900; color:#FF6B00; margin:15px 0; background:rgba(255,107,0,0.1); padding:15px; border-radius:16px;">
+            ${card.payments.gateways.jazzcash.number || '03001234567'}
+          </div>
+        </div>
+        
+        ${card.payments.gateways.jazzcash.barcode ? `
+          <div style="margin:20px 0; text-align:center;">
+            <div style="font-size:14px; color:#64748b; margin-bottom:12px; font-weight:700;">Scan QR Code to Pay</div>
+            <img src="${card.payments.gateways.jazzcash.barcode}" style="max-width:200px; max-height:200px; border-radius:16px; border:2px solid #e2e8f0; display:block; margin:0 auto; background:white; padding:12px;">
+          </div>
+        ` : ''}
+        
+        <div style="background:#f0f9ff; padding:15px; border-radius:16px; margin-top:20px;">
+          <div style="font-size:14px; color:#64748b; margin-bottom:10px; font-weight:800;">Instructions:</div>
+          <ol style="text-align:left; padding-left:20px; margin:12px 0; color:#475569; line-height:1.6;">
+            <li style="margin-bottom:8px;">Open JazzCash app and send payment to above number</li>
+            <li style="margin-bottom:8px;">Take screenshot of payment confirmation</li>
+            <li>Click "Confirm Payment" to place your order</li>
+          </ol>
+        </div>
+      </div>
+    `;
+  } else if (method === 'easypaisa' && card.payments?.gateways?.easypaisa) {
+    title.innerHTML = 'EasyPaisa Payment';
+    content.innerHTML = `
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px; color:#64748b; margin-bottom:12px;">Send payment to:</div>
+          <div style="font-size:24px; font-weight:900; color:#0A5C36; margin:15px 0; background:rgba(10,92,54,0.1); padding:15px; border-radius:16px;">
+            ${card.payments.gateways.easypaisa.number || '03001234567'}
+          </div>
+        </div>
+        
+        ${card.payments.gateways.easypaisa.barcode ? `
+          <div style="margin:20px 0; text-align:center;">
+            <div style="font-size:14px; color:#64748b; margin-bottom:12px; font-weight:700;">Scan QR Code to Pay</div>
+            <img src="${card.payments.gateways.easypaisa.barcode}" style="max-width:200px; max-height:200px; border-radius:16px; border:2px solid #e2e8f0; display:block; margin:0 auto; background:white; padding:12px;">
+          </div>
+        ` : ''}
+      </div>
+    `;
+  } else if (method === 'bank' && card.payments?.gateways?.bank) {
+    title.innerHTML = 'Bank Transfer';
+    content.innerHTML = `
+      <div style="background:#f8fafc; border-radius:16px; padding:20px;">
+        <div style="margin-bottom:16px;">
+          <div style="font-size:13px; color:#64748b;">Bank Name</div>
+          <div style="font-size:18px; font-weight:800; color:var(--dark-color);">${card.payments.gateways.bank.bankName || 'HBL'}</div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:13px; color:#64748b;">Account Title</div>
+          <div style="font-size:16px; font-weight:700; color:var(--dark-color);">${card.payments.gateways.bank.accountTitle || 'Business Account'}</div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:13px; color:#64748b;">Account Number</div>
+          <div style="font-size:18px; font-weight:900; color:#2563eb; background:rgba(37,99,235,0.1); padding:10px; border-radius:8px;">${card.payments.gateways.bank.accountNumber || '1234567890'}</div>
+        </div>
+        ${card.payments.gateways.bank.iban ? `
+          <div>
+            <div style="font-size:13px; color:#64748b;">IBAN</div>
+            <div style="font-size:14px; font-weight:700; color:#475569;">${card.payments.gateways.bank.iban}</div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  } else if (method === 'card' && card.payments?.gateways?.card) {
+    title.innerHTML = 'Card Payment';
+    content.innerHTML = `
+      <div style="text-align:center; padding:20px;">
+        <i class="fas fa-credit-card" style="font-size:48px; color:#8b5cf6; margin-bottom:16px;"></i>
+        <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:8px;">Secure Card Payment</h3>
+        <p style="color:#64748b; margin-bottom:20px;">You will be redirected to complete payment</p>
+        <div style="background:#f1f5f9; padding:16px; border-radius:12px;">
+          <div style="font-weight:700; margin-bottom:4px;">Processor: ${card.payments.gateways.card.processor || 'Stripe'}</div>
+          <div style="font-size:13px; color:#475569;">${card.payments.gateways.card.merchantId || 'Secure Connection'}</div>
+        </div>
+      </div>
+    `;
+  }
+  
+  openModal('paymentDetailsModal');
+  closeModal('checkoutModal');
+}
+
+function closeDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'none';
+}
+
+// ===== CART MANAGEMENT WITH RED BADGE FIX =====
+function updateCartCount() {
+  const count = cart.length;
+  const miniEl = document.getElementById('cartCountMini');
+  const cartBadge = document.getElementById('cartBadge');
+  
+  if (miniEl) miniEl.textContent = count;
+  
+  // FIX 1: Cart red badge show/hide
+  if (cartBadge) {
+    if (count > 0) {
+      cartBadge.textContent = count > 99 ? '99+' : count;
+      cartBadge.style.display = 'flex';
+    } else {
+      cartBadge.style.display = 'none';
+    }
+  }
+  
+  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+  
+  if (currentPage === 'cartPage') {
+    loadCartPage();
+  }
+}
+
+function addToCart(productIndex) {
+  const products = card.products || [];
+  const product = products[productIndex];
+  
+  if (product) {
+    const existingIndex = cart.findIndex(item => 
+      item.title === product.title && 
+      item.discountPrice === product.discountPrice
+    );
+    
+    if (existingIndex === -1) {
+      cart.push({
+        ...product,
+        index: productIndex,
+        quantity: 1
+      });
+    } else {
+      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+    }
+    updateCartCount();
+    showNotification('✅ Product added to cart!');
+    addInnerNotification('Cart Updated', `${product.title} added to cart`, 'success');
+  }
+}
+
+function removeFromCart(index) {
+  if (cart[index]) {
+    const productName = cart[index].title;
+    cart.splice(index, 1);
+    updateCartCount();
+    showNotification('🗑️ Product removed from cart');
+    addInnerNotification('Cart Updated', `${productName} removed from cart`, 'info');
+  }
+}
+
+function updateQuantity(index, change) {
+  if (cart[index]) {
+    const oldQty = cart[index].quantity || 1;
+    cart[index].quantity = Math.max(1, oldQty + change);
+    loadCartPage();
+    updateCartCount();
+  }
+}
+
+function loadCartPage() {
+  const cartContent = document.getElementById('cartContent');
+  const cartItemsCount = document.getElementById('cartItemsCount');
+  
+  if (cart.length === 0) {
+    cartContent.innerHTML = `
+      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+        <i class="fas fa-shopping-cart" style="font-size:64px; color:#cbd5e1; margin-bottom:20px;"></i>
+        <h3 style="color:#1e293b; margin-bottom:12px;">Your cart is empty</h3>
+        <p style="color:#64748b; margin-bottom:24px;">Add some products to get started</p>
+        <button onclick="window.navigateTo('productsPage')" style="padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+          Browse Products
+        </button>
+      </div>
+    `;
+    cartItemsCount.textContent = '0 items';
+    return;
+  }
+  
+  let html = '<div style="margin-bottom:16px;">';
+  let total = 0;
+  
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const itemTotal = price * (item.quantity || 1);
+    total += itemTotal;
+    
+    html += `
+      <div style="display:flex; gap:12px; background:white; padding:16px; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm);">
+        <img src="${item.image || ''}" style="width:80px; height:80px; object-fit:cover; border-radius:12px; background:#f1f5f9;" loading="lazy" onerror="this.style.display='none'">
+        <div style="flex:1;">
+          <div style="font-weight:700; color:var(--dark-color); margin-bottom:6px;">${item.title || 'Product'}</div>
+          <div style="font-weight:800; color:#10b981; margin-bottom:8px;">PKR ${itemTotal.toFixed(2)}</div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="display:flex; align-items:center; gap:8px; background:#f1f5f9; border-radius:8px; padding:4px;">
+              <button onclick="window.updateQuantity(${index}, -1)" style="width:30px; height:30px; border:none; background:white; border-radius:6px; font-weight:700; cursor:pointer;">-</button>
+              <span style="font-weight:700; min-width:20px; text-align:center;">${item.quantity || 1}</span>
+              <button onclick="window.updateQuantity(${index}, 1)" style="width:30px; height:30px; border:none; background:white; border-radius:6px; font-weight:700; cursor:pointer;">+</button>
+            </div>
+            <button onclick="window.removeFromCart(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:14px;">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  
+  html += `
+    <div style="background:white; border-radius:20px; padding:20px; margin:16px; box-shadow:var(--shadow-md);">
+      <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-receipt" style="color:#667eea;"></i> Order Summary
+      </h3>
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span style="color:#64748b;">Subtotal</span>
+        <span style="font-weight:700; color:var(--dark-color);">PKR ${total.toFixed(2)}</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+        <span style="color:#64748b;">Shipping</span>
+        <span style="color:#64748b;">Calculated at checkout</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:24px; padding-top:12px; border-top:2px solid #e2e8f0;">
+        <span style="font-size:16px; font-weight:800; color:var(--dark-color);">Total</span>
+        <span style="font-size:20px; font-weight:900; color:#10b981;">PKR ${total.toFixed(2)}</span>
+      </div>
+      <button onclick="window.openCheckoutModal()" style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:16px; cursor:pointer;">
+        <i class="fas fa-lock"></i> Proceed to Checkout
+      </button>
+    </div>
+  `;
+  
+  cartContent.innerHTML = html;
+  cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
+}
+
+// ===== NOTIFICATION SYSTEM =====
+function showNotification(message) {
+  const notification = document.getElementById('notificationAlert');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  setTimeout(() => { notification.style.display = 'none'; }, 3000);
+}
+
+function addInnerNotification(title, message, type = 'info') {
+  const notification = {
+    id: Date.now(),
+    title,
+    message,
+    type,
+    time: new Date(),
+    read: false
+  };
+  
+  innerNotifications.unshift(notification);
+  unreadNotifications++;
+  
+  if (innerNotifications.length > 50) innerNotifications.pop();
+  
+  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+  updateNotificationBellCount();
+}
+
+function updateNotificationBellCount() {
+  const badge = document.getElementById('notificationBadge');
+  const bell = document.getElementById('notificationBell');
+  
+  if (unreadNotifications > 0) {
+    badge.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+    badge.style.display = 'flex';
+    bell.style.color = '#f59e0b';
+  } else {
+    badge.style.display = 'none';
+    bell.style.color = 'white';
+  }
+}
+
+function toggleNotificationDrawer() {
+  const drawer = document.getElementById('notificationDrawer');
+  drawer.classList.toggle('open');
+  if (drawer.classList.contains('open')) {
+    loadNotificationDrawer();
+  }
+}
+
+function loadNotificationDrawer() {
+  const list = document.getElementById('notificationList');
+  const count = document.getElementById('notificationCount');
+  
+  if (innerNotifications.length === 0) {
+    list.innerHTML = `<div style="text-align:center; padding:40px;"><i class="fas fa-bell-slash" style="font-size:60px; color:#cbd5e1;"></i><h3 style="margin-top:16px; color:#1e293b;">No notifications</h3></div>`;
+    count.textContent = '0';
+    return;
+  }
+  
+  let html = '';
+  innerNotifications.slice(0, 20).forEach(notif => {
+    html += `
+      <div style="padding:16px; background:white; border-radius:12px; margin-bottom:8px; border-left:4px solid ${notif.read ? '#cbd5e1' : '#667eea'};">
+        <div style="display:flex; align-items:start; gap:12px;">
+          <div style="font-size:20px;">${notif.type === 'success' ? '✅' : notif.type === 'error' ? '❌' : 'ℹ️'}</div>
+          <div style="flex:1;">
+            <div style="font-weight:800; color:var(--dark-color); font-size:14px;">${notif.title}</div>
+            <div style="color:#64748b; font-size:13px; margin-top:4px;">${notif.message}</div>
+            <div style="font-size:11px; color:#94a3b8; margin-top:6px;">${new Date(notif.time).toLocaleTimeString()}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  list.innerHTML = html;
+  count.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+}
+
+function markAllNotificationsAsRead() {
+  innerNotifications.forEach(n => n.read = true);
+  unreadNotifications = 0;
+  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+  updateNotificationBellCount();
+  loadNotificationDrawer();
+  showNotification('✅ All notifications marked as read');
+}
+
+// ===== DELIVERY STATUS =====
+async function checkForDeliveries() {
+  const phone = getCustomerPhone();
+  if (!phone) return;
+  
+  try {
+    const { data, error } = await supa
+      .from('orders')
+      .select('*')
+      .eq('customer_phone', phone)
+      .eq('business_id', currentBusinessId)
+      .order('created_at', { ascending: false });
+    
+    if (!error && data) {
+      deliveryStatusData = data;
+      updateDeliveryIcon();
+    }
+  } catch (error) {
+    console.error('Error checking deliveries:', error);
+  }
+}
+
+function updateDeliveryIcon() {
+  const icon = document.getElementById('deliveryIcon');
+  const badge = document.getElementById('deliveryBadge');
+  
+  if (deliveryStatusData.length > 0) {
+    icon.style.color = '#10b981';
+    badge.textContent = deliveryStatusData.length;
+    badge.style.display = 'flex';
+    const hasPending = deliveryStatusData.some(order => order.status === 'confirmed' || order.status === 'processing' || order.status === 'shipped');
+    if (hasPending) badge.classList.add('alert');
+    else badge.classList.remove('alert');
+  } else {
+    icon.style.color = 'white';
+    badge.style.display = 'none';
+    badge.classList.remove('alert');
+  }
+}
+
+async function loadDeliveryStatus() {
+  const phone = getCustomerPhone();
+  
+  if (!phone) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+        <i class="fas fa-phone" style="font-size:48px; color:#cbd5e1; margin-bottom:16px;"></i>
+        <h3 style="color:#1e293b; margin-bottom:12px;">Phone Number Needed</h3>
+        <p style="color:#64748b; margin-bottom:24px;">Please save your phone number to track orders.</p>
+        <button onclick="window.openPhoneInput()" style="padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+          Add Phone Number
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  const { data, error } = await supa
+    .from('orders')
+    .select('*')
+    .eq('customer_phone', phone)
+    .eq('business_id', currentBusinessId)
+    .order('created_at', { ascending: false });
+  
+  if (error || !data || data.length === 0) {
+    document.getElementById('deliveryContent').innerHTML = `
+      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+        <i class="fas fa-truck" style="font-size:48px; color:#10b981; margin-bottom:16px;"></i>
+        <h3 style="color:#1e293b; margin-bottom:12px;">No Orders Yet</h3>
+        <p style="color:#64748b; margin-bottom:24px;">Your orders will appear here once you place them.</p>
+        <button onclick="window.navigateTo('productsPage')" style="padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+          <i class="fas fa-shopping-bag"></i> Shop Now
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  data.forEach(order => {
+    const statusClass = order.status;
+    const statusText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+    const date = new Date(order.created_at).toLocaleDateString();
+    
+    html += `
+      <div class="order-card" style="border-left-color: ${order.status === 'delivered' ? '#10b981' : order.status === 'cancelled' ? '#ef4444' : '#667eea'};">
+        <div class="order-header">
+          <span class="order-id">${order.order_id}</span>
+          <span class="order-token">${order.token || 'N/A'}</span>
+          <span class="order-status ${statusClass}">${statusText}</span>
+        </div>
+        
+        <div class="order-details">
+          <div class="order-item-row">
+            <span><i class="fas fa-box"></i> Items</span>
+            <span>${order.items ? order.items.length : 0} products</span>
+          </div>
+          <div class="order-item-row">
+            <span><i class="fas fa-tag"></i> Total</span>
+            <span style="font-weight:800; color:#10b981;">PKR ${order.total.toFixed(2)}</span>
+          </div>
+          <div class="order-address">
+            <i class="fas fa-map-marker-alt" style="color:#667eea;"></i> ${order.customer_address || 'No address'}
+          </div>
+          ${order.estimated_delivery ? `
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <span class="delivery-info-badge"><i class="fas fa-clock"></i> ${order.estimated_delivery}</span>
+              <span class="delivery-info-badge"><i class="fas fa-credit-card"></i> ${order.payment_method || 'COD'}</span>
+            </div>
+          ` : ''}
+        </div>
+        
+        <div style="font-size:11px; color:#94a3b8; margin-top:12px;">
+          <i class="fas fa-calendar"></i> ${date}
+        </div>
+      </div>
+    `;
+  });
+  
+  document.getElementById('deliveryContent').innerHTML = html;
+}
+
+function checkDeliveryStatus() {
+  const phone = getCustomerPhone();
+  if (!phone) {
+    openPhoneInput();
+    showNotification('Please add your phone number to track orders');
+    return;
+  }
+  navigateTo('deliveryPage');
+}
+
+// ===== ADMIN FUNCTIONS =====
+async function loadAdminPanel() {
+  await loadOrdersFromDatabase();
+  renderTokenList();
+  
+  document.getElementById('adminContent').innerHTML = `
+    <div style="margin:16px; display:flex; gap:12px;">
+      <button onclick="window.logoutAdmin()" style="flex:1; padding:12px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+      <button onclick="window.sendNotificationToAll()" style="flex:1; padding:12px; background:var(--warning-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-bell"></i> Send Alert
+      </button>
+    </div>
+  `;
+}
+
+async function sendNotificationToAll() {
+  const title = prompt('Notification Title:', 'New Update');
+  const body = prompt('Notification Message:', 'Check out our latest products!');
+  
+  if (title && body) {
+    const { error } = await supa.from('notifications').insert([{ title, body }]);
+    if (!error) {
+      showNotification('✅ Notification sent to all users!');
+      addInnerNotification('Notification Sent', `"${title}" sent to all users`, 'success');
+    }
+  }
+}
+
+// ===== LOGIN SYSTEM =====
+function toggleLogin() {
+  if (isAdminLoggedIn) {
+    if (confirm("Are you sure you want to logout?")) {
+      logoutAdmin();
+    }
+  } else {
+    navigateTo('loginPage');
+  }
+}
+
+function updateLoginUI() {
+  const loginIcon = document.getElementById('loginIcon');
+  const loginBtn = document.getElementById('loginBtn');
+  
+  if (isAdminLoggedIn) {
+    loginIcon.className = 'fas fa-sign-out-alt';
+    loginBtn.title = 'Logout';
+  } else {
+    loginIcon.className = 'fas fa-sign-in-alt';
+    loginBtn.title = 'Login';
+  }
+}
+
+function attemptLogin() {
+  const passwordInput = document.getElementById('adminPasswordInput');
+  const enteredPassword = passwordInput.value;
+  
+  if (enteredPassword === businessAdminPassword) {
+    isAdminLoggedIn = true;
+    isolatedLocalStorage.setItem('isAdminLoggedIn', 'true');
+    updateLoginUI();
+    showNotification('✅ Login successful!');
+    addInnerNotification('Admin Login', 'You have logged in as administrator', 'success');
+    navigateTo('adminPage');
+  } else {
+    showNotification('❌ Incorrect password. Try again.');
+    passwordInput.value = '';
+    passwordInput.focus();
+  }
+}
+
+function handleLoginKeypress(event) {
+  if (event.key === 'Enter') attemptLogin();
+}
+
+function logoutAdmin() {
+  isAdminLoggedIn = false;
+  isolatedLocalStorage.removeItem('isAdminLoggedIn');
+  updateLoginUI();
+  showNotification('👋 Logged out successfully');
+  addInnerNotification('Logged Out', 'You have been logged out', 'info');
+  navigateTo('homePage');
+}
+
+// ===== NAVIGATION =====
+function navigateTo(pageId) {
   const oldPage = document.getElementById(currentPage);
   const newPage = document.getElementById(pageId);
+  
+  if (currentPage === pageId || !newPage) return;
   
   if (oldPage) {
     oldPage.classList.remove('active');
@@ -1264,7 +2891,9 @@ function navigateToDirect(pageId) {
     newPage.classList.add('active');
     currentPage = pageId;
     
-    // Update nav items
+    const backBtn = document.getElementById('headerBackBtn');
+    if (backBtn) backBtn.style.display = pageId !== 'homePage' ? 'flex' : 'none';
+    
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     const navMap = { 'homePage': 0, 'productsPage': 1, 'cartPage': 2, 'aboutPage': 3, 'contactPage': 4 };
     if (navMap[pageId] !== undefined) {
@@ -1272,261 +2901,57 @@ function navigateToDirect(pageId) {
       if (navItems[navMap[pageId]]) navItems[navMap[pageId]].classList.add('active');
     }
     
-    // Load page content
-    switch(pageId) {
-      case 'homePage': loadHomePage(); break;
-      case 'productsPage': loadProductsPage(); break;
-      case 'cartPage': loadCartPage(); break;
-      case 'aboutPage': loadAboutPage(); break;
-      case 'contactPage': loadContactPage(); break;
-      case 'deliveryPage': loadDeliveryStatus(); break;
-      case 'adminPage': if (isAdminLoggedIn) loadAdminPanel(); else navigateTo('loginPage'); break;
-    }
+    document.getElementById('notificationDrawer').classList.remove('open');
+    
+    if (pageId === 'homePage') loadHomePage();
+    else if (pageId === 'productsPage') loadProductsPage();
+    else if (pageId === 'cartPage') loadCartPage();
+    else if (pageId === 'aboutPage') loadAboutPage();
+    else if (pageId === 'contactPage') loadContactPage();
+    else if (pageId === 'deliveryPage') loadDeliveryStatus();
+    else if (pageId === 'adminPage' && isAdminLoggedIn) loadAdminPanel();
+    else if (pageId === 'adminPage' && !isAdminLoggedIn) navigateTo('loginPage');
   }, 300);
   
   navigationHistory.push(pageId);
-  if (navigationHistory.length > 20) navigationHistory.shift();
-}
-
-function navigateTo(pageId) {
-  const hashMap = {
-    'homePage': 'home',
-    'productsPage': 'products',
-    'cartPage': 'cart',
-    'aboutPage': 'about',
-    'contactPage': 'contact',
-    'deliveryPage': 'delivery',
-    'adminPage': 'admin',
-    'loginPage': 'login'
-  };
-  
-  if (hashMap[pageId]) {
-    window.location.hash = hashMap[pageId];
-  }
 }
 
 function goBack() {
-  if (navigationHistory.length > 1) {
-    navigationHistory.pop();
-    const previousPage = navigationHistory[navigationHistory.length - 1];
-    const hashMap = {
-      'homePage': 'home',
-      'productsPage': 'products',
-      'cartPage': 'cart',
-      'aboutPage': 'about',
-      'contactPage': 'contact',
-      'deliveryPage': 'delivery',
-      'adminPage': 'admin',
-      'loginPage': 'login'
-    };
-    if (hashMap[previousPage]) {
-      window.location.hash = hashMap[previousPage];
-    } else {
-      window.location.hash = 'home';
-    }
-  } else {
-    const now = Date.now();
-    if (now - lastBackPress < 2000) {
-      document.getElementById('exitModal').style.display = 'flex';
-    } else {
-      lastBackPress = now;
-      showNotification('Press back again to exit');
-    }
-  }
-}
-
-// ===== EXIT MODAL FUNCTIONS =====
-function closeExitModal() {
-  document.getElementById('exitModal').style.display = 'none';
-  backPressCount = 0;
-}
-
-function exitApp() {
-  if (window.history.length > 1) {
-    window.history.go(-1);
-  } else {
-    window.close();
-  }
-}
-
-// ===== DATA ISOLATION SYSTEM =====
-function getStorageKey(key) {
-  const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
-  return `business_${businessKey}_${key}`;
-}
-
-const isolatedLocalStorage = {
-  setItem: function(key, value) { localStorage.setItem(getStorageKey(key), value); },
-  getItem: function(key) { return localStorage.getItem(getStorageKey(key)); },
-  removeItem: function(key) { localStorage.removeItem(getStorageKey(key)); }
-};
-
-// ===== CUSTOMER PHONE MANAGEMENT =====
-function getCustomerPhone() {
-  return isolatedLocalStorage.getItem('customerPhone') || '';
-}
-
-function saveCustomerPhone(phone) {
-  isolatedLocalStorage.setItem('customerPhone', phone);
-  document.getElementById('customerPhoneDisplay').textContent = phone || 'Tap to add your number';
-  showNotification('✅ Phone number saved!');
-}
-
-function updateCustomerPhoneDisplay() {
-  const phone = getCustomerPhone();
-  document.getElementById('customerPhoneDisplay').textContent = phone || 'Tap to add your number';
-}
-
-function openPhoneInput() {
-  const currentPhone = getCustomerPhone();
-  const phone = prompt("Enter your phone number for delivery:", currentPhone || "");
-  if (phone) {
-    const cleanedPhone = phone.replace(/\D/g, '');
-    if (cleanedPhone.length >= 10) {
-      saveCustomerPhone(cleanedPhone);
-      if (currentPage === 'deliveryPage') loadDeliveryStatus();
-    } else {
-      showNotification('❌ Please enter a valid phone number');
-    }
-  }
-}
-
-// ===== SHORT ID SYSTEM =====
-function generateShortId() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let shortId = '';
-  for (let i = 0; i < 6; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
-  return shortId;
-}
-
-// ===== PASSWORD GENERATOR =====
-function generateAdminPassword(cardId, shortId) {
-  const shortPart = shortId ? shortId.toLowerCase() : (cardId ? cardId.substring(0, 6).toLowerCase() : 'default');
-  return `business123_${shortPart}`;
-}
-
-// ===== NOTIFICATION SYSTEM =====
-function showNotification(message) {
-  const notification = document.getElementById('notificationAlert');
-  notification.textContent = message;
-  notification.style.display = 'block';
-  setTimeout(() => { notification.style.display = 'none'; }, 3000);
-}
-
-// ===== CART MANAGEMENT =====
-function updateCartCount() {
-  const count = cart.length;
-  document.getElementById('cartCountMini').textContent = count;
-  const cartBadge = document.getElementById('cartBadge');
-  if (cartBadge) {
-    if (count > 0) {
-      cartBadge.textContent = count > 99 ? '99+' : count;
-      cartBadge.style.display = 'flex';
-    } else {
-      cartBadge.style.display = 'none';
-    }
-  }
-  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
-  if (currentPage === 'cartPage') loadCartPage();
-}
-
-function addToCart(productIndex) {
-  const products = card.products || [];
-  const product = products[productIndex];
-  if (product) {
-    const existingIndex = cart.findIndex(item => item.title === product.title && item.discountPrice === product.discountPrice);
-    if (existingIndex === -1) {
-      cart.push({ ...product, index: productIndex, quantity: 1 });
-    } else {
-      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
-    }
-    updateCartCount();
-    showNotification('✅ Product added to cart!');
-  }
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  updateCartCount();
-}
-
-function updateQuantity(index, change) {
-  if (cart[index]) {
-    cart[index].quantity = Math.max(1, (cart[index].quantity || 1) + change);
-    loadCartPage();
-  }
-}
-
-function loadCartPage() {
-  const cartContent = document.getElementById('cartContent');
-  const cartItemsCount = document.getElementById('cartItemsCount');
-  
-  if (cart.length === 0) {
-    cartContent.innerHTML = '<div style="text-align:center; padding:80px 25px;"><i class="fas fa-shopping-cart" style="font-size:80px; color:#cbd5e1; opacity:0.5;"></i><h3 style="font-size:22px; color:var(--dark-color); margin:20px 0 15px; font-weight:800;">Your cart is empty</h3><p style="color:#64748b; margin-bottom:30px;">Add some products to get started</p><button onclick="navigateTo(\'productsPage\')" style="padding:15px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:16px; font-size:16px; font-weight:700; cursor:pointer;">Browse Products</button></div>';
-    cartItemsCount.textContent = '0 items';
+  const drawer = document.getElementById('notificationDrawer');
+  if (drawer && drawer.classList.contains('open')) {
+    toggleNotificationDrawer();
     return;
   }
   
-  let html = '<div style="display:flex; flex-direction:column; gap:15px; padding:20px;">';
-  let total = 0;
-  
-  cart.forEach((item, index) => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    const itemTotal = price * (item.quantity || 1);
-    total += itemTotal;
-    
-    html += `
-      <div style="display:flex; gap:15px; background:white; padding:15px; border-radius:24px; box-shadow:var(--shadow-md);">
-        <img src="${item.image || ''}" style="width:80px; height:80px; border-radius:16px; object-fit:contain; background:white; padding:8px;" loading="lazy" onerror="this.style.display='none'">
-        <div style="flex:1;">
-          <div style="font-weight:700; color:var(--dark-color); margin-bottom:8px;">${item.title || 'Product'}</div>
-          <div style="font-weight:800; color:#ef4444; margin-bottom:12px;">PKR ${itemTotal.toFixed(2)}</div>
-          <div style="display:flex; align-items:center; gap:12px;">
-            <div style="display:flex; align-items:center; gap:10px; background:#f8fafc; padding:6px; border-radius:12px;">
-              <button onclick="updateQuantity(${index}, -1)" style="width:28px; height:28px; border:2px solid #e2e8f0; background:white; border-radius:8px; font-size:18px; cursor:pointer;">-</button>
-              <span style="font-weight:800; min-width:25px; text-align:center;">${item.quantity || 1}</span>
-              <button onclick="updateQuantity(${index}, 1)" style="width:28px; height:28px; border:2px solid #e2e8f0; background:white; border-radius:8px; font-size:18px; cursor:pointer;">+</button>
-            </div>
-            <button onclick="removeFromCart(${index})" style="background:var(--danger-gradient); color:white; border:none; border-radius:8px; padding:6px 12px; font-size:11px; font-weight:700; cursor:pointer;">Remove</button>
-          </div>
-        </div>
-      </div>
-    `;
-  });
-  
-  html += '</div><div style="background:white; border-radius:24px; padding:25px; margin:25px; box-shadow:var(--shadow-md);"><h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:20px; padding-bottom:15px; border-bottom:2px solid #f1f5f9;"><i class="fas fa-receipt"></i> Order Summary</h3><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><span style="color:#475569;">Subtotal</span><span style="font-weight:800; color:var(--dark-color);">PKR ${total.toFixed(2)}</span></div><div style="display:flex; justify-content:space-between; margin-bottom:12px;"><span style="color:#475569;">Shipping</span><span style="color:#475569;">PKR 0</span></div><div style="display:flex; justify-content:space-between; margin-top:15px; padding-top:15px; border-top:2px solid #f1f5f9;"><span style="font-size:22px; font-weight:900; color:var(--dark-color);">Total</span><span style="font-size:22px; font-weight:900; color:#10b981;">PKR ${total.toFixed(2)}</span></div><button onclick="openCheckoutModal()" style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:16px; font-size:17px; font-weight:800; cursor:pointer; margin-top:25px;"><i class="fas fa-lock"></i> Proceed to Checkout</button></div>';
-  
-  cartContent.innerHTML = html;
-  cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
-}
-
-// ===== MODAL FUNCTIONS =====
-function openModal(modalId) {
-  document.getElementById(modalId).style.display = 'flex';
-  document.body.style.overflow = 'hidden';
-}
-
-function closeModal(modalId) {
-  document.getElementById(modalId).style.display = 'none';
-  document.body.style.overflow = 'auto';
-}
-
-// ===== IMAGE ZOOM =====
-function zoomImage(imageUrl, event) {
-  if (event) event.stopPropagation();
-  if (imageUrl && imageUrl.trim()) {
-    document.getElementById('zoomedImage').src = imageUrl;
-    document.getElementById('imageZoomOverlay').style.display = 'flex';
-    document.body.style.overflow = 'hidden';
+  if (navigationHistory.length > 1) {
+    navigationHistory.pop();
+    navigateTo(navigationHistory[navigationHistory.length - 1]);
+  } else {
+    navigateTo('homePage');
   }
 }
 
-function closeImageZoom() {
-  document.getElementById('imageZoomOverlay').style.display = 'none';
-  document.body.style.overflow = 'auto';
+// ===== LOAD PAGES =====
+function loadHomePage() {
+  const featuredProducts = document.getElementById('featuredProducts');
+  const products = card.products || [];
+  featuredProducts.innerHTML = '';
+  
+  products.slice(0, 4).forEach((product, index) => {
+    featuredProducts.appendChild(createProductCard(product, index));
+  });
 }
 
-// ===== FIXED: MODERN PRODUCT CARD WITH HALF BAHAR LABELS =====
+function loadProductsPage() {
+  const allProducts = document.getElementById('allProducts');
+  const products = card.products || [];
+  allProducts.innerHTML = '';
+  products.forEach((product, index) => {
+    allProducts.appendChild(createProductCard(product, index));
+  });
+}
+
+// ===== FIX 2: PRODUCT CARD WITH TRANSPARENT HALF BAHAR LABELS =====
 function createProductCard(product, index) {
   const price = product.discountPrice || product.originalPrice;
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
@@ -1550,191 +2975,79 @@ function createProductCard(product, index) {
     ).join('');
   }
   
-  // PRICE BADGE - BOTTOM LEFT
   let priceHtml = '';
   if (price) {
     if (hasDiscount && originalPrice) {
-      priceHtml = `<span class="price-badge"><span class="original-price">PKR ${originalPrice}</span><span class="current-price">PKR ${price}</span></span>`;
+      priceHtml = `
+        <span class="price-badge">
+          <span class="original-price">PKR ${originalPrice}</span>
+          <span class="current-price">PKR ${price}</span>
+        </span>
+      `;
     } else {
-      priceHtml = `<span class="price-badge"><span class="current-price">PKR ${price}</span></span>`;
+      priceHtml = `
+        <span class="price-badge">
+          <span class="current-price">PKR ${price}</span>
+        </span>
+      `;
     }
-  }
-  
-  // PERCENTAGE BADGE - BOTTOM RIGHT (agar product mein discount % nahi hai to show offer)
-  let bottomRightBadge = '';
-  if (hasDiscount && originalPrice && price) {
-    const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
-    bottomRightBadge = `<span class="percentage-badge"><i class="fas fa-bolt"></i> ${discount}% OFF</span>`;
-  } else if (product.badges && product.badges.length > 0) {
-    bottomRightBadge = `<span class="percentage-badge"><i class="fas fa-star"></i> ${product.badges[0]}</span>`;
   }
   
   const cardElement = document.createElement('div');
   cardElement.className = 'product-card';
   
   cardElement.innerHTML = `
-    <div class="product-image-container" onclick="zoomImage('${product.image || ''}', event)">
-      <img src="${product.image || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
-      ${discountPercentage}
-      ${offerBadge || featureBadges}
-      ${priceHtml}
-      ${bottomRightBadge}
+    <div style="position:relative; height:160px; overflow:hidden; border-radius:6px; margin-bottom:8px;" onclick="window.zoomImage('${product.image || ''}', event)">
+      <img src="${product.image || ''}" style="width:100%; height:100%; object-fit:cover;" loading="lazy" onerror="this.style.display='none'">
+      
+      <!-- Labels - Transparent + Half Bahar -->
+      <div class="badge-container">
+        ${discountPercentage}
+        ${offerBadge || featureBadges}
+        ${priceHtml}
+      </div>
     </div>
-    <div class="product-content">
-      <div class="product-title">${product.title || 'Product'}</div>
-      <div class="product-actions">
-        <button class="btn-primary" onclick="showProductModal(${index}); event.stopPropagation();">
-          <i class="fas fa-bolt"></i> Buy
-        </button>
-        <button class="btn-secondary" onclick="addToCart(${index}); event.stopPropagation();">
+    
+    <div style="flex:1; display:flex; flex-direction:column; justify-content:space-between;">
+      <div style="font-size:13px; font-weight:600; color:var(--dark-color); margin-bottom:8px; line-height:1.3; max-height:34px; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">
+        ${product.title || 'Product'}
+      </div>
+      <div style="display:flex; gap:6px;">
+        <button class="btn-primary" onclick="window.addToCart(${index}); event.stopPropagation();" style="flex:1; background:var(--success-gradient);">
           <i class="fas fa-cart-plus"></i> Add
+        </button>
+        <button class="btn-secondary" onclick="window.buyNow(${index}); event.stopPropagation();" style="flex:1; background:var(--info-gradient);">
+          <i class="fas fa-bolt"></i> Buy
         </button>
       </div>
     </div>
   `;
   
-  cardElement.onclick = (e) => {
-    if (!e.target.closest('button') && !e.target.closest('.product-image-container')) {
-      showProductModal(index);
-    }
-  };
-  
   return cardElement;
 }
 
-function showProductModal(productIndex) {
-  const products = card.products || [];
-  currentProduct = products[productIndex];
-  if (!currentProduct) return;
-  
-  const price = currentProduct.discountPrice || currentProduct.originalPrice;
-  const originalPrice = currentProduct.originalPrice && currentProduct.discountPrice ? currentProduct.originalPrice : null;
-  const hasDiscount = originalPrice && price && originalPrice > price;
-  
-  document.getElementById('modalImage').src = currentProduct.image || '';
-  document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
-  document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
-  
-  const modalPrice = document.getElementById('modalPrice');
-  if (hasDiscount && originalPrice && price) {
-    const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
-    modalPrice.innerHTML = `
-      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <div style="text-decoration:line-through; color:#94a3b8; font-size:16px; font-weight:500;">PKR ${originalPrice}</div>
-        <div style="color:#10b981; font-size:28px; font-weight:900;">PKR ${price}</div>
-        <div style="background:var(--danger-gradient); color:white; padding:6px 12px; border-radius:30px; font-size:13px; font-weight:800;">${discount}% OFF</div>
-      </div>
-    `;
-  } else {
-    modalPrice.innerHTML = `<div style="color:#10b981; font-size:28px; font-weight:900;">PKR ${price || 'N/A'}</div>`;
-  }
-  
-  document.getElementById('directCheckoutSection').style.display = 'none';
-  selectBuyNowPayment('whatsapp');
-  
-  openModal('productModal');
-}
-
-function addToCartFromModal() {
-  if (currentProduct) {
-    const products = card.products || [];
-    const productIndex = products.findIndex(p => p.title === currentProduct.title);
-    if (productIndex !== -1) {
-      addToCart(productIndex);
-      closeModal('productModal');
-    }
+function buyNow(productIndex) {
+  const product = card.products[productIndex];
+  if (product) {
+    cart = [{
+      ...product,
+      quantity: 1
+    }];
+    updateCartCount();
+    openCheckoutModal();
   }
 }
 
-function buyNowFromModal() {
-  document.getElementById('directCheckoutSection').style.display = 'block';
+function zoomImage(imageUrl, event) {
+  if (event) event.stopPropagation();
+  if (imageUrl) {
+    document.getElementById('zoomedImage').src = imageUrl;
+    document.getElementById('imageZoomOverlay').style.display = 'flex';
+  }
 }
 
-function selectBuyNowPayment(method) {
-  buyNowPaymentMethod = method;
-  ['whatsappBuyNowOption', 'codBuyNowOption'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.borderColor = '#e2e8f0';
-  });
-  const selected = document.getElementById(method === 'whatsapp' ? 'whatsappBuyNowOption' : 'codBuyNowOption');
-  if (selected) selected.style.borderColor = method === 'whatsapp' ? '#25D366' : '#10b981';
-}
-
-function checkoutBuyNow() {
-  if (!currentProduct) return;
-  const price = currentProduct.discountPrice || currentProduct.originalPrice || 0;
-  const businessName = card.businessName || card.name || "Your Business";
-  let message = `Hello ${businessName} Team,\n\nI would like to place an order:\n\n🛒 *${currentProduct.title || 'Product'}*\n💰 PKR ${price}\n\n💳 Payment: ${buyNowPaymentMethod === 'whatsapp' ? 'WhatsApp Order' : 'Cash on Delivery'}\n\nPlease confirm availability. Thank you!`;
-  if (card.phone) window.open(`https://wa.me/${card.phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
-  closeModal('productModal');
-  showNotification('✅ Order request sent!');
-}
-
-// ===== CHECKOUT FUNCTIONS =====
-function openCheckoutModal() {
-  if (cart.length === 0) { showNotification('Your cart is empty'); return; }
-  const checkoutItems = document.getElementById('checkoutItems');
-  let subtotal = 0;
-  checkoutItems.innerHTML = '';
-  cart.forEach(item => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    const itemTotal = price * (item.quantity || 1);
-    subtotal += itemTotal;
-    checkoutItems.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:12px; background:#f8fafc; border-radius:12px;"><div><div style="font-weight:800; margin-bottom:4px;">${item.title || 'Product'}</div><div style="font-size:12px; color:#64748b;">Qty: ${item.quantity || 1}</div></div><div style="font-weight:800;">PKR ${itemTotal.toFixed(2)}</div></div>`;
-  });
-  document.getElementById('checkoutSubtotal').textContent = subtotal.toFixed(2);
-  document.getElementById('checkoutTotal').textContent = subtotal.toFixed(2);
-  selectCheckoutPayment('whatsapp');
-  openModal('checkoutModal');
-}
-
-function selectCheckoutPayment(method) {
-  checkoutPaymentMethod = method;
-  ['whatsappCheckoutOption', 'codCheckoutOption'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.style.borderColor = '#e2e8f0';
-  });
-  const selected = document.getElementById(method === 'whatsapp' ? 'whatsappCheckoutOption' : 'codCheckoutOption');
-  if (selected) selected.style.borderColor = method === 'whatsapp' ? '#25D366' : '#10b981';
-}
-
-function proceedToPayment() {
-  if (cart.length === 0) return;
-  const total = cart.reduce((sum, item) => sum + (parseFloat(item.discountPrice || item.originalPrice || 0) * (item.quantity || 1)), 0);
-  const businessName = card.businessName || card.name || "Your Business";
-  let message = `Hello ${businessName} Team,\n\nI would like to place an order:\n\n`;
-  cart.forEach((item, i) => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    message += `${i+1}. ${item.title || 'Product'} - Qty: ${item.quantity || 1} - PKR ${(price * (item.quantity || 1)).toFixed(2)}\n`;
-  });
-  message += `\n💰 Total: PKR ${total.toFixed(2)}\n💳 Payment: ${checkoutPaymentMethod === 'whatsapp' ? 'WhatsApp Order' : 'Cash on Delivery'}\n\nPlease confirm availability. Thank you!`;
-  if (card.phone) window.open(`https://wa.me/${card.phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
-  cart = [];
-  updateCartCount();
-  closeModal('checkoutModal');
-  navigateTo('homePage');
-  showNotification('✅ Order sent!');
-}
-
-function confirmPayment() {
-  if (currentPage.includes('checkout')) proceedToPayment();
-  else checkoutBuyNow();
-  closeModal('paymentDetailsModal');
-}
-
-// ===== LOAD PAGES =====
-function loadHomePage() {
-  const featuredProducts = document.getElementById('featuredProducts');
-  const products = card.products || [];
-  featuredProducts.innerHTML = '';
-  products.slice(0, 4).forEach((product, index) => featuredProducts.appendChild(createProductCard(product, index)));
-}
-
-function loadProductsPage() {
-  const allProducts = document.getElementById('allProducts');
-  const products = card.products || [];
-  allProducts.innerHTML = '';
-  products.forEach((product, index) => allProducts.appendChild(createProductCard(product, index)));
+function closeImageZoom() {
+  document.getElementById('imageZoomOverlay').style.display = 'none';
 }
 
 function filterProducts() {
@@ -1742,181 +3055,280 @@ function filterProducts() {
   const products = card.products || [];
   const allProducts = document.getElementById('allProducts');
   allProducts.innerHTML = '';
-  products.filter(p => p.title?.toLowerCase().includes(searchTerm) || p.desc?.toLowerCase().includes(searchTerm)).forEach((p, i) => allProducts.appendChild(createProductCard(p, i)));
+  
+  products.filter(product => 
+    product.title?.toLowerCase().includes(searchTerm) ||
+    product.desc?.toLowerCase().includes(searchTerm)
+  ).forEach((product, index) => {
+    allProducts.appendChild(createProductCard(product, index));
+  });
 }
 
+// ===== FIX 4: ABOUT PAGE - CLEAN HOURS WITH CURRENT DAY HIGHLIGHT =====
 function loadAboutPage() {
-  document.getElementById('aboutContent').innerHTML = `<p style="line-height:1.8; color:#475569;">${card.business?.about || 'No information available'}</p>`;
+  document.getElementById('aboutContent').innerHTML = `
+    <div style="background:white; border-radius:16px; padding:24px; margin-bottom:16px; box-shadow:var(--shadow-sm);">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:50px; height:50px; background:var(--primary-gradient); border-radius:12px; display:flex; align-items:center; justify-content:center;">
+          <i class="fas fa-store" style="font-size:24px; color:white;"></i>
+        </div>
+        <div>
+          <h2 style="font-size:20px; font-weight:800; color:var(--dark-color);">${card.businessName || card.name || 'Business'}</h2>
+          <p style="color:#64748b; font-size:14px;">${card.business?.type || 'Premium Business'}</p>
+        </div>
+      </div>
+      <p style="color:#475569; line-height:1.7; font-size:15px;">${card.business?.about || 'Welcome to our business. We provide premium products and services with quality assurance.'}</p>
+    </div>
+  `;
+  
   if (card.businessHours) {
-    const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     const businessHours = document.getElementById('businessHours');
     businessHours.innerHTML = '';
-    card.businessHours.forEach((day, i) => {
-      if (day) {
-        const item = document.createElement('div');
-        item.style = "display:flex; justify-content:space-between; padding:15px; background:#f8fafc; border-radius:16px; margin-bottom:12px;";
-        if (!day.open || day.status === 'closed') item.innerHTML = `<span style="font-weight:600; color:#475569;">${days[i]}</span><span style="color:#ef4444; font-weight:600; background:rgba(239,68,68,0.1); padding:5px 12px; border-radius:20px;">Closed</span>`;
-        else item.innerHTML = `<span style="font-weight:600; color:#475569;">${days[i]}</span><span style="font-weight:600; color:#10b981; background:rgba(16,185,129,0.1); padding:5px 12px; border-radius:20px;">${day.start || ''} - ${day.end || ''}</span>`;
-        businessHours.appendChild(item);
+    
+    const today = new Date().getDay(); // 0 = Sunday, 1 = Monday, etc.
+    
+    card.businessHours.forEach((day, index) => {
+      if (index < days.length) {
+        const dayName = days[index];
+        const isToday = index === (today === 0 ? 6 : today - 1); // Convert to Monday=0
+        
+        const hourItem = document.createElement('div');
+        hourItem.style.cssText = `
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+          padding: 12px;
+          border-radius: 12px;
+          ${isToday ? 'background: #f0f9ff; border-left: 4px solid #3b82f6;' : 'border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;'}
+        `;
+        
+        if (!day || day.status === 'closed') {
+          hourItem.innerHTML = `
+            <span style="font-weight:700; color:#475569; display:flex; align-items:center; gap:8px;">
+              ${isToday ? '<span style="background:#3b82f6; width:8px; height:8px; border-radius:50%;"></span>' : ''}
+              ${dayName}
+            </span>
+            <span style="color:#ef4444; font-weight:600; background:#fee2e2; padding:6px 16px; border-radius:30px; font-size:13px;">
+              <i class="fas fa-clock"></i> Closed
+            </span>
+          `;
+        } else {
+          let startTime = day.start || '09:00';
+          let endTime = day.end || '18:00';
+          
+          hourItem.innerHTML = `
+            <span style="font-weight:700; color:#475569; display:flex; align-items:center; gap:8px;">
+              ${isToday ? '<span style="background:#10b981; width:8px; height:8px; border-radius:50%;"></span>' : ''}
+              ${dayName}
+            </span>
+            <span style="color:#10b981; font-weight:700; background:#d1fae5; padding:6px 20px; border-radius:30px; font-size:13px;">
+              <i class="fas fa-clock"></i> ${startTime} - ${endTime}
+            </span>
+          `;
+        }
+        
+        businessHours.appendChild(hourItem);
+      }
+    });
+  } else {
+    document.getElementById('businessHours').innerHTML = '<p style="color:#64748b; text-align:center; padding:20px;">No business hours available</p>';
+  }
+  
+  if (card.holidays && card.holidays.length > 0) {
+    const holidaysList = document.getElementById('holidaysList');
+    holidaysList.innerHTML = '';
+    card.holidays.forEach(holiday => {
+      if (holiday.name && holiday.date) {
+        const date = new Date(holiday.date);
+        const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        const holidayItem = document.createElement('div');
+        holidayItem.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;";
+        holidayItem.innerHTML = `
+          <span style="font-weight:600; color:#475569;">
+            <i class="fas fa-calendar-times" style="color:#ef4444; margin-right:8px;"></i>
+            ${holiday.name}
+          </span>
+          <span style="color:#64748b; background:#f1f5f9; padding:6px 16px; border-radius:30px; font-size:12px;">
+            ${formattedDate}
+          </span>
+        `;
+        holidaysList.appendChild(holidayItem);
       }
     });
   }
 }
 
 function loadContactPage() {
-  document.getElementById('contactPhone').textContent = card.phone || 'Not available';
-  document.getElementById('contactEmail').textContent = card.email || 'Not available';
-  document.getElementById('contactAddress').textContent = card.address || 'Not available';
-  updateCustomerPhoneDisplay();
+  const phoneEl = document.getElementById('contactPhone');
+  const emailEl = document.getElementById('contactEmail');
+  const addressEl = document.getElementById('contactAddress');
+  const customerPhoneEl = document.getElementById('customerPhoneDisplay');
+  const customerAddressEl = document.getElementById('customerAddressDisplay');
+  
+  if (phoneEl) phoneEl.textContent = card.phone || 'Not available';
+  if (emailEl) emailEl.textContent = card.email || 'Not available';
+  if (addressEl) addressEl.textContent = card.address || 'Not available';
+  if (customerPhoneEl) customerPhoneEl.textContent = getCustomerPhone() || 'Tap to set your number';
+  if (customerAddressEl) customerAddressEl.textContent = getCustomerAddress() || 'Tap to set your address';
   
   const socialGrid = document.getElementById('socialGrid');
   const socialMedia = card.socialMedia || {};
   socialGrid.innerHTML = '';
+  
   const platforms = [
     { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Facebook', bg: '#1877F2' },
     { key: 'instagram', icon: 'fab fa-instagram', label: 'Instagram', bg: '#E4405F' },
     { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', bg: '#1DA1F2' },
     { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', bg: '#0A66C2' },
-    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', bg: '#FF0000' }
+    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', bg: '#FF0000' },
+    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', bg: '#000000' }
   ];
-  platforms.forEach(p => {
-    const url = socialMedia[p.key];
+  
+  platforms.forEach(platform => {
+    const url = socialMedia[platform.key];
     if (url && url.trim()) {
       const link = document.createElement('a');
       link.href = url.includes('://') ? url : `https://${url}`;
       link.target = '_blank';
       link.style = "text-decoration:none; color:inherit;";
-      link.innerHTML = `<div style="display:flex; flex-direction:column; align-items:center; gap:12px; padding:20px; background:#f8fafc; border-radius:16px;"><div style="width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:22px; color:white; background:${p.bg}"><i class="${p.icon}"></i></div><div style="font-size:11px; font-weight:900; color:var(--dark-color);">${p.label}</div></div>`;
+      link.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px; background:white; border-radius:12px; box-shadow:var(--shadow-sm); transition:all 0.3s;">
+          <div style="width:40px; height:40px; background:${platform.bg}; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;">
+            <i class="${platform.icon}"></i>
+          </div>
+          <div style="font-size:12px; font-weight:600; color:var(--dark-color);">${platform.label}</div>
+        </div>
+      `;
       socialGrid.appendChild(link);
     }
   });
 }
 
-// ===== DELIVERY FUNCTIONS =====
-async function checkForDeliveries() {
-  const phone = getCustomerPhone();
-  if (!phone) return;
-  try {
-    const { data, error } = await supa.from('delivery_status').select('*').eq('customer_phone', phone).order('last_updated', { ascending: false });
-    if (!error && data) deliveryStatusData = data;
-  } catch (e) { console.error(e); }
+// ===== UTILITY FUNCTIONS =====
+function generateShortId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let shortId = '';
+  for (let i = 0; i < 6; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
+  return shortId;
 }
 
-function checkDeliveryStatus() {
-  if (!getCustomerPhone()) { openPhoneInput(); showNotification('Please add your phone number to track orders'); return; }
-  navigateTo('deliveryPage');
+function generateAdminPassword(cardId, shortId) {
+  const shortPart = shortId ? shortId.toLowerCase() : (cardId ? cardId.substring(0, 6).toLowerCase() : 'default');
+  return `business123_${shortPart}`;
 }
 
-async function loadDeliveryStatus() {
-  const phone = getCustomerPhone();
-  if (!phone) {
-    document.getElementById('deliveryContent').innerHTML = '<div style="text-align:center; padding:60px 20px;"><i class="fas fa-phone" style="font-size:60px; color:#cbd5e1;"></i><h3 style="font-size:20px; color:var(--dark-color); margin:20px 0 15px; font-weight:800;">Phone Number Needed</h3><p style="color:#64748b; margin-bottom:30px;">Please save your phone number to track deliveries.</p><button onclick="openPhoneInput()" style="padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">Add Phone Number</button></div>';
-    return;
-  }
-  const { data, error } = await supa.from('delivery_status').select('*').eq('customer_phone', phone).order('last_updated', { ascending: false });
-  if (error || !data || data.length === 0) {
-    document.getElementById('deliveryContent').innerHTML = '<div style="text-align:center; padding:60px 20px;"><i class="fas fa-truck" style="font-size:60px; color:#10b981;"></i><h3 style="font-size:20px; color:var(--dark-color); margin:20px 0 15px; font-weight:800;">No Active Deliveries</h3><p style="color:#64748b; margin-bottom:30px;">Your delivery status will appear here once you place an order.</p><button onclick="navigateTo(\'productsPage\')" style="padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;"><i class="fas fa-shopping-bag"></i> Shop Now</button></div>';
-    return;
-  }
-  let html = '';
-  data.forEach(order => {
-    const statusClass = order.status;
-    const statusText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
-    const updatedTime = new Date(order.last_updated).toLocaleString();
-    html += `<div class="delivery-card" style="border-left:5px solid ${order.status === 'delivered' ? '#10b981' : order.status === 'cancelled' ? '#ef4444' : '#667eea'}; background:white; border-radius:24px; padding:20px; margin:15px; box-shadow:var(--shadow-md);"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;"><span style="font-size:16px; font-weight:800; color:var(--dark-color);">Order #${order.order_id}</span><span style="padding:6px 12px; border-radius:20px; font-size:12px; font-weight:700; background:${order.status === 'pending' ? '#fef3c7' : order.status === 'processing' ? '#dbeafe' : order.status === 'shipped' ? '#ede9fe' : order.status === 'delivered' ? '#d1fae5' : '#fee2e2'}; color:${order.status === 'pending' ? '#92400e' : order.status === 'processing' ? '#1e40af' : order.status === 'shipped' ? '#5b21b6' : order.status === 'delivered' ? '#065f46' : '#991b1b'};">${statusText}</span></div><div style="color:#475569; font-size:14px; margin:8px 0;"><i class="fas fa-user"></i> ${order.customer_name || 'Customer'}</div>${order.location ? `<div style="color:#475569; font-size:14px; margin:8px 0;"><i class="fas fa-map-marker-alt"></i> ${order.location}</div>` : ''}${order.delivery_person ? `<div style="color:#475569; font-size:14px; margin:8px 0;"><i class="fas fa-user-tag"></i> ${order.delivery_person}</div>` : ''}<div style="font-size:12px; color:#94a3b8; margin-top:15px;"><i class="fas fa-clock"></i> Updated: ${updatedTime}</div></div>`;
-  });
-  document.getElementById('deliveryContent').innerHTML = html;
+function getPaymentMethodName(method) {
+  const names = { 'cod': 'Cash on Delivery', 'jazzcash': 'JazzCash', 'easypaisa': 'EasyPaisa', 'bank': 'Bank Transfer', 'card': 'Card Payment', 'whatsapp': 'WhatsApp Order' };
+  return names[method] || method;
 }
 
-function closeDeliveryModal() {
-  document.getElementById('deliveryStatusModal').style.display = 'none';
-}
-
-// ===== LOGIN SYSTEM =====
-function toggleLogin() {
-  if (isAdminLoggedIn) { if (confirm("Logout?")) logoutAdmin(); }
-  else navigateTo('loginPage');
-}
-
-function updateLoginUI() {
-  const icon = document.getElementById('loginIcon');
-  if (isAdminLoggedIn) { icon.className = 'fas fa-sign-out-alt'; document.getElementById('loginBtn').title = 'Logout'; }
-  else { icon.className = 'fas fa-sign-in-alt'; document.getElementById('loginBtn').title = 'Login'; }
-}
-
-function attemptLogin() {
-  if (document.getElementById('adminPasswordInput').value === businessAdminPassword) {
-    isAdminLoggedIn = true;
-    isolatedLocalStorage.setItem('isAdminLoggedIn', 'true');
-    updateLoginUI();
-    showNotification('✅ Login successful!');
-    navigateTo('adminPage');
-  } else {
-    showNotification('❌ Incorrect password');
-    document.getElementById('adminPasswordInput').value = '';
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
   }
 }
 
-function handleLoginKeypress(e) { if (e.key === 'Enter') attemptLogin(); }
-function logoutAdmin() { isAdminLoggedIn = false; isolatedLocalStorage.removeItem('isAdminLoggedIn'); updateLoginUI(); showNotification('👋 Logged out'); navigateTo('homePage'); }
-
-// ===== ADMIN FUNCTIONS =====
-async function loadAdminPanel() {
-  const { data, error } = await supa.from('delivery_status').select('*').order('last_updated', { ascending: false });
-  if (error) { document.getElementById('adminContent').innerHTML = '<p style="padding:20px;color:#ef4444;">Error</p>'; return; }
-  let html = '<div style="padding:15px; display:flex; justify-content:flex-end;"><button onclick="logoutAdmin()" class="logout-btn" style="display:flex; align-items:center; gap:8px; padding:8px 15px; background:rgba(239,68,68,0.9); color:white; border:none; border-radius:20px; font-size:13px; font-weight:700; cursor:pointer;"><i class="fas fa-sign-out-alt"></i> Logout</button></div><input type="text" id="adminSearch" placeholder="Search orders..." onkeyup="searchAdminOrders()" style="width:calc(100% - 30px); margin:15px; padding:12px; border:2px solid #e2e8f0; border-radius:8px;"><button onclick="addNewOrder()" style="width:calc(100% - 30px); margin:15px; padding:12px; background:var(--primary-gradient); color:white; border:none; border-radius:8px; font-weight:700;"><i class="fas fa-plus"></i> Add Order</button>';
-  if (!data || data.length === 0) html += '<p style="text-align:center; padding:40px;">No orders</p>';
-  else data.forEach(order => {
-    html += `<div class="admin-order-card" data-order-id="${order.order_id}" data-phone="${order.customer_phone}" style="background:white; border-radius:24px; padding:20px; margin:15px; box-shadow:var(--shadow-md);"><div style="display:flex; justify-content:space-between; margin-bottom:15px;"><div><div style="font-size:15px; font-weight:800;">Order #${order.order_id}</div><div style="color:#64748b; font-size:13px;">${order.customer_name || ''} ${order.customer_phone}</div></div><div style="font-size:12px; color:#94a3b8;">${new Date(order.last_updated).toLocaleString()}</div></div><select class="admin-select" data-id="${order.id}" style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:8px; margin-bottom:10px;"><option value="pending" ${order.status==='pending'?'selected':''}>⏳ Pending</option><option value="processing" ${order.status==='processing'?'selected':''}>🔄 Processing</option><option value="shipped" ${order.status==='shipped'?'selected':''}>🚚 Shipped</option><option value="delivered" ${order.status==='delivered'?'selected':''}>✅ Delivered</option><option value="cancelled" ${order.status==='cancelled'?'selected':''}>❌ Cancelled</option></select><input type="text" class="admin-input" data-id="${order.id}" placeholder="Location" value="${order.location||''}" style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:8px; margin-bottom:10px;"><input type="text" class="admin-input" data-id="${order.id}" placeholder="Delivery Person" value="${order.delivery_person||''}" style="width:100%; padding:10px; border:2px solid #e2e8f0; border-radius:8px; margin-bottom:10px;"><button onclick="updateOrder('${order.id}')" style="width:100%; padding:12px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700;">Update Order</button></div>`;
-  });
-  document.getElementById('adminContent').innerHTML = html;
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
 }
 
-function searchAdminOrders() {
-  const term = document.getElementById('adminSearch').value.toLowerCase();
-  document.querySelectorAll('.admin-order-card').forEach(c => {
-    c.style.display = c.textContent.toLowerCase().includes(term) ? 'block' : 'none';
-  });
+function showLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) overlay.style.display = 'flex';
 }
 
-async function updateOrder(id) {
-  const status = document.querySelector(`.admin-select[data-id="${id}"]`).value;
-  const location = document.querySelector(`.admin-input[data-id="${id}"]`).value;
-  const person = document.querySelectorAll(`.admin-input[data-id="${id}"]`)[1]?.value;
-  const { error } = await supa.from('delivery_status').update({ status, location, delivery_person: person, last_updated: new Date().toISOString() }).eq('id', id);
-  if (!error) { showNotification('✅ Updated'); loadAdminPanel(); if(currentPage==='deliveryPage') loadDeliveryStatus(); }
-  else showNotification('❌ Error');
+function hideLoading() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) overlay.style.display = 'none';
 }
 
-function addNewOrder() {
-  const id = prompt("Order ID:"), phone = prompt("Phone:"), name = prompt("Name (optional):");
-  if (!id || !phone) { showNotification('❌ Required'); return; }
-  supa.from('delivery_status').insert([{ order_id: id, customer_phone: phone, customer_name: name||'', status: 'pending', last_updated: new Date().toISOString() }]).then(({error}) => {
-    if (!error) { showNotification('✅ Added'); loadAdminPanel(); } else showNotification('❌ Error');
-  });
+// ===== CUSTOMER DATA =====
+function generateDeviceId() {
+  let deviceId = localStorage.getItem('customer_device_id');
+  if (!deviceId) {
+    deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('customer_device_id', deviceId);
+  }
+  return deviceId;
+}
+
+function initCustomerData() {
+  customerData.deviceId = generateDeviceId();
+  customerData.phone = getCustomerPhone();
+  customerData.name = isolatedLocalStorage.getItem('customerName') || '';
+  customerData.email = isolatedLocalStorage.getItem('customerEmail') || '';
 }
 
 // ===== SHARE BUSINESS =====
 function shareBusiness() {
-  const name = card.businessName || card.name || "Business";
-  const url = window.location.href.split('?')[0] + (shortCardId ? `?id=${shortCardId}` : '');
-  if (navigator.share) navigator.share({ title: name, text: `Check out ${name}!`, url }).catch(() => fallbackShare(url));
-  else fallbackShare(url);
+  const businessName = card.businessName || card.name || "Business";
+  const currentUrl = window.location.href.split('?')[0];
+  let shareUrl = shortCardId ? `${currentUrl}?id=${shortCardId}` : currentUrl;
+  const shareText = `Check out ${businessName} on their business app!\n\n${shareUrl}`;
+  
+  if (navigator.share) {
+    navigator.share({ title: businessName, text: shareText, url: shareUrl });
+  } else {
+    navigator.clipboard.writeText(shareText);
+    showNotification('📋 Link copied to clipboard!');
+  }
 }
-function fallbackShare(url) { navigator.clipboard.writeText(url); showNotification('📋 Link copied!'); }
+
+// ===== SAVE TO CONTACTS =====
+function saveBusinessToContacts() {
+  if (!card.name || !card.phone) {
+    showNotification('❌ Business information incomplete');
+    return;
+  }
+  
+  let contactInfo = `Business: ${card.name}\nPhone: ${card.phone}\n`;
+  if (card.email) contactInfo += `Email: ${card.email}\n`;
+  if (card.address) contactInfo += `Address: ${card.address}\n`;
+  
+  navigator.clipboard.writeText(contactInfo);
+  showNotification('📋 Business info copied! Paste in your contacts app');
+}
 
 // ===== WHATSAPP & CONTACT ACTIONS =====
-function openWhatsAppChat() { if (card.phone) window.open(`https://wa.me/${card.phone.replace(/\D/g, '')}?text=Hello%20${encodeURIComponent(card.businessName||'')}`, '_blank'); }
-function makeCall() { if (card.phone) window.open(`tel:${card.phone}`); }
-function sendEmail() { if (card.email) window.open(`mailto:${card.email}?subject=Inquiry`); }
-function openMap() { if (card.address) window.open(`https://maps.google.com/?q=${encodeURIComponent(card.address)}`, '_blank'); }
+function openWhatsAppChat() {
+  if (card.phone) {
+    const phone = card.phone.replace(/\D/g, '');
+    const message = `Hello ${card.businessName || card.name}, I'm interested in your products/services.`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+  }
+}
+
+function makeCall() {
+  if (card.phone) window.open(`tel:${card.phone}`);
+}
+
+function sendEmail() {
+  if (card.email) {
+    const subject = encodeURIComponent(`Inquiry - ${card.businessName || 'Business'}`);
+    window.open(`mailto:${card.email}?subject=${subject}`);
+  }
+}
+
+function openMap() {
+  if (card.address) window.open(`https://maps.google.com/?q=${encodeURIComponent(card.address)}`, '_blank');
+}
 
 // ===== PWA SETUP =====
 function setupDynamicPWA(businessData) {
-  const name = businessData.businessName || businessData.name || "Business";
-  document.title = name + " App";
-  document.getElementById('loadingTitle').textContent = name + " App";
-  document.getElementById('loadingSubtitle').textContent = `Loading ${name} experience...`;
+  const businessName = businessData.businessName || businessData.name || "Business";
+  document.title = businessName + " App";
+  const titleEl = document.getElementById('loadingTitle');
+  const subtitleEl = document.getElementById('loadingSubtitle');
+  if (titleEl) titleEl.textContent = businessName + " App";
+  if (subtitleEl) subtitleEl.textContent = `Loading ${businessName} experience...`;
 }
 
 // ===== INITIALIZATION =====
@@ -1926,50 +3338,146 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   if (id && id.length === 6) {
     const { data: mapping } = await supa.from('short_urls').select('full_id').eq('short_id', id).single();
-    if (mapping) { id = mapping.full_id; shortCardId = mapping.short_id; }
-  } else if (id && id.length === 36) {
-    const shortId = generateShortId();
-    await supa.from('short_urls').insert([{ short_id: shortId, full_id: id }]).then(() => shortCardId = shortId);
+    if (mapping) {
+      id = mapping.full_id;
+      shortCardId = mapping.short_id;
+    }
   }
   
-  if (!id) { document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>"; return; }
+  if (!id) {
+    document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>";
+    return;
+  }
   
   localStorage.setItem("lastCardId", id);
   currentBusinessId = id;
   
   const savedCart = isolatedLocalStorage.getItem('cart');
   cart = savedCart ? JSON.parse(savedCart) : [];
+  
   isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
+  
+  const savedNotifications = isolatedLocalStorage.getItem('innerNotifications');
+  if (savedNotifications) {
+    innerNotifications = JSON.parse(savedNotifications);
+    unreadNotifications = innerNotifications.filter(n => !n.read).length;
+  }
+  
+  initCustomerData();
   
   setTimeout(async () => {
     const { data, error } = await supa.from("cards").select("*").eq("id", id).single();
-    if (error || !data) { document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>"; return; }
+    if (error || !data) {
+      document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>";
+      return;
+    }
     
     card = JSON.parse(data.data);
     card.id = data.id;
     
     businessAdminPassword = generateAdminPassword(card.id, shortCardId);
-    document.getElementById('passwordHint').textContent = shortCardId ? `Hint: Password is business123_${shortCardId.toLowerCase()}` : `Hint: Password format is business123_{short_id}`;
+    const hintEl = document.getElementById('passwordHint');
+    if (hintEl) {
+      hintEl.textContent = shortCardId ? 
+        `Hint: Password is business123_${shortCardId.toLowerCase()}` : 
+        `Hint: Password format is business123_{short_id}`;
+    }
     
-    setupDynamicPWA(card);
-    document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
-    if (card.profileImage) document.getElementById('photo').src = card.profileImage;
-    document.getElementById('name').textContent = card.name || "";
-    document.getElementById('business').textContent = card.businessName || "";
-    
-    loadHomePage();
-    updateCartCount();
-    updateLoginUI();
-    updateCustomerPhoneDisplay();
+    await loadOrdersFromDatabase();
+    await renderApp();
     
     navigationHistory.push('homePage');
-    if (!window.location.hash) window.location.hash = '#home';
-    else handleHashChange();
+    updateCartCount();
+    updateLoginUI();
+    updateNotificationBellCount();
     
-    setTimeout(() => checkForDeliveries(), 1000);
+    setTimeout(() => { checkForDeliveries(); }, 1000);
+    
+    if (innerNotifications.length === 0) {
+      addInnerNotification('Welcome!', 'Browse products and enjoy shopping', 'info');
+    }
   }, 2000);
 });
 
+async function renderApp() {
+  setupDynamicPWA(card);
+  
+  const headerEl = document.getElementById('businessHeader');
+  if (headerEl) headerEl.textContent = card.businessName || card.name || "Premium Business";
+  
+  const photo = document.getElementById('photo');
+  if (card.profileImage) {
+    photo.src = card.profileImage;
+    photo.style.display = 'block';
+  } else {
+    photo.style.display = 'none';
+  }
+  
+  const nameEl = document.getElementById('name');
+  const businessEl = document.getElementById('business');
+  if (nameEl) nameEl.textContent = card.name || "";
+  if (businessEl) businessEl.textContent = card.businessName || "";
+  
+  loadHomePage();
+  navigateTo('homePage');
+}
+
+// ===== SERVICE WORKER & NOTIFICATIONS =====
+async function enableNotifications() {
+  if (!('Notification' in window)) {
+    showNotification('❌ Notifications not supported');
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    showNotification('✅ Notifications already enabled!');
+  } else if (Notification.permission !== 'denied') {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      showNotification('✅ Notifications enabled!');
+      addInnerNotification('Notifications Enabled', 'You will receive alerts for updates', 'success');
+    }
+  }
+}
+
+// ===== EXIT MODAL =====
+let lastBackPress = 0;
+
+window.addEventListener('popstate', function(event) {
+  if (currentPage === 'homePage') {
+    const now = Date.now();
+    if (now - lastBackPress < 2000) {
+      document.getElementById('exitModal').style.display = 'flex';
+    } else {
+      lastBackPress = now;
+      showNotification('Press back again to exit');
+    }
+  }
+});
+
+function closeExitModal() {
+  document.getElementById('exitModal').style.display = 'none';
+}
+
+function exitApp() {
+  if (window.history.length > 1) {
+    window.history.go(-1);
+  } else {
+    window.close();
+  }
+}
+
+function closeInstallPermissionModal() {
+  document.getElementById('installPermissionModal').style.display = 'none';
+}
+
+function acceptInstallPermissions() {
+  document.getElementById('installPermissionModal').style.display = 'none';
+  showNotification('✅ Thank you!');
+  enableNotifications();
+}
+
+// ===== INTERVALS =====
 setInterval(checkForDeliveries, 30000);
 </script>
 </body>
