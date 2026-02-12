@@ -581,10 +581,12 @@ button:hover {
   height: 100%;
   background: rgba(0,0,0,0.7);
   backdrop-filter: blur(5px);
-  z-index: 1000;
+  z-index: 99999;
   justify-content: center;
   align-items: center;
+  pointer-events: auto !important;
 }
+
 .payment-content {
   background: white;
   border-radius: 20px;
@@ -594,7 +596,11 @@ button:hover {
   overflow-y: auto;
   padding: 0;
   box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  pointer-events: auto !important;
+  position: relative;
+  z-index: 999999;
 }
+
 .payment-header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -604,6 +610,7 @@ button:hover {
   justify-content: space-between;
   align-items: center;
 }
+
 .payment-header h2 {
   margin: 0;
   color: white;
@@ -613,6 +620,7 @@ button:hover {
   box-shadow: none;
   font-size: 20px;
 }
+
 .close-payment {
   background: rgba(255,255,255,0.2);
   color: white;
@@ -622,6 +630,7 @@ button:hover {
   cursor: pointer;
   font-size: 16px;
   transition: all 0.3s;
+  pointer-events: auto !important;
 }
 .close-payment:hover {
   background: rgba(255,255,255,0.3);
@@ -666,6 +675,7 @@ input[type="file"] {
   border: 2px dashed #cbd5f5;
   border-radius: 10px;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 
 input[type="file"]:hover {
@@ -687,13 +697,14 @@ h2 i {
   padding: 15px 25px;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  z-index: 2000;
+  z-index: 200000;
   max-width: 300px;
   animation: slideDown 0.5s ease;
   font-weight: 700;
   font-size: 14px;
   text-align: center;
   display: none;
+  pointer-events: none;
 }
 
 @keyframes slideDown {
@@ -715,10 +726,11 @@ h2 i {
   height: 100%;
   background: rgba(0,0,0,0.8);
   backdrop-filter: blur(10px);
-  z-index: 3000;
+  z-index: 300000;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  pointer-events: none;
 }
 
 .loading-spinner {
@@ -804,6 +816,154 @@ h2 i {
 
 .token-copy-btn:hover {
   background: #475569;
+}
+
+/* ========== PAYMENT FIELDS FIX - CRITICAL ========== */
+.payment-modal * {
+  pointer-events: auto !important;
+}
+
+.payment-fields,
+.payment-fields input,
+.payment-fields select,
+.payment-fields textarea,
+.payment-fields button,
+.payment-fields div,
+.payment-details,
+.payment-option-card,
+.payment-option-card * {
+  pointer-events: auto !important;
+  cursor: text !important;
+}
+
+.payment-fields input,
+.payment-fields select,
+.payment-fields textarea {
+  background: white !important;
+  border: 2px solid #e2e8f0 !important;
+  color: #1e293b !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+  position: relative !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+  cursor: text !important;
+  -webkit-user-select: auto !important;
+  user-select: auto !important;
+}
+
+.payment-fields select {
+  cursor: pointer !important;
+}
+
+.payment-fields input[type="file"] {
+  cursor: pointer !important;
+}
+
+.payment-fields input:hover,
+.payment-fields select:hover,
+.payment-fields textarea:hover {
+  border-color: #667eea !important;
+}
+
+.payment-fields input:focus,
+.payment-fields select:focus,
+.payment-fields textarea:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+}
+
+.payment-option-card {
+  cursor: pointer !important;
+}
+
+.payment-option-card.selected .payment-fields {
+  display: block !important;
+}
+
+/* Fix for container elements */
+.payment-content,
+.payment-details,
+.payment-gateways,
+.token-settings,
+.ticket-settings {
+  pointer-events: auto !important;
+}
+
+/* Ensure modal doesn't block clicks */
+.payment-modal {
+  pointer-events: auto !important;
+}
+
+/* Fix for all inputs inside modal */
+#paymentModal input:not([type="checkbox"]),
+#paymentModal select,
+#paymentModal textarea {
+  pointer-events: auto !important;
+  cursor: text !important;
+}
+
+#paymentModal input[type="checkbox"] {
+  cursor: pointer !important;
+  width: 18px;
+  height: 18px;
+}
+
+#paymentModal label {
+  cursor: pointer !important;
+}
+
+/* Emergency fix for all payment fields */
+#fields-jazzcash input,
+#fields-jazzcash select,
+#fields-easypaisa input,
+#fields-easypaisa select,
+#fields-bank input,
+#fields-bank select,
+#fields-card input,
+#fields-card select,
+#fields-cod input,
+#fields-cod select {
+  pointer-events: auto !important;
+  cursor: text !important;
+  background: white !important;
+  border: 2px solid #e2e8f0 !important;
+  padding: 10px !important;
+  margin: 6px 0 !important;
+  border-radius: 8px !important;
+}
+
+/* Fix for file inputs */
+#jazzcashBarcode,
+#easypaisaBarcode {
+  cursor: pointer !important;
+}
+
+/* Ensure selects are clickable */
+.payment-fields select {
+  cursor: pointer !important;
+  appearance: auto !important;
+  -webkit-appearance: menulist !important;
+}
+
+/* Override any potential pointer-events: none from parent styles */
+.wrap *,
+.form-section *,
+.payment-modal * {
+  pointer-events: auto !important;
+}
+
+/* Specific fix for social inputs - keep them working */
+.social-input input {
+  pointer-events: auto !important;
+}
+
+/* Fix for day inputs */
+.dayBox input,
+.dayBox select {
+  pointer-events: auto !important;
 }
 </style>
 
@@ -1013,7 +1173,7 @@ h2 i {
       
       <div style="margin:20px 0; padding:16px; background:#f0f9ff; border-radius:12px;">
         <label style="font-weight:600;display:block;margin-bottom:8px;color: #475569;">WhatsApp Number with Country Code</label>
-        <input type="text" id="whatsappNumber" placeholder="+923001234567" value="+92" style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;color: #1e293b;">
+        <input type="text" id="whatsappNumber" placeholder="+923001234567" value="+92" style="width:100%;padding:12px;border:2px solid #e2e8f0;border-radius:10px;color: #1e293b; pointer-events:auto !important; cursor:text !important;">
         <small style="color:#666;display:block;margin-top:5px;">This number will receive all order notifications with tokens</small>
       </div>
       
@@ -1056,15 +1216,15 @@ Thank you for your order! 🛍️
         
         <div style="margin:15px 0;">
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-            <input type="checkbox" id="enableTokenSystem" checked style="width:18px; height:18px;">
-            <label for="enableTokenSystem" style="color:#1e293b; font-weight:600;">
+            <input type="checkbox" id="enableTokenSystem" checked style="width:18px; height:18px; pointer-events:auto !important; cursor:pointer !important;">
+            <label for="enableTokenSystem" style="color:#1e293b; font-weight:600; cursor:pointer !important;">
               Enable automatic token generation for all orders
             </label>
           </div>
           
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-            <input type="checkbox" id="requireTokenForTracking" checked style="width:18px; height:18px;">
-            <label for="requireTokenForTracking" style="color:#1e293b; font-weight:600;">
+            <input type="checkbox" id="requireTokenForTracking" checked style="width:18px; height:18px; pointer-events:auto !important; cursor:pointer !important;">
+            <label for="requireTokenForTracking" style="color:#1e293b; font-weight:600; cursor:pointer !important;">
               Require token for order tracking
             </label>
           </div>
@@ -1072,13 +1232,13 @@ Thank you for your order! 🛍️
         
         <div style="margin-bottom:15px;">
           <label style="font-weight:600;display:block;margin-bottom:8px;color: #475569;">Token Prefix</label>
-          <input type="text" id="tokenPrefix" placeholder="e.g., TKT, ORD, SUP" value="TKT" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;">
+          <input type="text" id="tokenPrefix" placeholder="e.g., TKT, ORD, SUP" value="TKT" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px; pointer-events:auto !important; cursor:text !important;">
           <small style="color:#64748b;display:block;margin-top:5px;">Will be combined with timestamp + random characters</small>
         </div>
         
         <div style="margin-bottom:15px;">
           <label style="font-weight:600;display:block;margin-bottom:8px;color: #475569;">Token Length (excluding prefix)</label>
-          <select id="tokenLength" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;">
+          <select id="tokenLength" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px; pointer-events:auto !important; cursor:pointer !important;">
             <option value="8">8 characters (e.g., TKT-1A2B3C4D)</option>
             <option value="10">10 characters (e.g., TKT-1A2B3C4D5E)</option>
             <option value="12" selected>12 characters (e.g., TKT-1A2B3C4D5E6F)</option>
@@ -1109,13 +1269,13 @@ Thank you for your order! 🛍️
             <div class="payment-name">JazzCash <span style="font-size:12px; color:#64748b; font-weight:400;">Mobile Wallet</span></div>
             <div style="font-size:12px; color:#64748b;">Instant payments via JazzCash app</div>
             <div class="payment-fields" id="fields-jazzcash">
-              <input type="text" id="jazzcashNumber" placeholder="JazzCash Account Number (03XXXXXXXXX)" value="03001234567">
+              <input type="text" id="jazzcashNumber" placeholder="JazzCash Account Number (03XXXXXXXXX)" value="03001234567" style="pointer-events:auto !important; cursor:text !important;">
               <div style="display:flex; gap:8px; margin-top:8px;">
-                <input type="file" id="jazzcashBarcode" accept="image/*" style="flex:1;">
+                <input type="file" id="jazzcashBarcode" accept="image/*" style="flex:1; pointer-events:auto !important; cursor:pointer !important;">
                 <span style="font-size:11px; color:#64748b; align-self:center;">Upload QR</span>
               </div>
               <div style="margin-top:8px;">
-                <select id="jazzcashType" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:6px;">
+                <select id="jazzcashType" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:6px; pointer-events:auto !important; cursor:pointer !important;">
                   <option value="jazzcash">JazzCash Account</option>
                   <option value="easypaisa">EasyPaisa Account</option>
                 </select>
@@ -1136,9 +1296,9 @@ Thank you for your order! 🛍️
             <div class="payment-name">EasyPaisa <span style="font-size:12px; color:#64748b; font-weight:400;">Mobile Account</span></div>
             <div style="font-size:12px; color:#64748b;">Send payments via EasyPaisa app</div>
             <div class="payment-fields" id="fields-easypaisa">
-              <input type="text" id="easypaisaNumber" placeholder="EasyPaisa Account Number" value="03001234567">
+              <input type="text" id="easypaisaNumber" placeholder="EasyPaisa Account Number" value="03001234567" style="pointer-events:auto !important; cursor:text !important;">
               <div style="display:flex; gap:8px; margin-top:8px;">
-                <input type="file" id="easypaisaBarcode" accept="image/*" style="flex:1;">
+                <input type="file" id="easypaisaBarcode" accept="image/*" style="flex:1; pointer-events:auto !important; cursor:pointer !important;">
                 <span style="font-size:11px; color:#64748b; align-self:center;">Upload QR</span>
               </div>
             </div>
@@ -1154,7 +1314,7 @@ Thank you for your order! 🛍️
             <div class="payment-name">Bank Transfer <span style="font-size:12px; color:#64748b; font-weight:400;">Direct Deposit</span></div>
             <div style="font-size:12px; color:#64748b;">Local bank transfers</div>
             <div class="payment-fields" id="fields-bank">
-              <select id="bankName" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:8px;">
+              <select id="bankName" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:6px; margin-bottom:8px; pointer-events:auto !important; cursor:pointer !important;">
                 <option value="HBL">Habib Bank Limited (HBL)</option>
                 <option value="UBL">United Bank Limited (UBL)</option>
                 <option value="MCB">MCB Bank Limited</option>
@@ -1164,9 +1324,9 @@ Thank you for your order! 🛍️
                 <option value="Faysal">Faysal Bank</option>
                 <option value="Other">Other Bank</option>
               </select>
-              <input type="text" id="accountTitle" placeholder="Account Title (Exact Name)" value="Business Account">
-              <input type="text" id="accountNumber" placeholder="Account Number" value="1234567890">
-              <input type="text" id="ibanNumber" placeholder="IBAN (Optional)" value="PK36HBL001234567890">
+              <input type="text" id="accountTitle" placeholder="Account Title (Exact Name)" value="Business Account" style="pointer-events:auto !important; cursor:text !important;">
+              <input type="text" id="accountNumber" placeholder="Account Number" value="1234567890" style="pointer-events:auto !important; cursor:text !important;">
+              <input type="text" id="ibanNumber" placeholder="IBAN (Optional)" value="PK36HBL001234567890" style="pointer-events:auto !important; cursor:text !important;">
             </div>
           </div>
         </div>
@@ -1180,15 +1340,15 @@ Thank you for your order! 🛍️
             <div class="payment-name">Card Payment <span style="font-size:12px; color:#64748b; font-weight:400;">Visa/Mastercard</span></div>
             <div style="font-size:12px; color:#64748b;">Online card payments</div>
             <div class="payment-fields" id="fields-card">
-              <select id="cardProcessor" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:6px;">
+              <select id="cardProcessor" style="width:100%; padding:10px; border:1px solid #e2e8f0; border-radius:6px; pointer-events:auto !important; cursor:pointer !important;">
                 <option value="stripe">Stripe (International)</option>
                 <option value="paypal">PayPal</option>
                 <option value="razorpay">Razorpay</option>
                 <option value="2checkout">2Checkout</option>
                 <option value="square">Square</option>
               </select>
-              <input type="text" id="merchantId" placeholder="Merchant ID / API Key / Publishable Key" value="pk_test_xxxxxxxxxxxx">
-              <input type="text" id="webhookSecret" placeholder="Webhook Secret (Optional)">
+              <input type="text" id="merchantId" placeholder="Merchant ID / API Key / Publishable Key" value="pk_test_xxxxxxxxxxxx" style="pointer-events:auto !important; cursor:text !important;">
+              <input type="text" id="webhookSecret" placeholder="Webhook Secret (Optional)" style="pointer-events:auto !important; cursor:text !important;">
               <small style="color:#64748b; display:block; margin-top:5px;">
                 <i class="fas fa-lock"></i> Customer will be redirected for secure payment
               </small>
@@ -1206,10 +1366,10 @@ Thank you for your order! 🛍️
             <div style="font-size:12px; color:#64748b;">Pay when order arrives</div>
             <div class="payment-fields" id="fields-cod">
               <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
-                <input type="checkbox" id="codEnabled" checked style="width:18px; height:18px;">
-                <label for="codEnabled" style="color:#1e293b; font-weight:600;">Enable Cash on Delivery</label>
+                <input type="checkbox" id="codEnabled" checked style="width:18px; height:18px; pointer-events:auto !important; cursor:pointer !important;">
+                <label for="codEnabled" style="color:#1e293b; font-weight:600; cursor:pointer !important;">Enable Cash on Delivery</label>
               </div>
-              <input type="number" id="codMinimumOrder" placeholder="Minimum order amount for COD" value="500" style="margin-top:8px;">
+              <input type="number" id="codMinimumOrder" placeholder="Minimum order amount for COD" value="500" style="margin-top:8px; pointer-events:auto !important; cursor:text !important;">
               <small style="color:#64748b; display:block; margin-top:5px;">
                 <i class="fas fa-info-circle"></i> Orders below this amount require advance payment
               </small>
@@ -1224,22 +1384,22 @@ Thank you for your order! 🛍️
         
         <div style="margin:15px 0;">
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-            <input type="checkbox" id="enableAutoTickets" checked style="width:18px; height:18px;">
-            <label for="enableAutoTickets" style="color:#1e293b; font-weight:600;">
+            <input type="checkbox" id="enableAutoTickets" checked style="width:18px; height:18px; pointer-events:auto !important; cursor:pointer !important;">
+            <label for="enableAutoTickets" style="color:#1e293b; font-weight:600; cursor:pointer !important;">
               Automatically generate beautiful order tickets on confirmation
             </label>
           </div>
           
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-            <input type="checkbox" id="enableEmailTickets" checked style="width:18px; height:18px;">
-            <label for="enableEmailTickets" style="color:#1e293b; font-weight:600;">
+            <input type="checkbox" id="enableEmailTickets" checked style="width:18px; height:18px; pointer-events:auto !important; cursor:pointer !important;">
+            <label for="enableEmailTickets" style="color:#1e293b; font-weight:600; cursor:pointer !important;">
               Send ticket details via email/SMS
             </label>
           </div>
           
           <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-            <input type="checkbox" id="enableWhatsappTickets" checked style="width:18px; height:18px;">
-            <label for="enableWhatsappTickets" style="color:#1e293b; font-weight:600;">
+            <input type="checkbox" id="enableWhatsappTickets" checked style="width:18px; height:18px; pointer-events:auto !important; cursor:pointer !important;">
+            <label for="enableWhatsappTickets" style="color:#1e293b; font-weight:600; cursor:pointer !important;">
               Send ticket confirmation on WhatsApp with token
             </label>
           </div>
@@ -1257,26 +1417,26 @@ Thank you for your order! 🛍️
         
         <div style="margin-top:15px;">
           <label style="font-weight:600;display:block;margin-bottom:8px;color: #475569;">Ticket ID Prefix</label>
-          <input type="text" id="ticketPrefix" placeholder="e.g., TKT, ORD, SUP" value="TKT" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;">
+          <input type="text" id="ticketPrefix" placeholder="e.g., TKT, ORD, SUP" value="TKT" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px; pointer-events:auto !important; cursor:text !important;">
         </div>
         
         <div style="margin-top:15px;">
           <label style="font-weight:600;display:block;margin-bottom:8px;color: #475569;">Admin Email for Order Notifications</label>
-          <input type="email" id="adminEmail" placeholder="admin@yourbusiness.com" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;">
+          <input type="email" id="adminEmail" placeholder="admin@yourbusiness.com" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px; pointer-events:auto !important; cursor:text !important;">
         </div>
         
         <div style="margin-top:15px;">
           <label style="font-weight:600;display:block;margin-bottom:8px;color: #475569;">Order Webhook URL (Optional)</label>
-          <input type="url" id="webhookUrl" placeholder="https://yourdomain.com/webhook" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px;">
+          <input type="url" id="webhookUrl" placeholder="https://yourdomain.com/webhook" style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:6px; pointer-events:auto !important; cursor:text !important;">
           <small style="color:#64748b;display:block;margin-top:5px;">Receive order data via POST request when orders are placed</small>
         </div>
       </div>
       
-      <button onclick="savePaymentAndTicketSettings()" style="width:100%;padding:15px;background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;margin-top:20px;cursor:pointer;">
+      <button onclick="savePaymentAndTicketSettings()" style="width:100%;padding:15px;background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white;border:none;border-radius:12px;font-size:16px;font-weight:600;margin-top:20px;cursor:pointer; pointer-events:auto !important;">
         <i class="fas fa-save"></i> Save All Professional Settings
       </button>
       
-      <button onclick="testTokenGeneration()" style="width:100%;padding:12px;background:#f1f5f9;color:#475569;border:none;border-radius:12px;font-size:14px;font-weight:600;margin-top:10px;cursor:pointer;">
+      <button onclick="testTokenGeneration()" style="width:100%;padding:12px;background:#f1f5f9;color:#475569;border:none;border-radius:12px;font-size:14px;font-weight:600;margin-top:10px;cursor:pointer; pointer-events:auto !important;">
         <i class="fas fa-flask"></i> Test Token Generation
       </button>
     </div>
@@ -1285,7 +1445,8 @@ Thank you for your order! 🛍️
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-const db = supabase.createClient(
+const { createClient } = supabase;
+const db = createClient(
  "https://dfvnefbxgayxqgjjgtrr.supabase.co",
  "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
@@ -1429,38 +1590,39 @@ function removeDeliveryZone(zoneId) {
 
 // ========== PROFESSIONAL PAYMENT GATEWAY MANAGEMENT - FIXED ==========
 function selectPaymentGateway(gateway) {
-  // Toggle selection
-  if (selectedPaymentGateways.includes(gateway)) {
-    selectedPaymentGateways = selectedPaymentGateways.filter(g => g !== gateway);
-  } else {
-    selectedPaymentGateways.push(gateway);
-  }
+  // Single selection mode - only one gateway can be selected at a time
+  selectedPaymentGateways = [gateway];
   
   // Update UI - remove selected class from all
   document.querySelectorAll('.payment-option-card').forEach(card => {
     card.classList.remove('selected');
   });
   
-  // Add selected class only to selected gateways
-  selectedPaymentGateways.forEach(g => {
-    const card = document.getElementById(`gateway-${g}`);
-    if (card) card.classList.add('selected');
-  });
+  // Add selected class to current gateway
+  const card = document.getElementById(`gateway-${gateway}`);
+  if (card) card.classList.add('selected');
   
-  // Show/hide fields based on selection
+  // Hide all payment fields
   document.querySelectorAll('.payment-fields').forEach(field => {
     field.style.display = 'none';
   });
   
-  selectedPaymentGateways.forEach(g => {
-    const fields = document.getElementById(`fields-${g}`);
-    if (fields) {
-      fields.style.display = 'block';
-    }
-  });
+  // Show current gateway fields
+  const fields = document.getElementById(`fields-${gateway}`);
+  if (fields) {
+    fields.style.display = 'block';
+    
+    // Force enable all inputs in this field
+    fields.querySelectorAll('input, select, textarea').forEach(input => {
+      input.disabled = false;
+      input.readOnly = false;
+      input.style.pointerEvents = 'auto';
+      input.style.cursor = input.type === 'file' ? 'pointer' : 'text';
+    });
+  }
 }
 
-// ========== TOKEN GENERATION SYSTEM - COMPATIBLE WITH CARD.HTML ==========
+// ========== TOKEN GENERATION SYSTEM ==========
 function generateProfessionalToken() {
   const prefix = document.getElementById('tokenPrefix')?.value || 'TKT';
   const timestamp = Date.now().toString().slice(-8);
@@ -1521,7 +1683,19 @@ function resizeImage(file){
 
 // ========== PAYMENT MODAL FUNCTIONS ==========
 function openPaymentModal() {
-  document.getElementById('paymentModal').style.display = 'flex';
+  const modal = document.getElementById('paymentModal');
+  modal.style.display = 'flex';
+  
+  // Force enable all inputs in modal
+  setTimeout(() => {
+    modal.querySelectorAll('input, select, textarea').forEach(input => {
+      input.disabled = false;
+      input.readOnly = false;
+      input.style.pointerEvents = 'auto';
+      input.style.cursor = input.type === 'file' ? 'pointer' : 'text';
+    });
+  }, 100);
+  
   // Update token preview
   testTokenGeneration();
 }
@@ -1552,7 +1726,7 @@ function generateShortId() {
   return shortId;
 }
 
-// ========== MAIN GENERATE FUNCTION - COMPATIBLE WITH CARD.HTML ==========
+// ========== MAIN GENERATE FUNCTION ==========
 async function generate(){
  // Validate required fields
  if(!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value){
@@ -1656,12 +1830,12 @@ async function generate(){
      }
    });
 
-   // COLLECT COMPLETE PAYMENT METHODS - PROFESSIONAL & FIXED
+   // COLLECT COMPLETE PAYMENT METHODS
    const paymentMethods = {
      whatsapp: {
-       active: !!document.getElementById('whatsappNumber').value,
-       number: document.getElementById('whatsappNumber').value.trim() || '',
-       greeting: "Hello! 👋 Welcome to " + document.getElementById('businessName').value.trim() + ". How may I assist you today?"
+       active: !!document.getElementById('whatsappNumber')?.value,
+       number: document.getElementById('whatsappNumber')?.value.trim() || '',
+       greeting: "Hello! 👋 Welcome to " + (document.getElementById('businessName')?.value.trim() || 'our business') + ". How may I assist you today?"
      },
      gateways: {},
      tokenSystem: {
@@ -1682,9 +1856,6 @@ async function generate(){
            type: document.getElementById('jazzcashType')?.value || 'jazzcash',
            barcode: ''
          };
-         if(document.getElementById('jazzcashBarcode')?.files[0]) {
-           paymentMethods.gateways.jazzcash.barcode = 'pending_upload';
-         }
          break;
        case 'easypaisa':
          paymentMethods.gateways.easypaisa = {
@@ -1719,11 +1890,11 @@ async function generate(){
      }
    });
    
-   // Process barcodes
-   if(document.getElementById('jazzcashBarcode')?.files[0]) {
+   // Process barcodes - only if gateway exists
+   if (paymentMethods.gateways.jazzcash && document.getElementById('jazzcashBarcode')?.files[0]) {
      paymentMethods.gateways.jazzcash.barcode = await resizeImage(document.getElementById('jazzcashBarcode').files[0]);
    }
-   if(document.getElementById('easypaisaBarcode')?.files[0]) {
+   if (paymentMethods.gateways.easypaisa && document.getElementById('easypaisaBarcode')?.files[0]) {
      paymentMethods.gateways.easypaisa.barcode = await resizeImage(document.getElementById('easypaisaBarcode').files[0]);
    }
 
@@ -1771,7 +1942,7 @@ async function generate(){
      website: document.getElementById('website').value.trim()
    };
 
-   // Prepare card data - COMPATIBLE WITH CARD.HTML
+   // Prepare card data
    const cardData = {
     id: id,
     name: document.getElementById('fullName').value.trim(),
@@ -1902,10 +2073,11 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Update WhatsApp preview
   const businessNameInput = document.getElementById('businessName');
-  businessNameInput.addEventListener('input', function() {
-    const preview = document.getElementById('whatsappPreview');
-    if(preview) {
-      preview.innerHTML = `🎉 *NEW ORDER CONFIRMED* - TOKEN: TKT-123456-A7F2
+  if (businessNameInput) {
+    businessNameInput.addEventListener('input', function() {
+      const preview = document.getElementById('whatsappPreview');
+      if(preview) {
+        preview.innerHTML = `🎉 *NEW ORDER CONFIRMED* - TOKEN: TKT-123456-A7F2
 
 ━━━━━━━━━━━━━━━━━━━
 *Order ID:* ORD-12345678
@@ -1929,8 +2101,9 @@ document.addEventListener('DOMContentLoaded', function() {
 ━━━━━━━━━━━━━━━━━━━
 Track order: Use token in delivery status
 Thank you for your order from ${this.value}! 🛍️`;
-    }
-  });
+      }
+    });
+  }
   
   // Update token preview when prefix changes
   const tokenPrefix = document.getElementById('tokenPrefix');
@@ -1951,6 +2124,18 @@ Thank you for your order from ${this.value}! 🛍️`;
       return false;
     }
   });
+  
+  // Force enable all payment fields periodically
+  setInterval(() => {
+    const modal = document.getElementById('paymentModal');
+    if (modal.style.display === 'flex') {
+      modal.querySelectorAll('input, select, textarea').forEach(input => {
+        input.disabled = false;
+        input.readOnly = false;
+        input.style.pointerEvents = 'auto';
+      });
+    }
+  }, 500);
 });
 </script>
 </body>
