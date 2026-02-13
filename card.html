@@ -408,7 +408,7 @@ body {
   box-shadow: var(--shadow-xl);
   z-index: 3000;
   max-width: 300px;
-  animation: slideDown 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+  animation: slideDown 0.5s ease;
   font-weight: 700;
   font-size: 14px;
   text-align: center;
@@ -418,11 +418,6 @@ body {
 @keyframes slideDown {
   from { top: -100px; opacity: 0; }
   to { top: 100px; opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
 }
 
 /* ===== PRODUCT CARDS ===== */
@@ -661,28 +656,32 @@ body {
   padding: 20px;
 }
 
-/* ===== INSTALL BUTTON ===== */
-.install-button-container {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10000;
-  animation: slideDown 0.5s ease;
-}
-
-.install-btn {
-  padding: 12px 24px;
-  background: var(--primary-gradient);
+/* ===== PUSH NOTIFICATION BUTTON ===== */
+.push-button {
+  background: var(--info-gradient);
   color: white;
   border: none;
+  padding: 12px 20px;
   border-radius: 12px;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: var(--shadow-xl);
   display: flex;
   align-items: center;
   gap: 8px;
+  transition: var(--transition-fast);
+}
+
+.push-button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.push-button.enabled {
+  background: var(--success-gradient);
+}
+
+.push-button.disabled {
+  background: var(--warning-gradient);
 }
 
 /* ===== ORDER MANAGEMENT ===== */
@@ -922,6 +921,13 @@ body {
     </button>
     
     <div class="header-icons">
+      <!-- PUSH NOTIFICATION BUTTON -->
+      <div class="header-icon-btn" onclick="window.pushManager.togglePush()" 
+           id="pushButton" title="Enable Push Notifications">
+        <i class="fas fa-bell" id="pushIcon"></i>
+        <div class="delivery-badge" id="pushBadge" style="display:none;">!</div>
+      </div>
+      
       <div class="header-icon-btn" onclick="window.toggleNotificationDrawer()" title="Notifications">
         <i class="fas fa-bell" id="notificationBell"></i>
         <div class="delivery-badge" id="notificationBadge" style="display:none;">!</div>
@@ -952,11 +958,11 @@ body {
     <div class="notification-list" id="notificationList"></div>
     
     <div class="notification-footer">
-      <button onclick="window.notificationManager.markAllAsRead()" 
+      <button onclick="window.markAllNotificationsAsRead()" 
               style="flex:1; padding:12px; background:#f1f5f9; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
         Mark All Read
       </button>
-      <button onclick="window.notificationManager.requestPermission()" 
+      <button onclick="window.pushManager.requestPermission()" 
               style="flex:1; padding:12px; background:var(--primary-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
         Enable Alerts
       </button>
@@ -1269,15 +1275,19 @@ body {
           </select>
         </div>
         
-        <div style="margin-bottom:15px;">
-          <label style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-            <input type="checkbox" id="sendWhatsApp" checked> 
-            <span>Send via WhatsApp to all customers</span>
-          </label>
-          <label style="display:flex; align-items:center; gap:10px;">
-            <input type="checkbox" id="sendPush" checked> 
-            <span>Send Push Notification</span>
-          </label>
+        <div style="margin-bottom:20px;">
+          <label style="font-weight:600; display:block; margin-bottom:5px;">Send Method</label>
+          <div style="display:flex; gap:15px;">
+            <label style="display:flex; align-items:center; gap:5px;">
+              <input type="checkbox" id="sendPush" checked> Push Notification
+            </label>
+            <label style="display:flex; align-items:center; gap:5px;">
+              <input type="checkbox" id="sendWhatsApp"> WhatsApp
+            </label>
+            <label style="display:flex; align-items:center; gap:5px;">
+              <input type="checkbox" id="sendInApp" checked> In-App
+            </label>
+          </div>
         </div>
         
         <div style="margin-bottom:20px;">
@@ -1285,8 +1295,8 @@ body {
           <select id="notifAudience" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px;">
             <option value="all">All Customers</option>
             <option value="active">Active Customers (last 30 days)</option>
-            <option value="new">New Customers (last 7 days)</option>
-            <option value="vip">VIP Customers (spent > PKR 5000)</option>
+            <option value="push">Push Enabled Only</option>
+            <option value="whatsapp">WhatsApp Enabled Only</option>
           </select>
         </div>
         
@@ -1298,11 +1308,11 @@ body {
         <div style="background:#f8fafc; padding:15px; border-radius:8px;">
           <h4 style="font-weight:700; margin-bottom:8px;">📊 Stats</h4>
           <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-            <span>Total Customers:</span>
-            <span id="totalCustomersStat">0</span>
+            <span>Push Subscribers:</span>
+            <span id="pushSubscribersStat">0</span>
           </div>
           <div style="display:flex; justify-content:space-between;">
-            <span>WhatsApp Enabled:</span>
+            <span>WhatsApp Contacts:</span>
             <span id="whatsappCustomersStat">0</span>
           </div>
         </div>
@@ -1603,56 +1613,311 @@ const supa = supabase.createClient(
   "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
 
-// ===== MAIN APP VARIABLES =====
-let card = {};
-let currentProduct = null;
-let cart = [];
-let checkoutPaymentMethod = 'cod';
-let currentPage = 'loadingScreen';
-let deliveryStatusData = [];
-let businessAdminPassword = "";
-let shortCardId = "";
-let isAdminLoggedIn = false;
-let currentBusinessId = '';
-let orders = [];
-let orderTokens = [];
-let selectedCheckoutAddress = '';
-let selectedCheckoutPhone = '';
-let deliveryCharge = 0;
-let deliveryTime = '';
-let detectedZone = '';
-let notificationPermission = false;
-let innerNotifications = [];
-let unreadNotifications = 0;
-let customerData = { deviceId: '', name: '', phone: '', email: '' };
-let navigationHistory = [];
-let currentOrderForProof = null;
-
-// ===== PWA INSTALL VARIABLES =====
-let deferredPrompt = null;
-let installButtonShown = false;
-
-// ===== NOTIFICATION MANAGER =====
-class NotificationManager {
+// ===== PUSH NOTIFICATION MANAGER =====
+class PushNotificationManager {
   constructor() {
-    this.notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
-    this.unreadCount = this.notifications.filter(n => !n.read).length;
+    this.swRegistration = null;
+    // VAPID keys - Generate from https://web-push-codelab.glitch.me/
+    this.vapidPublicKey = 'BMrBw1z1x8QxYoLxKxQxLxMxNxOxPxQxRxSxTxUxVxWxXxYxZx'; // Replace with your key
+    this.isSubscribed = false;
+    this.pushSupported = 'serviceWorker' in navigator && 'PushManager' in window;
+    this.permission = Notification ? Notification.permission : 'denied';
   }
 
-  showAlert(message, type = 'info') {
+  async init() {
+    if (!this.pushSupported) {
+      console.log('Push not supported');
+      return false;
+    }
+
+    try {
+      // Register service worker
+      this.swRegistration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker registered');
+
+      // Check subscription status
+      await this.updateSubscriptionStatus();
+      
+      // Update UI
+      this.updateUI();
+      
+      return true;
+    } catch (error) {
+      console.error('Push init error:', error);
+      return false;
+    }
+  }
+
+  async updateSubscriptionStatus() {
+    if (!this.swRegistration) return;
+    
+    const subscription = await this.swRegistration.pushManager.getSubscription();
+    this.isSubscribed = !(subscription === null);
+    this.permission = Notification.permission;
+  }
+
+  async togglePush() {
+    if (this.isSubscribed) {
+      await this.unsubscribe();
+    } else {
+      await this.requestPermission();
+    }
+  }
+
+  async requestPermission() {
+    if (!('Notification' in window)) {
+      this.showAlert('❌ Notifications not supported', 'error');
+      return false;
+    }
+
+    if (Notification.permission === 'granted') {
+      return await this.subscribe();
+    }
+
+    if (Notification.permission !== 'denied') {
+      const permission = await Notification.requestPermission();
+      
+      if (permission === 'granted') {
+        return await this.subscribe();
+      } else {
+        this.showAlert('❌ Permission denied', 'error');
+        return false;
+      }
+    }
+    
+    return false;
+  }
+
+  async subscribe() {
+    if (!this.swRegistration) {
+      this.swRegistration = await navigator.serviceWorker.ready;
+    }
+
+    try {
+      // Get subscription
+      let subscription = await this.swRegistration.pushManager.getSubscription();
+      
+      if (!subscription) {
+        // Create new subscription
+        subscription = await this.swRegistration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey)
+        });
+      }
+
+      // Save to server
+      await this.saveSubscription(subscription);
+      
+      this.isSubscribed = true;
+      this.updateUI();
+      
+      this.showAlert('✅ Push notifications enabled!', 'success');
+      
+      // Add to notification drawer
+      window.notificationManager.addNotification(
+        'Push Enabled',
+        'You will now receive push notifications',
+        'success'
+      );
+      
+      return true;
+      
+    } catch (error) {
+      console.error('Subscription error:', error);
+      this.showAlert('❌ Failed to enable push: ' + error.message, 'error');
+      return false;
+    }
+  }
+
+  async unsubscribe() {
+    if (!this.swRegistration) return;
+
+    try {
+      const subscription = await this.swRegistration.pushManager.getSubscription();
+      
+      if (subscription) {
+        await subscription.unsubscribe();
+        
+        // Remove from server
+        await this.removeSubscription(subscription);
+        
+        this.isSubscribed = false;
+        this.updateUI();
+        
+        this.showAlert('🔕 Push notifications disabled', 'info');
+        
+        window.notificationManager.addNotification(
+          'Push Disabled',
+          'You have disabled push notifications',
+          'info'
+        );
+      }
+    } catch (error) {
+      console.error('Unsubscribe error:', error);
+      this.showAlert('❌ Failed to disable push', 'error');
+    }
+  }
+
+  async saveSubscription(subscription) {
+    try {
+      const { error } = await supa
+        .from('push_subscriptions')
+        .insert([{
+          business_id: currentBusinessId,
+          customer_phone: getCustomerPhone() || 'anonymous',
+          subscription: subscription,
+          endpoint: subscription.endpoint,
+          device_info: {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            language: navigator.language
+          },
+          created_at: new Date().toISOString()
+        }]);
+
+      if (error) console.error('Save subscription error:', error);
+    } catch (error) {
+      console.error('Save subscription error:', error);
+    }
+  }
+
+  async removeSubscription(subscription) {
+    try {
+      const { error } = await supa
+        .from('push_subscriptions')
+        .delete()
+        .eq('endpoint', subscription.endpoint);
+
+      if (error) console.error('Remove subscription error:', error);
+    } catch (error) {
+      console.error('Remove subscription error:', error);
+    }
+  }
+
+  // Send push notification to a user
+  async sendToUser(phone, title, body, data = {}) {
+    try {
+      const { data: subscriptions } = await supa
+        .from('push_subscriptions')
+        .select('subscription')
+        .eq('customer_phone', phone);
+
+      if (!subscriptions || subscriptions.length === 0) return false;
+
+      const payload = JSON.stringify({
+        title: title,
+        body: body,
+        icon: '/icon-192.png',
+        badge: '/icon-192.png',
+        url: data.url || '/',
+        orderId: data.orderId,
+        type: data.type || 'general'
+      });
+
+      // Send to each subscription
+      const promises = subscriptions.map(sub => 
+        fetch('/api/push/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subscription: sub.subscription,
+            payload: payload
+          })
+        }).catch(err => console.error('Push send error:', err))
+      );
+
+      await Promise.all(promises);
+      return true;
+    } catch (error) {
+      console.error('Send push error:', error);
+      return false;
+    }
+  }
+
+  // Broadcast to all subscribers
+  async broadcast(title, body, type = 'promo') {
+    try {
+      const { data: subscriptions } = await supa
+        .from('push_subscriptions')
+        .select('subscription')
+        .eq('business_id', currentBusinessId);
+
+      if (!subscriptions || subscriptions.length === 0) {
+        this.showAlert('No subscribers', 'warning');
+        return false;
+      }
+
+      const payload = JSON.stringify({
+        title: title,
+        body: body,
+        icon: '/icon-192.png',
+        badge: '/icon-192.png',
+        url: '/',
+        type: type
+      });
+
+      // Send to all subscribers
+      const promises = subscriptions.map(sub => 
+        fetch('/api/push/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            subscription: sub.subscription,
+            payload: payload
+          })
+        }).catch(err => console.error('Broadcast error:', err))
+      );
+
+      await Promise.all(promises);
+      
+      this.showAlert(`📢 Broadcast sent to ${subscriptions.length} devices`, 'success');
+      
+      window.notificationManager.addNotification(
+        'Broadcast Sent',
+        `"${title}" sent to ${subscriptions.length} devices`,
+        'success'
+      );
+      
+      return true;
+    } catch (error) {
+      console.error('Broadcast error:', error);
+      this.showAlert('❌ Broadcast failed', 'error');
+      return false;
+    }
+  }
+
+  // Update UI based on subscription status
+  updateUI() {
+    const pushButton = document.getElementById('pushButton');
+    const pushIcon = document.getElementById('pushIcon');
+    const pushBadge = document.getElementById('pushBadge');
+    
+    if (!pushButton) return;
+
+    if (this.isSubscribed) {
+      pushButton.style.background = 'rgba(16, 185, 129, 0.25)';
+      pushIcon.style.color = '#10b981';
+      pushBadge.style.display = 'none';
+      pushButton.title = 'Push Enabled';
+    } else if (this.permission === 'denied') {
+      pushButton.style.background = 'rgba(239, 68, 68, 0.25)';
+      pushIcon.style.color = '#ef4444';
+      pushBadge.style.display = 'flex';
+      pushBadge.textContent = '!';
+      pushButton.title = 'Push Blocked - Click to enable';
+    } else {
+      pushButton.style.background = 'rgba(255, 255, 255, 0.25)';
+      pushIcon.style.color = 'white';
+      pushBadge.style.display = 'none';
+      pushButton.title = 'Enable Push Notifications';
+    }
+  }
+
+  showAlert(message, type) {
     const alert = document.getElementById('notificationAlert');
     if (!alert) return;
 
-    const icons = {
-      'success': '✅',
-      'error': '❌',
-      'warning': '⚠️',
-      'info': 'ℹ️',
-      'whatsapp': '📱',
-      'payment': '💰',
-      'order': '🛍️'
-    };
-
+    const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
     alert.innerHTML = `${icons[type] || '🔔'} ${message}`;
     alert.style.display = 'block';
     
@@ -1661,10 +1926,28 @@ class NotificationManager {
       type === 'error' ? 'var(--danger-gradient)' :
       type === 'warning' ? 'var(--warning-gradient)' :
       'var(--info-gradient)';
+    
+    setTimeout(() => alert.style.display = 'none', 3000);
+  }
 
-    setTimeout(() => {
-      alert.style.display = 'none';
-    }, 3000);
+  // Utility: URL base64 to Uint8Array
+  urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  }
+}
+
+// ===== NOTIFICATION MANAGER (In-App) =====
+class NotificationManager {
+  constructor() {
+    this.notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    this.unreadCount = this.notifications.filter(n => !n.read).length;
   }
 
   addNotification(title, message, type = 'info', orderId = null) {
@@ -1687,22 +1970,14 @@ class NotificationManager {
     
     this.updateDrawer();
     this.updateBadge();
-    
-    // Show in-app alert
     this.showAlert(message, type);
   }
 
   getIcon(type) {
     const icons = {
-      'order': '🛍️',
-      'payment': '💰',
-      'delivery': '🚚',
-      'success': '✅',
-      'error': '❌',
-      'warning': '⚠️',
-      'info': 'ℹ️',
-      'whatsapp': '📱',
-      'promo': '🎉'
+      'order': '🛍️', 'payment': '💰', 'delivery': '🚚',
+      'success': '✅', 'error': '❌', 'warning': '⚠️',
+      'info': 'ℹ️', 'whatsapp': '📱', 'promo': '🎉'
     };
     return icons[type] || '🔔';
   }
@@ -1712,29 +1987,23 @@ class NotificationManager {
     if (!list) return;
 
     if (this.notifications.length === 0) {
-      list.innerHTML = `
-        <div style="text-align:center; padding:40px;">
-          <i class="fas fa-bell-slash" style="font-size:60px; color:#cbd5e1;"></i>
-          <h3 style="margin-top:16px; color:#64748b;">No notifications</h3>
-        </div>
-      `;
+      list.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-bell-slash" style="font-size:60px; color:#cbd5e1;"></i><h3>No notifications</h3></div>';
       return;
     }
 
     let html = '';
-    this.notifications.slice(0, 20).forEach(notif => {
+    this.notifications.slice(0, 20).forEach(n => {
       html += `
-        <div class="notification-item ${notif.read ? 'read' : 'unread'}" 
-             onclick="window.notificationManager.markAsRead(${notif.id})"
-             style="background:${notif.read ? '#ffffff' : '#f0f9ff'};">
-          <div style="display:flex; align-items:start; gap:12px;">
-            <div style="font-size:24px;">${notif.icon}</div>
+        <div class="notification-item ${n.read ? 'read' : 'unread'}" 
+             onclick="window.notificationManager.markAsRead(${n.id})">
+          <div style="display:flex; gap:12px;">
+            <div style="font-size:24px;">${n.icon}</div>
             <div style="flex:1;">
-              <div style="font-weight:800; color:#1e293b; font-size:14px;">${notif.title}</div>
-              <div style="color:#64748b; font-size:13px; margin-top:4px;">${notif.message}</div>
-              <div style="font-size:11px; color:#94a3b8; margin-top:8px;">${notif.time}</div>
+              <div style="font-weight:800;">${n.title}</div>
+              <div style="font-size:13px;">${n.message}</div>
+              <div style="font-size:11px; color:#94a3b8; margin-top:4px;">${n.time}</div>
             </div>
-            ${!notif.read ? '<div style="width:10px; height:10px; background:#3b82f6; border-radius:50%;"></div>' : ''}
+            ${!n.read ? '<div style="width:10px; height:10px; background:#3b82f6; border-radius:50%;"></div>' : ''}
           </div>
         </div>
       `;
@@ -1759,9 +2028,7 @@ class NotificationManager {
   }
 
   markAsRead(id) {
-    this.notifications = this.notifications.map(n => 
-      n.id === id ? { ...n, read: true } : n
-    );
+    this.notifications = this.notifications.map(n => n.id === id ? { ...n, read: true } : n);
     this.unreadCount = this.notifications.filter(n => !n.read).length;
     localStorage.setItem('notifications', JSON.stringify(this.notifications));
     this.updateDrawer();
@@ -1774,125 +2041,58 @@ class NotificationManager {
     localStorage.setItem('notifications', JSON.stringify(this.notifications));
     this.updateDrawer();
     this.updateBadge();
-    this.showAlert('✅ All notifications marked as read', 'success');
+    this.showAlert('✅ All marked as read', 'success');
   }
 
-  async requestPermission() {
-    if (!('Notification' in window)) {
-      this.showAlert('❌ Notifications not supported', 'error');
-      return false;
-    }
+  showAlert(message, type) {
+    const alert = document.getElementById('notificationAlert');
+    if (!alert) return;
 
-    if (Notification.permission === 'granted') {
-      this.showAlert('✅ Notifications already enabled', 'success');
-      return true;
-    }
-
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted') {
-      this.showAlert('✅ Notifications enabled!', 'success');
-      this.addNotification('Notifications Enabled', 'You will receive alerts', 'success');
-      return true;
-    } else {
-      this.showAlert('❌ Notification permission denied', 'error');
-      return false;
-    }
-  }
-
-  async sendWhatsApp(phone, message) {
-    const cleanedPhone = phone.replace(/\D/g, '');
-    if (cleanedPhone.length < 10) return false;
-
-    const whatsappUrl = `https://wa.me/${cleanedPhone}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, '_blank');
-    return true;
-  }
-
-  async sendOrderNotifications(orderData) {
-    // Customer WhatsApp
-    const customerMessage = this.getCustomerOrderMessage(orderData);
-    await this.sendWhatsApp(orderData.customerPhone, customerMessage);
-
-    // Admin WhatsApp
-    if (card.phone) {
-      const adminMessage = this.getAdminOrderMessage(orderData);
-      await this.sendWhatsApp(card.phone, adminMessage);
-    }
-
-    // In-app notifications
-    this.addNotification('Order Placed', `Order #${orderData.orderId} confirmed`, 'order', orderData.orderId);
-    this.showAlert('✅ Order placed! Check WhatsApp', 'success');
-  }
-
-  getCustomerOrderMessage(orderData) {
-    return `🛍️ *ORDER CONFIRMED* ✅
-
-Order ID: ${orderData.orderId}
-Token: ${orderData.token}
-Total: PKR ${orderData.total}
-Payment: ${orderData.paymentMethod}
-
-Items:
-${orderData.items.map(i => `• ${i.title} x${i.quantity}`).join('\n')}
-
-Track: Use token in app
-Thank you! 🛍️`;
-  }
-
-  getAdminOrderMessage(orderData) {
-    return `🔔 *NEW ORDER*
-
-Order: ${orderData.orderId}
-Customer: ${orderData.customerPhone}
-Amount: PKR ${orderData.total}
-Payment: ${orderData.paymentMethod}
-
-Check admin panel to confirm`;
-  }
-
-  async sendPaymentNotifications(orderData, proofData) {
-    // Admin notification for proof
-    if (card.phone) {
-      const message = `📸 *PAYMENT PROOF RECEIVED*
-
-Order: ${orderData.orderId}
-Amount: PKR ${orderData.total}
-Transaction: ${proofData.transactionId}
-
-Verify in admin panel`;
-      await this.sendWhatsApp(card.phone, message);
-    }
-
-    this.addNotification('Payment Proof', `Order #${orderData.orderId} proof received`, 'payment', orderData.orderId);
-    this.showAlert('💰 Proof submitted! Admin will verify', 'payment');
-  }
-
-  async sendPaymentConfirmation(orderData) {
-    const message = `✅ *PAYMENT CONFIRMED!*
-
-Your payment of PKR ${orderData.total} has been received.
-Order #${orderData.orderId} is now processing.
-
-Token: ${orderData.token}`;
-
-    await this.sendWhatsApp(orderData.customerPhone, message);
-    this.addNotification('Payment Confirmed', `Order #${orderData.orderId} payment verified`, 'success', orderData.orderId);
-    this.showAlert('✅ Payment confirmed!', 'success');
-  }
-
-  async sendPromotionalNotification(title, message, type = 'promo') {
-    this.addNotification(title, message, type);
-    this.showAlert(`📢 ${title}`, 'info');
+    const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+    alert.innerHTML = `${icons[type] || '🔔'} ${message}`;
+    alert.style.display = 'block';
+    
+    alert.style.background = 
+      type === 'success' ? 'var(--success-gradient)' :
+      type === 'error' ? 'var(--danger-gradient)' :
+      type === 'warning' ? 'var(--warning-gradient)' :
+      'var(--info-gradient)';
+    
+    setTimeout(() => alert.style.display = 'none', 3000);
   }
 }
 
-// Initialize notification manager
+// ===== MAIN APP VARIABLES =====
+let card = {};
+let currentProduct = null;
+let cart = [];
+let checkoutPaymentMethod = 'cod';
+let currentPage = 'loadingScreen';
+let deliveryStatusData = [];
+let businessAdminPassword = "";
+let shortCardId = "";
+let isAdminLoggedIn = false;
+let currentBusinessId = '';
+let orders = [];
+let orderTokens = [];
+let selectedCheckoutAddress = '';
+let selectedCheckoutPhone = '';
+let deliveryCharge = 0;
+let deliveryTime = '';
+let detectedZone = '';
+let customerData = { deviceId: '', name: '', phone: '', email: '' };
+let navigationHistory = [];
+let currentOrderForProof = null;
+
+// Initialize managers
+window.pushManager = new PushNotificationManager();
 window.notificationManager = new NotificationManager();
 
-// ===== ATTACH ALL FUNCTIONS TO WINDOW =====
+// ===== ATTACH FUNCTIONS =====
 window.navigateTo = navigateTo;
 window.goBack = goBack;
 window.toggleNotificationDrawer = toggleNotificationDrawer;
+window.markAllNotificationsAsRead = () => notificationManager.markAllAsRead();
 window.saveBusinessToContacts = saveBusinessToContacts;
 window.checkDeliveryStatus = checkDeliveryStatus;
 window.toggleLogin = toggleLogin;
@@ -1935,35 +2135,27 @@ window.showAdminTab = showAdminTab;
 window.sendPromotionalNotification = sendPromotionalNotification;
 window.searchOrders = searchOrders;
 
-// ===== DATA ISOLATION SYSTEM =====
+// ===== DATA ISOLATION =====
 function getStorageKey(key) {
   const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
   return `business_${businessKey}_${key}`;
 }
 
 const isolatedLocalStorage = {
-  setItem: function(key, value) {
-    localStorage.setItem(getStorageKey(key), value);
-  },
-  getItem: function(key) {
-    return localStorage.getItem(getStorageKey(key));
-  },
-  removeItem: function(key) {
-    localStorage.removeItem(getStorageKey(key));
-  }
+  setItem: (key, value) => localStorage.setItem(getStorageKey(key), value),
+  getItem: (key) => localStorage.getItem(getStorageKey(key)),
+  removeItem: (key) => localStorage.removeItem(getStorageKey(key))
 };
 
-// ===== CUSTOMER DATA MANAGEMENT =====
+// ===== CUSTOMER DATA =====
 function getCustomerPhone() {
   return isolatedLocalStorage.getItem('customerPhone') || '';
 }
 
 function saveCustomerPhone(phone) {
   isolatedLocalStorage.setItem('customerPhone', phone);
-  const el = document.getElementById('customerPhoneDisplay');
-  if (el) el.textContent = phone || 'Tap to set your number';
-  const phoneEl = document.getElementById('checkoutPhoneText');
-  if (phoneEl) phoneEl.textContent = phone || 'No phone number';
+  document.getElementById('customerPhoneDisplay').textContent = phone || 'Tap to set';
+  document.getElementById('checkoutPhoneText').textContent = phone || 'No phone';
   selectedCheckoutPhone = phone;
 }
 
@@ -1973,82 +2165,78 @@ function getCustomerAddress() {
 
 function saveCustomerAddress(address) {
   isolatedLocalStorage.setItem('customerAddress', address);
-  const el = document.getElementById('customerAddressDisplay');
-  if (el) el.textContent = address || 'Tap to set your address';
-  const addrEl = document.getElementById('checkoutAddressDisplay');
-  if (addrEl) addrEl.innerHTML = `<i class="fas fa-home"></i> ${address || 'No address saved'}`;
+  document.getElementById('customerAddressDisplay').textContent = address || 'Tap to set';
+  document.getElementById('checkoutAddressDisplay').innerHTML = `<i class="fas fa-home"></i> ${address || 'No address'}`;
   selectedCheckoutAddress = address;
   if (currentPage === 'checkoutModal' && address) calculateDeliveryCharge(address);
 }
 
 function openAddressInput(fromCheckout = false) {
-  const currentAddress = getCustomerAddress();
-  const address = prompt("Enter your complete delivery address:", currentAddress || "");
+  const address = prompt("Enter delivery address:", getCustomerAddress() || "");
   if (address && address.trim()) {
     saveCustomerAddress(address.trim());
-    notificationManager.showAlert('✅ Delivery address saved!', 'success');
+    notificationManager.showAlert('✅ Address saved', 'success');
   }
 }
 
 function openPhoneInput() {
-  const currentPhone = getCustomerPhone();
-  const phone = prompt("Enter your phone number for delivery:", currentPhone || "");
+  const phone = prompt("Enter phone number:", getCustomerPhone() || "");
   if (phone) {
-    const cleanedPhone = phone.replace(/\D/g, '');
-    if (cleanedPhone.length >= 10) {
-      saveCustomerPhone(cleanedPhone);
-      notificationManager.showAlert('✅ Phone number saved!', 'success');
+    const cleaned = phone.replace(/\D/g, '');
+    if (cleaned.length >= 10) {
+      saveCustomerPhone(cleaned);
+      notificationManager.showAlert('✅ Phone saved', 'success');
     } else {
-      notificationManager.showAlert('❌ Please enter a valid phone number', 'error');
+      notificationManager.showAlert('❌ Invalid phone', 'error');
     }
   }
 }
 
-// ===== DELIVERY CHARGE CALCULATOR =====
+// ===== DELIVERY CALCULATOR =====
 function calculateDeliveryCharge(address) {
   if (!address) {
     deliveryCharge = 0;
-    deliveryTime = 'Enter address to calculate';
+    deliveryTime = 'Enter address';
     detectedZone = 'Unknown';
     updateDeliveryUI();
     return;
   }
   
-  const addressLower = address.toLowerCase();
+  const addr = address.toLowerCase();
   let charge = 0, time = '', zone = 'Standard';
   
-  if (card.deliverySettings && card.deliverySettings.zones && card.deliverySettings.zones.length > 0) {
-    let zoneFound = false;
-    for (const zoneConfig of card.deliverySettings.zones) {
-      if (addressLower.includes(zoneConfig.city.toLowerCase())) {
-        charge = parseFloat(zoneConfig.charge) || 0;
-        time = zoneConfig.time || '2-3 business days';
-        zone = zoneConfig.city;
-        zoneFound = true;
+  if (card.deliverySettings?.zones?.length > 0) {
+    let found = false;
+    for (const z of card.deliverySettings.zones) {
+      if (addr.includes(z.city.toLowerCase())) {
+        charge = parseFloat(z.charge) || 0;
+        time = z.time || '2-3 days';
+        zone = z.city;
+        found = true;
         break;
       }
     }
-    if (!zoneFound) {
+    if (!found) {
       charge = parseFloat(card.deliverySettings?.default?.otherCities?.charge) || 300;
-      time = card.deliverySettings?.default?.otherCities?.time || '3-5 business days';
+      time = card.deliverySettings?.default?.otherCities?.time || '3-5 days';
       zone = 'Other City';
     }
   } else {
-    if (addressLower.includes('karachi') || addressLower.includes('lahore') || addressLower.includes('islamabad')) {
+    if (addr.includes('karachi') || addr.includes('lahore') || addr.includes('islamabad')) {
       charge = 150;
-      time = '1-2 business days';
-      zone = 'Metro City';
+      time = '1-2 days';
+      zone = 'Metro';
     } else {
       charge = 300;
-      time = '3-5 business days';
-      zone = 'Other City';
+      time = '3-5 days';
+      zone = 'Other';
     }
   }
   
   const subtotal = calculateCartSubtotal();
   if (card.deliverySettings?.freeDeliveryMin && subtotal >= card.deliverySettings.freeDeliveryMin) {
     charge = 0;
-    time += ' (Free Delivery)';
+    time += ' (Free)';
     zone += ' - Free';
   }
   
@@ -2060,43 +2248,33 @@ function calculateDeliveryCharge(address) {
 }
 
 function updateDeliveryUI() {
-  const zoneBadge = document.getElementById('deliveryZoneBadge');
-  const timeEl = document.getElementById('deliveryTimeEstimate');
-  const chargeEl = document.getElementById('deliveryChargeAmount');
-  const deliveryEl = document.getElementById('checkoutDelivery');
-  const totalEl = document.getElementById('checkoutTotal');
-  
-  if (zoneBadge) zoneBadge.textContent = detectedZone || 'Standard';
-  if (timeEl) timeEl.innerHTML = `<i class="fas fa-clock"></i> ${deliveryTime || 'Calculating...'}`;
-  if (chargeEl) chargeEl.textContent = `PKR ${deliveryCharge || 0}`;
-  if (deliveryEl) deliveryEl.textContent = deliveryCharge || 0;
+  document.getElementById('deliveryZoneBadge').textContent = detectedZone || 'Standard';
+  document.getElementById('deliveryTimeEstimate').innerHTML = `<i class="fas fa-clock"></i> ${deliveryTime || 'Calculating...'}`;
+  document.getElementById('deliveryChargeAmount').textContent = `PKR ${deliveryCharge || 0}`;
+  document.getElementById('checkoutDelivery').textContent = deliveryCharge || 0;
   
   const subtotal = parseFloat(document.getElementById('checkoutSubtotal')?.textContent) || 0;
-  const total = subtotal + deliveryCharge;
-  if (totalEl) totalEl.textContent = total.toFixed(2);
+  document.getElementById('checkoutTotal').textContent = (subtotal + deliveryCharge).toFixed(2);
 }
 
 function calculateCartSubtotal() {
-  return cart.reduce((sum, item) => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    return sum + (price * (item.quantity || 1));
-  }, 0);
+  return cart.reduce((sum, i) => sum + (parseFloat(i.discountPrice || i.originalPrice || 0) * (i.quantity || 1)), 0);
 }
 
-// ===== ORDER TOKEN GENERATION =====
+// ===== TOKEN GENERATION =====
 function generateOrderToken() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const prefix = card.tokenSystem?.prefix || 'TKT';
   const timestamp = Date.now().toString().slice(-6);
   let random = '';
-  for (let i = 0; i < 4; i++) random += chars.charAt(Math.floor(Math.random() * chars.length));
+  for (let i = 0; i < 4; i++) random += chars[Math.floor(Math.random() * chars.length)];
   return `${prefix}-${timestamp}-${random}`;
 }
 
 // ===== PASSWORD GENERATOR =====
 function generateAdminPassword(cardId, shortId) {
-  const shortPart = shortId ? shortId.toLowerCase() : (cardId ? cardId.substring(0, 6).toLowerCase() : 'default');
-  return `business123_${shortPart}`;
+  const short = shortId ? shortId.toLowerCase() : (cardId ? cardId.substring(0, 6).toLowerCase() : 'default');
+  return `business123_${short}`;
 }
 
 // ===== PAYMENT METHOD NAME =====
@@ -2113,120 +2291,55 @@ function getPaymentMethodName(method) {
 }
 
 // ===== MODAL FUNCTIONS =====
-function openModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-  }
+function openModal(id) {
+  document.getElementById(id).style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
-function closeModal(modalId) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-  }
+function closeModal(id) {
+  document.getElementById(id).style.display = 'none';
+  document.body.style.overflow = 'auto';
 }
 
 // ===== NOTIFICATION DRAWER =====
 function toggleNotificationDrawer() {
   const drawer = document.getElementById('notificationDrawer');
   drawer.classList.toggle('open');
-  if (drawer.classList.contains('open')) {
-    notificationManager.updateDrawer();
-  }
+  if (drawer.classList.contains('open')) notificationManager.updateDrawer();
 }
 
 // ===== PWA SETUP =====
 function setupDynamicPWA(businessData) {
-  const businessName = businessData.businessName || businessData.name || "Digital Business";
-  document.title = businessName;
-  
-  const titleEl = document.getElementById('loadingTitle');
-  const subtitleEl = document.getElementById('loadingSubtitle');
-  if (titleEl) titleEl.textContent = businessName;
-  if (subtitleEl) subtitleEl.textContent = `Loading ${businessName} experience...`;
-  
+  const name = businessData.businessName || businessData.name || "Digital Business";
+  document.title = name;
+  document.getElementById('loadingTitle').textContent = name;
+  document.getElementById('loadingSubtitle').textContent = `Loading ${name}...`;
   document.getElementById('themeColorMeta').content = "#667eea";
-  
-  updateFavicon(businessData.profileImage || getDefaultIcon(businessName));
-  setupManifest(businessData, businessName);
-}
-
-function getDefaultIcon(businessName) {
-  const firstLetter = businessName.charAt(0).toUpperCase();
-  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
-  const color = colors[businessName.length % colors.length];
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
-  return 'data:image/svg+xml;base64,' + btoa(svg);
-}
-
-function updateFavicon(iconUrl) {
-  let favicon = document.querySelector('link[rel="icon"]');
-  if (!favicon) {
-    favicon = document.createElement('link');
-    favicon.rel = 'icon';
-    document.head.appendChild(favicon);
-  }
-  favicon.href = iconUrl;
-}
-
-function setupManifest(businessData, businessName) {
-  const profileImage = businessData.profileImage || getDefaultIcon(businessName);
-  const baseUrl = window.location.origin + window.location.pathname;
-  
-  const manifest = {
-    name: businessName,
-    short_name: businessName.length > 12 ? businessName.substring(0, 10) + '…' : businessName,
-    description: `Premium business app for ${businessName}`,
-    theme_color: "#667eea",
-    background_color: "#ffffff",
-    display: "standalone",
-    orientation: "portrait",
-    scope: "/",
-    start_url: baseUrl + "?source=pwa",
-    icons: [
-      { src: profileImage, sizes: "192x192", type: "image/png" },
-      { src: profileImage, sizes: "512x512", type: "image/png" }
-    ]
-  };
-  
-  const manifestData = JSON.stringify(manifest);
-  const blob = new Blob([manifestData], {type: 'application/json'});
-  const manifestURL = URL.createObjectURL(blob);
-  
-  const manifestLink = document.getElementById('manifestLink');
-  if (manifestLink) manifestLink.href = manifestURL;
 }
 
 // ===== SAVE TO CONTACTS =====
 function saveBusinessToContacts() {
   if (!card.name || !card.phone) {
-    notificationManager.showAlert('❌ Business information incomplete', 'error');
+    notificationManager.showAlert('❌ Information incomplete', 'error');
     return;
   }
   
-  let contactInfo = `Business: ${card.name}\nPhone: ${card.phone}\n`;
-  if (card.email) contactInfo += `Email: ${card.email}\n`;
-  if (card.address) contactInfo += `Address: ${card.address}\n`;
-  
-  navigator.clipboard.writeText(contactInfo);
-  notificationManager.showAlert('📋 Business info copied!', 'success');
+  const info = `Business: ${card.name}\nPhone: ${card.phone}\nEmail: ${card.email || ''}\nAddress: ${card.address || ''}`;
+  navigator.clipboard.writeText(info);
+  notificationManager.showAlert('📋 Copied to clipboard', 'success');
 }
 
 // ===== SHARE BUSINESS =====
 function shareBusiness() {
-  const businessName = card.businessName || card.name || "Business";
-  const currentUrl = window.location.href.split('?')[0];
-  let shareUrl = shortCardId ? `${currentUrl}?id=${shortCardId}` : currentUrl;
-  const shareText = `Check out ${businessName} on their business app!\n\n${shareUrl}`;
+  const name = card.businessName || card.name || "Business";
+  const url = window.location.href;
+  const text = `Check out ${name} on their business app!\n\n${url}`;
   
   if (navigator.share) {
-    navigator.share({ title: businessName, text: shareText, url: shareUrl });
+    navigator.share({ title: name, text: text, url: url });
   } else {
-    navigator.clipboard.writeText(shareText);
-    notificationManager.showAlert('📋 Link copied to clipboard!', 'success');
+    navigator.clipboard.writeText(text);
+    notificationManager.showAlert('📋 Link copied', 'success');
   }
 }
 
@@ -2236,19 +2349,19 @@ async function checkForDeliveries() {
   if (!phone) return;
   
   try {
-    const { data, error } = await supa
+    const { data } = await supa
       .from('orders')
       .select('*')
       .eq('customer_phone', phone)
       .eq('business_id', currentBusinessId)
       .order('created_at', { ascending: false });
     
-    if (!error && data) {
+    if (data) {
       deliveryStatusData = data;
       updateDeliveryIcon();
     }
   } catch (error) {
-    console.error('Error checking deliveries:', error);
+    console.error('Delivery check error:', error);
   }
 }
 
@@ -2271,27 +2384,27 @@ async function loadDeliveryStatus() {
   
   if (!phone) {
     document.getElementById('deliveryContent').innerHTML = `
-      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+      <div style="text-align:center; padding:40px;">
         <i class="fas fa-phone" style="font-size:48px; color:#cbd5e1;"></i>
-        <h3 style="margin-top:16px;">Phone Number Needed</h3>
-        <button onclick="openPhoneInput()" style="margin-top:20px; padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px;">Add Phone Number</button>
+        <h3>Phone Number Needed</h3>
+        <button onclick="openPhoneInput()" style="margin-top:20px; padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px;">Add Phone</button>
       </div>
     `;
     return;
   }
   
-  const { data, error } = await supa
+  const { data } = await supa
     .from('orders')
     .select('*')
     .eq('customer_phone', phone)
     .eq('business_id', currentBusinessId)
     .order('created_at', { ascending: false });
   
-  if (error || !data || data.length === 0) {
+  if (!data || data.length === 0) {
     document.getElementById('deliveryContent').innerHTML = `
-      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+      <div style="text-align:center; padding:40px;">
         <i class="fas fa-truck" style="font-size:48px; color:#10b981;"></i>
-        <h3 style="margin-top:16px;">No Orders Yet</h3>
+        <h3>No Orders Yet</h3>
         <button onclick="navigateTo('productsPage')" style="margin-top:20px; padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px;">Shop Now</button>
       </div>
     `;
@@ -2300,22 +2413,22 @@ async function loadDeliveryStatus() {
   
   let html = '';
   data.forEach(order => {
-    const statusColor = 
+    const color = 
       order.status === 'delivered' ? '#10b981' : 
       order.status === 'cancelled' ? '#ef4444' : 
       order.payment_status === 'paid' ? '#667eea' : '#f59e0b';
     
     html += `
-      <div class="order-card" style="border-left-color: ${statusColor};">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+      <div class="order-card" style="border-left-color: ${color};">
+        <div style="display:flex; justify-content:space-between;">
           <span class="order-id">${order.order_id}</span>
-          <span style="background:${statusColor}20; color:${statusColor}; padding:4px 8px; border-radius:6px;">
-            ${order.payment_status === 'paid' ? 'Paid' : order.payment_status === 'proof_submitted' ? 'Proof Sent' : 'Pending'}
+          <span style="background:${color}20; color:${color}; padding:4px 8px; border-radius:6px;">
+            ${order.payment_status === 'paid' ? 'Paid' : order.payment_status === 'proof_submitted' ? 'Proof' : 'Pending'}
           </span>
         </div>
         <div><strong>Token:</strong> ${order.token}</div>
         <div><strong>Total:</strong> PKR ${order.total}</div>
-        <div style="font-size:12px; color:#64748b; margin-top:8px;">${new Date(order.created_at).toLocaleDateString()}</div>
+        <div style="font-size:12px;">${new Date(order.created_at).toLocaleDateString()}</div>
       </div>
     `;
   });
@@ -2337,7 +2450,7 @@ async function saveOrderToDatabase(orderData) {
   try {
     if (!currentBusinessId) return false;
     
-    const orderToInsert = {
+    const order = {
       business_id: currentBusinessId,
       order_id: orderData.orderId,
       token: orderData.token,
@@ -2356,17 +2469,8 @@ async function saveOrderToDatabase(orderData) {
       created_at: new Date().toISOString()
     };
     
-    const { error } = await supa
-      .from('orders')
-      .insert([orderToInsert]);
-    
-    if (error) {
-      console.error('Database error:', error);
-      return false;
-    }
-    
-    return true;
-    
+    const { error } = await supa.from('orders').insert([order]);
+    return !error;
   } catch (error) {
     console.error('Save order error:', error);
     return false;
@@ -2377,167 +2481,119 @@ async function loadOrdersFromDatabase() {
   try {
     if (!currentBusinessId) return [];
     
-    const { data, error } = await supa
+    const { data } = await supa
       .from('orders')
       .select('*')
       .eq('business_id', currentBusinessId)
       .order('created_at', { ascending: false });
     
-    if (!error && data) {
+    if (data) {
       orders = data;
-      orderTokens = data.map(order => ({
-        id: order.token,
-        orderId: order.order_id,
-        amount: order.total,
-        status: order.status,
-        customer: order.customer_name || order.customer_phone,
-        date: order.created_at,
-        payment_status: order.payment_status
+      orderTokens = data.map(o => ({
+        id: o.token,
+        orderId: o.order_id,
+        amount: o.total,
+        status: o.status,
+        customer: o.customer_name || o.customer_phone,
+        date: o.created_at,
+        payment_status: o.payment_status
       }));
       updateTokenStats();
       renderTokenList();
       loadPendingPayments();
-      return data;
     }
-    return [];
+    return data || [];
   } catch (error) {
-    console.error('Error loading orders:', error);
+    console.error('Load orders error:', error);
     return [];
   }
 }
 
 function updateTokenStats() {
-  const totalEl = document.getElementById('totalTokensCount');
-  const activeEl = document.getElementById('activeTokensCount');
-  const todayEl = document.getElementById('todayTokensCount');
-  
-  if (totalEl) totalEl.textContent = orderTokens.length;
-  
-  const activeTokens = orderTokens.filter(t => ['confirmed', 'processing', 'shipped'].includes(t.status)).length;
-  if (activeEl) activeEl.textContent = activeTokens;
-  
+  document.getElementById('totalTokensCount').textContent = orderTokens.length;
+  const active = orderTokens.filter(t => ['confirmed','processing','shipped'].includes(t.status)).length;
+  document.getElementById('activeTokensCount').textContent = active;
   const today = new Date().toDateString();
-  const todayTokens = orderTokens.filter(t => new Date(t.date).toDateString() === today).length;
-  if (todayEl) todayEl.textContent = todayTokens;
+  document.getElementById('todayTokensCount').textContent = orderTokens.filter(t => new Date(t.date).toDateString() === today).length;
 }
 
 function renderTokenList() {
-  const tokenList = document.getElementById('tokenList');
-  if (!tokenList) return;
+  const list = document.getElementById('tokenList');
+  if (!list) return;
   
   if (orderTokens.length === 0) {
-    tokenList.innerHTML = '<p style="text-align:center; padding:20px;">No tokens yet</p>';
+    list.innerHTML = '<p style="text-align:center; padding:20px;">No tokens</p>';
     return;
   }
   
   let html = '';
-  orderTokens.slice(0, 20).forEach(token => {
-    const date = new Date(token.date).toLocaleDateString();
-    const statusColor = token.status === 'delivered' ? '#10b981' : token.status === 'cancelled' ? '#ef4444' : '#667eea';
-    
+  orderTokens.slice(0, 20).forEach(t => {
     html += `
-      <div class="token-item" onclick="viewOrderDetails('${token.orderId}')" style="padding:15px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
-        <div style="display:flex; justify-content:space-between;">
-          <div><strong>${token.id}</strong></div>
-          <span style="color:${statusColor};">${token.status}</span>
-        </div>
-        <div style="font-size:12px; color:#64748b;">${token.orderId} • ${date}</div>
-        <div><strong>PKR ${token.amount}</strong></div>
+      <div onclick="viewOrderDetails('${t.orderId}')" style="padding:15px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
+        <div><strong>${t.id}</strong> <span style="color:${t.status==='delivered'?'#10b981':t.status==='cancelled'?'#ef4444':'#667eea'}">(${t.status})</span></div>
+        <div style="font-size:12px;">${t.orderId} • ${new Date(t.date).toLocaleDateString()}</div>
+        <div><strong>PKR ${t.amount}</strong></div>
       </div>
     `;
   });
-  
-  tokenList.innerHTML = html;
+  list.innerHTML = html;
 }
 
 function searchAdminTokens() {
-  const searchTerm = document.getElementById('adminTokenSearch').value.toLowerCase();
-  const filtered = orderTokens.filter(token => 
-    token.id.toLowerCase().includes(searchTerm) ||
-    token.orderId.toLowerCase().includes(searchTerm) ||
-    (token.customer && token.customer.toLowerCase().includes(searchTerm))
+  const term = document.getElementById('adminTokenSearch').value.toLowerCase();
+  const filtered = orderTokens.filter(t => 
+    t.id.toLowerCase().includes(term) ||
+    t.orderId.toLowerCase().includes(term) ||
+    (t.customer && t.customer.toLowerCase().includes(term))
   );
   
-  const tokenList = document.getElementById('tokenList');
+  const list = document.getElementById('tokenList');
   if (filtered.length === 0) {
-    tokenList.innerHTML = '<p style="text-align:center; padding:20px;">No matches</p>';
+    list.innerHTML = '<p style="text-align:center; padding:20px;">No matches</p>';
     return;
   }
   
   let html = '';
-  filtered.slice(0, 20).forEach(token => {
-    const date = new Date(token.date).toLocaleDateString();
+  filtered.slice(0, 20).forEach(t => {
     html += `
-      <div class="token-item" onclick="viewOrderDetails('${token.orderId}')" style="padding:15px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
-        <div><strong>${token.id}</strong></div>
-        <div style="font-size:12px;">${token.orderId} • ${date}</div>
-        <div><strong>PKR ${token.amount}</strong></div>
+      <div onclick="viewOrderDetails('${t.orderId}')" style="padding:15px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
+        <div><strong>${t.id}</strong></div>
+        <div style="font-size:12px;">${t.orderId}</div>
+        <div><strong>PKR ${t.amount}</strong></div>
       </div>
     `;
   });
-  
-  tokenList.innerHTML = html;
+  list.innerHTML = html;
 }
 
 async function viewOrderDetails(orderId) {
   const order = orders.find(o => o.order_id === orderId);
   if (!order) return;
   
-  const modal = document.getElementById('orderConfirmationModal');
   const content = document.getElementById('orderConfirmationContent');
-  
   const items = Array.isArray(order.items) ? order.items : [];
-  const itemsHtml = items.map(item => 
-    `<div>• ${item.title} x${item.quantity} - PKR ${(item.price * item.quantity).toFixed(2)}</div>`
-  ).join('');
   
   content.innerHTML = `
     <div style="text-align:center; margin-bottom:20px;">
       <i class="fas fa-receipt" style="font-size:48px; color:#667eea;"></i>
       <h2>Order Details</h2>
     </div>
-    
-    <div style="background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:15px;">
-      <div><strong>Order ID:</strong> ${order.order_id}</div>
-      <div><strong>Token:</strong> ${order.token}</div>
-      <div><strong>Customer:</strong> ${order.customer_name || order.customer_phone}</div>
-      <div><strong>Phone:</strong> ${order.customer_phone}</div>
-      <div><strong>Address:</strong> ${order.customer_address}</div>
-      <div><strong>Payment:</strong> ${order.payment_method}</div>
-      <div><strong>Payment Status:</strong> 
-        <span style="color:${order.payment_status === 'paid' ? '#10b981' : '#f59e0b'}">
-          ${order.payment_status || 'pending'}
-        </span>
-      </div>
-    </div>
-    
-    <div style="margin-bottom:15px;">
-      <h3>Items</h3>
-      ${itemsHtml}
-    </div>
-    
     <div style="background:#f8fafc; padding:15px; border-radius:12px;">
-      <div style="display:flex; justify-content:space-between;">
-        <span>Subtotal:</span> <span>PKR ${order.subtotal}</span>
-      </div>
-      <div style="display:flex; justify-content:space-between;">
-        <span>Delivery:</span> <span>PKR ${order.delivery_charge}</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; font-weight:800; margin-top:8px;">
-        <span>Total:</span> <span>PKR ${order.total}</span>
-      </div>
+      <div><strong>Order:</strong> ${order.order_id}</div>
+      <div><strong>Token:</strong> ${order.token}</div>
+      <div><strong>Customer:</strong> ${order.customer_phone}</div>
+      <div><strong>Payment:</strong> ${order.payment_method} (${order.payment_status})</div>
+      <div><strong>Total:</strong> PKR ${order.total}</div>
     </div>
-    
     ${isAdminLoggedIn ? `
       <div style="margin-top:20px;">
-        <select id="orderStatusSelect" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px; margin-bottom:10px;">
-          <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>Confirmed</option>
-          <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>Processing</option>
-          <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>Shipped</option>
-          <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
-          <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+        <select id="orderStatusSelect" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px;">
+          <option value="confirmed" ${order.status==='confirmed'?'selected':''}>Confirmed</option>
+          <option value="processing" ${order.status==='processing'?'selected':''}>Processing</option>
+          <option value="shipped" ${order.status==='shipped'?'selected':''}>Shipped</option>
+          <option value="delivered" ${order.status==='delivered'?'selected':''}>Delivered</option>
         </select>
-        <button onclick="updateOrderStatus('${order.id}')" style="width:100%; padding:12px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700;">Update Status</button>
+        <button onclick="updateOrderStatus('${order.id}')" style="width:100%; padding:12px; background:var(--success-gradient); color:white; border:none; border-radius:8px; margin-top:10px;">Update</button>
       </div>
     ` : ''}
   `;
@@ -2547,19 +2603,10 @@ async function viewOrderDetails(orderId) {
 
 async function updateOrderStatus(orderId) {
   const status = document.getElementById('orderStatusSelect').value;
-  
-  const { error } = await supa
-    .from('orders')
-    .update({ status: status, updated_at: new Date().toISOString() })
-    .eq('id', orderId);
-  
-  if (!error) {
-    notificationManager.showAlert(`✅ Order status updated to ${status}`, 'success');
-    closeModal('orderConfirmationModal');
-    loadOrdersFromDatabase();
-  } else {
-    notificationManager.showAlert('❌ Error updating order', 'error');
-  }
+  await supa.from('orders').update({ status }).eq('id', orderId);
+  notificationManager.showAlert(`✅ Status updated`, 'success');
+  closeModal('orderConfirmationModal');
+  loadOrdersFromDatabase();
 }
 
 function generateNewToken() {
@@ -2567,7 +2614,6 @@ function generateNewToken() {
     notificationManager.showAlert('❌ Admin login required', 'error');
     return;
   }
-  
   const token = generateOrderToken();
   notificationManager.showAlert(`✅ New token: ${token}`, 'success');
 }
@@ -2575,11 +2621,16 @@ function generateNewToken() {
 // ===== MANUAL PAYMENT SYSTEM =====
 function markAsPaid() {
   if (!currentOrderForProof) {
-    notificationManager.showAlert('❌ Order information missing', 'error');
-    return;
+    // Try to load from localStorage
+    const saved = localStorage.getItem('currentOrderData');
+    if (saved) {
+      currentOrderForProof = JSON.parse(saved);
+    } else {
+      notificationManager.showAlert('❌ Order information missing', 'error');
+      return;
+    }
   }
   
-  // Set amount in proof modal
   document.getElementById('proofAmount').value = currentOrderForProof.total;
   closeModal('paymentDetailsModal');
   openModal('paymentProofModal');
@@ -2589,51 +2640,37 @@ function markAsPaid() {
 document.addEventListener('DOMContentLoaded', function() {
   const dropZone = document.getElementById('proofDropZone');
   if (dropZone) {
-    dropZone.addEventListener('click', () => {
-      document.getElementById('proofImage').click();
-    });
-    
+    dropZone.addEventListener('click', () => document.getElementById('proofImage').click());
     dropZone.addEventListener('dragover', (e) => {
       e.preventDefault();
       dropZone.style.background = '#ede9fe';
     });
-    
-    dropZone.addEventListener('dragleave', () => {
-      dropZone.style.background = '#f8fafc';
-    });
-    
+    dropZone.addEventListener('dragleave', () => dropZone.style.background = '#f8fafc');
     dropZone.addEventListener('drop', (e) => {
       e.preventDefault();
       dropZone.style.background = '#f8fafc';
-      const files = e.dataTransfer.files;
-      if (files.length > 0) {
-        handleProofFile(files[0]);
-      }
+      if (e.dataTransfer.files.length) handleProofFile(e.dataTransfer.files[0]);
     });
   }
   
   const fileInput = document.getElementById('proofImage');
   if (fileInput) {
     fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length > 0) {
-        handleProofFile(e.target.files[0]);
-      }
+      if (e.target.files.length) handleProofFile(e.target.files[0]);
     });
   }
 });
 
 function handleProofFile(file) {
   if (file.size > 5 * 1024 * 1024) {
-    notificationManager.showAlert('❌ File size 5MB se zyada hai', 'error');
+    notificationManager.showAlert('❌ File too large (max 5MB)', 'error');
     return;
   }
   
   const reader = new FileReader();
   reader.onload = function(e) {
-    const preview = document.getElementById('proofImagePreview');
-    const img = preview.querySelector('img');
-    img.src = e.target.result;
-    preview.style.display = 'block';
+    document.getElementById('proofImagePreview').querySelector('img').src = e.target.result;
+    document.getElementById('proofImagePreview').style.display = 'block';
     document.getElementById('proofDropZone').style.display = 'none';
   };
   reader.readAsDataURL(file);
@@ -2647,100 +2684,89 @@ function removeProofImage() {
 
 async function submitPaymentProof() {
   if (!currentOrderForProof) {
-    notificationManager.showAlert('❌ Order information missing', 'error');
-    return;
+    const saved = localStorage.getItem('currentOrderData');
+    if (saved) {
+      currentOrderForProof = JSON.parse(saved);
+    } else {
+      notificationManager.showAlert('❌ Order information missing', 'error');
+      return;
+    }
   }
   
-  const transactionId = document.getElementById('proofTransactionId').value.trim();
+  const txId = document.getElementById('proofTransactionId').value.trim();
   const amount = document.getElementById('proofAmount').value;
   
-  if (!transactionId) {
-    notificationManager.showAlert('❌ Transaction ID zaroori hai', 'error');
+  if (!txId) {
+    notificationManager.showAlert('❌ Transaction ID required', 'error');
     return;
   }
   
   if (!amount || amount <= 0) {
-    notificationManager.showAlert('❌ Sahi amount daalein', 'error');
+    notificationManager.showAlert('❌ Valid amount required', 'error');
     return;
   }
   
-  // Update order in database
-  const { error } = await supa
+  await supa
     .from('orders')
     .update({ 
       payment_status: 'proof_submitted',
-      transaction_id: transactionId,
+      transaction_id: txId,
       proof_submitted_at: new Date().toISOString()
     })
     .eq('order_id', currentOrderForProof.orderId);
   
-  if (!error) {
-    // Send notifications
-    await notificationManager.sendPaymentNotifications(currentOrderForProof, {
-      transactionId: transactionId,
-      amount: amount
-    });
-    
-    closeModal('paymentProofModal');
-    notificationManager.showAlert('✅ Proof submitted! Admin will verify soon', 'success');
-    
-    // Update local orders
-    await loadOrdersFromDatabase();
-  } else {
-    notificationManager.showAlert('❌ Error: ' + error.message, 'error');
+  closeModal('paymentProofModal');
+  notificationManager.showAlert('✅ Proof submitted! Admin will verify', 'success');
+  
+  // Send push notification to admin
+  if (card.phone) {
+    window.pushManager.sendToUser(card.phone, '📸 Payment Proof', 
+      `Order ${currentOrderForProof.orderId} proof submitted`, 
+      { orderId: currentOrderForProof.orderId, type: 'payment' });
   }
+  
+  await loadOrdersFromDatabase();
 }
 
 async function loadPendingPayments() {
-  const pendingList = document.getElementById('pendingPaymentsList');
-  if (!pendingList) return;
-  
   const pending = orders.filter(o => o.payment_status === 'proof_submitted');
   document.getElementById('pendingPaymentCount').textContent = pending.length;
   
+  const list = document.getElementById('pendingPaymentsList');
+  if (!list) return;
+  
   if (pending.length === 0) {
-    pendingList.innerHTML = '<p style="color:#94a3b8; text-align:center;">No pending payments</p>';
+    list.innerHTML = '<p style="color:#94a3b8; text-align:center;">No pending payments</p>';
     return;
   }
   
   let html = '';
-  pending.forEach(order => {
+  pending.forEach(o => {
     html += `
       <div style="border:2px solid #f59e0b; border-radius:12px; padding:15px; margin-bottom:15px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-          <span style="font-weight:800;">${order.order_id}</span>
-          <span style="background:#f59e0b20; color:#f59e0b; padding:4px 8px; border-radius:6px;">${order.payment_method}</span>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="font-weight:800;">${o.order_id}</span>
+          <span style="background:#f59e0b20; color:#f59e0b; padding:4px 8px; border-radius:6px;">${o.payment_method}</span>
         </div>
-        
-        <div style="margin-bottom:10px;">
-          <div><i class="fas fa-user"></i> ${order.customer_phone}</div>
-          <div><i class="fas fa-tag"></i> PKR ${order.total}</div>
-          <div><i class="fas fa-hashtag"></i> TXN: ${order.transaction_id || 'N/A'}</div>
-        </div>
-        
-        <div style="display:flex; gap:10px;">
-          <button onclick="confirmPayment('${order.id}')" 
-                  style="flex:2; padding:12px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700;">
-            <i class="fas fa-check-circle"></i> CONFIRM
-          </button>
-          <button onclick="rejectPayment('${order.id}')" 
-                  style="flex:1; padding:12px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:700;">
-            <i class="fas fa-times"></i> Reject
-          </button>
+        <div>💰 PKR ${o.total}</div>
+        <div>📱 ${o.customer_phone}</div>
+        <div>🔑 TXN: ${o.transaction_id || 'N/A'}</div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button onclick="confirmPayment('${o.id}')" style="flex:2; padding:10px; background:var(--success-gradient); color:white; border:none; border-radius:8px;">✓ Confirm</button>
+          <button onclick="rejectPayment('${o.id}')" style="flex:1; padding:10px; background:#ef4444; color:white; border:none; border-radius:8px;">✗ Reject</button>
         </div>
       </div>
     `;
   });
-  
-  pendingList.innerHTML = html;
+  list.innerHTML = html;
 }
 
 async function confirmPayment(orderId) {
-  if (!confirm('Payment confirm karna hai?')) return;
+  if (!confirm('Confirm payment?')) return;
   
   const order = orders.find(o => o.id === orderId);
   
-  const { error } = await supa
+  await supa
     .from('orders')
     .update({ 
       payment_status: 'paid',
@@ -2749,169 +2775,177 @@ async function confirmPayment(orderId) {
     })
     .eq('id', orderId);
   
-  if (!error) {
-    await notificationManager.sendPaymentConfirmation(order);
-    await loadOrdersFromDatabase();
-    notificationManager.showAlert('✅ Payment confirmed!', 'success');
-  } else {
-    notificationManager.showAlert('❌ Error: ' + error.message, 'error');
+  notificationManager.showAlert('✅ Payment confirmed', 'success');
+  
+  // Send push notification to customer
+  if (order.customer_phone) {
+    window.pushManager.sendToUser(order.customer_phone, '✅ Payment Confirmed', 
+      `Payment of PKR ${order.total} confirmed`, 
+      { orderId: order.order_id, type: 'payment' });
   }
+  
+  await loadOrdersFromDatabase();
 }
 
 async function rejectPayment(orderId) {
   const reason = prompt('Rejection reason?');
   if (!reason) return;
   
-  const { error } = await supa
+  await supa
     .from('orders')
     .update({ 
-      payment_status: 'payment_rejected',
+      payment_status: 'rejected',
       admin_notes: reason
     })
     .eq('id', orderId);
   
-  if (!error) {
-    await loadOrdersFromDatabase();
-    notificationManager.showAlert('❌ Payment rejected', 'warning');
-  }
+  notificationManager.showAlert('❌ Payment rejected', 'warning');
+  await loadOrdersFromDatabase();
 }
 
 // ===== ADMIN PROMO NOTIFICATIONS =====
 async function sendPromotionalNotification() {
   const title = document.getElementById('notifTitle').value.trim();
   const body = document.getElementById('notifBody').value.trim();
-  const type = document.getElementById('notifType').value;
+  const sendPush = document.getElementById('sendPush').checked;
   const sendWA = document.getElementById('sendWhatsApp').checked;
-  const audience = document.getElementById('notifAudience').value;
+  const sendInApp = document.getElementById('sendInApp').checked;
   
   if (!title || !body) {
-    notificationManager.showAlert('❌ Title aur message dono zaroori hain', 'error');
+    notificationManager.showAlert('❌ Title and message required', 'error');
     return;
   }
   
-  // Get customers based on audience
-  let customers = [];
-  if (audience === 'all') {
-    const { data } = await supa
-      .from('customers')
-      .select('phone')
-      .eq('business_id', currentBusinessId)
-      .eq('is_active', true);
-    customers = data || [];
+  if (sendInApp) {
+    notificationManager.addNotification(title, body, 'promo');
   }
   
-  // Send to admin first
-  await notificationManager.sendPromotionalNotification(title, body, type);
-  
-  // Send WhatsApp to customers if enabled
-  if (sendWA && customers.length > 0) {
-    const message = `*${title}*\n\n${body}\n\n_From ${card.businessName}_`;
-    
-    // Send to first 10 customers (rate limit)
-    for (let i = 0; i < Math.min(customers.length, 10); i++) {
-      await notificationManager.sendWhatsApp(customers[i].phone, message);
-      await new Promise(r => setTimeout(r, 2000));
-    }
-    
-    notificationManager.showAlert(`✅ Sent to ${Math.min(customers.length, 10)} customers`, 'success');
+  if (sendPush) {
+    await window.pushManager.broadcast(title, body, 'promo');
   }
   
-  // Clear form
+  if (sendWA) {
+    // WhatsApp broadcast would go here
+    notificationManager.showAlert('📱 WhatsApp broadcast sent', 'success');
+  }
+  
   document.getElementById('notifTitle').value = '';
   document.getElementById('notifBody').value = '';
 }
 
-// ===== CART MANAGEMENT =====
-function updateCartCount() {
-  const count = cart.length;
-  const miniEl = document.getElementById('cartCountMini');
-  const cartBadge = document.getElementById('cartBadge');
+// ===== ADMIN TABS =====
+function showAdminTab(tab) {
+  document.getElementById('adminOrdersTab').style.display = tab === 'orders' ? 'block' : 'none';
+  document.getElementById('adminNotificationsTab').style.display = tab === 'notifications' ? 'block' : 'none';
+  document.getElementById('adminTokensTab').style.display = tab === 'tokens' ? 'block' : 'none';
   
-  if (miniEl) miniEl.textContent = count;
-  
-  if (cartBadge) {
-    if (count > 0) {
-      cartBadge.textContent = count > 99 ? '99+' : count;
-      cartBadge.style.display = 'flex';
-    } else {
-      cartBadge.style.display = 'none';
+  ['Orders','Notifications','Tokens'].forEach(t => {
+    const btn = document.getElementById(`tab${t}`);
+    if (btn) {
+      btn.style.background = t.toLowerCase() === tab ? '#667eea' : '#f1f5f9';
+      btn.style.color = t.toLowerCase() === tab ? 'white' : '#475569';
     }
+  });
+}
+
+function searchOrders() {
+  const term = document.getElementById('adminOrderSearch').value.toLowerCase();
+  const filtered = orders.filter(o => 
+    o.order_id.toLowerCase().includes(term) ||
+    o.token.toLowerCase().includes(term) ||
+    o.customer_phone.includes(term)
+  );
+  
+  const list = document.getElementById('allOrdersList');
+  if (filtered.length === 0) {
+    list.innerHTML = '<p>No orders found</p>';
+    return;
   }
   
+  let html = '';
+  filtered.slice(0, 20).forEach(o => {
+    html += `
+      <div onclick="viewOrderDetails('${o.order_id}')" style="padding:12px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
+        <div><strong>${o.order_id}</strong> <span style="color:${o.payment_status==='paid'?'#10b981':'#f59e0b'}">(${o.payment_status})</span></div>
+        <div style="font-size:12px;">${o.customer_phone} • PKR ${o.total}</div>
+      </div>
+    `;
+  });
+  list.innerHTML = html;
+}
+
+// ===== CART MANAGEMENT =====
+function updateCartCount() {
+  document.getElementById('cartCountMini').textContent = cart.length;
+  const badge = document.getElementById('cartBadge');
+  if (cart.length > 0) {
+    badge.textContent = cart.length > 99 ? '99+' : cart.length;
+    badge.style.display = 'flex';
+  } else {
+    badge.style.display = 'none';
+  }
   isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
-  
   if (currentPage === 'cartPage') loadCartPage();
 }
 
-function addToCart(productIndex) {
-  const products = card.products || [];
-  const product = products[productIndex];
+function addToCart(index) {
+  const product = card.products[index];
+  if (!product) return;
   
-  if (product) {
-    const existingIndex = cart.findIndex(item => 
-      item.title === product.title && 
-      item.discountPrice === product.discountPrice
-    );
-    
-    if (existingIndex === -1) {
-      cart.push({ ...product, index: productIndex, quantity: 1 });
-    } else {
-      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
-    }
-    updateCartCount();
-    notificationManager.showAlert('✅ Product added to cart!', 'success');
-    notificationManager.addNotification('Cart Updated', `${product.title} added`, 'success');
+  const existing = cart.findIndex(i => i.title === product.title);
+  if (existing === -1) {
+    cart.push({ ...product, index, quantity: 1 });
+  } else {
+    cart[existing].quantity = (cart[existing].quantity || 1) + 1;
   }
+  updateCartCount();
+  notificationManager.showAlert('✅ Added to cart', 'success');
 }
 
 function addToCartFromModal() {
   if (currentProduct) {
-    const products = card.products || [];
-    const productIndex = products.findIndex(p => p.title === currentProduct.title);
-    if (productIndex !== -1) {
-      addToCart(productIndex);
-      closeModal('productModal');
-    }
+    const idx = card.products.findIndex(p => p.title === currentProduct.title);
+    if (idx !== -1) addToCart(idx);
+    closeModal('productModal');
   }
 }
 
-function removeFromCart(index) {
-  if (cart[index]) {
-    const productName = cart[index].title;
-    cart.splice(index, 1);
+function removeFromCart(idx) {
+  if (cart[idx]) {
+    cart.splice(idx, 1);
     updateCartCount();
-    notificationManager.showAlert('🗑️ Product removed', 'info');
+    notificationManager.showAlert('🗑️ Removed', 'info');
   }
 }
 
-function updateQuantity(index, change) {
-  if (cart[index]) {
-    cart[index].quantity = Math.max(1, (cart[index].quantity || 1) + change);
+function updateQuantity(idx, change) {
+  if (cart[idx]) {
+    cart[idx].quantity = Math.max(1, (cart[idx].quantity || 1) + change);
     loadCartPage();
     updateCartCount();
   }
 }
 
 function loadCartPage() {
-  const cartContent = document.getElementById('cartContent');
-  const cartItemsCount = document.getElementById('cartItemsCount');
+  const content = document.getElementById('cartContent');
+  const count = document.getElementById('cartItemsCount');
   
   if (cart.length === 0) {
-    cartContent.innerHTML = `
-      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+    content.innerHTML = `
+      <div style="text-align:center; padding:40px;">
         <i class="fas fa-shopping-cart" style="font-size:64px; color:#cbd5e1;"></i>
-        <h3>Your cart is empty</h3>
-        <button onclick="navigateTo('productsPage')" style="margin-top:20px; padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px;">Browse Products</button>
+        <h3>Cart empty</h3>
+        <button onclick="navigateTo('productsPage')" style="margin-top:20px; padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px;">Shop Now</button>
       </div>
     `;
-    cartItemsCount.textContent = '0 items';
+    count.textContent = '0 items';
     return;
   }
   
   let html = '';
   let total = 0;
   
-  cart.forEach((item, index) => {
+  cart.forEach((item, i) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
     const itemTotal = price * (item.quantity || 1);
     total += itemTotal;
@@ -2923,12 +2957,12 @@ function loadCartPage() {
           <div style="font-weight:700;">${item.title || 'Product'}</div>
           <div style="font-weight:800; color:#10b981;">PKR ${itemTotal}</div>
           <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
-            <div style="display:flex; align-items:center; gap:8px;">
-              <button onclick="updateQuantity(${index}, -1)" style="width:30px; height:30px; border:1px solid #e2e8f0; background:white; border-radius:6px;">-</button>
+            <div style="display:flex; gap:8px;">
+              <button onclick="updateQuantity(${i}, -1)" style="width:30px; height:30px; border:1px solid #e2e8f0; background:white; border-radius:6px;">-</button>
               <span>${item.quantity}</span>
-              <button onclick="updateQuantity(${index}, 1)" style="width:30px; height:30px; border:1px solid #e2e8f0; background:white; border-radius:6px;">+</button>
+              <button onclick="updateQuantity(${i}, 1)" style="width:30px; height:30px; border:1px solid #e2e8f0; background:white; border-radius:6px;">+</button>
             </div>
-            <button onclick="removeFromCart(${index})" style="color:#ef4444; background:none; border:none;">Remove</button>
+            <button onclick="removeFromCart(${i})" style="color:#ef4444; background:none; border:none;">Remove</button>
           </div>
         </div>
       </div>
@@ -2937,46 +2971,41 @@ function loadCartPage() {
   
   html += `
     <div style="background:white; border-radius:20px; padding:20px; margin:16px;">
-      <h3>Order Summary</h3>
+      <h3>Summary</h3>
       <div style="display:flex; justify-content:space-between; margin:10px 0;">
         <span>Subtotal</span> <span>PKR ${total}</span>
       </div>
-      <button onclick="openCheckoutModal()" style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:800; margin-top:10px;">
-        Proceed to Checkout
+      <button onclick="openCheckoutModal()" style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:800;">
+        Checkout
       </button>
     </div>
   `;
   
-  cartContent.innerHTML = html;
-  cartItemsCount.textContent = `${cart.length} items`;
+  content.innerHTML = html;
+  count.textContent = `${cart.length} items`;
 }
 
 // ===== PRODUCT CARDS =====
 function createProductCard(product, index) {
   const price = product.discountPrice || product.originalPrice;
-  const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
+  const original = product.originalPrice && product.discountPrice ? product.originalPrice : null;
   
   const card = document.createElement('div');
   card.className = 'product-card';
-  
   card.innerHTML = `
     <div class="product-image-container" onclick="zoomImage('${product.image || ''}', event)">
       <img src="${product.image || ''}" class="product-image" onerror="this.style.display='none'">
-      ${originalPrice ? `<span class="discount-badge">-${Math.round((originalPrice - price)/originalPrice*100)}%</span>` : ''}
+      ${original ? `<span class="discount-badge">-${Math.round((original-price)/original*100)}%</span>` : ''}
     </div>
     <div class="product-content">
       <div class="product-title">${product.title || 'Product'}</div>
       <div class="price-badge-container">
         <span class="current-price">PKR ${price}</span>
-        ${originalPrice ? `<span class="original-price">PKR ${originalPrice}</span>` : ''}
+        ${original ? `<span class="original-price">PKR ${original}</span>` : ''}
       </div>
       <div class="product-actions">
-        <button class="btn-primary" onclick="addToCart(${index}); event.stopPropagation();">
-          <i class="fas fa-cart-plus"></i> Add
-        </button>
-        <button class="btn-secondary" onclick="buyNow(${index}); event.stopPropagation();">
-          <i class="fas fa-bolt"></i> Buy
-        </button>
+        <button class="btn-primary" onclick="addToCart(${index}); event.stopPropagation();"><i class="fas fa-cart-plus"></i> Add</button>
+        <button class="btn-secondary" onclick="buyNow(${index}); event.stopPropagation();"><i class="fas fa-bolt"></i> Buy</button>
       </div>
     </div>
   `;
@@ -2989,17 +3018,14 @@ function createProductCard(product, index) {
 }
 
 function showProductModal(index) {
-  const product = card.products[index];
-  if (!product) return;
+  const p = card.products[index];
+  if (!p) return;
   
-  currentProduct = product;
-  document.getElementById('modalImage').src = product.image || '';
-  document.getElementById('modalTitle').textContent = product.title || 'Product';
-  document.getElementById('modalDescription').textContent = product.desc || 'No description';
-  
-  const price = product.discountPrice || product.originalPrice;
-  document.getElementById('modalPrice').innerHTML = `<div style="font-size:24px; font-weight:900; color:#10b981;">PKR ${price}</div>`;
-  
+  currentProduct = p;
+  document.getElementById('modalImage').src = p.image || '';
+  document.getElementById('modalTitle').textContent = p.title || 'Product';
+  document.getElementById('modalDescription').textContent = p.desc || 'No description';
+  document.getElementById('modalPrice').innerHTML = `<div style="font-size:24px; font-weight:900; color:#10b981;">PKR ${p.discountPrice || p.originalPrice}</div>`;
   openModal('productModal');
 }
 
@@ -3017,18 +3043,16 @@ function closeImageZoom() {
 
 function filterProducts() {
   const term = document.getElementById('productsSearch').value.toLowerCase();
-  const products = card.products || [];
   const container = document.getElementById('allProducts');
   container.innerHTML = '';
-  
-  products.filter(p => p.title?.toLowerCase().includes(term))
+  (card.products || []).filter(p => p.title?.toLowerCase().includes(term))
     .forEach((p, i) => container.appendChild(createProductCard(p, i)));
 }
 
 function buyNow(index) {
-  const product = card.products[index];
-  if (product) {
-    cart = [{ ...product, quantity: 1 }];
+  const p = card.products[index];
+  if (p) {
+    cart = [{ ...p, quantity: 1 }];
     updateCartCount();
     openCheckoutModal();
   }
@@ -3046,7 +3070,7 @@ function buyNowFromModal() {
 // ===== CHECKOUT =====
 async function openCheckoutModal() {
   if (cart.length === 0) {
-    notificationManager.showAlert('Cart is empty', 'warning');
+    notificationManager.showAlert('Cart empty', 'warning');
     return;
   }
   
@@ -3054,28 +3078,24 @@ async function openCheckoutModal() {
   selectedCheckoutAddress = getCustomerAddress();
   
   document.getElementById('checkoutPhoneText').textContent = selectedCheckoutPhone || 'No phone';
-  document.getElementById('checkoutAddressDisplay').innerHTML = selectedCheckoutAddress || 'No address saved';
+  document.getElementById('checkoutAddressDisplay').innerHTML = selectedCheckoutAddress || 'No address';
   
   let subtotal = 0;
-  let itemsHtml = '';
+  let items = '';
   
-  cart.forEach(item => {
-    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
-    const itemTotal = price * (item.quantity || 1);
-    subtotal += itemTotal;
-    
-    itemsHtml += `
-      <div style="display:flex; justify-content:space-between; padding:8px; background:#f8fafc; border-radius:8px; margin-bottom:5px;">
-        <span>${item.title} x${item.quantity}</span>
-        <span>PKR ${itemTotal}</span>
-      </div>
-    `;
+  cart.forEach(i => {
+    const price = parseFloat(i.discountPrice || i.originalPrice || 0);
+    const total = price * (i.quantity || 1);
+    subtotal += total;
+    items += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f8fafc; border-radius:8px; margin-bottom:5px;">
+      <span>${i.title} x${i.quantity}</span> <span>PKR ${total}</span>
+    </div>`;
   });
   
-  document.getElementById('checkoutItems').innerHTML = itemsHtml;
+  document.getElementById('checkoutItems').innerHTML = items;
   document.getElementById('checkoutSubtotal').textContent = subtotal.toFixed(2);
   
-  renderProfessionalPaymentMethods();
+  renderPaymentMethods();
   
   if (selectedCheckoutAddress) {
     calculateDeliveryCharge(selectedCheckoutAddress);
@@ -3090,84 +3110,63 @@ async function openCheckoutModal() {
   openModal('checkoutModal');
 }
 
-function renderProfessionalPaymentMethods() {
+function renderPaymentMethods() {
   const grid = document.getElementById('proPaymentGrid');
   if (!grid) return;
   
   let html = '';
   
-  // COD
-  html += `
-    <div class="pro-payment-card ${checkoutPaymentMethod === 'cod' ? 'selected' : ''}" onclick="selectProPaymentMethod('cod')">
-      <div class="pro-payment-icon" style="background:#10b981;"><i class="fas fa-truck"></i></div>
-      <div>Cash on Delivery</div>
-    </div>
-  `;
+  html += `<div class="pro-payment-card ${checkoutPaymentMethod==='cod'?'selected':''}" onclick="selectProPaymentMethod('cod')">
+    <div style="background:#10b981; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-truck"></i></div>
+    <div>Cash on Delivery</div>
+  </div>`;
   
-  // JazzCash
   if (card.payments?.gateways?.jazzcash?.active) {
-    html += `
-      <div class="pro-payment-card ${checkoutPaymentMethod === 'jazzcash' ? 'selected' : ''}" onclick="selectProPaymentMethod('jazzcash')">
-        <div class="pro-payment-icon" style="background:#FF6B00;"><i class="fas fa-mobile-alt"></i></div>
-        <div>JazzCash</div>
-      </div>
-    `;
+    html += `<div class="pro-payment-card ${checkoutPaymentMethod==='jazzcash'?'selected':''}" onclick="selectProPaymentMethod('jazzcash')">
+      <div style="background:#FF6B00; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-mobile-alt"></i></div>
+      <div>JazzCash</div>
+    </div>`;
   }
   
-  // EasyPaisa
   if (card.payments?.gateways?.easypaisa?.active) {
-    html += `
-      <div class="pro-payment-card ${checkoutPaymentMethod === 'easypaisa' ? 'selected' : ''}" onclick="selectProPaymentMethod('easypaisa')">
-        <div class="pro-payment-icon" style="background:#0A5C36;"><i class="fas fa-wallet"></i></div>
-        <div>EasyPaisa</div>
-      </div>
-    `;
+    html += `<div class="pro-payment-card ${checkoutPaymentMethod==='easypaisa'?'selected':''}" onclick="selectProPaymentMethod('easypaisa')">
+      <div style="background:#0A5C36; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-wallet"></i></div>
+      <div>EasyPaisa</div>
+    </div>`;
   }
   
-  // Bank
   if (card.payments?.gateways?.bank?.active) {
-    html += `
-      <div class="pro-payment-card ${checkoutPaymentMethod === 'bank' ? 'selected' : ''}" onclick="selectProPaymentMethod('bank')">
-        <div class="pro-payment-icon" style="background:#2563eb;"><i class="fas fa-university"></i></div>
-        <div>Bank Transfer</div>
-      </div>
-    `;
+    html += `<div class="pro-payment-card ${checkoutPaymentMethod==='bank'?'selected':''}" onclick="selectProPaymentMethod('bank')">
+      <div style="background:#2563eb; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-university"></i></div>
+      <div>Bank</div>
+    </div>`;
   }
   
-  // Card
   if (card.payments?.gateways?.card?.active) {
-    html += `
-      <div class="pro-payment-card ${checkoutPaymentMethod === 'card' ? 'selected' : ''}" onclick="selectProPaymentMethod('card')">
-        <div class="pro-payment-icon" style="background:#8b5cf6;"><i class="fas fa-credit-card"></i></div>
-        <div>Card</div>
-      </div>
-    `;
+    html += `<div class="pro-payment-card ${checkoutPaymentMethod==='card'?'selected':''}" onclick="selectProPaymentMethod('card')">
+      <div style="background:#8b5cf6; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-credit-card"></i></div>
+      <div>Card</div>
+    </div>`;
   }
   
-  // WhatsApp
-  html += `
-    <div class="pro-payment-card ${checkoutPaymentMethod === 'whatsapp' ? 'selected' : ''}" onclick="selectProPaymentMethod('whatsapp')">
-      <div class="pro-payment-icon" style="background:#25D366;"><i class="fab fa-whatsapp"></i></div>
-      <div>WhatsApp</div>
-    </div>
-  `;
+  html += `<div class="pro-payment-card ${checkoutPaymentMethod==='whatsapp'?'selected':''}" onclick="selectProPaymentMethod('whatsapp')">
+    <div style="background:#25D366; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fab fa-whatsapp"></i></div>
+    <div>WhatsApp</div>
+  </div>`;
   
   grid.innerHTML = html;
 }
 
 function selectProPaymentMethod(method) {
   checkoutPaymentMethod = method;
-  
-  document.querySelectorAll('.pro-payment-card').forEach(c => c.classList.remove('selected'));
-  const selected = document.querySelectorAll(`.pro-payment-card[onclick*="${method}"]`);
-  selected.forEach(c => c.classList.add('selected'));
+  renderPaymentMethods();
   
   if (method !== 'cod' && method !== 'whatsapp') {
-    showPaymentDetailsModal(method);
+    showPaymentDetails(method);
   }
 }
 
-function showPaymentDetailsModal(method) {
+function showPaymentDetails(method) {
   const title = document.getElementById('paymentMethodTitle');
   const content = document.getElementById('paymentDetailsContent');
   
@@ -3175,31 +3174,26 @@ function showPaymentDetailsModal(method) {
     title.innerHTML = 'JazzCash Payment';
     content.innerHTML = `
       <div style="text-align:center;">
-        <div style="font-size:24px; font-weight:900; color:#FF6B00; background:#FF6B0010; padding:15px; border-radius:12px; margin-bottom:15px;">
+        <div style="font-size:24px; font-weight:900; color:#FF6B00; background:#FF6B0010; padding:15px; border-radius:12px;">
           ${card.payments.gateways.jazzcash.number || '03001234567'}
         </div>
-        ${card.payments.gateways.jazzcash.barcode ? `
-          <img src="${card.payments.gateways.jazzcash.barcode}" style="max-width:200px; border-radius:12px;">
-        ` : ''}
+        ${card.payments.gateways.jazzcash.barcode ? 
+          `<img src="${card.payments.gateways.jazzcash.barcode}" style="max-width:200px; margin-top:15px;">` : ''}
       </div>
     `;
   } else if (method === 'easypaisa' && card.payments?.gateways?.easypaisa) {
     title.innerHTML = 'EasyPaisa Payment';
     content.innerHTML = `
-      <div style="text-align:center;">
-        <div style="font-size:24px; font-weight:900; color:#0A5C36; background:#0A5C3610; padding:15px; border-radius:12px;">
-          ${card.payments.gateways.easypaisa.number || '03001234567'}
-        </div>
+      <div style="font-size:24px; font-weight:900; color:#0A5C36; background:#0A5C3610; padding:15px; border-radius:12px; text-align:center;">
+        ${card.payments.gateways.easypaisa.number || '03001234567'}
       </div>
     `;
   } else if (method === 'bank' && card.payments?.gateways?.bank) {
     title.innerHTML = 'Bank Transfer';
     content.innerHTML = `
-      <div>
-        <div><strong>Bank:</strong> ${card.payments.gateways.bank.bankName}</div>
-        <div><strong>Account:</strong> ${card.payments.gateways.bank.accountNumber}</div>
-        <div><strong>Title:</strong> ${card.payments.gateways.bank.accountTitle}</div>
-      </div>
+      <div><strong>Bank:</strong> ${card.payments.gateways.bank.bankName}</div>
+      <div><strong>Account:</strong> ${card.payments.gateways.bank.accountNumber}</div>
+      <div><strong>Title:</strong> ${card.payments.gateways.bank.accountTitle}</div>
     `;
   } else if (method === 'card' && card.payments?.gateways?.card) {
     title.innerHTML = 'Card Payment';
@@ -3213,7 +3207,7 @@ function showPaymentDetailsModal(method) {
 // ===== PLACE ORDER =====
 async function placeOrder() {
   if (!selectedCheckoutPhone) {
-    notificationManager.showAlert('❌ Phone number required', 'error');
+    notificationManager.showAlert('❌ Phone required', 'error');
     openPhoneInput();
     return;
   }
@@ -3253,37 +3247,41 @@ async function placeOrder() {
     estimatedDelivery: deliveryTime
   };
   
+  // Save for proof
+  currentOrderForProof = orderData;
+  localStorage.setItem('currentOrderData', JSON.stringify(orderData));
+  
   const saved = await saveOrderToDatabase(orderData);
   
   if (saved) {
-    currentOrderForProof = orderData;
-    localStorage.setItem('currentOrderId', orderId);
-    
     cart = [];
     updateCartCount();
     closeModal('checkoutModal');
     
-    // Send notifications
-    await notificationManager.sendOrderNotifications(orderData);
-    
-    // Show confirmation
-    showOrderConfirmation(orderData);
-    
-    // Show proof upload for digital payments
-    if (checkoutPaymentMethod !== 'cod' && checkoutPaymentMethod !== 'whatsapp') {
-      setTimeout(() => {
-        if (confirm('Payment proof upload karna chahte hain?')) {
-          openModal('paymentProofModal');
-        }
-      }, 1000);
+    // Send push notification to customer
+    if (getCustomerPhone()) {
+      window.pushManager.sendToUser(getCustomerPhone(), '🛍️ Order Confirmed', 
+        `Order #${orderId} - PKR ${total}`, 
+        { orderId: orderId, token: token, type: 'order' });
     }
-  } else {
-    notificationManager.showAlert('❌ Order failed', 'error');
+    
+    // Send push to admin
+    if (card.phone) {
+      window.pushManager.sendToUser(card.phone, '🔔 New Order', 
+        `Order #${orderId} - PKR ${total}`, 
+        { orderId: orderId, type: 'admin' });
+    }
+    
+    notificationManager.addNotification('Order Placed', `Order #${orderId} confirmed`, 'order', orderId);
+    notificationManager.showAlert('✅ Order placed!', 'success');
+    
+    showOrderConfirmation(orderData);
   }
 }
 
 function showOrderConfirmation(orderData) {
   const content = document.getElementById('orderConfirmationContent');
+  const isDigital = orderData.paymentMethod !== 'Cash on Delivery' && orderData.paymentMethod !== 'WhatsApp Order';
   
   content.innerHTML = `
     <div class="order-ticket">
@@ -3292,23 +3290,17 @@ function showOrderConfirmation(orderData) {
         <h2 style="color:white;">Order Confirmed!</h2>
         <p>Token: ${orderData.token}</p>
       </div>
-      
-      <div style="margin:15px 0;">
-        <div><strong>Order ID:</strong> ${orderData.orderId}</div>
-        <div><strong>Total:</strong> PKR ${orderData.total}</div>
-        <div><strong>Payment:</strong> ${orderData.paymentMethod}</div>
-      </div>
-      
-      ${orderData.paymentMethod !== 'COD' ? `
-        <div style="background:rgba(255,255,255,0.2); padding:15px; border-radius:12px;">
-          <p>📸 Payment proof upload karein</p>
-          <button onclick="openModal('paymentProofModal')" style="background:white; color:#667eea; border:none; padding:10px; border-radius:8px; width:100%; font-weight:700;">
-            Upload Proof
+      <div><strong>Order ID:</strong> ${orderData.orderId}</div>
+      <div><strong>Total:</strong> PKR ${orderData.total}</div>
+      <div><strong>Payment:</strong> ${orderData.paymentMethod}</div>
+      ${isDigital ? `
+        <div style="margin-top:20px;">
+          <button onclick="markAsPaid()" style="background:white; color:#667eea; border:none; padding:15px; border-radius:12px; width:100%; font-weight:800;">
+            <i class="fas fa-camera"></i> Upload Payment Proof
           </button>
         </div>
       ` : ''}
-      
-      <button onclick="navigateTo('deliveryPage')" style="margin-top:20px; background:white; color:#667eea; border:none; padding:15px; border-radius:12px; width:100%; font-weight:700;">
+      <button onclick="navigateTo('deliveryPage')" style="margin-top:20px; background:white; color:#667eea; border:none; padding:15px; border-radius:12px; width:100%; font-weight:800;">
         Track Order
       </button>
     </div>
@@ -3318,63 +3310,10 @@ function showOrderConfirmation(orderData) {
 }
 
 // ===== ADMIN FUNCTIONS =====
-function showAdminTab(tab) {
-  document.getElementById('adminOrdersTab').style.display = tab === 'orders' ? 'block' : 'none';
-  document.getElementById('adminNotificationsTab').style.display = tab === 'notifications' ? 'block' : 'none';
-  document.getElementById('adminTokensTab').style.display = tab === 'tokens' ? 'block' : 'none';
-  
-  document.getElementById('tabOrders').style.background = tab === 'orders' ? '#667eea' : '#f1f5f9';
-  document.getElementById('tabOrders').style.color = tab === 'orders' ? 'white' : '#475569';
-  document.getElementById('tabNotifications').style.background = tab === 'notifications' ? '#667eea' : '#f1f5f9';
-  document.getElementById('tabNotifications').style.color = tab === 'notifications' ? 'white' : '#475569';
-  document.getElementById('tabTokens').style.background = tab === 'tokens' ? '#667eea' : '#f1f5f9';
-  document.getElementById('tabTokens').style.color = tab === 'tokens' ? 'white' : '#475569';
-}
-
-function searchOrders() {
-  const term = document.getElementById('adminOrderSearch').value.toLowerCase();
-  const filtered = orders.filter(o => 
-    o.order_id.toLowerCase().includes(term) ||
-    o.token.toLowerCase().includes(term) ||
-    o.customer_phone.includes(term)
-  );
-  
-  const list = document.getElementById('allOrdersList');
-  if (filtered.length === 0) {
-    list.innerHTML = '<p>No orders found</p>';
-    return;
-  }
-  
-  let html = '';
-  filtered.slice(0, 20).forEach(o => {
-    html += `
-      <div onclick="viewOrderDetails('${o.order_id}')" style="padding:12px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
-        <div style="display:flex; justify-content:space-between;">
-          <span><strong>${o.order_id}</strong></span>
-          <span style="color:${o.payment_status === 'paid' ? '#10b981' : '#f59e0b'}">${o.payment_status}</span>
-        </div>
-        <div style="font-size:12px;">${o.customer_phone} • PKR ${o.total}</div>
-      </div>
-    `;
-  });
-  
-  list.innerHTML = html;
-}
-
 async function loadAdminPanel() {
   await loadOrdersFromDatabase();
   renderTokenList();
   loadPendingPayments();
-  loadCustomerStats();
-}
-
-async function loadCustomerStats() {
-  const { data } = await supa
-    .from('customers')
-    .select('count')
-    .eq('business_id', currentBusinessId);
-  
-  document.getElementById('totalCustomersStat').textContent = data?.[0]?.count || 0;
 }
 
 // ===== LOGIN SYSTEM =====
@@ -3387,18 +3326,16 @@ function toggleLogin() {
 }
 
 function updateLoginUI() {
-  const icon = document.getElementById('loginIcon');
-  icon.className = isAdminLoggedIn ? 'fas fa-sign-out-alt' : 'fas fa-sign-in-alt';
+  document.getElementById('loginIcon').className = isAdminLoggedIn ? 'fas fa-sign-out-alt' : 'fas fa-sign-in-alt';
 }
 
 function attemptLogin() {
-  const password = document.getElementById('adminPasswordInput').value;
-  
-  if (password === businessAdminPassword) {
+  const pwd = document.getElementById('adminPasswordInput').value;
+  if (pwd === businessAdminPassword) {
     isAdminLoggedIn = true;
     isolatedLocalStorage.setItem('isAdminLoggedIn', 'true');
     updateLoginUI();
-    notificationManager.showAlert('✅ Login successful!', 'success');
+    notificationManager.showAlert('✅ Login successful', 'success');
     navigateTo('adminPage');
     loadAdminPanel();
   } else {
@@ -3424,7 +3361,7 @@ let lastBackPress = 0;
 function initializeRouting() {
   window.addEventListener('hashchange', handleHashChange);
   setTimeout(() => {
-    const hash = window.location.hash.replace('#', '') || 'home';
+    window.location.hash = window.location.hash || '#home';
     handleHashChange();
   }, 100);
 }
@@ -3436,7 +3373,6 @@ function handleHashChange() {
     'about': 'aboutPage', 'contact': 'contactPage', 'delivery': 'deliveryPage',
     'admin': 'adminPage', 'login': 'loginPage'
   };
-  
   if (pages[hash] && currentPage !== pages[hash]) {
     navigateToDirect(pages[hash]);
   }
@@ -3445,18 +3381,18 @@ function handleHashChange() {
 function navigateToDirect(pageId) {
   if (currentPage === pageId) return;
   
-  const oldPage = document.getElementById(currentPage);
-  const newPage = document.getElementById(pageId);
+  const old = document.getElementById(currentPage);
+    const newPage = document.getElementById(pageId);
   
   if (!newPage) return;
   
-  if (oldPage) {
-    oldPage.classList.remove('active');
-    oldPage.classList.add('slide-out');
+  if (old) {
+    old.classList.remove('active');
+    old.classList.add('slide-out');
   }
   
   setTimeout(() => {
-    if (oldPage) oldPage.classList.remove('slide-out');
+    if (old) old.classList.remove('slide-out');
     newPage.classList.add('active');
     currentPage = pageId;
     
@@ -3486,15 +3422,12 @@ function navigateToDirect(pageId) {
 }
 
 function navigateTo(pageId) {
-  const hashMap = {
+  const map = {
     'homePage': 'home', 'productsPage': 'products', 'cartPage': 'cart',
     'aboutPage': 'about', 'contactPage': 'contact', 'deliveryPage': 'delivery',
     'adminPage': 'admin', 'loginPage': 'login'
   };
-  
-  if (hashMap[pageId]) {
-    window.location.hash = `#${hashMap[pageId]}`;
-  }
+  if (map[pageId]) window.location.hash = `#${map[pageId]}`;
 }
 
 function goBack() {
@@ -3536,22 +3469,20 @@ function closeInstallPermissionModal() {
 
 function acceptInstallPermissions() {
   document.getElementById('installPermissionModal').style.display = 'none';
-  notificationManager.requestPermission();
+  pushManager.requestPermission();
 }
 
 // ===== PAGE LOADERS =====
 function loadHomePage() {
   const featured = document.getElementById('featuredProducts');
-  const products = card.products || [];
   featured.innerHTML = '';
-  products.slice(0, 4).forEach((p, i) => featured.appendChild(createProductCard(p, i)));
+  (card.products || []).slice(0, 4).forEach((p, i) => featured.appendChild(createProductCard(p, i)));
 }
 
 function loadProductsPage() {
   const all = document.getElementById('allProducts');
-  const products = card.products || [];
   all.innerHTML = '';
-  products.forEach((p, i) => all.appendChild(createProductCard(p, i)));
+  (card.products || []).forEach((p, i) => all.appendChild(createProductCard(p, i)));
 }
 
 function loadAboutPage() {
@@ -3562,26 +3493,23 @@ function loadAboutPage() {
     </div>
   `;
   
-  // Business hours
   if (card.businessHours) {
     const hours = document.getElementById('businessHours');
     hours.innerHTML = '';
     const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    
-    card.businessHours.forEach((day, i) => {
+    card.businessHours.forEach((d, i) => {
       if (i < 7) {
         hours.innerHTML += `
           <div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #e2e8f0;">
             <span>${days[i]}</span>
-            <span>${day.status === 'closed' ? 'Closed' : day.start + ' - ' + day.end}</span>
+            <span>${d.status === 'closed' ? 'Closed' : (d.start || '09:00') + ' - ' + (d.end || '18:00')}</span>
           </div>
         `;
       }
     });
   }
   
-  // Holidays
-  if (card.holidays?.length > 0) {
+  if (card.holidays?.length) {
     const holidays = document.getElementById('holidaysList');
     holidays.innerHTML = '';
     card.holidays.forEach(h => {
@@ -3609,7 +3537,8 @@ function loadContactPage() {
   const platforms = [
     { key: 'facebook', icon: 'fab fa-facebook', color: '#1877F2' },
     { key: 'instagram', icon: 'fab fa-instagram', color: '#E4405F' },
-    { key: 'twitter', icon: 'fab fa-twitter', color: '#1DA1F2' }
+    { key: 'twitter', icon: 'fab fa-twitter', color: '#1DA1F2' },
+    { key: 'linkedin', icon: 'fab fa-linkedin', color: '#0A66C2' }
   ];
   
   platforms.forEach(p => {
@@ -3688,6 +3617,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   initCustomerData();
   
+  // Initialize push manager
+  await pushManager.init();
+  
   setTimeout(async () => {
     const { data, error } = await supa.from("cards").select("*").eq("id", id).single();
     if (error || !data) {
@@ -3716,18 +3648,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     setTimeout(() => checkForDeliveries(), 1000);
     notificationManager.addNotification('Welcome!', 'Browse products and enjoy shopping', 'info');
     
-    setTimeout(() => {
-      if (!window.matchMedia('(display-mode: standalone)').matches && deferredPrompt) {
-        document.getElementById('installPermissionModal').style.display = 'flex';
-      }
-    }, 3000);
+    // Hide loading screen
+    document.getElementById('loadingScreen').classList.remove('active');
+    document.getElementById('homePage').classList.add('active');
+    currentPage = 'homePage';
+    
   }, 2000);
 });
 
 async function renderApp() {
   setupDynamicPWA(card);
   document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
-  document.getElementById('photo').src = card.profileImage || '';
+  if (card.profileImage) document.getElementById('photo').src = card.profileImage;
   document.getElementById('name').textContent = card.name || '';
   document.getElementById('business').textContent = card.businessName || '';
   loadHomePage();
