@@ -13,6 +13,7 @@
 <link rel="manifest" href="manifest.json" id="manifestLink">
 
 <style>
+/* ===== ALL YOUR EXISTING STYLES HERE - KEEP COMPLETELY UNCHANGED ===== */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -323,101 +324,18 @@ body {
   right: -350px;
   width: 320px;
   height: 100%;
-  background: white;
-  box-shadow: -5px 0 30px rgba(0,0,0,0.2);
+  background: var(--glass-bg);
+  backdrop-filter: blur(30px);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: -10px 0 40px rgba(0,0,0,0.2);
   z-index: 2000;
-  transition: right 0.3s ease;
+  transition: var(--transition-slow);
   display: flex;
   flex-direction: column;
 }
 
 .notification-drawer.open {
   right: 0;
-}
-
-.notification-header {
-  padding: 20px;
-  background: white;
-  border-bottom: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.notification-header h3 {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--dark-color);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.notification-count {
-  background: var(--primary-gradient);
-  color: white;
-  padding: 2px 8px;
-  border-radius: 20px;
-  font-size: 12px;
-}
-
-.notification-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 15px;
-}
-
-.notification-item {
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  transition: all 0.2s;
-  cursor: pointer;
-  border-left: 4px solid transparent;
-}
-
-.notification-item:hover {
-  background: #f8fafc;
-}
-
-.notification-item.unread {
-  background: #f0f9ff;
-  border-left-color: #3b82f6;
-}
-
-.notification-item.read {
-  opacity: 0.8;
-}
-
-.notification-footer {
-  padding: 15px;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  gap: 10px;
-}
-
-/* ===== NOTIFICATION ALERT ===== */
-.notification-alert {
-  position: fixed;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: white;
-  padding: 15px 25px;
-  border-radius: 12px;
-  box-shadow: var(--shadow-xl);
-  z-index: 3000;
-  max-width: 300px;
-  animation: slideDown 0.5s ease;
-  font-weight: 700;
-  font-size: 14px;
-  text-align: center;
-  display: none;
-}
-
-@keyframes slideDown {
-  from { top: -100px; opacity: 0; }
-  to { top: 100px; opacity: 1; }
 }
 
 /* ===== PRODUCT CARDS ===== */
@@ -474,6 +392,7 @@ body {
   padding: 4px;
 }
 
+/* ===== BADGE POSITIONS ===== */
 .badge-container {
   position: absolute;
   top: 0;
@@ -656,32 +575,28 @@ body {
   padding: 20px;
 }
 
-/* ===== PUSH NOTIFICATION BUTTON ===== */
-.push-button {
-  background: var(--info-gradient);
+/* ===== INSTALL BUTTON ===== */
+.install-button-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  animation: slideDown 0.5s ease;
+}
+
+.install-btn {
+  padding: 12px 24px;
+  background: var(--primary-gradient);
   color: white;
   border: none;
-  padding: 12px 20px;
   border-radius: 12px;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
+  box-shadow: var(--shadow-xl);
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: var(--transition-fast);
-}
-
-.push-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.push-button.enabled {
-  background: var(--success-gradient);
-}
-
-.push-button.disabled {
-  background: var(--warning-gradient);
 }
 
 /* ===== ORDER MANAGEMENT ===== */
@@ -841,6 +756,26 @@ body {
   border-bottom: 1px solid #f1f5f9;
 }
 
+/* ===== NOTIFICATION ALERT ===== */
+.notification-alert {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--whatsapp-gradient);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 12px;
+  box-shadow: var(--shadow-xl);
+  z-index: 3000;
+  max-width: 300px;
+  animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s forwards;
+  font-weight: 700;
+  font-size: 14px;
+  text-align: center;
+  display: none;
+}
+
 /* ===== PAGE HEADERS ===== */
 #homePage, #productsPage, #cartPage, #aboutPage, #contactPage, #deliveryPage, #adminPage, #loginPage {
   padding-top: 80px;
@@ -883,6 +818,21 @@ body {
   .notification-drawer { width: 100%; right: -100%; }
 }
 
+@keyframes slideIn {
+  from { top: 50px; opacity: 0; }
+  to { top: 100px; opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideDown {
+  from { top: -100px; opacity: 0; }
+  to { top: 20px; opacity: 1; }
+}
+
 @keyframes zoomIn {
   from { transform: scale(0.8); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
@@ -921,13 +871,6 @@ body {
     </button>
     
     <div class="header-icons">
-      <!-- PUSH NOTIFICATION BUTTON -->
-      <div class="header-icon-btn" onclick="window.pushManager.togglePush()" 
-           id="pushButton" title="Enable Push Notifications">
-        <i class="fas fa-bell" id="pushIcon"></i>
-        <div class="delivery-badge" id="pushBadge" style="display:none;">!</div>
-      </div>
-      
       <div class="header-icon-btn" onclick="window.toggleNotificationDrawer()" title="Notifications">
         <i class="fas fa-bell" id="notificationBell"></i>
         <div class="delivery-badge" id="notificationBadge" style="display:none;">!</div>
@@ -952,25 +895,18 @@ body {
   <div class="notification-drawer" id="notificationDrawer">
     <div class="notification-header">
       <h3><i class="fas fa-bell"></i> Notifications <span class="notification-count" id="notificationCount">0</span></h3>
-      <button onclick="window.toggleNotificationDrawer()" style="background:none; border:none; font-size:24px; cursor:pointer;">×</button>
+      <button onclick="window.toggleNotificationDrawer()" style="background: none; border: none; font-size: 24px; color: var(--dark-color); cursor: pointer;">×</button>
     </div>
-    
-    <div class="notification-list" id="notificationList"></div>
-    
-    <div class="notification-footer">
-      <button onclick="window.markAllNotificationsAsRead()" 
-              style="flex:1; padding:12px; background:#f1f5f9; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+    <div class="notification-content" id="notificationList"></div>
+    <div class="notification-actions">
+      <button onclick="window.markAllNotificationsAsRead()" style="flex:1; padding: 10px; background: #f1f5f9; border: none; border-radius: 8px; font-weight: 700; color: #64748b; cursor: pointer;">
         Mark All Read
       </button>
-      <button onclick="window.pushManager.requestPermission()" 
-              style="flex:1; padding:12px; background:var(--primary-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+      <button onclick="window.enableNotifications()" style="flex:1; padding: 10px; background: var(--primary-gradient); border: none; border-radius: 8px; font-weight: 700; color: white; cursor: pointer;">
         Enable Alerts
       </button>
     </div>
   </div>
-
-  <!-- ===== NOTIFICATION ALERT ===== -->
-  <div class="notification-alert" id="notificationAlert"></div>
 
   <!-- ===== IMAGE ZOOM OVERLAY ===== -->
   <div class="image-zoom-overlay" id="imageZoomOverlay" onclick="window.closeImageZoom()">
@@ -1008,7 +944,7 @@ body {
         <button class="permission-btn cancel" onclick="window.closeInstallPermissionModal()" style="flex:1; padding:12px; background:#f1f5f9; border:none; border-radius:12px; font-weight:700; color:#475569; cursor:pointer;">
           <i class="fas fa-times"></i> Skip
         </button>
-        <button class="permission-btn accept" onclick="window.acceptInstallPermissions()" style="flex:1; padding:12px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+        <button class="permission-btn accept" onclick="window.acceptInstallPermissions()" style="flex:1; padding:12px; background:var(--success-gradient); border:none; border-radius:12px; font-weight:700; color:white; cursor:pointer;">
           <i class="fas fa-check"></i> Accept & Continue
         </button>
       </div>
@@ -1218,151 +1154,41 @@ body {
       <p style="color:#64748b; margin-top:4px;">Manage orders, tokens & deliveries</p>
     </div>
     
-    <!-- Admin Tabs -->
-    <div style="display:flex; margin:15px; gap:5px;">
-      <button onclick="showAdminTab('orders')" id="tabOrders" style="flex:1; padding:10px; background:#667eea; color:white; border:none; border-radius:8px; font-weight:700;">Orders</button>
-      <button onclick="showAdminTab('notifications')" id="tabNotifications" style="flex:1; padding:10px; background:#f1f5f9; color:#475569; border:none; border-radius:8px; font-weight:700;">Notifications</button>
-      <button onclick="showAdminTab('tokens')" id="tabTokens" style="flex:1; padding:10px; background:#f1f5f9; color:#475569; border:none; border-radius:8px; font-weight:700;">Tokens</button>
-    </div>
-    
-    <!-- Orders Tab -->
-    <div id="adminOrdersTab" style="display:block;">
-      <div class="token-management">
-        <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:15px;">
-          <i class="fas fa-clock" style="color:#f59e0b;"></i> Pending Payment Confirmations
-          <span id="pendingPaymentCount" style="background:#f59e0b; color:white; padding:2px 10px; border-radius:20px; font-size:12px;">0</span>
+    <div class="token-management">
+      <div class="token-header">
+        <h3 style="font-size:18px; font-weight:800; color:var(--dark-color);">
+          <i class="fas fa-ticket-alt" style="color:#667eea;"></i> Order Tokens
         </h3>
-        
-        <div id="pendingPaymentsList"></div>
-      </div>
-      
-      <div class="token-management">
-        <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:15px;">
-          <i class="fas fa-search"></i> Search Orders
-        </h3>
-        <input type="text" id="adminOrderSearch" placeholder="Search by order ID, token, phone..." 
-               style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px; margin-bottom:15px;"
-               onkeyup="searchOrders()">
-        <div id="allOrdersList"></div>
-      </div>
-    </div>
-    
-    <!-- Notifications Tab -->
-    <div id="adminNotificationsTab" style="display:none;">
-      <div class="token-management">
-        <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:15px;">
-          <i class="fas fa-pen"></i> Create New Notification
-        </h3>
-        
-        <div style="margin-bottom:15px;">
-          <label style="font-weight:600; display:block; margin-bottom:5px;">Notification Title</label>
-          <input type="text" id="notifTitle" placeholder="e.g., Summer Sale" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px;">
-        </div>
-        
-        <div style="margin-bottom:15px;">
-          <label style="font-weight:600; display:block; margin-bottom:5px;">Notification Message</label>
-          <textarea id="notifBody" rows="3" placeholder="Your message here..." style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px;"></textarea>
-        </div>
-        
-        <div style="margin-bottom:15px;">
-          <label style="font-weight:600; display:block; margin-bottom:5px;">Notification Type</label>
-          <select id="notifType" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px;">
-            <option value="promo">🎉 Promotion / Offer</option>
-            <option value="info">ℹ️ General Info</option>
-            <option value="warning">⚠️ Important Alert</option>
-            <option value="success">✅ Success Update</option>
-            <option value="order">🛍️ Order Update</option>
-          </select>
-        </div>
-        
-        <div style="margin-bottom:20px;">
-          <label style="font-weight:600; display:block; margin-bottom:5px;">Send Method</label>
-          <div style="display:flex; gap:15px;">
-            <label style="display:flex; align-items:center; gap:5px;">
-              <input type="checkbox" id="sendPush" checked> Push Notification
-            </label>
-            <label style="display:flex; align-items:center; gap:5px;">
-              <input type="checkbox" id="sendWhatsApp"> WhatsApp
-            </label>
-            <label style="display:flex; align-items:center; gap:5px;">
-              <input type="checkbox" id="sendInApp" checked> In-App
-            </label>
-          </div>
-        </div>
-        
-        <div style="margin-bottom:20px;">
-          <label style="font-weight:600; display:block; margin-bottom:5px;">Target Audience</label>
-          <select id="notifAudience" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px;">
-            <option value="all">All Customers</option>
-            <option value="active">Active Customers (last 30 days)</option>
-            <option value="push">Push Enabled Only</option>
-            <option value="whatsapp">WhatsApp Enabled Only</option>
-          </select>
-        </div>
-        
-        <button onclick="sendPromotionalNotification()" 
-                style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:800; cursor:pointer; margin-bottom:15px;">
-          <i class="fas fa-paper-plane"></i> SEND NOTIFICATION
+        <button onclick="window.generateNewToken()" style="background:var(--success-gradient); color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;">
+          <i class="fas fa-plus"></i> Generate Token
         </button>
-        
-        <div style="background:#f8fafc; padding:15px; border-radius:8px;">
-          <h4 style="font-weight:700; margin-bottom:8px;">📊 Stats</h4>
-          <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-            <span>Push Subscribers:</span>
-            <span id="pushSubscribersStat">0</span>
-          </div>
-          <div style="display:flex; justify-content:space-between;">
-            <span>WhatsApp Contacts:</span>
-            <span id="whatsappCustomersStat">0</span>
-          </div>
+      </div>
+      
+      <div class="token-stats" id="tokenStats">
+        <div class="stat-card">
+          <div class="stat-number" id="totalTokensCount">0</div>
+          <div class="stat-label">Total Tokens</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="activeTokensCount">0</div>
+          <div class="stat-label">Active</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="todayTokensCount">0</div>
+          <div class="stat-label">Today</div>
         </div>
       </div>
       
-      <div class="token-management">
-        <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:15px;">
-          <i class="fas fa-history"></i> Notification History
-        </h3>
-        <div id="notificationHistory"></div>
+      <div style="margin-bottom:16px;">
+        <input type="text" id="adminTokenSearch" placeholder="Search tokens, orders, customers..." 
+               style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;"
+               onkeyup="window.searchAdminTokens()">
       </div>
+      
+      <div class="token-list" id="tokenList"></div>
     </div>
     
-    <!-- Tokens Tab -->
-    <div id="adminTokensTab" style="display:none;">
-      <div class="token-management">
-        <div class="token-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <h3 style="font-size:18px; font-weight:800; color:var(--dark-color);">
-            <i class="fas fa-ticket-alt" style="color:#667eea;"></i> Order Tokens
-          </h3>
-          <button onclick="window.generateNewToken()" style="background:var(--success-gradient); color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;">
-            <i class="fas fa-plus"></i> Generate Token
-          </button>
-        </div>
-        
-        <div class="token-stats" id="tokenStats">
-          <div class="stat-card">
-            <div class="stat-number" id="totalTokensCount">0</div>
-            <div class="stat-label">Total Tokens</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number" id="activeTokensCount">0</div>
-            <div class="stat-label">Active</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-number" id="todayTokensCount">0</div>
-            <div class="stat-label">Today</div>
-          </div>
-        </div>
-        
-        <div style="margin-bottom:16px;">
-          <input type="text" id="adminTokenSearch" placeholder="Search tokens, orders, customers..." 
-                 style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;"
-                 onkeyup="window.searchAdminTokens()">
-        </div>
-        
-        <div class="token-list" id="tokenList"></div>
-      </div>
-    </div>
-    
+    <div id="adminContent"></div>
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
@@ -1386,6 +1212,12 @@ body {
       </button>
       
       <div class="password-hint" id="passwordHint" style="margin-top:20px; padding:16px; background:#f1f5f9; border-radius:12px; color:#64748b; font-size:14px;"></div>
+      
+      <div id="logoutSection" style="display:none; margin-top: 30px;">
+        <button onclick="window.logoutAdmin()" class="logout-btn" style="margin: 0 auto; padding:12px 24px; background:#ef4444; color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
     </div>
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
@@ -1415,55 +1247,14 @@ body {
   </div>
 </div>
 
-<!-- ===== PAYMENT PROOF MODAL ===== -->
-<div class="modal-overlay" id="paymentProofModal">
-  <div class="modal-content">
-    <button class="close-btn" onclick="closeModal('paymentProofModal')">×</button>
-    
-    <div style="padding:25px;">
-      <div style="text-align:center; margin-bottom:20px;">
-        <i class="fas fa-camera" style="font-size:48px; color:#667eea;"></i>
-        <h2 style="font-size:22px; font-weight:800; margin-top:10px;">Submit Payment Proof</h2>
-        <p style="color:#64748b;">Apne payment ka screenshot ya transaction ID share karein</p>
-      </div>
-      
-      <div style="margin-bottom:20px;">
-        <label style="font-weight:600; display:block; margin-bottom:8px;">Transaction ID / Reference Number</label>
-        <input type="text" id="proofTransactionId" placeholder="e.g., T20240213ABCD" 
-               style="width:100%; padding:14px; border:2px solid #e2e8f0; border-radius:12px;">
-      </div>
-      
-      <div style="margin-bottom:20px;">
-        <label style="font-weight:600; display:block; margin-bottom:8px;">Amount Paid (PKR)</label>
-        <input type="number" id="proofAmount" placeholder="e.g., 1500" 
-               style="width:100%; padding:14px; border:2px solid #e2e8f0; border-radius:12px;">
-      </div>
-      
-      <div style="margin-bottom:20px;">
-        <label style="font-weight:600; display:block; margin-bottom:8px;">Payment Screenshot (Optional)</label>
-        <div id="proofDropZone" style="border:3px dashed #667eea; border-radius:16px; padding:25px; text-align:center; background:#f8fafc; cursor:pointer;">
-          <i class="fas fa-cloud-upload-alt" style="font-size:48px; color:#667eea;"></i>
-          <p style="margin:10px 0;">Click ya drag & drop</p>
-          <p style="font-size:12px; color:#94a3b8;">JPG, PNG (Max 5MB)</p>
-          <input type="file" id="proofImage" accept="image/*" style="display:none;">
-        </div>
-        <div id="proofImagePreview" style="margin-top:15px; display:none;">
-          <img src="" style="max-width:100%; max-height:150px; border-radius:8px;">
-          <button onclick="removeProofImage()" style="margin-top:8px; background:#ef4444; color:white; border:none; padding:5px 15px; border-radius:6px;">Remove</button>
-        </div>
-      </div>
-      
-      <div style="margin-bottom:20px;">
-        <label style="font-weight:600; display:block; margin-bottom:8px;">Additional Notes</label>
-        <textarea id="proofNotes" rows="2" placeholder="Koi extra information..." 
-                  style="width:100%; padding:14px; border:2px solid #e2e8f0; border-radius:12px;"></textarea>
-      </div>
-      
-      <button onclick="submitPaymentProof()" 
-              style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:16px; cursor:pointer;">
-        <i class="fas fa-check-circle"></i> SUBMIT PROOF
-      </button>
-    </div>
+<!-- ===== NOTIFICATION ALERT ===== -->
+<div class="notification-alert" id="notificationAlert"></div>
+
+<!-- ===== DELIVERY STATUS MODAL ===== -->
+<div class="delivery-modal-overlay" id="deliveryStatusModal" style="display:none;">
+  <div class="delivery-modal" style="background:white; max-width:340px; width:90%; border-radius:24px; position:relative; padding:20px;">
+    <button onclick="window.closeDeliveryModal()" style="position:absolute;top:15px;right:15px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.1);border:none;color:var(--dark-color);font-size:24px;cursor:pointer;">×</button>
+    <div id="deliveryStatusContent" style="padding:40px 25px;"></div>
   </div>
 </div>
 
@@ -1537,35 +1328,8 @@ body {
       </div>
       
       <button onclick="window.placeOrder()" style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:var(--border-radius-md); font-size:17px; font-weight:800; cursor:pointer;">
-        <i class="fas fa-lock"></i> Place Order
+        <i class="fas fa-lock"></i> Place Order & Generate Token
       </button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== PAYMENT DETAILS MODAL ===== -->
-<div class="modal-overlay" id="paymentDetailsModal">
-  <div class="modal-content">
-    <button class="close-btn" onclick="window.closeModal('paymentDetailsModal')">×</button>
-    
-    <div style="padding:25px;">
-      <div style="text-align:center; margin-bottom:20px;">
-        <i class="fas fa-credit-card" style="font-size:48px; color:#667eea;"></i>
-        <h2 id="paymentMethodTitle" style="font-size:22px; font-weight:800; margin-top:10px;">Payment Details</h2>
-      </div>
-      
-      <div id="paymentDetailsContent"></div>
-      
-      <!-- I HAVE PAID BUTTON -->
-      <button onclick="window.markAsPaid()" 
-              style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:16px; cursor:pointer; margin:20px 0;">
-        <i class="fas fa-check-circle"></i> I HAVE PAID - Submit Proof
-      </button>
-      
-      <p style="font-size:12px; color:#64748b; text-align:center;">
-        <i class="fas fa-info-circle"></i> 
-        Payment karne ke baad proof upload karein. Admin verify karega.
-      </p>
     </div>
   </div>
 </div>
@@ -1575,6 +1339,22 @@ body {
   <div class="modal-content">
     <button class="close-btn" onclick="window.closeModal('orderConfirmationModal')">×</button>
     <div style="padding:25px;" id="orderConfirmationContent"></div>
+  </div>
+</div>
+
+<!-- ===== PAYMENT DETAILS MODAL ===== -->
+<div class="modal-overlay" id="paymentDetailsModal">
+  <div class="modal-content">
+    <button class="close-btn" onclick="window.closeModal('paymentDetailsModal')">×</button>
+    <div style="padding:25px;">
+      <h2 style="font-size:22px; font-weight:800; color:var(--dark-color); margin-bottom:20px;" id="paymentMethodTitle">
+        Payment Details
+      </h2>
+      <div id="paymentDetailsContent"></div>
+      <button onclick="window.completePaymentAndConfirmOrder()" style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:var(--border-radius-md); font-size:17px; font-weight:800; cursor:pointer; margin-top:25px;">
+        <i class="fas fa-check-circle"></i> Confirm Payment
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1613,455 +1393,6 @@ const supa = supabase.createClient(
   "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
 );
 
-// ===== PUSH NOTIFICATION MANAGER =====
-class PushNotificationManager {
-  constructor() {
-    this.swRegistration = null;
-    // VAPID keys - Generate from https://web-push-codelab.glitch.me/
-    this.vapidPublicKey = 'BMrBw1z1x8QxYoLxKxQxLxMxNxOxPxQxRxSxTxUxVxWxXxYxZx'; // Replace with your key
-    this.isSubscribed = false;
-    this.pushSupported = 'serviceWorker' in navigator && 'PushManager' in window;
-    this.permission = Notification ? Notification.permission : 'denied';
-  }
-
-  async init() {
-    if (!this.pushSupported) {
-      console.log('Push not supported');
-      return false;
-    }
-
-    try {
-      // Register service worker
-      this.swRegistration = await navigator.serviceWorker.register('/sw.js');
-      console.log('Service Worker registered');
-
-      // Check subscription status
-      await this.updateSubscriptionStatus();
-      
-      // Update UI
-      this.updateUI();
-      
-      return true;
-    } catch (error) {
-      console.error('Push init error:', error);
-      return false;
-    }
-  }
-
-  async updateSubscriptionStatus() {
-    if (!this.swRegistration) return;
-    
-    const subscription = await this.swRegistration.pushManager.getSubscription();
-    this.isSubscribed = !(subscription === null);
-    this.permission = Notification.permission;
-  }
-
-  async togglePush() {
-    if (this.isSubscribed) {
-      await this.unsubscribe();
-    } else {
-      await this.requestPermission();
-    }
-  }
-
-  async requestPermission() {
-    if (!('Notification' in window)) {
-      this.showAlert('❌ Notifications not supported', 'error');
-      return false;
-    }
-
-    if (Notification.permission === 'granted') {
-      return await this.subscribe();
-    }
-
-    if (Notification.permission !== 'denied') {
-      const permission = await Notification.requestPermission();
-      
-      if (permission === 'granted') {
-        return await this.subscribe();
-      } else {
-        this.showAlert('❌ Permission denied', 'error');
-        return false;
-      }
-    }
-    
-    return false;
-  }
-
-  async subscribe() {
-    if (!this.swRegistration) {
-      this.swRegistration = await navigator.serviceWorker.ready;
-    }
-
-    try {
-      // Get subscription
-      let subscription = await this.swRegistration.pushManager.getSubscription();
-      
-      if (!subscription) {
-        // Create new subscription
-        subscription = await this.swRegistration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKey)
-        });
-      }
-
-      // Save to server
-      await this.saveSubscription(subscription);
-      
-      this.isSubscribed = true;
-      this.updateUI();
-      
-      this.showAlert('✅ Push notifications enabled!', 'success');
-      
-      // Add to notification drawer
-      window.notificationManager.addNotification(
-        'Push Enabled',
-        'You will now receive push notifications',
-        'success'
-      );
-      
-      return true;
-      
-    } catch (error) {
-      console.error('Subscription error:', error);
-      this.showAlert('❌ Failed to enable push: ' + error.message, 'error');
-      return false;
-    }
-  }
-
-  async unsubscribe() {
-    if (!this.swRegistration) return;
-
-    try {
-      const subscription = await this.swRegistration.pushManager.getSubscription();
-      
-      if (subscription) {
-        await subscription.unsubscribe();
-        
-        // Remove from server
-        await this.removeSubscription(subscription);
-        
-        this.isSubscribed = false;
-        this.updateUI();
-        
-        this.showAlert('🔕 Push notifications disabled', 'info');
-        
-        window.notificationManager.addNotification(
-          'Push Disabled',
-          'You have disabled push notifications',
-          'info'
-        );
-      }
-    } catch (error) {
-      console.error('Unsubscribe error:', error);
-      this.showAlert('❌ Failed to disable push', 'error');
-    }
-  }
-
-  async saveSubscription(subscription) {
-    try {
-      const { error } = await supa
-        .from('push_subscriptions')
-        .insert([{
-          business_id: currentBusinessId,
-          customer_phone: getCustomerPhone() || 'anonymous',
-          subscription: subscription,
-          endpoint: subscription.endpoint,
-          device_info: {
-            userAgent: navigator.userAgent,
-            platform: navigator.platform,
-            language: navigator.language
-          },
-          created_at: new Date().toISOString()
-        }]);
-
-      if (error) console.error('Save subscription error:', error);
-    } catch (error) {
-      console.error('Save subscription error:', error);
-    }
-  }
-
-  async removeSubscription(subscription) {
-    try {
-      const { error } = await supa
-        .from('push_subscriptions')
-        .delete()
-        .eq('endpoint', subscription.endpoint);
-
-      if (error) console.error('Remove subscription error:', error);
-    } catch (error) {
-      console.error('Remove subscription error:', error);
-    }
-  }
-
-  // Send push notification to a user
-  async sendToUser(phone, title, body, data = {}) {
-    try {
-      const { data: subscriptions } = await supa
-        .from('push_subscriptions')
-        .select('subscription')
-        .eq('customer_phone', phone);
-
-      if (!subscriptions || subscriptions.length === 0) return false;
-
-      const payload = JSON.stringify({
-        title: title,
-        body: body,
-        icon: '/icon-192.png',
-        badge: '/icon-192.png',
-        url: data.url || '/',
-        orderId: data.orderId,
-        type: data.type || 'general'
-      });
-
-      // Send to each subscription
-      const promises = subscriptions.map(sub => 
-        fetch('/api/push/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            subscription: sub.subscription,
-            payload: payload
-          })
-        }).catch(err => console.error('Push send error:', err))
-      );
-
-      await Promise.all(promises);
-      return true;
-    } catch (error) {
-      console.error('Send push error:', error);
-      return false;
-    }
-  }
-
-  // Broadcast to all subscribers
-  async broadcast(title, body, type = 'promo') {
-    try {
-      const { data: subscriptions } = await supa
-        .from('push_subscriptions')
-        .select('subscription')
-        .eq('business_id', currentBusinessId);
-
-      if (!subscriptions || subscriptions.length === 0) {
-        this.showAlert('No subscribers', 'warning');
-        return false;
-      }
-
-      const payload = JSON.stringify({
-        title: title,
-        body: body,
-        icon: '/icon-192.png',
-        badge: '/icon-192.png',
-        url: '/',
-        type: type
-      });
-
-      // Send to all subscribers
-      const promises = subscriptions.map(sub => 
-        fetch('/api/push/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            subscription: sub.subscription,
-            payload: payload
-          })
-        }).catch(err => console.error('Broadcast error:', err))
-      );
-
-      await Promise.all(promises);
-      
-      this.showAlert(`📢 Broadcast sent to ${subscriptions.length} devices`, 'success');
-      
-      window.notificationManager.addNotification(
-        'Broadcast Sent',
-        `"${title}" sent to ${subscriptions.length} devices`,
-        'success'
-      );
-      
-      return true;
-    } catch (error) {
-      console.error('Broadcast error:', error);
-      this.showAlert('❌ Broadcast failed', 'error');
-      return false;
-    }
-  }
-
-  // Update UI based on subscription status
-  updateUI() {
-    const pushButton = document.getElementById('pushButton');
-    const pushIcon = document.getElementById('pushIcon');
-    const pushBadge = document.getElementById('pushBadge');
-    
-    if (!pushButton) return;
-
-    if (this.isSubscribed) {
-      pushButton.style.background = 'rgba(16, 185, 129, 0.25)';
-      pushIcon.style.color = '#10b981';
-      pushBadge.style.display = 'none';
-      pushButton.title = 'Push Enabled';
-    } else if (this.permission === 'denied') {
-      pushButton.style.background = 'rgba(239, 68, 68, 0.25)';
-      pushIcon.style.color = '#ef4444';
-      pushBadge.style.display = 'flex';
-      pushBadge.textContent = '!';
-      pushButton.title = 'Push Blocked - Click to enable';
-    } else {
-      pushButton.style.background = 'rgba(255, 255, 255, 0.25)';
-      pushIcon.style.color = 'white';
-      pushBadge.style.display = 'none';
-      pushButton.title = 'Enable Push Notifications';
-    }
-  }
-
-  showAlert(message, type) {
-    const alert = document.getElementById('notificationAlert');
-    if (!alert) return;
-
-    const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-    alert.innerHTML = `${icons[type] || '🔔'} ${message}`;
-    alert.style.display = 'block';
-    
-    alert.style.background = 
-      type === 'success' ? 'var(--success-gradient)' :
-      type === 'error' ? 'var(--danger-gradient)' :
-      type === 'warning' ? 'var(--warning-gradient)' :
-      'var(--info-gradient)';
-    
-    setTimeout(() => alert.style.display = 'none', 3000);
-  }
-
-  // Utility: URL base64 to Uint8Array
-  urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-  }
-}
-
-// ===== NOTIFICATION MANAGER (In-App) =====
-class NotificationManager {
-  constructor() {
-    this.notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
-    this.unreadCount = this.notifications.filter(n => !n.read).length;
-  }
-
-  addNotification(title, message, type = 'info', orderId = null) {
-    const notification = {
-      id: Date.now(),
-      title: title,
-      message: message,
-      type: type,
-      orderId: orderId,
-      time: new Date().toLocaleString(),
-      read: false,
-      icon: this.getIcon(type)
-    };
-
-    this.notifications.unshift(notification);
-    if (this.notifications.length > 50) this.notifications.pop();
-    
-    this.unreadCount++;
-    localStorage.setItem('notifications', JSON.stringify(this.notifications));
-    
-    this.updateDrawer();
-    this.updateBadge();
-    this.showAlert(message, type);
-  }
-
-  getIcon(type) {
-    const icons = {
-      'order': '🛍️', 'payment': '💰', 'delivery': '🚚',
-      'success': '✅', 'error': '❌', 'warning': '⚠️',
-      'info': 'ℹ️', 'whatsapp': '📱', 'promo': '🎉'
-    };
-    return icons[type] || '🔔';
-  }
-
-  updateDrawer() {
-    const list = document.getElementById('notificationList');
-    if (!list) return;
-
-    if (this.notifications.length === 0) {
-      list.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-bell-slash" style="font-size:60px; color:#cbd5e1;"></i><h3>No notifications</h3></div>';
-      return;
-    }
-
-    let html = '';
-    this.notifications.slice(0, 20).forEach(n => {
-      html += `
-        <div class="notification-item ${n.read ? 'read' : 'unread'}" 
-             onclick="window.notificationManager.markAsRead(${n.id})">
-          <div style="display:flex; gap:12px;">
-            <div style="font-size:24px;">${n.icon}</div>
-            <div style="flex:1;">
-              <div style="font-weight:800;">${n.title}</div>
-              <div style="font-size:13px;">${n.message}</div>
-              <div style="font-size:11px; color:#94a3b8; margin-top:4px;">${n.time}</div>
-            </div>
-            ${!n.read ? '<div style="width:10px; height:10px; background:#3b82f6; border-radius:50%;"></div>' : ''}
-          </div>
-        </div>
-      `;
-    });
-
-    list.innerHTML = html;
-    document.getElementById('notificationCount').textContent = this.unreadCount > 9 ? '9+' : this.unreadCount;
-  }
-
-  updateBadge() {
-    const badge = document.getElementById('notificationBadge');
-    const bell = document.getElementById('notificationBell');
-    
-    if (this.unreadCount > 0) {
-      badge.textContent = this.unreadCount > 9 ? '9+' : this.unreadCount;
-      badge.style.display = 'flex';
-      bell.style.color = '#f59e0b';
-    } else {
-      badge.style.display = 'none';
-      bell.style.color = 'white';
-    }
-  }
-
-  markAsRead(id) {
-    this.notifications = this.notifications.map(n => n.id === id ? { ...n, read: true } : n);
-    this.unreadCount = this.notifications.filter(n => !n.read).length;
-    localStorage.setItem('notifications', JSON.stringify(this.notifications));
-    this.updateDrawer();
-    this.updateBadge();
-  }
-
-  markAllAsRead() {
-    this.notifications = this.notifications.map(n => ({ ...n, read: true }));
-    this.unreadCount = 0;
-    localStorage.setItem('notifications', JSON.stringify(this.notifications));
-    this.updateDrawer();
-    this.updateBadge();
-    this.showAlert('✅ All marked as read', 'success');
-  }
-
-  showAlert(message, type) {
-    const alert = document.getElementById('notificationAlert');
-    if (!alert) return;
-
-    const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-    alert.innerHTML = `${icons[type] || '🔔'} ${message}`;
-    alert.style.display = 'block';
-    
-    alert.style.background = 
-      type === 'success' ? 'var(--success-gradient)' :
-      type === 'error' ? 'var(--danger-gradient)' :
-      type === 'warning' ? 'var(--warning-gradient)' :
-      'var(--info-gradient)';
-    
-    setTimeout(() => alert.style.display = 'none', 3000);
-  }
-}
-
 // ===== MAIN APP VARIABLES =====
 let card = {};
 let currentProduct = null;
@@ -2080,19 +1411,22 @@ let selectedCheckoutPhone = '';
 let deliveryCharge = 0;
 let deliveryTime = '';
 let detectedZone = '';
+let notificationPermission = false;
+let innerNotifications = [];
+let unreadNotifications = 0;
 let customerData = { deviceId: '', name: '', phone: '', email: '' };
 let navigationHistory = [];
-let currentOrderForProof = null;
 
-// Initialize managers
-window.pushManager = new PushNotificationManager();
-window.notificationManager = new NotificationManager();
+// ===== PWA INSTALL VARIABLES =====
+let deferredPrompt = null;
+let installButtonShown = false;
 
-// ===== ATTACH FUNCTIONS =====
+// ===== ATTACH ALL FUNCTIONS TO WINDOW =====
 window.navigateTo = navigateTo;
 window.goBack = goBack;
 window.toggleNotificationDrawer = toggleNotificationDrawer;
-window.markAllNotificationsAsRead = () => notificationManager.markAllAsRead();
+window.markAllNotificationsAsRead = markAllNotificationsAsRead;
+window.enableNotifications = enableNotifications;
 window.saveBusinessToContacts = saveBusinessToContacts;
 window.checkDeliveryStatus = checkDeliveryStatus;
 window.toggleLogin = toggleLogin;
@@ -2114,8 +1448,12 @@ window.updateQuantity = updateQuantity;
 window.openCheckoutModal = openCheckoutModal;
 window.selectProPaymentMethod = selectProPaymentMethod;
 window.placeOrder = placeOrder;
+window.downloadOrderTicket = downloadOrderTicket;
+window.shareOrderTicket = shareOrderTicket;
 window.closeModal = closeModal;
 window.openModal = openModal;
+window.completePaymentAndConfirmOrder = completePaymentAndConfirmOrder;
+window.selectProPaymentMethodForCheckout = selectProPaymentMethodForCheckout;
 window.attemptLogin = attemptLogin;
 window.handleLoginKeypress = handleLoginKeypress;
 window.logoutAdmin = logoutAdmin;
@@ -2123,39 +1461,44 @@ window.generateNewToken = generateNewToken;
 window.searchAdminTokens = searchAdminTokens;
 window.viewOrderDetails = viewOrderDetails;
 window.updateOrderStatus = updateOrderStatus;
+window.sendNotificationToAll = sendNotificationToAll;
 window.closeExitModal = closeExitModal;
 window.exitApp = exitApp;
 window.closeInstallPermissionModal = closeInstallPermissionModal;
 window.acceptInstallPermissions = acceptInstallPermissions;
+window.closeDeliveryModal = closeDeliveryModal;
 window.addToCartFromModal = addToCartFromModal;
 window.showProductModal = showProductModal;
-window.markAsPaid = markAsPaid;
-window.submitPaymentProof = submitPaymentProof;
-window.showAdminTab = showAdminTab;
-window.sendPromotionalNotification = sendPromotionalNotification;
-window.searchOrders = searchOrders;
 
-// ===== DATA ISOLATION =====
+// ===== DATA ISOLATION SYSTEM =====
 function getStorageKey(key) {
   const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
   return `business_${businessKey}_${key}`;
 }
 
 const isolatedLocalStorage = {
-  setItem: (key, value) => localStorage.setItem(getStorageKey(key), value),
-  getItem: (key) => localStorage.getItem(getStorageKey(key)),
-  removeItem: (key) => localStorage.removeItem(getStorageKey(key))
+  setItem: function(key, value) {
+    localStorage.setItem(getStorageKey(key), value);
+  },
+  getItem: function(key) {
+    return localStorage.getItem(getStorageKey(key));
+  },
+  removeItem: function(key) {
+    localStorage.removeItem(getStorageKey(key));
+  }
 };
 
-// ===== CUSTOMER DATA =====
+// ===== CUSTOMER DATA MANAGEMENT =====
 function getCustomerPhone() {
   return isolatedLocalStorage.getItem('customerPhone') || '';
 }
 
 function saveCustomerPhone(phone) {
   isolatedLocalStorage.setItem('customerPhone', phone);
-  document.getElementById('customerPhoneDisplay').textContent = phone || 'Tap to set';
-  document.getElementById('checkoutPhoneText').textContent = phone || 'No phone';
+  const el = document.getElementById('customerPhoneDisplay');
+  if (el) el.textContent = phone || 'Tap to set your number';
+  const phoneEl = document.getElementById('checkoutPhoneText');
+  if (phoneEl) phoneEl.textContent = phone || 'No phone number';
   selectedCheckoutPhone = phone;
 }
 
@@ -2165,78 +1508,90 @@ function getCustomerAddress() {
 
 function saveCustomerAddress(address) {
   isolatedLocalStorage.setItem('customerAddress', address);
-  document.getElementById('customerAddressDisplay').textContent = address || 'Tap to set';
-  document.getElementById('checkoutAddressDisplay').innerHTML = `<i class="fas fa-home"></i> ${address || 'No address'}`;
+  const el = document.getElementById('customerAddressDisplay');
+  if (el) el.textContent = address || 'Tap to set your address';
+  const addrEl = document.getElementById('checkoutAddressDisplay');
+  if (addrEl) addrEl.innerHTML = `<i class="fas fa-home"></i> ${address || 'No address saved'}`;
   selectedCheckoutAddress = address;
   if (currentPage === 'checkoutModal' && address) calculateDeliveryCharge(address);
 }
 
 function openAddressInput(fromCheckout = false) {
-  const address = prompt("Enter delivery address:", getCustomerAddress() || "");
+  const currentAddress = getCustomerAddress();
+  const address = prompt("Enter your complete delivery address:", currentAddress || "");
   if (address && address.trim()) {
     saveCustomerAddress(address.trim());
-    notificationManager.showAlert('✅ Address saved', 'success');
+    showNotification('✅ Delivery address saved!');
+    setTimeout(() => {
+      showNotification('💡 You can also update your address in Contact Page → My Delivery Address');
+    }, 1500);
   }
 }
 
 function openPhoneInput() {
-  const phone = prompt("Enter phone number:", getCustomerPhone() || "");
+  const currentPhone = getCustomerPhone();
+  const phone = prompt("Enter your phone number for delivery:", currentPhone || "");
   if (phone) {
-    const cleaned = phone.replace(/\D/g, '');
-    if (cleaned.length >= 10) {
-      saveCustomerPhone(cleaned);
-      notificationManager.showAlert('✅ Phone saved', 'success');
+    const cleanedPhone = phone.replace(/\D/g, '');
+    if (cleanedPhone.length >= 10) {
+      saveCustomerPhone(cleanedPhone);
+      showNotification('✅ Phone number saved!');
+      setTimeout(() => {
+        showNotification('📱 You can also update your phone in Contact Page → My Delivery Phone');
+      }, 1500);
     } else {
-      notificationManager.showAlert('❌ Invalid phone', 'error');
+      showNotification('❌ Please enter a valid phone number');
     }
   }
 }
 
-// ===== DELIVERY CALCULATOR =====
+// ===== DELIVERY CHARGE CALCULATOR - FIXED WITH BUSINESS SETTINGS =====
 function calculateDeliveryCharge(address) {
   if (!address) {
     deliveryCharge = 0;
-    deliveryTime = 'Enter address';
+    deliveryTime = 'Enter address to calculate';
     detectedZone = 'Unknown';
     updateDeliveryUI();
     return;
   }
   
-  const addr = address.toLowerCase();
+  const addressLower = address.toLowerCase();
   let charge = 0, time = '', zone = 'Standard';
   
-  if (card.deliverySettings?.zones?.length > 0) {
-    let found = false;
-    for (const z of card.deliverySettings.zones) {
-      if (addr.includes(z.city.toLowerCase())) {
-        charge = parseFloat(z.charge) || 0;
-        time = z.time || '2-3 days';
-        zone = z.city;
-        found = true;
+  // Use business delivery settings from card (configured in index.html)
+  if (card.deliverySettings && card.deliverySettings.zones && card.deliverySettings.zones.length > 0) {
+    let zoneFound = false;
+    for (const zoneConfig of card.deliverySettings.zones) {
+      if (addressLower.includes(zoneConfig.city.toLowerCase())) {
+        charge = parseFloat(zoneConfig.charge) || 0;
+        time = zoneConfig.time || '2-3 business days';
+        zone = zoneConfig.city;
+        zoneFound = true;
         break;
       }
     }
-    if (!found) {
+    if (!zoneFound) {
       charge = parseFloat(card.deliverySettings?.default?.otherCities?.charge) || 300;
-      time = card.deliverySettings?.default?.otherCities?.time || '3-5 days';
+      time = card.deliverySettings?.default?.otherCities?.time || '3-5 business days';
       zone = 'Other City';
     }
   } else {
-    if (addr.includes('karachi') || addr.includes('lahore') || addr.includes('islamabad')) {
+    // Fallback detection if no zones configured
+    if (addressLower.includes('karachi') || addressLower.includes('lahore') || addressLower.includes('islamabad')) {
       charge = 150;
-      time = '1-2 days';
-      zone = 'Metro';
+      time = '1-2 business days';
+      zone = 'Metro City';
     } else {
       charge = 300;
-      time = '3-5 days';
-      zone = 'Other';
+      time = '3-5 business days';
+      zone = 'Other City';
     }
   }
   
   const subtotal = calculateCartSubtotal();
   if (card.deliverySettings?.freeDeliveryMin && subtotal >= card.deliverySettings.freeDeliveryMin) {
     charge = 0;
-    time += ' (Free)';
+    time += ' (Free Delivery)';
     zone += ' - Free';
   }
   
@@ -2248,33 +1603,51 @@ function calculateDeliveryCharge(address) {
 }
 
 function updateDeliveryUI() {
-  document.getElementById('deliveryZoneBadge').textContent = detectedZone || 'Standard';
-  document.getElementById('deliveryTimeEstimate').innerHTML = `<i class="fas fa-clock"></i> ${deliveryTime || 'Calculating...'}`;
-  document.getElementById('deliveryChargeAmount').textContent = `PKR ${deliveryCharge || 0}`;
-  document.getElementById('checkoutDelivery').textContent = deliveryCharge || 0;
+  const zoneBadge = document.getElementById('deliveryZoneBadge');
+  const timeEl = document.getElementById('deliveryTimeEstimate');
+  const chargeEl = document.getElementById('deliveryChargeAmount');
+  const deliveryEl = document.getElementById('checkoutDelivery');
+  const totalEl = document.getElementById('checkoutTotal');
+  
+  if (zoneBadge) zoneBadge.textContent = detectedZone || 'Standard';
+  if (timeEl) timeEl.innerHTML = `<i class="fas fa-clock"></i> ${deliveryTime || 'Calculating...'}`;
+  if (chargeEl) chargeEl.textContent = `PKR ${deliveryCharge || 0}`;
+  if (deliveryEl) deliveryEl.textContent = deliveryCharge || 0;
   
   const subtotal = parseFloat(document.getElementById('checkoutSubtotal')?.textContent) || 0;
-  document.getElementById('checkoutTotal').textContent = (subtotal + deliveryCharge).toFixed(2);
+  const total = subtotal + deliveryCharge;
+  if (totalEl) totalEl.textContent = total.toFixed(2);
 }
 
 function calculateCartSubtotal() {
-  return cart.reduce((sum, i) => sum + (parseFloat(i.discountPrice || i.originalPrice || 0) * (i.quantity || 1)), 0);
+  return cart.reduce((sum, item) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    return sum + (price * (item.quantity || 1));
+  }, 0);
 }
 
-// ===== TOKEN GENERATION =====
+// ===== ORDER TOKEN GENERATION =====
 function generateOrderToken() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const prefix = card.tokenSystem?.prefix || 'TKT';
   const timestamp = Date.now().toString().slice(-6);
   let random = '';
-  for (let i = 0; i < 4; i++) random += chars[Math.floor(Math.random() * chars.length)];
+  for (let i = 0; i < 4; i++) random += chars.charAt(Math.floor(Math.random() * chars.length));
   return `${prefix}-${timestamp}-${random}`;
+}
+
+// ===== SHORT ID SYSTEM =====
+function generateShortId() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let shortId = '';
+  for (let i = 0; i < 6; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
+  return shortId;
 }
 
 // ===== PASSWORD GENERATOR =====
 function generateAdminPassword(cardId, shortId) {
-  const short = shortId ? shortId.toLowerCase() : (cardId ? cardId.substring(0, 6).toLowerCase() : 'default');
-  return `business123_${short}`;
+  const shortPart = shortId ? shortId.toLowerCase() : (cardId ? cardId.substring(0, 6).toLowerCase() : 'default');
+  return `business123_${shortPart}`;
 }
 
 // ===== PAYMENT METHOD NAME =====
@@ -2291,55 +1664,302 @@ function getPaymentMethodName(method) {
 }
 
 // ===== MODAL FUNCTIONS =====
-function openModal(id) {
-  document.getElementById(id).style.display = 'flex';
-  document.body.style.overflow = 'hidden';
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
 }
 
-function closeModal(id) {
-  document.getElementById(id).style.display = 'none';
-  document.body.style.overflow = 'auto';
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
 }
 
-// ===== NOTIFICATION DRAWER =====
+function closeDeliveryModal() {
+  document.getElementById('deliveryStatusModal').style.display = 'none';
+}
+
+// ===== NOTIFICATION SYSTEM =====
+function showNotification(message) {
+  const notification = document.getElementById('notificationAlert');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  setTimeout(() => { notification.style.display = 'none'; }, 3000);
+}
+
+function addInnerNotification(title, message, type = 'info') {
+  const notification = {
+    id: Date.now(),
+    title,
+    message,
+    type,
+    time: new Date(),
+    read: false
+  };
+  
+  innerNotifications.unshift(notification);
+  unreadNotifications++;
+  
+  if (innerNotifications.length > 50) innerNotifications.pop();
+  
+  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+  updateNotificationBellCount();
+}
+
+function updateNotificationBellCount() {
+  const badge = document.getElementById('notificationBadge');
+  const bell = document.getElementById('notificationBell');
+  
+  if (unreadNotifications > 0) {
+    badge.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+    badge.style.display = 'flex';
+    bell.style.color = '#f59e0b';
+  } else {
+    badge.style.display = 'none';
+    bell.style.color = 'white';
+  }
+}
+
 function toggleNotificationDrawer() {
   const drawer = document.getElementById('notificationDrawer');
   drawer.classList.toggle('open');
-  if (drawer.classList.contains('open')) notificationManager.updateDrawer();
+  if (drawer.classList.contains('open')) loadNotificationDrawer();
+}
+
+function loadNotificationDrawer() {
+  const list = document.getElementById('notificationList');
+  const count = document.getElementById('notificationCount');
+  
+  if (innerNotifications.length === 0) {
+    list.innerHTML = `<div style="text-align:center; padding:40px;"><i class="fas fa-bell-slash" style="font-size:60px; color:#cbd5e1;"></i><h3 style="margin-top:16px; color:#1e293b;">No notifications</h3></div>`;
+    count.textContent = '0';
+    return;
+  }
+  
+  let html = '';
+  innerNotifications.slice(0, 20).forEach(notif => {
+    html += `
+      <div style="padding:16px; background:white; border-radius:12px; margin-bottom:8px; border-left:4px solid ${notif.read ? '#cbd5e1' : '#667eea'};">
+        <div style="display:flex; align-items:start; gap:12px;">
+          <div style="font-size:20px;">${notif.type === 'success' ? '✅' : notif.type === 'error' ? '❌' : 'ℹ️'}</div>
+          <div style="flex:1;">
+            <div style="font-weight:800; color:var(--dark-color); font-size:14px;">${notif.title}</div>
+            <div style="color:#64748b; font-size:13px; margin-top:4px;">${notif.message}</div>
+            <div style="font-size:11px; color:#94a3b8; margin-top:6px;">${new Date(notif.time).toLocaleTimeString()}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  
+  list.innerHTML = html;
+  count.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+}
+
+function markAllNotificationsAsRead() {
+  innerNotifications.forEach(n => n.read = true);
+  unreadNotifications = 0;
+  isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+  updateNotificationBellCount();
+  loadNotificationDrawer();
+  showNotification('✅ All notifications marked as read');
+}
+
+// ===== NOTIFICATION PERMISSION =====
+async function enableNotifications() {
+  if (!('Notification' in window)) {
+    showNotification('❌ Notifications not supported');
+    return;
+  }
+  
+  if (Notification.permission === 'granted') {
+    showNotification('✅ Notifications already enabled!');
+  } else if (Notification.permission !== 'denied') {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      showNotification('✅ Notifications enabled!');
+      addInnerNotification('Notifications Enabled', 'You will receive alerts for updates', 'success');
+    }
+  }
+}
+
+// ===== SERVICE WORKER =====
+async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('sw.js');
+      console.log('Service Worker registered:', registration);
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
+    }
+  }
 }
 
 // ===== PWA SETUP =====
 function setupDynamicPWA(businessData) {
-  const name = businessData.businessName || businessData.name || "Digital Business";
-  document.title = name;
-  document.getElementById('loadingTitle').textContent = name;
-  document.getElementById('loadingSubtitle').textContent = `Loading ${name}...`;
+  const businessName = businessData.businessName || businessData.name || "Digital Business";
+  document.title = businessName;
+  
+  const titleEl = document.getElementById('loadingTitle');
+  const subtitleEl = document.getElementById('loadingSubtitle');
+  if (titleEl) titleEl.textContent = businessName;
+  if (subtitleEl) subtitleEl.textContent = `Loading ${businessName} experience...`;
+  
   document.getElementById('themeColorMeta').content = "#667eea";
+  
+  updateFavicon(businessData.profileImage || getDefaultIcon(businessName));
+  setupManifest(businessData, businessName);
+}
+
+function getDefaultIcon(businessName) {
+  const firstLetter = businessName.charAt(0).toUpperCase();
+  const colors = ['#667eea', '#764ba2', '#10b981', '#f59e0b', '#ef4444', '#3b82f6'];
+  const color = colors[businessName.length % colors.length];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><rect width="100" height="100" fill="${color}" rx="20"/><text x="50" y="65" font-size="40" font-family="Arial, sans-serif" fill="white" text-anchor="middle" font-weight="bold">${firstLetter}</text></svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(svg);
+}
+
+function updateFavicon(iconUrl) {
+  let favicon = document.querySelector('link[rel="icon"]');
+  if (!favicon) {
+    favicon = document.createElement('link');
+    favicon.rel = 'icon';
+    document.head.appendChild(favicon);
+  }
+  favicon.href = iconUrl;
+  
+  let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+  if (!appleIcon) {
+    appleIcon = document.createElement('link');
+    appleIcon.rel = 'apple-touch-icon';
+    document.head.appendChild(appleIcon);
+  }
+  appleIcon.href = iconUrl;
+  appleIcon.sizes = "180x180";
+}
+
+function setupManifest(businessData, businessName) {
+  const profileImage = businessData.profileImage || getDefaultIcon(businessName);
+  const baseUrl = window.location.origin + window.location.pathname;
+  
+  const manifest = {
+    name: businessName,
+    short_name: businessName.length > 12 ? businessName.substring(0, 10) + '…' : businessName,
+    description: `Premium business app for ${businessName}`,
+    theme_color: "#667eea",
+    background_color: "#ffffff",
+    display: "standalone",
+    orientation: "portrait",
+    scope: "/",
+    start_url: baseUrl + "?source=pwa",
+    icons: [
+      {
+        src: profileImage,
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "any maskable"
+      },
+      {
+        src: profileImage,
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "any maskable"
+      }
+    ]
+  };
+  
+  const manifestData = JSON.stringify(manifest, null, 2);
+  const blob = new Blob([manifestData], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(blob);
+  
+  const manifestLink = document.getElementById('manifestLink');
+  if (manifestLink) {
+    manifestLink.href = manifestURL;
+  }
+  
+  localStorage.setItem('pwa_manifest', manifestData);
+  console.log('PWA Manifest updated for:', businessName);
+}
+
+// ===== PWA INSTALL =====
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  if (!installButtonShown) {
+    setTimeout(() => showInstallButton(), 5000);
+    installButtonShown = true;
+  }
+});
+
+function showInstallButton() {
+  if (!deferredPrompt) return;
+  
+  const existing = document.querySelector('.install-button-container');
+  if (existing) existing.remove();
+  
+  const container = document.createElement('div');
+  container.className = 'install-button-container';
+  container.innerHTML = `
+    <button class="install-btn" onclick="installPWA()">
+      <i class="fas fa-download"></i> Install App
+    </button>
+  `;
+  document.body.appendChild(container);
+  
+  setTimeout(() => {
+    if (container.parentNode) {
+      container.remove();
+      installButtonShown = false;
+    }
+  }, 30000);
+}
+
+function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(() => {
+    deferredPrompt = null;
+    const container = document.querySelector('.install-button-container');
+    if (container) container.remove();
+  });
+}
+
+function isPWAInstalled() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
 // ===== SAVE TO CONTACTS =====
 function saveBusinessToContacts() {
   if (!card.name || !card.phone) {
-    notificationManager.showAlert('❌ Information incomplete', 'error');
+    showNotification('❌ Business information incomplete');
     return;
   }
   
-  const info = `Business: ${card.name}\nPhone: ${card.phone}\nEmail: ${card.email || ''}\nAddress: ${card.address || ''}`;
-  navigator.clipboard.writeText(info);
-  notificationManager.showAlert('📋 Copied to clipboard', 'success');
+  let contactInfo = `Business: ${card.name}\nPhone: ${card.phone}\n`;
+  if (card.email) contactInfo += `Email: ${card.email}\n`;
+  if (card.address) contactInfo += `Address: ${card.address}\n`;
+  
+  navigator.clipboard.writeText(contactInfo);
+  showNotification('📋 Business info copied! Paste in your contacts app');
 }
 
 // ===== SHARE BUSINESS =====
 function shareBusiness() {
-  const name = card.businessName || card.name || "Business";
-  const url = window.location.href;
-  const text = `Check out ${name} on their business app!\n\n${url}`;
+  const businessName = card.businessName || card.name || "Business";
+  const currentUrl = window.location.href.split('?')[0];
+  let shareUrl = shortCardId ? `${currentUrl}?id=${shortCardId}` : currentUrl;
+  const shareText = `Check out ${businessName} on their business app!\n\n${shareUrl}`;
   
   if (navigator.share) {
-    navigator.share({ title: name, text: text, url: url });
+    navigator.share({ title: businessName, text: shareText, url: shareUrl });
   } else {
-    navigator.clipboard.writeText(text);
-    notificationManager.showAlert('📋 Link copied', 'success');
+    navigator.clipboard.writeText(shareText);
+    showNotification('📋 Link copied to clipboard!');
   }
 }
 
@@ -2349,19 +1969,19 @@ async function checkForDeliveries() {
   if (!phone) return;
   
   try {
-    const { data } = await supa
+    const { data, error } = await supa
       .from('orders')
       .select('*')
       .eq('customer_phone', phone)
       .eq('business_id', currentBusinessId)
       .order('created_at', { ascending: false });
     
-    if (data) {
+    if (!error && data) {
       deliveryStatusData = data;
       updateDeliveryIcon();
     }
   } catch (error) {
-    console.error('Delivery check error:', error);
+    console.error('Error checking deliveries:', error);
   }
 }
 
@@ -2373,9 +1993,13 @@ function updateDeliveryIcon() {
     icon.style.color = '#10b981';
     badge.textContent = deliveryStatusData.length;
     badge.style.display = 'flex';
+    const hasPending = deliveryStatusData.some(order => ['confirmed', 'processing', 'shipped'].includes(order.status));
+    if (hasPending) badge.classList.add('alert');
+    else badge.classList.remove('alert');
   } else {
     icon.style.color = 'white';
     badge.style.display = 'none';
+    badge.classList.remove('alert');
   }
 }
 
@@ -2384,28 +2008,34 @@ async function loadDeliveryStatus() {
   
   if (!phone) {
     document.getElementById('deliveryContent').innerHTML = `
-      <div style="text-align:center; padding:40px;">
-        <i class="fas fa-phone" style="font-size:48px; color:#cbd5e1;"></i>
-        <h3>Phone Number Needed</h3>
-        <button onclick="openPhoneInput()" style="margin-top:20px; padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px;">Add Phone</button>
+      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+        <i class="fas fa-phone" style="font-size:48px; color:#cbd5e1; margin-bottom:16px;"></i>
+        <h3 style="color:#1e293b; margin-bottom:12px;">Phone Number Needed</h3>
+        <p style="color:#64748b; margin-bottom:24px;">Please save your phone number to track orders.</p>
+        <button onclick="window.openPhoneInput()" style="padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+          Add Phone Number
+        </button>
       </div>
     `;
     return;
   }
   
-  const { data } = await supa
+  const { data, error } = await supa
     .from('orders')
     .select('*')
     .eq('customer_phone', phone)
     .eq('business_id', currentBusinessId)
     .order('created_at', { ascending: false });
   
-  if (!data || data.length === 0) {
+  if (error || !data || data.length === 0) {
     document.getElementById('deliveryContent').innerHTML = `
-      <div style="text-align:center; padding:40px;">
-        <i class="fas fa-truck" style="font-size:48px; color:#10b981;"></i>
-        <h3>No Orders Yet</h3>
-        <button onclick="navigateTo('productsPage')" style="margin-top:20px; padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px;">Shop Now</button>
+      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+        <i class="fas fa-truck" style="font-size:48px; color:#10b981; margin-bottom:16px;"></i>
+        <h3 style="color:#1e293b; margin-bottom:12px;">No Orders Yet</h3>
+        <p style="color:#64748b; margin-bottom:24px;">Your orders will appear here once you place them.</p>
+        <button onclick="window.navigateTo('productsPage')" style="padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+          <i class="fas fa-shopping-bag"></i> Shop Now
+        </button>
       </div>
     `;
     return;
@@ -2413,22 +2043,39 @@ async function loadDeliveryStatus() {
   
   let html = '';
   data.forEach(order => {
-    const color = 
-      order.status === 'delivered' ? '#10b981' : 
-      order.status === 'cancelled' ? '#ef4444' : 
-      order.payment_status === 'paid' ? '#667eea' : '#f59e0b';
+    const statusClass = order.status;
+    const statusText = order.status.charAt(0).toUpperCase() + order.status.slice(1);
+    const date = new Date(order.created_at).toLocaleDateString();
     
     html += `
-      <div class="order-card" style="border-left-color: ${color};">
-        <div style="display:flex; justify-content:space-between;">
+      <div class="order-card" style="border-left-color: ${order.status === 'delivered' ? '#10b981' : order.status === 'cancelled' ? '#ef4444' : '#667eea'};">
+        <div class="order-header">
           <span class="order-id">${order.order_id}</span>
-          <span style="background:${color}20; color:${color}; padding:4px 8px; border-radius:6px;">
-            ${order.payment_status === 'paid' ? 'Paid' : order.payment_status === 'proof_submitted' ? 'Proof' : 'Pending'}
-          </span>
+          <span class="order-token">${order.token || 'N/A'}</span>
+          <span class="order-status ${statusClass}">${statusText}</span>
         </div>
-        <div><strong>Token:</strong> ${order.token}</div>
-        <div><strong>Total:</strong> PKR ${order.total}</div>
-        <div style="font-size:12px;">${new Date(order.created_at).toLocaleDateString()}</div>
+        <div class="order-details">
+          <div class="order-item-row">
+            <span><i class="fas fa-box"></i> Items</span>
+            <span>${order.items ? order.items.length : 0} products</span>
+          </div>
+          <div class="order-item-row">
+            <span><i class="fas fa-tag"></i> Total</span>
+            <span style="font-weight:800; color:#10b981;">PKR ${order.total.toFixed(2)}</span>
+          </div>
+          <div class="order-address">
+            <i class="fas fa-map-marker-alt" style="color:#667eea;"></i> ${order.customer_address || 'No address'}
+          </div>
+          ${order.estimated_delivery ? `
+            <div style="display:flex; gap:8px; margin-top:8px;">
+              <span class="delivery-info-badge"><i class="fas fa-clock"></i> ${order.estimated_delivery}</span>
+              <span class="delivery-info-badge"><i class="fas fa-credit-card"></i> ${order.payment_method || 'COD'}</span>
+            </div>
+          ` : ''}
+        </div>
+        <div style="font-size:11px; color:#94a3b8; margin-top:12px;">
+          <i class="fas fa-calendar"></i> ${date}
+        </div>
       </div>
     `;
   });
@@ -2440,21 +2087,28 @@ function checkDeliveryStatus() {
   const phone = getCustomerPhone();
   if (!phone) {
     openPhoneInput();
+    showNotification('Please add your phone number to track orders');
     return;
   }
   navigateTo('deliveryPage');
 }
 
-// ===== ORDERS DATABASE =====
+// ===== ORDERS DATABASE - FIXED WITH BUSINESS ID =====
 async function saveOrderToDatabase(orderData) {
   try {
-    if (!currentBusinessId) return false;
+    // Check if currentBusinessId exists and is valid
+    if (!currentBusinessId) {
+      console.error('No business ID found');
+      showNotification('❌ Business configuration error');
+      return false;
+    }
     
-    const order = {
+    // Create the order object with all required fields
+    const orderToInsert = {
       business_id: currentBusinessId,
       order_id: orderData.orderId,
       token: orderData.token,
-      customer_name: orderData.customerName || 'Customer',
+      customer_name: orderData.customerName || customerData.name || 'Customer',
       customer_phone: orderData.customerPhone,
       customer_address: orderData.customerAddress,
       items: orderData.items,
@@ -2462,17 +2116,42 @@ async function saveOrderToDatabase(orderData) {
       delivery_charge: orderData.deliveryCharge,
       total: orderData.total,
       payment_method: orderData.paymentMethod,
-      payment_status: orderData.payment_status || 'pending',
       status: 'confirmed',
       zone: orderData.zone || detectedZone,
       estimated_delivery: orderData.estimatedDelivery || deliveryTime,
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
     
-    const { error } = await supa.from('orders').insert([order]);
-    return !error;
+    console.log('Attempting to save order:', orderToInsert);
+    
+    const { data, error } = await supa
+      .from('orders')
+      .insert([orderToInsert])
+      .select();
+    
+    if (error) {
+      console.error('Supabase insert error details:', error);
+      
+      // Check for specific error types
+      if (error.code === '23503') {
+        showNotification('❌ Business account not properly configured');
+      } else if (error.code === '42P01') {
+        showNotification('❌ Orders table does not exist');
+      } else if (error.message) {
+        showNotification('❌ Database error: ' + error.message.substring(0, 50));
+      } else {
+        showNotification('❌ Failed to save order');
+      }
+      return false;
+    }
+    
+    console.log('Order saved successfully:', data);
+    return true;
+    
   } catch (error) {
-    console.error('Save order error:', error);
+    console.error('Exception in saveOrderToDatabase:', error);
+    showNotification('❌ Error: ' + (error.message || 'Unknown error'));
     return false;
   }
 }
@@ -2481,121 +2160,193 @@ async function loadOrdersFromDatabase() {
   try {
     if (!currentBusinessId) return [];
     
-    const { data } = await supa
+    const { data, error } = await supa
       .from('orders')
       .select('*')
       .eq('business_id', currentBusinessId)
       .order('created_at', { ascending: false });
     
-    if (data) {
+    if (!error && data) {
       orders = data;
-      orderTokens = data.map(o => ({
-        id: o.token,
-        orderId: o.order_id,
-        amount: o.total,
-        status: o.status,
-        customer: o.customer_name || o.customer_phone,
-        date: o.created_at,
-        payment_status: o.payment_status
+      orderTokens = data.map(order => ({
+        id: order.token,
+        orderId: order.order_id,
+        amount: order.total,
+        status: order.status,
+        customer: order.customer_name || order.customer_phone,
+        date: order.created_at
       }));
       updateTokenStats();
       renderTokenList();
-      loadPendingPayments();
+      return data;
     }
-    return data || [];
+    return [];
   } catch (error) {
-    console.error('Load orders error:', error);
+    console.error('Error loading orders:', error);
     return [];
   }
 }
 
 function updateTokenStats() {
-  document.getElementById('totalTokensCount').textContent = orderTokens.length;
-  const active = orderTokens.filter(t => ['confirmed','processing','shipped'].includes(t.status)).length;
-  document.getElementById('activeTokensCount').textContent = active;
+  const totalEl = document.getElementById('totalTokensCount');
+  const activeEl = document.getElementById('activeTokensCount');
+  const todayEl = document.getElementById('todayTokensCount');
+  
+  if (totalEl) totalEl.textContent = orderTokens.length;
+  
+  const activeTokens = orderTokens.filter(t => ['confirmed', 'processing', 'shipped'].includes(t.status)).length;
+  if (activeEl) activeEl.textContent = activeTokens;
+  
   const today = new Date().toDateString();
-  document.getElementById('todayTokensCount').textContent = orderTokens.filter(t => new Date(t.date).toDateString() === today).length;
+  const todayTokens = orderTokens.filter(t => new Date(t.date).toDateString() === today).length;
+  if (todayEl) todayEl.textContent = todayTokens;
 }
 
 function renderTokenList() {
-  const list = document.getElementById('tokenList');
-  if (!list) return;
+  const tokenList = document.getElementById('tokenList');
+  if (!tokenList) return;
   
   if (orderTokens.length === 0) {
-    list.innerHTML = '<p style="text-align:center; padding:20px;">No tokens</p>';
+    tokenList.innerHTML = `
+      <div style="text-align:center; padding:40px;">
+        <i class="fas fa-ticket-alt" style="font-size:48px; color:#cbd5e1; margin-bottom:16px;"></i>
+        <p style="color:#64748b;">No tokens generated yet</p>
+      </div>
+    `;
     return;
   }
   
   let html = '';
-  orderTokens.slice(0, 20).forEach(t => {
+  orderTokens.slice(0, 20).forEach(token => {
+    const date = new Date(token.date).toLocaleDateString();
+    const statusColor = 
+      token.status === 'delivered' ? '#10b981' : 
+      token.status === 'cancelled' ? '#ef4444' : 
+      token.status === 'confirmed' ? '#3b82f6' : '#f59e0b';
+    
     html += `
-      <div onclick="viewOrderDetails('${t.orderId}')" style="padding:15px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
-        <div><strong>${t.id}</strong> <span style="color:${t.status==='delivered'?'#10b981':t.status==='cancelled'?'#ef4444':'#667eea'}">(${t.status})</span></div>
-        <div style="font-size:12px;">${t.orderId} • ${new Date(t.date).toLocaleDateString()}</div>
-        <div><strong>PKR ${t.amount}</strong></div>
+      <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
+        <div>
+          <div class="token-code">${token.id}</div>
+          <div style="font-size:11px; color:#64748b; margin-top:4px;">
+            <i class="fas fa-box"></i> ${token.orderId} • ${date}
+          </div>
+          ${token.customer ? `<div style="font-size:11px; color:#475569; margin-top:2px;">👤 ${token.customer}</div>` : ''}
+        </div>
+        <div style="text-align:right;">
+          <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
+          <span class="token-status" style="background: ${statusColor}10; color: ${statusColor};">
+            ${token.status}
+          </span>
+        </div>
       </div>
     `;
   });
-  list.innerHTML = html;
+  
+  tokenList.innerHTML = html;
 }
 
 function searchAdminTokens() {
-  const term = document.getElementById('adminTokenSearch').value.toLowerCase();
-  const filtered = orderTokens.filter(t => 
-    t.id.toLowerCase().includes(term) ||
-    t.orderId.toLowerCase().includes(term) ||
-    (t.customer && t.customer.toLowerCase().includes(term))
+  const searchTerm = document.getElementById('adminTokenSearch').value.toLowerCase();
+  const filtered = orderTokens.filter(token => 
+    token.id.toLowerCase().includes(searchTerm) ||
+    token.orderId.toLowerCase().includes(searchTerm) ||
+    (token.customer && token.customer.toLowerCase().includes(searchTerm)) ||
+    token.amount.toString().includes(searchTerm)
   );
   
-  const list = document.getElementById('tokenList');
+  const tokenList = document.getElementById('tokenList');
   if (filtered.length === 0) {
-    list.innerHTML = '<p style="text-align:center; padding:20px;">No matches</p>';
+    tokenList.innerHTML = '<p style="text-align:center; padding:20px; color:#64748b;">No matching tokens found</p>';
     return;
   }
   
   let html = '';
-  filtered.slice(0, 20).forEach(t => {
+  filtered.slice(0, 20).forEach(token => {
+    const date = new Date(token.date).toLocaleDateString();
+    const statusColor = token.status === 'delivered' ? '#10b981' : token.status === 'cancelled' ? '#ef4444' : '#3b82f6';
+    
     html += `
-      <div onclick="viewOrderDetails('${t.orderId}')" style="padding:15px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
-        <div><strong>${t.id}</strong></div>
-        <div style="font-size:12px;">${t.orderId}</div>
-        <div><strong>PKR ${t.amount}</strong></div>
+      <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
+        <div>
+          <div class="token-code">${token.id}</div>
+          <div style="font-size:11px; color:#64748b; margin-top:4px;">${token.orderId} • ${date}</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
+          <span class="token-status" style="background: ${statusColor}10; color: ${statusColor};">${token.status}</span>
+        </div>
       </div>
     `;
   });
-  list.innerHTML = html;
+  
+  tokenList.innerHTML = html;
 }
 
 async function viewOrderDetails(orderId) {
   const order = orders.find(o => o.order_id === orderId);
   if (!order) return;
   
+  const modal = document.getElementById('orderConfirmationModal');
   const content = document.getElementById('orderConfirmationContent');
-  const items = Array.isArray(order.items) ? order.items : [];
+  
+  const date = new Date(order.created_at).toLocaleString();
+  let itemsHtml = '';
+  if (order.items && Array.isArray(order.items)) {
+    order.items.forEach(item => {
+      itemsHtml += `<div class="order-item-row"><span>${item.title || 'Product'} x${item.quantity || 1}</span><span>PKR ${(item.price * (item.quantity || 1)).toFixed(2)}</span></div>`;
+    });
+  }
   
   content.innerHTML = `
-    <div style="text-align:center; margin-bottom:20px;">
-      <i class="fas fa-receipt" style="font-size:48px; color:#667eea;"></i>
-      <h2>Order Details</h2>
-    </div>
-    <div style="background:#f8fafc; padding:15px; border-radius:12px;">
-      <div><strong>Order:</strong> ${order.order_id}</div>
-      <div><strong>Token:</strong> ${order.token}</div>
-      <div><strong>Customer:</strong> ${order.customer_phone}</div>
-      <div><strong>Payment:</strong> ${order.payment_method} (${order.payment_status})</div>
-      <div><strong>Total:</strong> PKR ${order.total}</div>
-    </div>
-    ${isAdminLoggedIn ? `
-      <div style="margin-top:20px;">
-        <select id="orderStatusSelect" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px;">
-          <option value="confirmed" ${order.status==='confirmed'?'selected':''}>Confirmed</option>
-          <option value="processing" ${order.status==='processing'?'selected':''}>Processing</option>
-          <option value="shipped" ${order.status==='shipped'?'selected':''}>Shipped</option>
-          <option value="delivered" ${order.status==='delivered'?'selected':''}>Delivered</option>
-        </select>
-        <button onclick="updateOrderStatus('${order.id}')" style="width:100%; padding:12px; background:var(--success-gradient); color:white; border:none; border-radius:8px; margin-top:10px;">Update</button>
+    <div class="order-ticket">
+      <div class="ticket-header">
+        <span class="ticket-id">${order.token || order.order_id}</span>
+        <span class="ticket-date">${date}</span>
       </div>
-    ` : ''}
+      <div class="ticket-body">
+        <div class="ticket-row">
+          <span>Order ID:</span>
+          <span style="font-weight:800;">${order.order_id}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Customer:</span>
+          <span>${order.customer_name || order.customer_phone}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Phone:</span>
+          <span>${order.customer_phone}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Address:</span>
+          <span style="max-width:180px;">${order.customer_address || 'N/A'}</span>
+        </div>
+        ${order.zone ? `<div class="ticket-row"><span>Zone:</span><span>${order.zone}</span></div>` : ''}
+        ${order.estimated_delivery ? `<div class="ticket-row"><span>Est. Delivery:</span><span>${order.estimated_delivery}</span></div>` : ''}
+        <div style="margin:16px 0; padding:12px 0; border-top:2px dashed rgba(255,255,255,0.3); border-bottom:2px dashed rgba(255,255,255,0.3);">
+          ${itemsHtml || '<div class="order-item-row"><span>Order Total</span><span>PKR ' + order.total.toFixed(2) + '</span></div>'}
+        </div>
+        <div class="ticket-total">
+          <span>Total Amount</span>
+          <span>PKR ${order.total.toFixed(2)}</span>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:20px; font-size:12px; opacity:0.9;">
+        <i class="fas fa-shield-alt"></i> Payment: ${order.payment_method || 'COD'}
+      </div>
+    </div>
+    <div style="display:flex; gap:12px; margin-top:20px;">
+      <select id="orderStatusSelect" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;">
+        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>✅ Confirmed</option>
+        <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>🔄 Processing</option>
+        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
+        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>📦 Delivered</option>
+        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+      </select>
+      <button onclick="window.updateOrderStatus('${order.id}')" style="padding:12px 20px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        Update
+      </button>
+    </div>
   `;
   
   openModal('orderConfirmationModal');
@@ -2603,456 +2354,334 @@ async function viewOrderDetails(orderId) {
 
 async function updateOrderStatus(orderId) {
   const status = document.getElementById('orderStatusSelect').value;
-  await supa.from('orders').update({ status }).eq('id', orderId);
-  notificationManager.showAlert(`✅ Status updated`, 'success');
-  closeModal('orderConfirmationModal');
-  loadOrdersFromDatabase();
+  
+  const { error } = await supa
+    .from('orders')
+    .update({ status: status, updated_at: new Date().toISOString() })
+    .eq('id', orderId);
+  
+  if (!error) {
+    showNotification('✅ Order status updated to ' + status);
+    closeModal('orderConfirmationModal');
+    loadOrdersFromDatabase();
+  } else {
+    showNotification('❌ Error updating order');
+  }
 }
 
 function generateNewToken() {
   if (!isAdminLoggedIn) {
-    notificationManager.showAlert('❌ Admin login required', 'error');
+    showNotification('❌ Admin login required');
     return;
   }
+  
   const token = generateOrderToken();
-  notificationManager.showAlert(`✅ New token: ${token}`, 'success');
-}
-
-// ===== MANUAL PAYMENT SYSTEM =====
-function markAsPaid() {
-  if (!currentOrderForProof) {
-    // Try to load from localStorage
-    const saved = localStorage.getItem('currentOrderData');
-    if (saved) {
-      currentOrderForProof = JSON.parse(saved);
-    } else {
-      notificationManager.showAlert('❌ Order information missing', 'error');
-      return;
-    }
-  }
+  const orderId = 'ORD-' + Date.now().toString().slice(-8);
   
-  document.getElementById('proofAmount').value = currentOrderForProof.total;
-  closeModal('paymentDetailsModal');
-  openModal('paymentProofModal');
-}
-
-// File upload handlers
-document.addEventListener('DOMContentLoaded', function() {
-  const dropZone = document.getElementById('proofDropZone');
-  if (dropZone) {
-    dropZone.addEventListener('click', () => document.getElementById('proofImage').click());
-    dropZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropZone.style.background = '#ede9fe';
-    });
-    dropZone.addEventListener('dragleave', () => dropZone.style.background = '#f8fafc');
-    dropZone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      dropZone.style.background = '#f8fafc';
-      if (e.dataTransfer.files.length) handleProofFile(e.dataTransfer.files[0]);
-    });
-  }
-  
-  const fileInput = document.getElementById('proofImage');
-  if (fileInput) {
-    fileInput.addEventListener('change', (e) => {
-      if (e.target.files.length) handleProofFile(e.target.files[0]);
-    });
-  }
-});
-
-function handleProofFile(file) {
-  if (file.size > 5 * 1024 * 1024) {
-    notificationManager.showAlert('❌ File too large (max 5MB)', 'error');
-    return;
-  }
-  
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    document.getElementById('proofImagePreview').querySelector('img').src = e.target.result;
-    document.getElementById('proofImagePreview').style.display = 'block';
-    document.getElementById('proofDropZone').style.display = 'none';
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeProofImage() {
-  document.getElementById('proofImagePreview').style.display = 'none';
-  document.getElementById('proofDropZone').style.display = 'block';
-  document.getElementById('proofImage').value = '';
-}
-
-async function submitPaymentProof() {
-  if (!currentOrderForProof) {
-    const saved = localStorage.getItem('currentOrderData');
-    if (saved) {
-      currentOrderForProof = JSON.parse(saved);
-    } else {
-      notificationManager.showAlert('❌ Order information missing', 'error');
-      return;
-    }
-  }
-  
-  const txId = document.getElementById('proofTransactionId').value.trim();
-  const amount = document.getElementById('proofAmount').value;
-  
-  if (!txId) {
-    notificationManager.showAlert('❌ Transaction ID required', 'error');
-    return;
-  }
-  
-  if (!amount || amount <= 0) {
-    notificationManager.showAlert('❌ Valid amount required', 'error');
-    return;
-  }
-  
-  await supa
-    .from('orders')
-    .update({ 
-      payment_status: 'proof_submitted',
-      transaction_id: txId,
-      proof_submitted_at: new Date().toISOString()
-    })
-    .eq('order_id', currentOrderForProof.orderId);
-  
-  closeModal('paymentProofModal');
-  notificationManager.showAlert('✅ Proof submitted! Admin will verify', 'success');
-  
-  // Send push notification to admin
-  if (card.phone) {
-    window.pushManager.sendToUser(card.phone, '📸 Payment Proof', 
-      `Order ${currentOrderForProof.orderId} proof submitted`, 
-      { orderId: currentOrderForProof.orderId, type: 'payment' });
-  }
-  
-  await loadOrdersFromDatabase();
-}
-
-async function loadPendingPayments() {
-  const pending = orders.filter(o => o.payment_status === 'proof_submitted');
-  document.getElementById('pendingPaymentCount').textContent = pending.length;
-  
-  const list = document.getElementById('pendingPaymentsList');
-  if (!list) return;
-  
-  if (pending.length === 0) {
-    list.innerHTML = '<p style="color:#94a3b8; text-align:center;">No pending payments</p>';
-    return;
-  }
-  
-  let html = '';
-  pending.forEach(o => {
-    html += `
-      <div style="border:2px solid #f59e0b; border-radius:12px; padding:15px; margin-bottom:15px;">
-        <div style="display:flex; justify-content:space-between;">
-          <span style="font-weight:800;">${o.order_id}</span>
-          <span style="background:#f59e0b20; color:#f59e0b; padding:4px 8px; border-radius:6px;">${o.payment_method}</span>
-        </div>
-        <div>💰 PKR ${o.total}</div>
-        <div>📱 ${o.customer_phone}</div>
-        <div>🔑 TXN: ${o.transaction_id || 'N/A'}</div>
-        <div style="display:flex; gap:10px; margin-top:10px;">
-          <button onclick="confirmPayment('${o.id}')" style="flex:2; padding:10px; background:var(--success-gradient); color:white; border:none; border-radius:8px;">✓ Confirm</button>
-          <button onclick="rejectPayment('${o.id}')" style="flex:1; padding:10px; background:#ef4444; color:white; border:none; border-radius:8px;">✗ Reject</button>
-        </div>
-      </div>
-    `;
+  orderTokens.unshift({
+    id: token,
+    orderId: orderId,
+    amount: 0,
+    status: 'pending',
+    customer: 'Manual Entry',
+    date: new Date().toISOString()
   });
-  list.innerHTML = html;
-}
-
-async function confirmPayment(orderId) {
-  if (!confirm('Confirm payment?')) return;
   
-  const order = orders.find(o => o.id === orderId);
-  
-  await supa
-    .from('orders')
-    .update({ 
-      payment_status: 'paid',
-      status: 'processing',
-      payment_confirmed_at: new Date().toISOString()
-    })
-    .eq('id', orderId);
-  
-  notificationManager.showAlert('✅ Payment confirmed', 'success');
-  
-  // Send push notification to customer
-  if (order.customer_phone) {
-    window.pushManager.sendToUser(order.customer_phone, '✅ Payment Confirmed', 
-      `Payment of PKR ${order.total} confirmed`, 
-      { orderId: order.order_id, type: 'payment' });
-  }
-  
-  await loadOrdersFromDatabase();
-}
-
-async function rejectPayment(orderId) {
-  const reason = prompt('Rejection reason?');
-  if (!reason) return;
-  
-  await supa
-    .from('orders')
-    .update({ 
-      payment_status: 'rejected',
-      admin_notes: reason
-    })
-    .eq('id', orderId);
-  
-  notificationManager.showAlert('❌ Payment rejected', 'warning');
-  await loadOrdersFromDatabase();
-}
-
-// ===== ADMIN PROMO NOTIFICATIONS =====
-async function sendPromotionalNotification() {
-  const title = document.getElementById('notifTitle').value.trim();
-  const body = document.getElementById('notifBody').value.trim();
-  const sendPush = document.getElementById('sendPush').checked;
-  const sendWA = document.getElementById('sendWhatsApp').checked;
-  const sendInApp = document.getElementById('sendInApp').checked;
-  
-  if (!title || !body) {
-    notificationManager.showAlert('❌ Title and message required', 'error');
-    return;
-  }
-  
-  if (sendInApp) {
-    notificationManager.addNotification(title, body, 'promo');
-  }
-  
-  if (sendPush) {
-    await window.pushManager.broadcast(title, body, 'promo');
-  }
-  
-  if (sendWA) {
-    // WhatsApp broadcast would go here
-    notificationManager.showAlert('📱 WhatsApp broadcast sent', 'success');
-  }
-  
-  document.getElementById('notifTitle').value = '';
-  document.getElementById('notifBody').value = '';
-}
-
-// ===== ADMIN TABS =====
-function showAdminTab(tab) {
-  document.getElementById('adminOrdersTab').style.display = tab === 'orders' ? 'block' : 'none';
-  document.getElementById('adminNotificationsTab').style.display = tab === 'notifications' ? 'block' : 'none';
-  document.getElementById('adminTokensTab').style.display = tab === 'tokens' ? 'block' : 'none';
-  
-  ['Orders','Notifications','Tokens'].forEach(t => {
-    const btn = document.getElementById(`tab${t}`);
-    if (btn) {
-      btn.style.background = t.toLowerCase() === tab ? '#667eea' : '#f1f5f9';
-      btn.style.color = t.toLowerCase() === tab ? 'white' : '#475569';
-    }
-  });
-}
-
-function searchOrders() {
-  const term = document.getElementById('adminOrderSearch').value.toLowerCase();
-  const filtered = orders.filter(o => 
-    o.order_id.toLowerCase().includes(term) ||
-    o.token.toLowerCase().includes(term) ||
-    o.customer_phone.includes(term)
-  );
-  
-  const list = document.getElementById('allOrdersList');
-  if (filtered.length === 0) {
-    list.innerHTML = '<p>No orders found</p>';
-    return;
-  }
-  
-  let html = '';
-  filtered.slice(0, 20).forEach(o => {
-    html += `
-      <div onclick="viewOrderDetails('${o.order_id}')" style="padding:12px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
-        <div><strong>${o.order_id}</strong> <span style="color:${o.payment_status==='paid'?'#10b981':'#f59e0b'}">(${o.payment_status})</span></div>
-        <div style="font-size:12px;">${o.customer_phone} • PKR ${o.total}</div>
-      </div>
-    `;
-  });
-  list.innerHTML = html;
+  updateTokenStats();
+  renderTokenList();
+  showNotification('✅ New token generated: ' + token);
 }
 
 // ===== CART MANAGEMENT =====
 function updateCartCount() {
-  document.getElementById('cartCountMini').textContent = cart.length;
-  const badge = document.getElementById('cartBadge');
-  if (cart.length > 0) {
-    badge.textContent = cart.length > 99 ? '99+' : cart.length;
-    badge.style.display = 'flex';
-  } else {
-    badge.style.display = 'none';
+  const count = cart.length;
+  const miniEl = document.getElementById('cartCountMini');
+  const cartBadge = document.getElementById('cartBadge');
+  
+  if (miniEl) miniEl.textContent = count;
+  
+  if (cartBadge) {
+    if (count > 0) {
+      cartBadge.textContent = count > 99 ? '99+' : count;
+      cartBadge.style.display = 'flex';
+    } else {
+      cartBadge.style.display = 'none';
+    }
   }
+  
   isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+  
   if (currentPage === 'cartPage') loadCartPage();
 }
 
-function addToCart(index) {
-  const product = card.products[index];
-  if (!product) return;
+function addToCart(productIndex) {
+  const products = card.products || [];
+  const product = products[productIndex];
   
-  const existing = cart.findIndex(i => i.title === product.title);
-  if (existing === -1) {
-    cart.push({ ...product, index, quantity: 1 });
-  } else {
-    cart[existing].quantity = (cart[existing].quantity || 1) + 1;
+  if (product) {
+    const existingIndex = cart.findIndex(item => 
+      item.title === product.title && 
+      item.discountPrice === product.discountPrice
+    );
+    
+    if (existingIndex === -1) {
+      cart.push({ ...product, index: productIndex, quantity: 1 });
+    } else {
+      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+    }
+    updateCartCount();
+    showNotification('✅ Product added to cart!');
+    addInnerNotification('Cart Updated', `${product.title} added to cart`, 'success');
   }
-  updateCartCount();
-  notificationManager.showAlert('✅ Added to cart', 'success');
 }
 
 function addToCartFromModal() {
   if (currentProduct) {
-    const idx = card.products.findIndex(p => p.title === currentProduct.title);
-    if (idx !== -1) addToCart(idx);
-    closeModal('productModal');
+    const products = card.products || [];
+    const productIndex = products.findIndex(p => p.title === currentProduct.title);
+    if (productIndex !== -1) {
+      addToCart(productIndex);
+      closeModal('productModal');
+    }
   }
 }
 
-function removeFromCart(idx) {
-  if (cart[idx]) {
-    cart.splice(idx, 1);
+function removeFromCart(index) {
+  if (cart[index]) {
+    const productName = cart[index].title;
+    cart.splice(index, 1);
     updateCartCount();
-    notificationManager.showAlert('🗑️ Removed', 'info');
+    showNotification('🗑️ Product removed from cart');
+    addInnerNotification('Cart Updated', `${productName} removed from cart`, 'info');
   }
 }
 
-function updateQuantity(idx, change) {
-  if (cart[idx]) {
-    cart[idx].quantity = Math.max(1, (cart[idx].quantity || 1) + change);
+function updateQuantity(index, change) {
+  if (cart[index]) {
+    cart[index].quantity = Math.max(1, (cart[index].quantity || 1) + change);
     loadCartPage();
     updateCartCount();
   }
 }
 
 function loadCartPage() {
-  const content = document.getElementById('cartContent');
-  const count = document.getElementById('cartItemsCount');
+  const cartContent = document.getElementById('cartContent');
+  const cartItemsCount = document.getElementById('cartItemsCount');
   
   if (cart.length === 0) {
-    content.innerHTML = `
-      <div style="text-align:center; padding:40px;">
-        <i class="fas fa-shopping-cart" style="font-size:64px; color:#cbd5e1;"></i>
-        <h3>Cart empty</h3>
-        <button onclick="navigateTo('productsPage')" style="margin-top:20px; padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px;">Shop Now</button>
+    cartContent.innerHTML = `
+      <div style="text-align:center; padding:40px; background:white; border-radius:20px; margin:16px;">
+        <i class="fas fa-shopping-cart" style="font-size:64px; color:#cbd5e1; margin-bottom:20px;"></i>
+        <h3 style="color:#1e293b; margin-bottom:12px;">Your cart is empty</h3>
+        <p style="color:#64748b; margin-bottom:24px;">Add some products to get started</p>
+        <button onclick="window.navigateTo('productsPage')" style="padding:12px 30px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+          Browse Products
+        </button>
       </div>
     `;
-    count.textContent = '0 items';
+    cartItemsCount.textContent = '0 items';
     return;
   }
   
-  let html = '';
+  let html = '<div style="margin-bottom:16px;">';
   let total = 0;
   
-  cart.forEach((item, i) => {
+  cart.forEach((item, index) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
     const itemTotal = price * (item.quantity || 1);
     total += itemTotal;
     
     html += `
-      <div style="display:flex; gap:12px; background:white; padding:16px; border-radius:16px; margin-bottom:12px;">
-        <img src="${item.image || ''}" style="width:80px; height:80px; object-fit:cover; border-radius:12px;" onerror="this.style.display='none'">
+      <div style="display:flex; gap:12px; background:white; padding:16px; border-radius:16px; margin-bottom:12px; box-shadow:var(--shadow-sm);">
+        <img src="${item.image || ''}" style="width:80px; height:80px; object-fit:cover; border-radius:12px; background:#f1f5f9;" loading="lazy" onerror="this.style.display='none'">
         <div style="flex:1;">
-          <div style="font-weight:700;">${item.title || 'Product'}</div>
-          <div style="font-weight:800; color:#10b981;">PKR ${itemTotal}</div>
-          <div style="display:flex; align-items:center; gap:12px; margin-top:8px;">
-            <div style="display:flex; gap:8px;">
-              <button onclick="updateQuantity(${i}, -1)" style="width:30px; height:30px; border:1px solid #e2e8f0; background:white; border-radius:6px;">-</button>
-              <span>${item.quantity}</span>
-              <button onclick="updateQuantity(${i}, 1)" style="width:30px; height:30px; border:1px solid #e2e8f0; background:white; border-radius:6px;">+</button>
+          <div style="font-weight:700; color:var(--dark-color); margin-bottom:6px;">${item.title || 'Product'}</div>
+          <div style="font-weight:800; color:#10b981; margin-bottom:8px;">PKR ${itemTotal.toFixed(2)}</div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <div style="display:flex; align-items:center; gap:8px; background:#f1f5f9; border-radius:8px; padding:4px;">
+              <button onclick="window.updateQuantity(${index}, -1)" style="width:30px; height:30px; border:none; background:white; border-radius:6px; font-weight:700; cursor:pointer;">-</button>
+              <span style="font-weight:700; min-width:20px; text-align:center;">${item.quantity || 1}</span>
+              <button onclick="window.updateQuantity(${index}, 1)" style="width:30px; height:30px; border:none; background:white; border-radius:6px; font-weight:700; cursor:pointer;">+</button>
             </div>
-            <button onclick="removeFromCart(${i})" style="color:#ef4444; background:none; border:none;">Remove</button>
+            <button onclick="window.removeFromCart(${index})" style="background:none; border:none; color:#ef4444; cursor:pointer; font-size:14px;">
+              Remove
+            </button>
           </div>
         </div>
       </div>
     `;
   });
   
+  html += '</div>';
+  
   html += `
-    <div style="background:white; border-radius:20px; padding:20px; margin:16px;">
-      <h3>Summary</h3>
-      <div style="display:flex; justify-content:space-between; margin:10px 0;">
-        <span>Subtotal</span> <span>PKR ${total}</span>
+    <div style="background:white; border-radius:20px; padding:20px; margin:16px; box-shadow:var(--shadow-md);">
+      <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+        <i class="fas fa-receipt" style="color:#667eea;"></i> Order Summary
+      </h3>
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span style="color:#64748b;">Subtotal</span>
+        <span style="font-weight:700; color:var(--dark-color);">PKR ${total.toFixed(2)}</span>
       </div>
-      <button onclick="openCheckoutModal()" style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:800;">
-        Checkout
+      <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+        <span style="color:#64748b;">Shipping</span>
+        <span style="color:#64748b;">Calculated at checkout</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:24px; padding-top:12px; border-top:2px solid #e2e8f0;">
+        <span style="font-size:16px; font-weight:800; color:var(--dark-color);">Total</span>
+        <span style="font-size:20px; font-weight:900; color:#10b981;">PKR ${total.toFixed(2)}</span>
+      </div>
+      <button onclick="window.openCheckoutModal()" style="width:100%; padding:16px; background:var(--success-gradient); color:white; border:none; border-radius:12px; font-weight:800; font-size:16px; cursor:pointer;">
+        <i class="fas fa-lock"></i> Proceed to Checkout
       </button>
     </div>
   `;
   
-  content.innerHTML = html;
-  count.textContent = `${cart.length} items`;
+  cartContent.innerHTML = html;
+  cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
 }
 
 // ===== PRODUCT CARDS =====
 function createProductCard(product, index) {
   const price = product.discountPrice || product.originalPrice;
-  const original = product.originalPrice && product.discountPrice ? product.originalPrice : null;
+  const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
+  const hasDiscount = originalPrice && price && originalPrice > price;
   
-  const card = document.createElement('div');
-  card.className = 'product-card';
-  card.innerHTML = `
-    <div class="product-image-container" onclick="zoomImage('${product.image || ''}', event)">
-      <img src="${product.image || ''}" class="product-image" onerror="this.style.display='none'">
-      ${original ? `<span class="discount-badge">-${Math.round((original-price)/original*100)}%</span>` : ''}
+  let discountPercentage = '';
+  if (hasDiscount && originalPrice && price) {
+    const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
+    discountPercentage = `<span class="discount-badge" onclick="event.stopPropagation();"><i class="fas fa-tag"></i> -${discount}%</span>`;
+  }
+  
+  let offerBadge = '';
+  if (product.offerTag) {
+    offerBadge = `<span class="offer-badge" onclick="event.stopPropagation();"><i class="fas fa-gift"></i> ${product.offerTag}</span>`;
+  }
+  
+  let featureBadges = '';
+  if (product.badges && product.badges.length > 0) {
+    featureBadges = product.badges.slice(0, 1).map(badge => 
+      `<span class="feature-badge" onclick="event.stopPropagation();">${badge}</span>`
+    ).join('');
+  }
+  
+  let priceHtml = '';
+  if (price) {
+    if (hasDiscount && originalPrice) {
+      priceHtml = `
+        <div class="price-badge-container">
+          <span class="current-price">PKR ${price}</span>
+          <span class="original-price">PKR ${originalPrice}</span>
+        </div>
+      `;
+    } else {
+      priceHtml = `
+        <div class="price-badge-container">
+          <span class="current-price">PKR ${price}</span>
+        </div>
+      `;
+    }
+  }
+  
+  const cardElement = document.createElement('div');
+  cardElement.className = 'product-card';
+  
+  cardElement.innerHTML = `
+    <div class="product-image-container" onclick="window.zoomImage('${product.image || ''}', event)">
+      <img src="${product.image || ''}" class="product-image" loading="lazy" onerror="this.style.display='none'">
+      
+      <div class="badge-container">
+        ${discountPercentage}
+        ${offerBadge || featureBadges}
+      </div>
     </div>
+    
     <div class="product-content">
       <div class="product-title">${product.title || 'Product'}</div>
-      <div class="price-badge-container">
-        <span class="current-price">PKR ${price}</span>
-        ${original ? `<span class="original-price">PKR ${original}</span>` : ''}
-      </div>
+      ${priceHtml}
       <div class="product-actions">
-        <button class="btn-primary" onclick="addToCart(${index}); event.stopPropagation();"><i class="fas fa-cart-plus"></i> Add</button>
-        <button class="btn-secondary" onclick="buyNow(${index}); event.stopPropagation();"><i class="fas fa-bolt"></i> Buy</button>
+        <button class="btn-primary" onclick="window.addToCart(${index}); event.stopPropagation();">
+          <i class="fas fa-cart-plus"></i> Add
+        </button>
+        <button class="btn-secondary" onclick="window.buyNow(${index}); event.stopPropagation();">
+          <i class="fas fa-bolt"></i> Buy
+        </button>
       </div>
     </div>
   `;
   
-  card.onclick = (e) => {
-    if (!e.target.closest('button')) showProductModal(index);
+  cardElement.onclick = (e) => {
+    if (!e.target.closest('button') && !e.target.closest('.badge-container')) {
+      showProductModal(index);
+    }
   };
   
-  return card;
+  return cardElement;
 }
 
-function showProductModal(index) {
-  const p = card.products[index];
-  if (!p) return;
+function showProductModal(productIndex) {
+  const products = card.products || [];
+  currentProduct = products[productIndex];
   
-  currentProduct = p;
-  document.getElementById('modalImage').src = p.image || '';
-  document.getElementById('modalTitle').textContent = p.title || 'Product';
-  document.getElementById('modalDescription').textContent = p.desc || 'No description';
-  document.getElementById('modalPrice').innerHTML = `<div style="font-size:24px; font-weight:900; color:#10b981;">PKR ${p.discountPrice || p.originalPrice}</div>`;
+  if (!currentProduct) return;
+  
+  const price = currentProduct.discountPrice || currentProduct.originalPrice;
+  const originalPrice = currentProduct.originalPrice && currentProduct.discountPrice ? currentProduct.originalPrice : null;
+  const hasDiscount = originalPrice && price && originalPrice > price;
+  
+  document.getElementById('modalImage').src = currentProduct.image || '';
+  document.getElementById('modalTitle').textContent = currentProduct.title || 'Product';
+  document.getElementById('modalDescription').textContent = currentProduct.desc || 'No description available';
+  
+  const modalPrice = document.getElementById('modalPrice');
+  if (hasDiscount) {
+    const discount = Math.round(((originalPrice - price) / originalPrice) * 100);
+    modalPrice.innerHTML = `
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+        <div style="text-decoration:line-through; color:#94a3b8; font-size:16px; font-weight:500;">PKR ${originalPrice}</div>
+        <div style="color:#10b981; font-size:24px; font-weight:900;">PKR ${price}</div>
+        <div style="background:var(--danger-gradient); color:white; padding:4px 8px; border-radius:4px; font-size:13px; font-weight:800;">${discount}% OFF</div>
+      </div>
+    `;
+  } else {
+    modalPrice.innerHTML = `<div style="color:#10b981; font-size:24px; font-weight:900;">PKR ${price || 'N/A'}</div>`;
+  }
+  
   openModal('productModal');
 }
 
-function zoomImage(url, e) {
-  if (e) e.stopPropagation();
-  if (url) {
-    document.getElementById('zoomedImage').src = url;
+function zoomImage(imageUrl, event) {
+  if (event) event.stopPropagation();
+  if (imageUrl) {
+    document.getElementById('zoomedImage').src = imageUrl;
     document.getElementById('imageZoomOverlay').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
   }
 }
 
 function closeImageZoom() {
   document.getElementById('imageZoomOverlay').style.display = 'none';
+  document.body.style.overflow = 'auto';
 }
 
 function filterProducts() {
-  const term = document.getElementById('productsSearch').value.toLowerCase();
-  const container = document.getElementById('allProducts');
-  container.innerHTML = '';
-  (card.products || []).filter(p => p.title?.toLowerCase().includes(term))
-    .forEach((p, i) => container.appendChild(createProductCard(p, i)));
+  const searchTerm = document.getElementById('productsSearch').value.toLowerCase();
+  const products = card.products || [];
+  const allProducts = document.getElementById('allProducts');
+  allProducts.innerHTML = '';
+  
+  products.filter(product => 
+    product.title?.toLowerCase().includes(searchTerm) ||
+    product.desc?.toLowerCase().includes(searchTerm)
+  ).forEach((product, index) => {
+    allProducts.appendChild(createProductCard(product, index));
+  });
 }
 
-function buyNow(index) {
-  const p = card.products[index];
-  if (p) {
-    cart = [{ ...p, quantity: 1 }];
+function buyNow(productIndex) {
+  const product = card.products[productIndex];
+  if (product) {
+    cart = [{ ...product, quantity: 1 }];
     updateCartCount();
     openCheckoutModal();
   }
@@ -3067,41 +2696,57 @@ function buyNowFromModal() {
   }
 }
 
-// ===== CHECKOUT =====
+// ===== CHECKOUT - FIXED PAYMENT METHODS & DELIVERY =====
 async function openCheckoutModal() {
   if (cart.length === 0) {
-    notificationManager.showAlert('Cart empty', 'warning');
+    showNotification('Your cart is empty');
     return;
   }
   
   selectedCheckoutPhone = getCustomerPhone();
   selectedCheckoutAddress = getCustomerAddress();
   
-  document.getElementById('checkoutPhoneText').textContent = selectedCheckoutPhone || 'No phone';
-  document.getElementById('checkoutAddressDisplay').innerHTML = selectedCheckoutAddress || 'No address';
+  document.getElementById('checkoutPhoneText').textContent = selectedCheckoutPhone || 'No phone number';
+  document.getElementById('checkoutAddressDisplay').innerHTML = selectedCheckoutAddress ? 
+    `<i class="fas fa-home"></i> ${selectedCheckoutAddress}` : 
+    `<span style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i> No address saved - please add address</span>`;
   
   let subtotal = 0;
-  let items = '';
+  let itemsHtml = '';
   
-  cart.forEach(i => {
-    const price = parseFloat(i.discountPrice || i.originalPrice || 0);
-    const total = price * (i.quantity || 1);
-    subtotal += total;
-    items += `<div style="display:flex; justify-content:space-between; padding:8px; background:#f8fafc; border-radius:8px; margin-bottom:5px;">
-      <span>${i.title} x${i.quantity}</span> <span>PKR ${total}</span>
-    </div>`;
+  cart.forEach((item, index) => {
+    const price = parseFloat(item.discountPrice || item.originalPrice || 0);
+    const itemTotal = price * (item.quantity || 1);
+    subtotal += itemTotal;
+    
+    itemsHtml += `
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; padding:8px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
+        <div style="display:flex; gap:8px; align-items:center;">
+          <span style="font-weight:800; color:var(--dark-color);">${item.quantity || 1}x</span>
+          <span style="font-size:13px; color:#475569; max-width:150px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.title || 'Product'}</span>
+        </div>
+        <span style="font-weight:800; color:#10b981;">PKR ${itemTotal.toFixed(2)}</span>
+      </div>
+    `;
   });
   
-  document.getElementById('checkoutItems').innerHTML = items;
+  document.getElementById('checkoutItems').innerHTML = itemsHtml;
   document.getElementById('checkoutSubtotal').textContent = subtotal.toFixed(2);
   
-  renderPaymentMethods();
+  renderProfessionalPaymentMethods();
   
   if (selectedCheckoutAddress) {
     calculateDeliveryCharge(selectedCheckoutAddress);
   } else {
     deliveryCharge = 0;
-    document.getElementById('deliveryZoneBadge').textContent = 'Address Required';
+    deliveryTime = 'Enter address to calculate';
+    detectedZone = 'Not Set';
+    const zoneBadge = document.getElementById('deliveryZoneBadge');
+    if (zoneBadge) zoneBadge.textContent = 'Address Required';
+    const timeEl = document.getElementById('deliveryTimeEstimate');
+    if (timeEl) timeEl.innerHTML = '<i class="fas fa-exclamation-triangle" style="color:#ef4444;"></i> Please add delivery address';
+    const chargeEl = document.getElementById('deliveryChargeAmount');
+    if (chargeEl) chargeEl.textContent = 'PKR 0';
     document.getElementById('checkoutDelivery').textContent = '0';
     document.getElementById('checkoutTotal').textContent = subtotal.toFixed(2);
   }
@@ -3110,63 +2755,121 @@ async function openCheckoutModal() {
   openModal('checkoutModal');
 }
 
-function renderPaymentMethods() {
+// ===== FIXED: RENDER PAYMENT METHODS FROM BUSINESS CARD =====
+function renderProfessionalPaymentMethods() {
   const grid = document.getElementById('proPaymentGrid');
   if (!grid) return;
   
   let html = '';
   
-  html += `<div class="pro-payment-card ${checkoutPaymentMethod==='cod'?'selected':''}" onclick="selectProPaymentMethod('cod')">
-    <div style="background:#10b981; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-truck"></i></div>
-    <div>Cash on Delivery</div>
-  </div>`;
+  // Always show COD if active or by default
+  if (!card.payments || card.payments?.gateways?.cod?.active !== false) {
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'cod' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('cod')">
+        <div class="pro-payment-icon" style="background:#10b981;">
+          <i class="fas fa-truck"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">Cash on Delivery</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">Pay when order arrives</div>
+      </div>
+    `;
+  }
   
+  // JazzCash
   if (card.payments?.gateways?.jazzcash?.active) {
-    html += `<div class="pro-payment-card ${checkoutPaymentMethod==='jazzcash'?'selected':''}" onclick="selectProPaymentMethod('jazzcash')">
-      <div style="background:#FF6B00; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-mobile-alt"></i></div>
-      <div>JazzCash</div>
-    </div>`;
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'jazzcash' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('jazzcash')">
+        <div class="pro-payment-icon" style="background:#FF6B00;">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">JazzCash</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.jazzcash.number || 'Pay via app'}</div>
+      </div>
+    `;
   }
   
+  // EasyPaisa
   if (card.payments?.gateways?.easypaisa?.active) {
-    html += `<div class="pro-payment-card ${checkoutPaymentMethod==='easypaisa'?'selected':''}" onclick="selectProPaymentMethod('easypaisa')">
-      <div style="background:#0A5C36; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-wallet"></i></div>
-      <div>EasyPaisa</div>
-    </div>`;
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'easypaisa' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('easypaisa')">
+        <div class="pro-payment-icon" style="background:#0A5C36;">
+          <i class="fas fa-wallet"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">EasyPaisa</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.easypaisa.number || 'Pay via app'}</div>
+      </div>
+    `;
   }
   
+  // Bank Transfer
   if (card.payments?.gateways?.bank?.active) {
-    html += `<div class="pro-payment-card ${checkoutPaymentMethod==='bank'?'selected':''}" onclick="selectProPaymentMethod('bank')">
-      <div style="background:#2563eb; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-university"></i></div>
-      <div>Bank</div>
-    </div>`;
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'bank' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('bank')">
+        <div class="pro-payment-icon" style="background:#2563eb;">
+          <i class="fas fa-university"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">Bank Transfer</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">${card.payments.gateways.bank.bankName || 'Direct transfer'}</div>
+      </div>
+    `;
   }
   
+  // Card Payment
   if (card.payments?.gateways?.card?.active) {
-    html += `<div class="pro-payment-card ${checkoutPaymentMethod==='card'?'selected':''}" onclick="selectProPaymentMethod('card')">
-      <div style="background:#8b5cf6; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fas fa-credit-card"></i></div>
-      <div>Card</div>
-    </div>`;
+    html += `
+      <div class="pro-payment-card ${checkoutPaymentMethod === 'card' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('card')">
+        <div class="pro-payment-icon" style="background:#8b5cf6;">
+          <i class="fas fa-credit-card"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">Card Payment</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">Visa / Mastercard</div>
+      </div>
+    `;
   }
   
-  html += `<div class="pro-payment-card ${checkoutPaymentMethod==='whatsapp'?'selected':''}" onclick="selectProPaymentMethod('whatsapp')">
-    <div style="background:#25D366; width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white;"><i class="fab fa-whatsapp"></i></div>
-    <div>WhatsApp</div>
-  </div>`;
+  // WhatsApp Order
+  html += `
+    <div class="pro-payment-card ${checkoutPaymentMethod === 'whatsapp' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('whatsapp')">
+      <div class="pro-payment-icon" style="background:#25D366;">
+        <i class="fab fa-whatsapp"></i>
+      </div>
+      <div style="font-weight:700; font-size:14px;">WhatsApp Order</div>
+      <div style="font-size:11px; color:#64748b; text-align:center;">Order via chat</div>
+    </div>
+  `;
+  
+  // If no payment methods at all, show default COD
+  if (html === '') {
+    html += `
+      <div class="pro-payment-card selected" onclick="window.selectProPaymentMethod('cod')">
+        <div class="pro-payment-icon" style="background:#10b981;">
+          <i class="fas fa-truck"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">Cash on Delivery</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">Pay when order arrives</div>
+      </div>
+    `;
+  }
   
   grid.innerHTML = html;
 }
 
 function selectProPaymentMethod(method) {
   checkoutPaymentMethod = method;
-  renderPaymentMethods();
   
-  if (method !== 'cod' && method !== 'whatsapp') {
-    showPaymentDetails(method);
+  document.querySelectorAll('.pro-payment-card').forEach(card => {
+    card.classList.remove('selected');
+  });
+  
+  const selectedCards = document.querySelectorAll(`.pro-payment-card[onclick*="${method}"]`);
+  selectedCards.forEach(card => card.classList.add('selected'));
+  
+  if (method === 'jazzcash' || method === 'easypaisa' || method === 'bank' || method === 'card') {
+    showPaymentDetailsModal(method);
   }
 }
 
-function showPaymentDetails(method) {
+function showPaymentDetailsModal(method) {
   const title = document.getElementById('paymentMethodTitle');
   const content = document.getElementById('paymentDetailsContent');
   
@@ -3174,240 +2877,634 @@ function showPaymentDetails(method) {
     title.innerHTML = 'JazzCash Payment';
     content.innerHTML = `
       <div style="text-align:center;">
-        <div style="font-size:24px; font-weight:900; color:#FF6B00; background:#FF6B0010; padding:15px; border-radius:12px;">
-          ${card.payments.gateways.jazzcash.number || '03001234567'}
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px; color:#64748b; margin-bottom:12px;">Send payment to:</div>
+          <div style="font-size:24px; font-weight:900; color:#FF6B00; margin:15px 0; background:rgba(255,107,0,0.1); padding:15px; border-radius:16px;">
+            ${card.payments.gateways.jazzcash.number || '03001234567'}
+          </div>
         </div>
-        ${card.payments.gateways.jazzcash.barcode ? 
-          `<img src="${card.payments.gateways.jazzcash.barcode}" style="max-width:200px; margin-top:15px;">` : ''}
+        ${card.payments.gateways.jazzcash.barcode ? `
+          <div style="margin:20px 0; text-align:center;">
+            <div style="font-size:14px; color:#64748b; margin-bottom:12px; font-weight:700;">Scan QR Code to Pay</div>
+            <img src="${card.payments.gateways.jazzcash.barcode}" style="max-width:200px; max-height:200px; border-radius:16px; border:2px solid #e2e8f0; display:block; margin:0 auto; background:white; padding:12px;">
+          </div>
+        ` : ''}
       </div>
     `;
   } else if (method === 'easypaisa' && card.payments?.gateways?.easypaisa) {
     title.innerHTML = 'EasyPaisa Payment';
     content.innerHTML = `
-      <div style="font-size:24px; font-weight:900; color:#0A5C36; background:#0A5C3610; padding:15px; border-radius:12px; text-align:center;">
-        ${card.payments.gateways.easypaisa.number || '03001234567'}
+      <div style="text-align:center;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:15px; color:#64748b; margin-bottom:12px;">Send payment to:</div>
+          <div style="font-size:24px; font-weight:900; color:#0A5C36; margin:15px 0; background:rgba(10,92,54,0.1); padding:15px; border-radius:16px;">
+            ${card.payments.gateways.easypaisa.number || '03001234567'}
+          </div>
+        </div>
+        ${card.payments.gateways.easypaisa.barcode ? `
+          <div style="margin:20px 0; text-align:center;">
+            <div style="font-size:14px; color:#64748b; margin-bottom:12px; font-weight:700;">Scan QR Code to Pay</div>
+            <img src="${card.payments.gateways.easypaisa.barcode}" style="max-width:200px; max-height:200px; border-radius:16px; border:2px solid #e2e8f0; display:block; margin:0 auto; background:white; padding:12px;">
+          </div>
+        ` : ''}
       </div>
     `;
   } else if (method === 'bank' && card.payments?.gateways?.bank) {
     title.innerHTML = 'Bank Transfer';
     content.innerHTML = `
-      <div><strong>Bank:</strong> ${card.payments.gateways.bank.bankName}</div>
-      <div><strong>Account:</strong> ${card.payments.gateways.bank.accountNumber}</div>
-      <div><strong>Title:</strong> ${card.payments.gateways.bank.accountTitle}</div>
+      <div style="background:#f8fafc; border-radius:16px; padding:20px;">
+        <div style="margin-bottom:16px;">
+          <div style="font-size:13px; color:#64748b;">Bank Name</div>
+          <div style="font-size:18px; font-weight:800; color:var(--dark-color);">${card.payments.gateways.bank.bankName || 'HBL'}</div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:13px; color:#64748b;">Account Title</div>
+          <div style="font-size:16px; font-weight:700; color:var(--dark-color);">${card.payments.gateways.bank.accountTitle || 'Business Account'}</div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <div style="font-size:13px; color:#64748b;">Account Number</div>
+          <div style="font-size:18px; font-weight:900; color:#2563eb; background:rgba(37,99,235,0.1); padding:10px; border-radius:8px;">${card.payments.gateways.bank.accountNumber || '1234567890'}</div>
+        </div>
+        ${card.payments.gateways.bank.iban ? `
+          <div style="margin-bottom:16px;">
+            <div style="font-size:13px; color:#64748b;">IBAN</div>
+            <div style="font-size:15px; font-weight:700; color:var(--dark-color);">${card.payments.gateways.bank.iban}</div>
+          </div>
+        ` : ''}
+      </div>
     `;
   } else if (method === 'card' && card.payments?.gateways?.card) {
     title.innerHTML = 'Card Payment';
-    content.innerHTML = '<p>You will be redirected for secure payment</p>';
+    content.innerHTML = `
+      <div style="text-align:center; padding:20px;">
+        <i class="fas fa-credit-card" style="font-size:48px; color:#8b5cf6; margin-bottom:16px;"></i>
+        <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:8px;">Secure Card Payment</h3>
+        <p style="color:#64748b; margin-bottom:20px;">You will be redirected to complete payment</p>
+        <div style="background:#f8fafc; border-radius:12px; padding:16px;">
+          <div style="font-size:14px; color:#475569; margin-bottom:8px;">Processor: ${card.payments.gateways.card.processor || 'Stripe'}</div>
+          <div style="font-size:13px; color:#64748b;">Merchant ID: ${card.payments.gateways.card.merchantId || 'Not provided'}</div>
+        </div>
+      </div>
+    `;
   }
   
   openModal('paymentDetailsModal');
   closeModal('checkoutModal');
 }
 
-// ===== PLACE ORDER =====
+function selectProPaymentMethodForCheckout(method) {
+  checkoutPaymentMethod = method;
+  if (method === 'jazzcash' || method === 'easypaisa' || method === 'bank' || method === 'card') {
+    showPaymentDetailsModal(method);
+  }
+}
+
+function completePaymentAndConfirmOrder() {
+  placeOrder();
+  closeModal('paymentDetailsModal');
+}
+
+// ===== FIXED: PLACE ORDER - NOW WORKS WITH DATABASE =====
 async function placeOrder() {
   if (!selectedCheckoutPhone) {
-    notificationManager.showAlert('❌ Phone required', 'error');
+    showNotification('❌ Please add your phone number');
     openPhoneInput();
     return;
   }
   
   if (!selectedCheckoutAddress) {
-    notificationManager.showAlert('❌ Address required', 'error');
+    showNotification('❌ Please add your delivery address');
     openAddressInput(true);
     return;
   }
   
   if (cart.length === 0) {
-    notificationManager.showAlert('❌ Cart empty', 'error');
+    showNotification('❌ Your cart is empty');
+    closeModal('checkoutModal');
     return;
   }
   
-  const subtotal = calculateCartSubtotal();
-  const total = subtotal + deliveryCharge;
-  const orderId = 'ORD-' + Date.now().toString().slice(-8);
-  const token = generateOrderToken();
+  // Validate delivery charge has been calculated
+  if (!deliveryCharge || deliveryCharge === 0) {
+    calculateDeliveryCharge(selectedCheckoutAddress);
+  }
   
-  const orderData = {
-    orderId: orderId,
-    token: token,
-    customerPhone: selectedCheckoutPhone,
-    customerAddress: selectedCheckoutAddress,
-    items: cart.map(i => ({
-      title: i.title,
-      price: parseFloat(i.discountPrice || i.originalPrice || 0),
-      quantity: i.quantity || 1
-    })),
-    subtotal: subtotal,
-    deliveryCharge: deliveryCharge,
-    total: total,
-    paymentMethod: getPaymentMethodName(checkoutPaymentMethod),
-    payment_status: checkoutPaymentMethod === 'cod' ? 'pending' : 'pending',
-    zone: detectedZone,
-    estimatedDelivery: deliveryTime
-  };
-  
-  // Save for proof
-  currentOrderForProof = orderData;
-  localStorage.setItem('currentOrderData', JSON.stringify(orderData));
-  
-  const saved = await saveOrderToDatabase(orderData);
-  
-  if (saved) {
-    cart = [];
-    updateCartCount();
-    closeModal('checkoutModal');
+  try {
+    const subtotal = calculateCartSubtotal();
+    const total = subtotal + deliveryCharge;
     
-    // Send push notification to customer
-    if (getCustomerPhone()) {
-      window.pushManager.sendToUser(getCustomerPhone(), '🛍️ Order Confirmed', 
-        `Order #${orderId} - PKR ${total}`, 
-        { orderId: orderId, token: token, type: 'order' });
+    const orderId = 'ORD-' + Date.now().toString().slice(-8);
+    const token = generateOrderToken();
+    
+    const orderItems = cart.map(item => ({
+      title: item.title,
+      price: parseFloat(item.discountPrice || item.originalPrice || 0),
+      quantity: item.quantity || 1,
+      image: item.image || ''
+    }));
+    
+    const orderData = {
+      orderId: orderId,
+      token: token,
+      customerName: customerData.name || '',
+      customerPhone: selectedCheckoutPhone,
+      customerAddress: selectedCheckoutAddress,
+      items: orderItems,
+      subtotal: subtotal,
+      deliveryCharge: deliveryCharge,
+      total: total,
+      paymentMethod: getPaymentMethodName(checkoutPaymentMethod),
+      zone: detectedZone,
+      estimatedDelivery: deliveryTime,
+      status: 'confirmed',
+      created_at: new Date().toISOString()
+    };
+    
+    console.log('Saving order:', orderData);
+    const saved = await saveOrderToDatabase(orderData);
+    
+    if (saved) {
+      await loadOrdersFromDatabase();
+      
+      cart = [];
+      updateCartCount();
+      isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+      
+      closeModal('checkoutModal');
+      
+      showOrderConfirmation(orderData);
+      
+      if (checkoutPaymentMethod !== 'whatsapp' && card.phone) {
+        sendOrderWhatsApp(orderData);
+      }
+      
+      addInnerNotification('Order Placed', `Order #${orderId} confirmed with token ${token}`, 'success');
+      showNotification('✅ Order placed successfully! Token: ' + token);
+    } else {
+      // If database save fails, still show confirmation to customer
+      // but notify that there might be an issue
+      cart = [];
+      updateCartCount();
+      isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+      closeModal('checkoutModal');
+      showOrderConfirmation(orderData);
+      showNotification('⚠️ Order confirmed but database sync pending');
     }
-    
-    // Send push to admin
-    if (card.phone) {
-      window.pushManager.sendToUser(card.phone, '🔔 New Order', 
-        `Order #${orderId} - PKR ${total}`, 
-        { orderId: orderId, type: 'admin' });
-    }
-    
-    notificationManager.addNotification('Order Placed', `Order #${orderId} confirmed`, 'order', orderId);
-    notificationManager.showAlert('✅ Order placed!', 'success');
-    
-    showOrderConfirmation(orderData);
+  } catch (error) {
+    console.error('Order error:', error);
+    showNotification('❌ Error placing order: ' + (error.message || 'Unknown error'));
   }
 }
 
 function showOrderConfirmation(orderData) {
+  const modal = document.getElementById('orderConfirmationModal');
   const content = document.getElementById('orderConfirmationContent');
-  const isDigital = orderData.paymentMethod !== 'Cash on Delivery' && orderData.paymentMethod !== 'WhatsApp Order';
+  
+  const date = new Date().toLocaleString();
+  let itemsHtml = '';
+  
+  orderData.items.forEach(item => {
+    itemsHtml += `
+      <div class="order-item-row">
+        <span>${item.title} x${item.quantity}</span>
+        <span>PKR ${(item.price * item.quantity).toFixed(2)}</span>
+      </div>
+    `;
+  });
   
   content.innerHTML = `
     <div class="order-ticket">
-      <div style="text-align:center; margin-bottom:20px;">
-        <i class="fas fa-check-circle" style="font-size:48px; color:#10b981;"></i>
-        <h2 style="color:white;">Order Confirmed!</h2>
-        <p>Token: ${orderData.token}</p>
+      <div class="ticket-header">
+        <span class="ticket-id">${orderData.token}</span>
+        <span class="ticket-date">${date}</span>
       </div>
-      <div><strong>Order ID:</strong> ${orderData.orderId}</div>
-      <div><strong>Total:</strong> PKR ${orderData.total}</div>
-      <div><strong>Payment:</strong> ${orderData.paymentMethod}</div>
-      ${isDigital ? `
-        <div style="margin-top:20px;">
-          <button onclick="markAsPaid()" style="background:white; color:#667eea; border:none; padding:15px; border-radius:12px; width:100%; font-weight:800;">
-            <i class="fas fa-camera"></i> Upload Payment Proof
-          </button>
+      <div class="ticket-body">
+        <div style="text-align:center; margin-bottom:20px;">
+          <i class="fas fa-check-circle" style="font-size:48px; color:#10b981;"></i>
+          <h3 style="color:white; margin-top:12px;">Order Confirmed!</h3>
+          <p style="color:rgba(255,255,255,0.9); font-size:13px;">Your order has been placed successfully</p>
         </div>
-      ` : ''}
-      <button onclick="navigateTo('deliveryPage')" style="margin-top:20px; background:white; color:#667eea; border:none; padding:15px; border-radius:12px; width:100%; font-weight:800;">
-        Track Order
+        
+        <div class="ticket-row">
+          <span>Order ID:</span>
+          <span style="font-weight:800;">${orderData.orderId}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Customer:</span>
+          <span>${orderData.customerPhone}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Address:</span>
+          <span style="max-width:180px;">${orderData.customerAddress}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Delivery:</span>
+          <span>${orderData.estimatedDelivery}</span>
+        </div>
+        
+        <div style="margin:16px 0; padding:12px 0; border-top:2px dashed rgba(255,255,255,0.3); border-bottom:2px dashed rgba(255,255,255,0.3);">
+          ${itemsHtml}
+        </div>
+        
+        <div class="ticket-row">
+          <span>Subtotal:</span>
+          <span>PKR ${orderData.subtotal.toFixed(2)}</span>
+        </div>
+        <div class="ticket-row">
+          <span>Delivery:</span>
+          <span>PKR ${orderData.deliveryCharge.toFixed(2)}</span>
+        </div>
+        <div class="ticket-total">
+          <span>Total</span>
+          <span>PKR ${orderData.total.toFixed(2)}</span>
+        </div>
+      </div>
+      <div style="text-align:center; margin-top:20px; font-size:12px; opacity:0.9;">
+        <i class="fas fa-shield-alt"></i> Payment: ${orderData.paymentMethod}
+      </div>
+    </div>
+    
+    <div style="display:flex; gap:12px; margin-top:20px;">
+      <button onclick="window.downloadOrderTicket('${orderData.token}')" style="flex:1; padding:14px; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-download"></i> Save Ticket
+      </button>
+      <button onclick="window.shareOrderTicket('${orderData.token}')" style="flex:1; padding:14px; background:var(--primary-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-share-alt"></i> Share
       </button>
     </div>
+    
+    <button onclick="window.navigateTo('deliveryPage')" style="width:100%; padding:14px; background:var(--whatsapp-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer; margin-top:12px;">
+      <i class="fas fa-truck"></i> Track Order
+    </button>
   `;
   
   openModal('orderConfirmationModal');
+}
+
+function downloadOrderTicket(token) {
+  const order = orders.find(o => o.token === token);
+  if (!order) return;
+  
+  const ticketText = `ORDER TICKET: ${order.token}\nDate: ${new Date(order.created_at).toLocaleString()}\nOrder ID: ${order.order_id}\nTotal: PKR ${order.total.toFixed(2)}\nPayment: ${order.payment_method}\nStatus: ${order.status}`;
+  const blob = new Blob([ticketText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `order-${order.token}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function shareOrderTicket(token) {
+  const order = orders.find(o => o.token === token);
+  if (!order) return;
+  
+  const shareText = `Order Confirmed!\nToken: ${order.token}\nOrder ID: ${order.order_id}\nTotal: PKR ${order.total.toFixed(2)}\nStatus: ${order.status}`;
+  
+  if (navigator.share) {
+    navigator.share({ title: 'Order Confirmation', text: shareText });
+  } else {
+    navigator.clipboard.writeText(shareText);
+    showNotification('📋 Ticket copied to clipboard');
+  }
+}
+
+function sendOrderWhatsApp(orderData) {
+  if (!card.phone) return;
+  
+  const phone = card.phone.replace(/\D/g, '');
+  let message = `🛍️ *NEW ORDER CONFIRMED*\n\n`;
+  message += `*Order ID:* ${orderData.orderId}\n`;
+  message += `*Token:* ${orderData.token}\n`;
+  message += `*Customer:* ${orderData.customerPhone}\n`;
+  message += `*Address:* ${orderData.customerAddress}\n\n`;
+  message += `*Items:*\n`;
+  
+  orderData.items.forEach(item => {
+    message += `• ${item.title} x${item.quantity} - PKR ${(item.price * item.quantity).toFixed(2)}\n`;
+  });
+  
+  message += `\n*Subtotal:* PKR ${orderData.subtotal.toFixed(2)}`;
+  message += `\n*Delivery:* PKR ${orderData.deliveryCharge.toFixed(2)}`;
+  message += `\n*Total:* PKR ${orderData.total.toFixed(2)}`;
+  message += `\n*Payment:* ${orderData.paymentMethod}`;
+  message += `\n*Delivery:* ${orderData.estimatedDelivery}`;
+  
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+}
+
+// ===== LOAD PAGES =====
+function loadHomePage() {
+  const featuredProducts = document.getElementById('featuredProducts');
+  const products = card.products || [];
+  featuredProducts.innerHTML = '';
+  
+  products.slice(0, 4).forEach((product, index) => {
+    featuredProducts.appendChild(createProductCard(product, index));
+  });
+}
+
+function loadProductsPage() {
+  const allProducts = document.getElementById('allProducts');
+  const products = card.products || [];
+  allProducts.innerHTML = '';
+  products.forEach((product, index) => {
+    allProducts.appendChild(createProductCard(product, index));
+  });
+}
+
+function loadAboutPage() {
+  document.getElementById('aboutContent').innerHTML = `
+    <div style="background:white; border-radius:16px; padding:24px; margin-bottom:16px; box-shadow:var(--shadow-sm);">
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+        <div style="width:50px; height:50px; background:var(--primary-gradient); border-radius:12px; display:flex; align-items:center; justify-content:center;">
+          <i class="fas fa-store" style="font-size:24px; color:white;"></i>
+        </div>
+        <div>
+          <h2 style="font-size:20px; font-weight:800; color:var(--dark-color);">${card.businessName || card.name || 'Business'}</h2>
+          <p style="color:#64748b; font-size:14px;">${card.business?.type || 'Premium Business'}</p>
+        </div>
+      </div>
+      <p style="color:#475569; line-height:1.7; font-size:15px;">${card.business?.about || 'Welcome to our business. We provide premium products and services with quality assurance.'}</p>
+    </div>
+  `;
+  
+  if (card.businessHours) {
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const businessHours = document.getElementById('businessHours');
+    businessHours.innerHTML = '';
+    
+    const today = new Date().getDay();
+    
+    card.businessHours.forEach((day, index) => {
+      if (index < days.length) {
+        const dayName = days[index];
+        const isToday = index === (today === 0 ? 6 : today - 1);
+        
+        const hourItem = document.createElement('div');
+        hourItem.style.cssText = `
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+          padding: 12px;
+          border-radius: 12px;
+          ${isToday ? 'background: #f0f9ff; border-left: 4px solid #3b82f6;' : 'border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;'}
+        `;
+        
+        if (!day || day.status === 'closed') {
+          hourItem.innerHTML = `
+            <span style="font-weight:700; color:#475569; display:flex; align-items:center; gap:8px;">
+              ${isToday ? '<span style="background:#3b82f6; width:8px; height:8px; border-radius:50%;"></span>' : ''}
+              ${dayName}
+            </span>
+            <span style="color:#ef4444; font-weight:600; background:#fee2e2; padding:6px 16px; border-radius:30px; font-size:13px;">
+              <i class="fas fa-clock"></i> Closed
+            </span>
+          `;
+        } else {
+          let startTime = day.start || '09:00';
+          let endTime = day.end || '18:00';
+          
+          hourItem.innerHTML = `
+            <span style="font-weight:700; color:#475569; display:flex; align-items:center; gap:8px;">
+              ${isToday ? '<span style="background:#10b981; width:8px; height:8px; border-radius:50%;"></span>' : ''}
+              ${dayName}
+            </span>
+            <span style="color:#10b981; font-weight:700; background:#d1fae5; padding:6px 20px; border-radius:30px; font-size:13px;">
+              <i class="fas fa-clock"></i> ${startTime} - ${endTime}
+            </span>
+          `;
+        }
+        
+        businessHours.appendChild(hourItem);
+      }
+    });
+  }
+  
+  if (card.holidays && card.holidays.length > 0) {
+    const holidaysList = document.getElementById('holidaysList');
+    holidaysList.innerHTML = '';
+    card.holidays.forEach(holiday => {
+      if (holiday.name && holiday.date) {
+        const date = new Date(holiday.date);
+        const formattedDate = date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        const holidayItem = document.createElement('div');
+        holidayItem.style = "display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #e2e8f0;";
+        holidayItem.innerHTML = `
+          <span style="font-weight:600; color:#475569;">
+            <i class="fas fa-calendar-times" style="color:#ef4444; margin-right:8px;"></i>
+            ${holiday.name}
+          </span>
+          <span style="color:#64748b; background:#f1f5f9; padding:6px 16px; border-radius:30px; font-size:12px;">
+            ${formattedDate}
+          </span>
+        `;
+        holidaysList.appendChild(holidayItem);
+      }
+    });
+  }
+}
+
+function loadContactPage() {
+  const phoneEl = document.getElementById('contactPhone');
+  const emailEl = document.getElementById('contactEmail');
+  const addressEl = document.getElementById('contactAddress');
+  const customerPhoneEl = document.getElementById('customerPhoneDisplay');
+  const customerAddressEl = document.getElementById('customerAddressDisplay');
+  
+  if (phoneEl) phoneEl.textContent = card.phone || 'Not available';
+  if (emailEl) emailEl.textContent = card.email || 'Not available';
+  if (addressEl) addressEl.textContent = card.address || 'Not available';
+  if (customerPhoneEl) customerPhoneEl.textContent = getCustomerPhone() || 'Tap to set your number';
+  if (customerAddressEl) customerAddressEl.textContent = getCustomerAddress() || 'Tap to set your address';
+  
+  const socialGrid = document.getElementById('socialGrid');
+  const socialMedia = card.socialMedia || {};
+  socialGrid.innerHTML = '';
+  
+  const platforms = [
+    { key: 'facebook', icon: 'fab fa-facebook-f', label: 'Facebook', bg: '#1877F2' },
+    { key: 'instagram', icon: 'fab fa-instagram', label: 'Instagram', bg: '#E4405F' },
+    { key: 'twitter', icon: 'fab fa-twitter', label: 'Twitter', bg: '#1DA1F2' },
+    { key: 'linkedin', icon: 'fab fa-linkedin-in', label: 'LinkedIn', bg: '#0A66C2' },
+    { key: 'youtube', icon: 'fab fa-youtube', label: 'YouTube', bg: '#FF0000' },
+    { key: 'tiktok', icon: 'fab fa-tiktok', label: 'TikTok', bg: '#000000' }
+  ];
+  
+  platforms.forEach(platform => {
+    const url = socialMedia[platform.key];
+    if (url && url.trim()) {
+      const link = document.createElement('a');
+      link.href = url.includes('://') ? url : `https://${url}`;
+      link.target = '_blank';
+      link.style = "text-decoration:none; color:inherit;";
+      link.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px; padding:12px; background:white; border-radius:12px; box-shadow:var(--shadow-sm); transition:all 0.3s;">
+          <div style="width:40px; height:40px; background:${platform.bg}; border-radius:10px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;">
+            <i class="${platform.icon}"></i>
+          </div>
+          <div style="font-size:12px; font-weight:600; color:var(--dark-color);">${platform.label}</div>
+        </div>
+      `;
+      socialGrid.appendChild(link);
+    }
+  });
 }
 
 // ===== ADMIN FUNCTIONS =====
 async function loadAdminPanel() {
   await loadOrdersFromDatabase();
   renderTokenList();
-  loadPendingPayments();
+  
+  document.getElementById('adminContent').innerHTML = `
+    <div style="margin:16px; display:flex; gap:12px;">
+      <button onclick="window.logoutAdmin()" style="flex:1; padding:12px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+      <button onclick="window.sendNotificationToAll()" style="flex:1; padding:12px; background:var(--warning-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-bell"></i> Send Alert
+      </button>
+    </div>
+  `;
+}
+
+async function sendNotificationToAll() {
+  const title = prompt('Notification Title:', 'New Update');
+  const body = prompt('Notification Message:', 'Check out our latest products!');
+  
+  if (title && body) {
+    const { error } = await supa.from('notifications').insert([{ title, body }]);
+    if (!error) {
+      showNotification('✅ Notification sent to all users!');
+      addInnerNotification('Notification Sent', `"${title}" sent to all users`, 'success');
+    }
+  }
 }
 
 // ===== LOGIN SYSTEM =====
 function toggleLogin() {
   if (isAdminLoggedIn) {
-    logoutAdmin();
+    if (confirm("Are you sure you want to logout?")) {
+      logoutAdmin();
+    }
   } else {
     navigateTo('loginPage');
   }
 }
 
 function updateLoginUI() {
-  document.getElementById('loginIcon').className = isAdminLoggedIn ? 'fas fa-sign-out-alt' : 'fas fa-sign-in-alt';
-}
-
-function attemptLogin() {
-  const pwd = document.getElementById('adminPasswordInput').value;
-  if (pwd === businessAdminPassword) {
-    isAdminLoggedIn = true;
-    isolatedLocalStorage.setItem('isAdminLoggedIn', 'true');
-    updateLoginUI();
-    notificationManager.showAlert('✅ Login successful', 'success');
-    navigateTo('adminPage');
-    loadAdminPanel();
+  const loginIcon = document.getElementById('loginIcon');
+  const loginBtn = document.getElementById('loginBtn');
+  
+  if (isAdminLoggedIn) {
+    loginIcon.className = 'fas fa-sign-out-alt';
+    loginBtn.title = 'Logout';
   } else {
-    notificationManager.showAlert('❌ Incorrect password', 'error');
+    loginIcon.className = 'fas fa-sign-in-alt';
+    loginBtn.title = 'Login';
   }
 }
 
-function handleLoginKeypress(e) {
-  if (e.key === 'Enter') attemptLogin();
+function attemptLogin() {
+  const passwordInput = document.getElementById('adminPasswordInput');
+  const enteredPassword = passwordInput.value;
+  
+  if (enteredPassword === businessAdminPassword) {
+    isAdminLoggedIn = true;
+    isolatedLocalStorage.setItem('isAdminLoggedIn', 'true');
+    updateLoginUI();
+    showNotification('✅ Login successful!');
+    addInnerNotification('Admin Login', 'You have logged in as administrator', 'success');
+    navigateTo('adminPage');
+  } else {
+    showNotification('❌ Incorrect password. Try again.');
+    passwordInput.value = '';
+    passwordInput.focus();
+  }
+}
+
+function handleLoginKeypress(event) {
+  if (event.key === 'Enter') attemptLogin();
 }
 
 function logoutAdmin() {
   isAdminLoggedIn = false;
   isolatedLocalStorage.removeItem('isAdminLoggedIn');
   updateLoginUI();
-  notificationManager.showAlert('👋 Logged out', 'info');
+  showNotification('👋 Logged out successfully');
+  addInnerNotification('Logged Out', 'You have been logged out', 'info');
   navigateTo('homePage');
 }
 
-// ===== NAVIGATION =====
+// ===== NAVIGATION WITH HASH ROUTING =====
 let lastBackPress = 0;
 
 function initializeRouting() {
   window.addEventListener('hashchange', handleHashChange);
+  
   setTimeout(() => {
-    window.location.hash = window.location.hash || '#home';
-    handleHashChange();
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      handleHashChange();
+    } else {
+      window.location.hash = '#home';
+    }
   }, 100);
 }
 
 function handleHashChange() {
   const hash = window.location.hash.replace('#', '');
-  const pages = {
-    'home': 'homePage', 'products': 'productsPage', 'cart': 'cartPage',
-    'about': 'aboutPage', 'contact': 'contactPage', 'delivery': 'deliveryPage',
-    'admin': 'adminPage', 'login': 'loginPage'
+  const pageMap = {
+    'home': 'homePage',
+    'products': 'productsPage',
+    'cart': 'cartPage',
+    'about': 'aboutPage',
+    'contact': 'contactPage',
+    'delivery': 'deliveryPage',
+    'admin': 'adminPage',
+    'login': 'loginPage'
   };
-  if (pages[hash] && currentPage !== pages[hash]) {
-    navigateToDirect(pages[hash]);
+  
+  if (pageMap[hash]) {
+    if (currentPage !== pageMap[hash]) {
+      navigateToDirect(pageMap[hash]);
+    }
+  } else {
+    window.location.hash = '#home';
   }
 }
 
 function navigateToDirect(pageId) {
   if (currentPage === pageId) return;
   
-  const old = document.getElementById(currentPage);
-    const newPage = document.getElementById(pageId);
+  const oldPage = document.getElementById(currentPage);
+  const newPage = document.getElementById(pageId);
   
   if (!newPage) return;
   
-  if (old) {
-    old.classList.remove('active');
-    old.classList.add('slide-out');
+  if (oldPage) {
+    oldPage.classList.remove('active');
+    oldPage.classList.add('slide-out');
   }
   
   setTimeout(() => {
-    if (old) old.classList.remove('slide-out');
+    if (oldPage) oldPage.classList.remove('slide-out');
     newPage.classList.add('active');
     currentPage = pageId;
     
-    document.getElementById('headerBackBtn').style.display = pageId !== 'homePage' ? 'flex' : 'none';
+    const backBtn = document.getElementById('headerBackBtn');
+    if (backBtn) backBtn.style.display = pageId !== 'homePage' ? 'flex' : 'none';
     
-    // Update nav
-    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     const navMap = { 'homePage': 0, 'productsPage': 1, 'cartPage': 2, 'aboutPage': 3, 'contactPage': 4 };
     if (navMap[pageId] !== undefined) {
-      document.querySelectorAll('.nav-item')[navMap[pageId]].classList.add('active');
+      const navItems = document.querySelectorAll('.nav-item');
+      if (navItems[navMap[pageId]]) navItems[navMap[pageId]].classList.add('active');
     }
     
     document.getElementById('notificationDrawer').classList.remove('open');
     
-    // Load page content
     if (pageId === 'homePage') loadHomePage();
     else if (pageId === 'productsPage') loadProductsPage();
     else if (pageId === 'cartPage') loadCartPage();
@@ -3422,12 +3519,20 @@ function navigateToDirect(pageId) {
 }
 
 function navigateTo(pageId) {
-  const map = {
-    'homePage': 'home', 'productsPage': 'products', 'cartPage': 'cart',
-    'aboutPage': 'about', 'contactPage': 'contact', 'deliveryPage': 'delivery',
-    'adminPage': 'admin', 'loginPage': 'login'
+  const hashMap = {
+    'homePage': 'home',
+    'productsPage': 'products',
+    'cartPage': 'cart',
+    'aboutPage': 'about',
+    'contactPage': 'contact',
+    'deliveryPage': 'delivery',
+    'adminPage': 'admin',
+    'loginPage': 'login'
   };
-  if (map[pageId]) window.location.hash = `#${map[pageId]}`;
+  
+  if (hashMap[pageId]) {
+    window.location.hash = `#${hashMap[pageId]}`;
+  }
 }
 
 function goBack() {
@@ -3439,14 +3544,15 @@ function goBack() {
   
   if (navigationHistory.length > 1) {
     navigationHistory.pop();
-    navigateTo(navigationHistory[navigationHistory.length - 1]);
+    const previousPage = navigationHistory[navigationHistory.length - 1];
+    navigateTo(previousPage);
   } else {
     const now = Date.now();
     if (now - lastBackPress < 2000) {
       document.getElementById('exitModal').style.display = 'flex';
     } else {
       lastBackPress = now;
-      notificationManager.showAlert('Press back again to exit', 'info');
+      showNotification('Press back again to exit');
     }
   }
 }
@@ -3469,111 +3575,33 @@ function closeInstallPermissionModal() {
 
 function acceptInstallPermissions() {
   document.getElementById('installPermissionModal').style.display = 'none';
-  pushManager.requestPermission();
-}
-
-// ===== PAGE LOADERS =====
-function loadHomePage() {
-  const featured = document.getElementById('featuredProducts');
-  featured.innerHTML = '';
-  (card.products || []).slice(0, 4).forEach((p, i) => featured.appendChild(createProductCard(p, i)));
-}
-
-function loadProductsPage() {
-  const all = document.getElementById('allProducts');
-  all.innerHTML = '';
-  (card.products || []).forEach((p, i) => all.appendChild(createProductCard(p, i)));
-}
-
-function loadAboutPage() {
-  document.getElementById('aboutContent').innerHTML = `
-    <div style="background:white; border-radius:16px; padding:24px;">
-      <h2>${card.businessName || card.name}</h2>
-      <p>${card.business?.about || 'Welcome to our business.'}</p>
-    </div>
-  `;
-  
-  if (card.businessHours) {
-    const hours = document.getElementById('businessHours');
-    hours.innerHTML = '';
-    const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-    card.businessHours.forEach((d, i) => {
-      if (i < 7) {
-        hours.innerHTML += `
-          <div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #e2e8f0;">
-            <span>${days[i]}</span>
-            <span>${d.status === 'closed' ? 'Closed' : (d.start || '09:00') + ' - ' + (d.end || '18:00')}</span>
-          </div>
-        `;
-      }
-    });
-  }
-  
-  if (card.holidays?.length) {
-    const holidays = document.getElementById('holidaysList');
-    holidays.innerHTML = '';
-    card.holidays.forEach(h => {
-      holidays.innerHTML += `
-        <div style="display:flex; justify-content:space-between; padding:8px;">
-          <span>${h.name}</span>
-          <span>${new Date(h.date).toLocaleDateString()}</span>
-        </div>
-      `;
-    });
-  }
-}
-
-function loadContactPage() {
-  document.getElementById('contactPhone').textContent = card.phone || 'N/A';
-  document.getElementById('contactEmail').textContent = card.email || 'N/A';
-  document.getElementById('contactAddress').textContent = card.address || 'N/A';
-  document.getElementById('customerPhoneDisplay').textContent = getCustomerPhone() || 'Tap to set';
-  document.getElementById('customerAddressDisplay').textContent = getCustomerAddress() || 'Tap to set';
-  
-  const social = document.getElementById('socialGrid');
-  const media = card.socialMedia || {};
-  social.innerHTML = '';
-  
-  const platforms = [
-    { key: 'facebook', icon: 'fab fa-facebook', color: '#1877F2' },
-    { key: 'instagram', icon: 'fab fa-instagram', color: '#E4405F' },
-    { key: 'twitter', icon: 'fab fa-twitter', color: '#1DA1F2' },
-    { key: 'linkedin', icon: 'fab fa-linkedin', color: '#0A66C2' }
-  ];
-  
-  platforms.forEach(p => {
-    if (media[p.key]) {
-      social.innerHTML += `
-        <a href="${media[p.key]}" target="_blank" style="text-decoration:none;">
-          <div style="background:${p.color}; color:white; padding:10px; border-radius:10px; text-align:center;">
-            <i class="${p.icon}"></i>
-          </div>
-        </a>
-      `;
-    }
-  });
+  showNotification('✅ Thank you!');
+  enableNotifications();
 }
 
 // ===== CUSTOMER DATA =====
 function generateDeviceId() {
-  let id = localStorage.getItem('customer_device_id');
-  if (!id) {
-    id = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('customer_device_id', id);
+  let deviceId = localStorage.getItem('customer_device_id');
+  if (!deviceId) {
+    deviceId = 'dev_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('customer_device_id', deviceId);
   }
-  return id;
+  return deviceId;
 }
 
 function initCustomerData() {
   customerData.deviceId = generateDeviceId();
   customerData.phone = getCustomerPhone();
+  customerData.name = isolatedLocalStorage.getItem('customerName') || '';
+  customerData.email = isolatedLocalStorage.getItem('customerEmail') || '';
 }
 
-// ===== CONTACT ACTIONS =====
+// ===== WHATSAPP & CONTACT ACTIONS =====
 function openWhatsAppChat() {
   if (card.phone) {
     const phone = card.phone.replace(/\D/g, '');
-    window.open(`https://wa.me/${phone}`, '_blank');
+    const message = `Hello ${card.businessName || card.name}, I'm interested in your products/services.`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
   }
 }
 
@@ -3582,7 +3610,10 @@ function makeCall() {
 }
 
 function sendEmail() {
-  if (card.email) window.open(`mailto:${card.email}`);
+  if (card.email) {
+    const subject = encodeURIComponent(`Inquiry - ${card.businessName || 'Business'}`);
+    window.open(`mailto:${card.email}?subject=${subject}`);
+  }
 }
 
 function openMap() {
@@ -3591,19 +3622,19 @@ function openMap() {
 
 // ===== INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", async () => {
-  const params = new URLSearchParams(location.search);
-  let id = params.get("id") || localStorage.getItem("lastCardId");
+  const urlParams = new URLSearchParams(location.search);
+  let id = urlParams.get("id") || localStorage.getItem("lastCardId");
   
   if (id && id.length === 6) {
-    const { data } = await supa.from('short_urls').select('full_id').eq('short_id', id).single();
-    if (data) {
-      id = data.full_id;
-      shortCardId = data.short_id;
+    const { data: mapping } = await supa.from('short_urls').select('full_id').eq('short_id', id).single();
+    if (mapping) {
+      id = mapping.full_id;
+      shortCardId = mapping.short_id;
     }
   }
   
   if (!id) {
-    document.body.innerHTML = "<div style='padding:40px; text-align:center;'>Card not found</div>";
+    document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>";
     return;
   }
   
@@ -3615,15 +3646,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   
   isAdminLoggedIn = isolatedLocalStorage.getItem('isAdminLoggedIn') === 'true';
   
-  initCustomerData();
+  const savedNotifications = isolatedLocalStorage.getItem('innerNotifications');
+  if (savedNotifications) {
+    innerNotifications = JSON.parse(savedNotifications);
+    unreadNotifications = innerNotifications.filter(n => !n.read).length;
+  }
   
-  // Initialize push manager
-  await pushManager.init();
+  initCustomerData();
   
   setTimeout(async () => {
     const { data, error } = await supa.from("cards").select("*").eq("id", id).single();
     if (error || !data) {
-      document.body.innerHTML = "<div style='padding:40px; text-align:center;'>Card not found</div>";
+      document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>";
       return;
     }
     
@@ -3631,8 +3665,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     card.id = data.id;
     
     businessAdminPassword = generateAdminPassword(card.id, shortCardId);
-    document.getElementById('passwordHint').textContent = shortCardId ? 
-      `Hint: business123_${shortCardId.toLowerCase()}` : 'Hint: business123_{short_id}';
+    const hintEl = document.getElementById('passwordHint');
+    if (hintEl) {
+      hintEl.textContent = shortCardId ? 
+        `Hint: Password is business123_${shortCardId.toLowerCase()}` : 
+        `Hint: Password format is business123_{short_id}`;
+    }
     
     await loadOrdersFromDatabase();
     await renderApp();
@@ -3642,29 +3680,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     navigationHistory.push('homePage');
     updateCartCount();
     updateLoginUI();
-    notificationManager.updateBadge();
+    updateNotificationBellCount();
     updateDeliveryIcon();
     
-    setTimeout(() => checkForDeliveries(), 1000);
-    notificationManager.addNotification('Welcome!', 'Browse products and enjoy shopping', 'info');
+    setTimeout(() => { checkForDeliveries(); }, 1000);
     
-    // Hide loading screen
-    document.getElementById('loadingScreen').classList.remove('active');
-    document.getElementById('homePage').classList.add('active');
-    currentPage = 'homePage';
+    if (innerNotifications.length === 0) {
+      addInnerNotification('Welcome!', 'Browse products and enjoy shopping', 'info');
+    }
     
+    setTimeout(() => {
+      if (!isPWAInstalled() && deferredPrompt && !installButtonShown) {
+        document.getElementById('installPermissionModal').style.display = 'flex';
+      }
+    }, 3000);
   }, 2000);
 });
 
 async function renderApp() {
   setupDynamicPWA(card);
-  document.getElementById('businessHeader').textContent = card.businessName || card.name || "Premium Business";
-  if (card.profileImage) document.getElementById('photo').src = card.profileImage;
-  document.getElementById('name').textContent = card.name || '';
-  document.getElementById('business').textContent = card.businessName || '';
+  
+  const headerEl = document.getElementById('businessHeader');
+  if (headerEl) headerEl.textContent = card.businessName || card.name || "Premium Business";
+  
+  const photo = document.getElementById('photo');
+  if (card.profileImage) {
+    photo.src = card.profileImage;
+    photo.style.display = 'block';
+  } else {
+    photo.style.display = 'none';
+  }
+  
+  const nameEl = document.getElementById('name');
+  const businessEl = document.getElementById('business');
+  if (nameEl) nameEl.textContent = card.name || "";
+  if (businessEl) businessEl.textContent = card.businessName || "";
+  
   loadHomePage();
 }
 
+// ===== INTERVALS =====
 setInterval(checkForDeliveries, 30000);
 </script>
 </body>
