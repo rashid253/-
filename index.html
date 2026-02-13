@@ -1726,7 +1726,7 @@ function generateShortId() {
   return shortId;
 }
 
-// ========== MAIN GENERATE FUNCTION ==========
+// ========== MAIN GENERATE FUNCTION - FIXED ==========
 async function generate(){
  // Validate required fields
  if(!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value){
@@ -1971,18 +1971,41 @@ async function generate(){
     cardData.profileImage = await resizeImage(document.getElementById('profileImage').files[0]);
    }
 
-   // Save to Supabase
+   // ===== FIXED PART: INSERT INTO BUSINESSES TABLE FIRST =====
+   console.log("Inserting business...");
+   const { data: business, error: businessError } = await db.from("businesses").insert({
+     id: id,
+     business_name: document.getElementById('businessName').value.trim(),
+     owner_name: document.getElementById('fullName').value.trim(),
+     owner_phone: document.getElementById('phoneNumber').value.trim(),
+     owner_email: document.getElementById('email').value.trim() || null,
+     address: document.getElementById('address').value.trim()
+   }).select().single();
+
+   if(businessError){
+     hideLoading();
+     console.error("Business error:", businessError);
+     alert("Failed to save business: " + businessError.message);
+     return;
+   }
+
+   console.log("Business inserted:", business);
+
+   // ===== THEN INSERT INTO CARDS TABLE WITH BUSINESS_ID =====
    const { data: inserted, error } = await db.from("cards").insert({
      id: id,
+     business_id: id,  // This links to the businesses table
      data: JSON.stringify(cardData)
    }).select().single();
 
    if(error){
      hideLoading();
-     console.error("Supabase error:", error);
+     console.error("Card error:", error);
      alert("Failed to save card: " + error.message);
      return;
    }
+
+   console.log("Card inserted:", inserted);
 
    // Store ID and redirect
    localStorage.setItem("lastCardId", inserted.id);
@@ -1998,7 +2021,7 @@ async function generate(){
        full_id: inserted.id
      });
      
-     showSuccess(`🎫 Token System Ready! Sample: ${generateProfessionalToken()}`);
+     showSuccess(`🎫 Token System Ready! Access Key: ${business.access_key || 'Generated'}`);
      
      setTimeout(() => {
        location.href = "card.html?id=" + shortId;
