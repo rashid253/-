@@ -1275,7 +1275,7 @@ body {
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
-  <!-- ===== CUSTOMER INFO PAGE (NEW) ===== -->
+  <!-- ===== CUSTOMER INFO PAGE ===== -->
   <div id="customerInfoPage" class="page">
     <div class="page-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
       <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-user"></i> Customer Information</h1>
@@ -1324,7 +1324,7 @@ body {
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
-  <!-- ===== PAYMENT PAGE (NEW) ===== -->
+  <!-- ===== PAYMENT PAGE ===== -->
   <div id="paymentPage" class="page">
     <div class="page-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
       <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-credit-card"></i> Payment Method</h1>
@@ -1347,7 +1347,6 @@ body {
       
       <div class="pro-payment-grid" id="paymentMethodsGrid"></div>
       
-      <!-- Payment Proof Upload Section (shows when non-COD selected) -->
       <div id="paymentProofSection" style="display:none;">
         <div class="payment-proof-area">
           <div class="proof-upload-btn" onclick="document.getElementById('paymentProofInput').click()">
@@ -1633,7 +1632,6 @@ let cart = [];
 let currentPage = 'loadingScreen';
 let deliveryStatusData = [];
 let businessAdminPassword = "";
-let shortCardId = "";
 let isAdminLoggedIn = false;
 let currentBusinessId = '';
 let orders = [];
@@ -1725,6 +1723,13 @@ const isolatedLocalStorage = {
   }
 };
 
+// ===== PASSWORD GENERATOR - USING UUID FIRST 6 CHARS =====
+function generateAdminPassword(cardId) {
+  // FULL UUID KE PEHLE 6 CHARACTERS USE KARO
+  const idPart = cardId ? cardId.substring(0, 6).toLowerCase() : 'default';
+  return `business123_${idPart}`;
+}
+
 // ===== CUSTOMER DATA MANAGEMENT =====
 function loadCustomerInfo() {
   const saved = isolatedLocalStorage.getItem('customerInfo');
@@ -1746,13 +1751,11 @@ function loadCustomerInfo() {
 }
 
 function saveCustomerInfo() {
-  // Get form values
   const name = document.getElementById('customerName').value.trim();
   const phone = document.getElementById('customerPhone').value.trim();
   const email = document.getElementById('customerEmail').value.trim();
   const address = document.getElementById('customerAddress').value.trim();
   
-  // Validate
   let isValid = true;
   
   if (!name) {
@@ -1785,7 +1788,6 @@ function saveCustomerInfo() {
   
   if (!isValid) return;
   
-  // Save customer info
   customerInfo = {
     name: name,
     phone: phone,
@@ -1796,7 +1798,6 @@ function saveCustomerInfo() {
   
   isolatedLocalStorage.setItem('customerInfo', JSON.stringify(customerInfo));
   
-  // Navigate to payment page
   navigateTo('paymentPage');
   loadPaymentPage();
 }
@@ -1818,7 +1819,6 @@ function getCurrentLocation() {
       document.getElementById('locationCoords').textContent = 
         `📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
       
-      // Reverse geocode to get address
       fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`)
         .then(response => response.json())
         .then(data => {
@@ -1839,17 +1839,14 @@ function getCurrentLocation() {
 
 // ===== PAYMENT FUNCTIONS =====
 function loadPaymentPage() {
-  // Load payment methods from business card
   const paymentGrid = document.getElementById('paymentMethodsGrid');
   const orderSummary = document.getElementById('paymentOrderSummary');
   
-  // Calculate totals
   let subtotal = cart.reduce((sum, item) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
     return sum + (price * (item.quantity || 1));
   }, 0);
   
-  // Calculate delivery charge
   let deliveryCharge = 0;
   if (customerInfo.address) {
     const addressLower = customerInfo.address.toLowerCase();
@@ -1862,7 +1859,6 @@ function loadPaymentPage() {
   
   const total = subtotal + deliveryCharge;
   
-  // Show order summary
   let itemsHtml = '';
   cart.forEach(item => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
@@ -1889,10 +1885,8 @@ function loadPaymentPage() {
   
   document.getElementById('paymentTotal').textContent = `PKR ${total.toFixed(2)}`;
   
-  // Render payment methods
   let methodsHtml = '';
   
-  // Cash on Delivery (always available)
   methodsHtml += `
     <div class="pro-payment-card ${selectedPaymentMethod === 'cod' ? 'selected' : ''}" onclick="window.selectPaymentMethod('cod')">
       <div class="pro-payment-icon" style="background:#10b981;">
@@ -1903,7 +1897,6 @@ function loadPaymentPage() {
     </div>
   `;
   
-  // JazzCash
   if (card.payments?.gateways?.jazzcash?.active) {
     methodsHtml += `
       <div class="pro-payment-card ${selectedPaymentMethod === 'jazzcash' ? 'selected' : ''}" onclick="window.selectPaymentMethod('jazzcash')">
@@ -1916,7 +1909,6 @@ function loadPaymentPage() {
     `;
   }
   
-  // EasyPaisa
   if (card.payments?.gateways?.easypaisa?.active) {
     methodsHtml += `
       <div class="pro-payment-card ${selectedPaymentMethod === 'easypaisa' ? 'selected' : ''}" onclick="window.selectPaymentMethod('easypaisa')">
@@ -1929,7 +1921,6 @@ function loadPaymentPage() {
     `;
   }
   
-  // Bank Transfer
   if (card.payments?.gateways?.bank?.active) {
     methodsHtml += `
       <div class="pro-payment-card ${selectedPaymentMethod === 'bank' ? 'selected' : ''}" onclick="window.selectPaymentMethod('bank')">
@@ -1942,7 +1933,6 @@ function loadPaymentPage() {
     `;
   }
   
-  // Card Payment
   if (card.payments?.gateways?.card?.active) {
     methodsHtml += `
       <div class="pro-payment-card ${selectedPaymentMethod === 'card' ? 'selected' : ''}" onclick="window.selectPaymentMethod('card')">
@@ -1955,7 +1945,6 @@ function loadPaymentPage() {
     `;
   }
   
-  // Crypto
   if (card.payments?.gateways?.crypto?.active) {
     methodsHtml += `
       <div class="pro-payment-card ${selectedPaymentMethod === 'crypto' ? 'selected' : ''}" onclick="window.selectPaymentMethod('crypto')">
@@ -1974,7 +1963,6 @@ function loadPaymentPage() {
 function selectPaymentMethod(method) {
   selectedPaymentMethod = method;
   
-  // Update UI
   document.querySelectorAll('.pro-payment-card').forEach(card => {
     card.classList.remove('selected');
   });
@@ -1982,7 +1970,6 @@ function selectPaymentMethod(method) {
   const selectedCards = document.querySelectorAll(`.pro-payment-card[onclick*="${method}"]`);
   selectedCards.forEach(card => card.classList.add('selected'));
   
-  // Show/hide proof upload section
   const proofSection = document.getElementById('paymentProofSection');
   if (method !== 'cod') {
     proofSection.style.display = 'block';
@@ -2085,7 +2072,6 @@ function showPaymentDetails(method) {
     `;
   }
   
-  // Update amount display
   setTimeout(() => {
     const amountEl = document.getElementById('paymentAmountDisplay');
     if (amountEl) {
@@ -2114,7 +2100,6 @@ function handleProofUpload(input) {
 }
 
 async function processPayment() {
-  // Validate customer info
   if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) {
     showNotification('❌ Please complete customer information first');
     navigateTo('customerInfoPage');
@@ -2127,13 +2112,11 @@ async function processPayment() {
     return;
   }
   
-  // For non-COD methods, require payment proof
   if (selectedPaymentMethod !== 'cod' && !paymentProof) {
     showNotification('❌ Please upload payment proof');
     return;
   }
   
-  // Calculate totals
   let subtotal = cart.reduce((sum, item) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
     return sum + (price * (item.quantity || 1));
@@ -2151,7 +2134,6 @@ async function processPayment() {
   
   const total = subtotal + deliveryCharge;
   
-  // Create order
   const orderId = 'ORD-' + Date.now().toString().slice(-8);
   const token = generateOrderToken();
   
@@ -2180,27 +2162,28 @@ async function processPayment() {
     created_at: new Date().toISOString()
   };
   
-  // Send to business email and WhatsApp
   await sendOrderNotifications(pendingOrder);
   
-  // Show confirmation
+  await saveOrderToDatabase(pendingOrder);
+  
   showOrderConfirmation(pendingOrder);
   
-  // Clear cart
   cart = [];
   updateCartCount();
   isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
   
-  // Add notification
   addInnerNotification('Order Placed', `Order #${orderId} awaiting confirmation`, 'success');
   
-  // Navigate to delivery page
   navigateTo('deliveryPage');
+}
+
+function completePaymentAndConfirmOrder() {
+  closeModal('paymentDetailsModal');
+  processPayment();
 }
 
 async function sendOrderNotifications(order) {
   try {
-    // Send to WhatsApp if business has WhatsApp
     if (card.phone) {
       const phone = card.phone.replace(/\D/g, '');
       let message = `🛍️ *NEW ORDER AWAITING CONFIRMATION*\n\n`;
@@ -2228,7 +2211,6 @@ async function sendOrderNotifications(order) {
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
     }
     
-    // Send to email if business has email
     if (card.email) {
       const subject = `New Order: ${order.orderId} - ${order.customerName}`;
       let body = `NEW ORDER AWAITING CONFIRMATION\n\n`;
@@ -2256,7 +2238,6 @@ async function sendOrderNotifications(order) {
       window.open(`mailto:${card.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
     }
     
-    // Add to orders list
     orders.unshift({
       ...order,
       status: 'pending_confirmation'
@@ -2290,11 +2271,6 @@ function getPaymentMethodName(method) {
   return names[method] || method;
 }
 
-function completePaymentAndConfirmOrder() {
-  closeModal('paymentDetailsModal');
-  processPayment();
-}
-
 // ===== ORDER TOKEN GENERATION =====
 function generateOrderToken() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -2303,20 +2279,6 @@ function generateOrderToken() {
   let random = '';
   for (let i = 0; i < 4; i++) random += chars.charAt(Math.floor(Math.random() * chars.length));
   return `${prefix}-${timestamp}-${random}`;
-}
-
-// ===== SHORT ID SYSTEM =====
-function generateShortId() {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let shortId = '';
-  for (let i = 0; i < 6; i++) shortId += chars.charAt(Math.floor(Math.random() * chars.length));
-  return shortId;
-}
-
-// ===== PASSWORD GENERATOR =====
-function generateAdminPassword(cardId, shortId) {
-  const shortPart = shortId ? shortId.toLowerCase() : (cardId ? cardId.substring(0, 6).toLowerCase() : 'default');
-  return `business123_${shortPart}`;
 }
 
 // ===== MODAL FUNCTIONS =====
@@ -2608,7 +2570,7 @@ function saveBusinessToContacts() {
 function shareBusiness() {
   const businessName = card.businessName || card.name || "Business";
   const currentUrl = window.location.href.split('?')[0];
-  let shareUrl = shortCardId ? `${currentUrl}?id=${shortCardId}` : currentUrl;
+  let shareUrl = currentUrl + "?id=" + currentBusinessId;
   const shareText = `Check out ${businessName} on their business app!\n\n${shareUrl}`;
   
   if (navigator.share) {
@@ -2623,7 +2585,6 @@ function shareBusiness() {
 async function checkForDeliveries() {
   if (!customerInfo.phone) return;
   
-  // Filter orders for this customer
   const customerOrders = orders.filter(order => 
     order.customerPhone === customerInfo.phone
   );
@@ -3057,7 +3018,6 @@ async function updateOrderStatus(orderId) {
     closeModal('orderConfirmationModal');
     await loadOrdersFromDatabase();
     
-    // If status changed to delivered, update delivery icon
     if (status === 'delivered') {
       checkForDeliveries();
     }
@@ -3829,7 +3789,6 @@ function navigateToDirect(pageId) {
     
     document.getElementById('notificationDrawer').classList.remove('open');
     
-    // Load page-specific content
     if (pageId === 'homePage') loadHomePage();
     else if (pageId === 'productsPage') loadProductsPage();
     else if (pageId === 'cartPage') loadCartPage();
@@ -3942,26 +3901,21 @@ function openMap() {
   if (card.address) window.open(`https://maps.google.com/?q=${encodeURIComponent(card.address)}`, '_blank');
 }
 
-// ===== INITIALIZATION =====
+// ===== INITIALIZATION - NO SHORT KEY LOGIC =====
 document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(location.search);
   let id = urlParams.get("id") || localStorage.getItem("lastCardId");
   
-  if (id && id.length === 6) {
-    const { data: mapping } = await supa.from('short_urls').select('full_id').eq('short_id', id).single();
-    if (mapping) {
-      id = mapping.full_id;
-      shortCardId = mapping.short_id;
-    }
-  }
-  
+  // SHORT KEY LOGIC COMPLETELY REMOVED - DIRECT UUID ONLY
   if (!id) {
-    document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>";
+    document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);'><h2>Card not found</h2><p>No ID provided</p></div>";
     return;
   }
   
+  console.log("Loading card with UUID:", id);
+  
   localStorage.setItem("lastCardId", id);
-  currentBusinessId = id;
+  currentBusinessId = id;  // YEH PURI UUID HAI
   
   const savedCart = isolatedLocalStorage.getItem('cart');
   cart = savedCart ? JSON.parse(savedCart) : [];
@@ -3974,7 +3928,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     unreadNotifications = innerNotifications.filter(n => !n.read).length;
   }
   
-  // Load customer info
   const savedCustomer = isolatedLocalStorage.getItem('customerInfo');
   if (savedCustomer) {
     try {
@@ -3985,21 +3938,29 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
   
   setTimeout(async () => {
-    const { data, error } = await supa.from("cards").select("*").eq("id", id).single();
+    // DIRECT QUERY WITH FULL UUID
+    const { data, error } = await supa
+      .from("cards")
+      .select("*")
+      .eq("id", id)  // UUID SE DIRECT MATCH
+      .single();
+    
     if (error || !data) {
-      document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white;'><h2>Card not found</h2></div>";
+      document.body.innerHTML = "<div style='padding:40px; text-align:center; color:white; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);'><h2>Card not found</h2><p>Invalid ID: " + id + "</p></div>";
       return;
     }
     
     card = JSON.parse(data.data);
-    card.id = data.id;
+    card.id = data.id;  // YEH PURI UUID HAI
     
-    businessAdminPassword = generateAdminPassword(card.id, shortCardId);
+    // PASSWORD BANAO UUID KE PEHLE 6 CHARS SE
+    businessAdminPassword = generateAdminPassword(card.id);
+    
+    // HINT DIKHAO
     const hintEl = document.getElementById('passwordHint');
     if (hintEl) {
-      hintEl.textContent = shortCardId ? 
-        `Hint: Password is business123_${shortCardId.toLowerCase()}` : 
-        `Hint: Password format is business123_{short_id}`;
+      const uuidFirst6 = card.id.substring(0, 6).toLowerCase();
+      hintEl.textContent = `Hint: Password is business123_${uuidFirst6}`;
     }
     
     await loadOrdersFromDatabase();
