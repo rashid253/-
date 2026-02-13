@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
+/* TAMAM STYLE WAHI HAI - KOI CHANGE NAHI */
+/* AP KA JO STYLE HAI BILKUL WAISA HI RAKHA HAI */
 body{
   margin:0;
   font-family:'Poppins',system-ui;
@@ -993,7 +995,7 @@ h2 i {
 </button>
 
 <button type="button" onclick="generate()" style="background:linear-gradient(135deg, #667eea 0%, #764ba2 100%);margin-top:24px" id="generateButton">
- <i class="fas fa-magic"></i> Generate Professional Digital Card
+ <i class="fas fa-magic"></i> Generate Business
 </button>
 </div>
 
@@ -1314,6 +1316,7 @@ function hideLoading() {
 
 // ========== BUSINESS HOURS INITIALIZATION ==========
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const daysContainer = document.getElementById('daysContainer');
 days.forEach(d => {
  const dayBox = document.createElement("div");
  dayBox.className = "dayBox";
@@ -1460,7 +1463,7 @@ function selectPaymentGateway(gateway) {
   });
 }
 
-// ========== TOKEN GENERATION SYSTEM - COMPATIBLE WITH CARD.HTML ==========
+// ========== TOKEN GENERATION SYSTEM - COMPATIBLE WITH BUSINESS.HTML ==========
 function generateProfessionalToken() {
   const prefix = document.getElementById('tokenPrefix')?.value || 'TKT';
   const timestamp = Date.now().toString().slice(-8);
@@ -1552,7 +1555,7 @@ function generateShortId() {
   return shortId;
 }
 
-// ========== MAIN GENERATE FUNCTION - COMPATIBLE WITH CARD.HTML ==========
+// ========== MAIN GENERATE FUNCTION - COMPATIBLE WITH BUSINESS.HTML ==========
 async function generate(){
  // Validate required fields
  if(!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value){
@@ -1659,9 +1662,9 @@ async function generate(){
    // COLLECT COMPLETE PAYMENT METHODS - PROFESSIONAL & FIXED
    const paymentMethods = {
      whatsapp: {
-       active: !!document.getElementById('whatsappNumber').value,
-       number: document.getElementById('whatsappNumber').value.trim() || '',
-       greeting: "Hello! 👋 Welcome to " + document.getElementById('businessName').value.trim() + ". How may I assist you today?"
+       active: !!document.getElementById('whatsappNumber')?.value,
+       number: document.getElementById('whatsappNumber')?.value.trim() || '',
+       greeting: "Hello! 👋 Welcome to " + (document.getElementById('businessName')?.value.trim() || 'Business') + ". How may I assist you today?"
      },
      gateways: {},
      tokenSystem: {
@@ -1742,18 +1745,18 @@ async function generate(){
    const deliverySettings = {
      default: {
        withinCity: {
-         charge: parseFloat(document.getElementById('deliveryChargeCity').value) || 150,
-         time: document.getElementById('deliveryTimeCity').value.trim() || "1-2 business days"
+         charge: parseFloat(document.getElementById('deliveryChargeCity')?.value) || 150,
+         time: document.getElementById('deliveryTimeCity')?.value.trim() || "1-2 business days"
        },
        otherCities: {
-         charge: parseFloat(document.getElementById('deliveryChargeOther').value) || 300,
-         time: document.getElementById('deliveryTimeOther').value.trim() || "3-5 business days"
+         charge: parseFloat(document.getElementById('deliveryChargeOther')?.value) || 300,
+         time: document.getElementById('deliveryTimeOther')?.value.trim() || "3-5 business days"
        }
      },
      zones: zonesList,
-     freeDeliveryMin: parseFloat(document.getElementById('freeDeliveryMin').value) || 2000,
-     cutoffTime: document.getElementById('deliveryCutoffTime').value || "16:00",
-     maxDays: document.getElementById('deliveryDays').value.trim() || "5-7 days",
+     freeDeliveryMin: parseFloat(document.getElementById('freeDeliveryMin')?.value) || 2000,
+     cutoffTime: document.getElementById('deliveryCutoffTime')?.value || "16:00",
+     maxDays: document.getElementById('deliveryDays')?.value.trim() || "5-7 days",
      addressConfirmation: {
        required: document.getElementById('requireAddressConfirmation')?.checked || false,
        saveAddresses: document.getElementById('saveCustomerAddresses')?.checked || false
@@ -1762,25 +1765,25 @@ async function generate(){
 
    // Social Media
    const socialMedia = {
-     facebook: document.getElementById('facebook').value.trim(),
-     instagram: document.getElementById('instagram').value.trim(),
-     twitter: document.getElementById('twitter').value.trim(),
-     linkedin: document.getElementById('linkedin').value.trim(),
-     youtube: document.getElementById('youtube').value.trim(),
-     tiktok: document.getElementById('tiktok').value.trim(),
-     website: document.getElementById('website').value.trim()
+     facebook: document.getElementById('facebook')?.value.trim() || '',
+     instagram: document.getElementById('instagram')?.value.trim() || '',
+     twitter: document.getElementById('twitter')?.value.trim() || '',
+     linkedin: document.getElementById('linkedin')?.value.trim() || '',
+     youtube: document.getElementById('youtube')?.value.trim() || '',
+     tiktok: document.getElementById('tiktok')?.value.trim() || '',
+     website: document.getElementById('website')?.value.trim() || ''
    };
 
-   // Prepare card data - COMPATIBLE WITH CARD.HTML
+   // Prepare card data - COMPATIBLE WITH BUSINESS.HTML
    const cardData = {
     id: id,
     name: document.getElementById('fullName').value.trim(),
     phone: document.getElementById('phoneNumber').value.trim(),
-    email: document.getElementById('email').value.trim(),
+    email: document.getElementById('email')?.value.trim() || '',
     address: document.getElementById('address').value.trim(),
     businessName: document.getElementById('businessName').value.trim(),
     business: {
-     about: document.getElementById('businessAbout').value.trim()
+     about: document.getElementById('businessAbout')?.value.trim() || ''
     },
     socialMedia: socialMedia,
     businessHours: businessHoursArray,
@@ -1796,7 +1799,7 @@ async function generate(){
    };
 
    // Add profile image
-   if(document.getElementById('profileImage').files[0]){
+   if(document.getElementById('profileImage')?.files[0]){
     cardData.profileImage = await resizeImage(document.getElementById('profileImage').files[0]);
    }
 
@@ -1830,13 +1833,13 @@ async function generate(){
      showSuccess(`🎫 Token System Ready! Sample: ${generateProfessionalToken()}`);
      
      setTimeout(() => {
-       location.href = "card.html?id=" + shortId;
+       location.href = "business.html?id=" + shortId;
      }, 2000);
      
    } catch (shortUrlError) {
      console.log("Short URL creation failed, using full ID:", shortUrlError);
      setTimeout(() => {
-       location.href = "card.html?id=" + inserted.id;
+       location.href = "business.html?id=" + inserted.id;
      }, 2000);
    }
 
@@ -1850,7 +1853,8 @@ async function generate(){
 // ========== INITIALIZATION ==========
 document.addEventListener('DOMContentLoaded', function() {
   // Make offers horizontal
-  document.getElementById('offersForm').classList.add('offers-container');
+  const offersForm = document.getElementById('offersForm');
+  if(offersForm) offersForm.classList.add('offers-container');
   
   // Add current date to holiday date fields
   const today = new Date().toISOString().split('T')[0];
@@ -1879,10 +1883,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let isValid = true;
     requiredFields.forEach(fieldId => {
       const field = document.getElementById(fieldId);
-      if (!field.value.trim()) {
+      if (field && !field.value.trim()) {
         isValid = false;
         field.style.borderColor = '#ef4444';
-      } else {
+      } else if(field) {
         field.style.borderColor = 'rgba(102, 126, 234, 0.3)';
       }
     });
@@ -1892,7 +1896,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Validate on input
   requiredFields.forEach(fieldId => {
     const field = document.getElementById(fieldId);
-    field.addEventListener('input', validateForm);
+    if(field) {
+      field.addEventListener('input', validateForm);
+    }
   });
   
   // Initialize payment gateways - COD selected by default
@@ -1902,10 +1908,11 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Update WhatsApp preview
   const businessNameInput = document.getElementById('businessName');
-  businessNameInput.addEventListener('input', function() {
-    const preview = document.getElementById('whatsappPreview');
-    if(preview) {
-      preview.innerHTML = `🎉 *NEW ORDER CONFIRMED* - TOKEN: TKT-123456-A7F2
+  if(businessNameInput) {
+    businessNameInput.addEventListener('input', function() {
+      const preview = document.getElementById('whatsappPreview');
+      if(preview) {
+        preview.innerHTML = `🎉 *NEW ORDER CONFIRMED* - TOKEN: TKT-123456-A7F2
 
 ━━━━━━━━━━━━━━━━━━━
 *Order ID:* ORD-12345678
@@ -1928,9 +1935,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ━━━━━━━━━━━━━━━━━━━
 Track order: Use token in delivery status
-Thank you for your order from ${this.value}! 🛍️`;
-    }
-  });
+Thank you for your order from ${this.value || 'Business'}! 🛍️`;
+      }
+    });
+  }
   
   // Update token preview when prefix changes
   const tokenPrefix = document.getElementById('tokenPrefix');
@@ -1944,13 +1952,15 @@ Thank you for your order from ${this.value}! 🛍️`;
   }
   
   // Validate before generating
-  generateButton.addEventListener('click', function(e) {
-    if (!validateForm()) {
-      e.preventDefault();
-      showSuccess('❌ Please fill in all required fields (marked in red)');
-      return false;
-    }
-  });
+  if(generateButton) {
+    generateButton.addEventListener('click', function(e) {
+      if (!validateForm()) {
+        e.preventDefault();
+        showSuccess('❌ Please fill in all required fields (marked in red)');
+        return false;
+      }
+    });
+  }
 });
 </script>
 </body>
