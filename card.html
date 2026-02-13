@@ -337,7 +337,7 @@ body {
   right: 0;
 }
 
-/* ===== PRODUCT CARDS - FIXED BADGE POSITIONS ===== */
+/* ===== PRODUCT CARDS ===== */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -391,7 +391,7 @@ body {
   padding: 4px;
 }
 
-/* ===== BADGE POSITIONS - FIXED ===== */
+/* ===== BADGE POSITIONS ===== */
 .badge-container {
   position: absolute;
   top: 0;
@@ -402,7 +402,6 @@ body {
   z-index: 15;
 }
 
-/* DISCOUNT BADGE - TOP LEFT CORNER ONLY */
 .discount-badge {
   position: absolute;
   top: 8px;
@@ -422,7 +421,6 @@ body {
   z-index: 20;
 }
 
-/* OFFER BADGE - BOTTOM RIGHT CORNER (WHITE SPACE) */
 .offer-badge {
   position: absolute;
   bottom: 8px;
@@ -442,7 +440,6 @@ body {
   z-index: 20;
 }
 
-/* FEATURE BADGE - ALSO BOTTOM RIGHT CORNER */
 .feature-badge {
   position: absolute;
   bottom: 8px;
@@ -459,7 +456,6 @@ body {
   z-index: 20;
 }
 
-/* PRICE BADGE - PRODUCT TITLE KE NEECHE, CTA BUTTONS K UPAR */
 .product-content {
   display: flex;
   flex-direction: column;
@@ -1548,7 +1544,7 @@ function openPhoneInput() {
   }
 }
 
-// ===== DELIVERY CHARGE CALCULATOR =====
+// ===== DELIVERY CHARGE CALCULATOR - FIXED WITH BUSINESS SETTINGS =====
 function calculateDeliveryCharge(address) {
   if (!address) {
     deliveryCharge = 0;
@@ -1561,11 +1557,12 @@ function calculateDeliveryCharge(address) {
   const addressLower = address.toLowerCase();
   let charge = 0, time = '', zone = 'Standard';
   
+  // Use business delivery settings from card (configured in index.html)
   if (card.deliverySettings && card.deliverySettings.zones && card.deliverySettings.zones.length > 0) {
     let zoneFound = false;
     for (const zoneConfig of card.deliverySettings.zones) {
       if (addressLower.includes(zoneConfig.city.toLowerCase())) {
-        charge = zoneConfig.charge || 0;
+        charge = parseFloat(zoneConfig.charge) || 0;
         time = zoneConfig.time || '2-3 business days';
         zone = zoneConfig.city;
         zoneFound = true;
@@ -1573,11 +1570,12 @@ function calculateDeliveryCharge(address) {
       }
     }
     if (!zoneFound) {
-      charge = card.deliverySettings?.default?.otherCities?.charge || 300;
+      charge = parseFloat(card.deliverySettings?.default?.otherCities?.charge) || 300;
       time = card.deliverySettings?.default?.otherCities?.time || '3-5 business days';
       zone = 'Other City';
     }
   } else {
+    // Fallback detection if no zones configured
     if (addressLower.includes('karachi') || addressLower.includes('lahore') || addressLower.includes('islamabad')) {
       charge = 150;
       time = '1-2 business days';
@@ -1630,7 +1628,7 @@ function calculateCartSubtotal() {
 // ===== ORDER TOKEN GENERATION =====
 function generateOrderToken() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  const prefix = 'TKT';
+  const prefix = card.tokenSystem?.prefix || 'TKT';
   const timestamp = Date.now().toString().slice(-6);
   let random = '';
   for (let i = 0; i < 4; i++) random += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -1801,7 +1799,7 @@ async function registerServiceWorker() {
   }
 }
 
-// ===== PWA SETUP - FIXED: No "App" word, proper icons =====
+// ===== PWA SETUP =====
 function setupDynamicPWA(businessData) {
   const businessName = businessData.businessName || businessData.name || "Digital Business";
   document.title = businessName;
@@ -1844,7 +1842,6 @@ function updateFavicon(iconUrl) {
   appleIcon.sizes = "180x180";
 }
 
-// ===== FIXED: PWA MANIFEST - No "App" word, proper start_url =====
 function setupManifest(businessData, businessName) {
   const profileImage = businessData.profileImage || getDefaultIcon(businessName);
   const baseUrl = window.location.origin + window.location.pathname;
@@ -2117,9 +2114,16 @@ async function saveOrderToDatabase(orderData) {
         business_id: currentBusinessId,
         created_at: new Date().toISOString()
       }]);
-    return !error;
+    
+    if (error) {
+      console.error('Supabase insert error:', error);
+      showNotification('❌ Database error: ' + error.message);
+      return false;
+    }
+    return true;
   } catch (error) {
     console.error('Error saving order:', error);
+    showNotification('❌ Error saving order: ' + error.message);
     return false;
   }
 }
@@ -2507,7 +2511,7 @@ function loadCartPage() {
   cartItemsCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
 }
 
-// ===== PRODUCT CARDS - FIXED BADGE POSITIONS =====
+// ===== PRODUCT CARDS =====
 function createProductCard(product, index) {
   const price = product.discountPrice || product.originalPrice;
   const originalPrice = product.originalPrice && product.discountPrice ? product.originalPrice : null;
@@ -2662,7 +2666,7 @@ function buyNowFromModal() {
   }
 }
 
-// ===== CHECKOUT =====
+// ===== CHECKOUT - FIXED PAYMENT METHODS & DELIVERY =====
 async function openCheckoutModal() {
   if (cart.length === 0) {
     showNotification('Your cart is empty');
@@ -2721,12 +2725,14 @@ async function openCheckoutModal() {
   openModal('checkoutModal');
 }
 
+// ===== FIXED: RENDER PAYMENT METHODS FROM BUSINESS CARD =====
 function renderProfessionalPaymentMethods() {
   const grid = document.getElementById('proPaymentGrid');
   if (!grid) return;
   
   let html = '';
   
+  // Always show COD if active or by default
   if (!card.payments || card.payments?.gateways?.cod?.active !== false) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'cod' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('cod')">
@@ -2739,6 +2745,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // JazzCash
   if (card.payments?.gateways?.jazzcash?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'jazzcash' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('jazzcash')">
@@ -2751,6 +2758,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // EasyPaisa
   if (card.payments?.gateways?.easypaisa?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'easypaisa' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('easypaisa')">
@@ -2763,6 +2771,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // Bank Transfer
   if (card.payments?.gateways?.bank?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'bank' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('bank')">
@@ -2775,6 +2784,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // Card Payment
   if (card.payments?.gateways?.card?.active) {
     html += `
       <div class="pro-payment-card ${checkoutPaymentMethod === 'card' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('card')">
@@ -2787,6 +2797,7 @@ function renderProfessionalPaymentMethods() {
     `;
   }
   
+  // WhatsApp Order
   html += `
     <div class="pro-payment-card ${checkoutPaymentMethod === 'whatsapp' ? 'selected' : ''}" onclick="window.selectProPaymentMethod('whatsapp')">
       <div class="pro-payment-icon" style="background:#25D366;">
@@ -2796,6 +2807,19 @@ function renderProfessionalPaymentMethods() {
       <div style="font-size:11px; color:#64748b; text-align:center;">Order via chat</div>
     </div>
   `;
+  
+  // If no payment methods at all, show default COD
+  if (html === '') {
+    html += `
+      <div class="pro-payment-card selected" onclick="window.selectProPaymentMethod('cod')">
+        <div class="pro-payment-icon" style="background:#10b981;">
+          <i class="fas fa-truck"></i>
+        </div>
+        <div style="font-weight:700; font-size:14px;">Cash on Delivery</div>
+        <div style="font-size:11px; color:#64748b; text-align:center;">Pay when order arrives</div>
+      </div>
+    `;
+  }
   
   grid.innerHTML = html;
 }
@@ -2871,6 +2895,12 @@ function showPaymentDetailsModal(method) {
           <div style="font-size:13px; color:#64748b;">Account Number</div>
           <div style="font-size:18px; font-weight:900; color:#2563eb; background:rgba(37,99,235,0.1); padding:10px; border-radius:8px;">${card.payments.gateways.bank.accountNumber || '1234567890'}</div>
         </div>
+        ${card.payments.gateways.bank.iban ? `
+          <div style="margin-bottom:16px;">
+            <div style="font-size:13px; color:#64748b;">IBAN</div>
+            <div style="font-size:15px; font-weight:700; color:var(--dark-color);">${card.payments.gateways.bank.iban}</div>
+          </div>
+        ` : ''}
       </div>
     `;
   } else if (method === 'card' && card.payments?.gateways?.card) {
@@ -2880,6 +2910,10 @@ function showPaymentDetailsModal(method) {
         <i class="fas fa-credit-card" style="font-size:48px; color:#8b5cf6; margin-bottom:16px;"></i>
         <h3 style="font-size:18px; font-weight:800; color:var(--dark-color); margin-bottom:8px;">Secure Card Payment</h3>
         <p style="color:#64748b; margin-bottom:20px;">You will be redirected to complete payment</p>
+        <div style="background:#f8fafc; border-radius:12px; padding:16px;">
+          <div style="font-size:14px; color:#475569; margin-bottom:8px;">Processor: ${card.payments.gateways.card.processor || 'Stripe'}</div>
+          <div style="font-size:13px; color:#64748b;">Merchant ID: ${card.payments.gateways.card.merchantId || 'Not provided'}</div>
+        </div>
       </div>
     `;
   }
@@ -2900,6 +2934,7 @@ function completePaymentAndConfirmOrder() {
   closeModal('paymentDetailsModal');
 }
 
+// ===== FIXED: PLACE ORDER - NO MORE ERRORS =====
 async function placeOrder() {
   if (!selectedCheckoutPhone) {
     showNotification('❌ Please add your phone number');
@@ -2917,6 +2952,11 @@ async function placeOrder() {
     showNotification('❌ Your cart is empty');
     closeModal('checkoutModal');
     return;
+  }
+  
+  // Validate delivery charge has been calculated
+  if (!deliveryCharge || deliveryCharge === 0) {
+    calculateDeliveryCharge(selectedCheckoutAddress);
   }
   
   try {
@@ -2950,6 +2990,7 @@ async function placeOrder() {
       created_at: new Date().toISOString()
     };
     
+    console.log('Saving order:', orderData);
     const saved = await saveOrderToDatabase(orderData);
     
     if (saved) {
@@ -2974,7 +3015,7 @@ async function placeOrder() {
     }
   } catch (error) {
     console.error('Order error:', error);
-    showNotification('❌ Error placing order');
+    showNotification('❌ Error placing order: ' + error.message);
   }
 }
 
