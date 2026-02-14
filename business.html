@@ -1369,6 +1369,58 @@ body {
   font-size: 16px;
 }
 
+/* Admin Quick Actions */
+.admin-quick-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 8px;
+}
+
+.admin-quick-btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+  background: white;
+  box-shadow: var(--shadow-sm);
+  color: var(--dark-color);
+}
+
+.admin-quick-btn i {
+  color: #667eea;
+  font-size: 18px;
+}
+
+.admin-quick-btn:hover {
+  background: #f8fafc;
+  transform: translateY(-2px);
+}
+
+/* Order Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-confirmed { background: #dbeafe; color: #1e40af; }
+.status-processing { background: #ede9fe; color: #5b21b6; }
+.status-shipped { background: #d1fae5; color: #065f46; }
+.status-delivered { background: #10b981; color: white; }
+.status-cancelled { background: #fee2e2; color: #b91c1c; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .app-container { max-width: 100%; }
@@ -1377,6 +1429,7 @@ body {
   .quick-actions { grid-template-columns: repeat(2,1fr); }
   .notification-drawer { width: 100%; right: -100%; }
   .popup-content, .receipt-content { max-width: 100%; margin: 0 16px; }
+  .admin-quick-actions { flex-direction: column; }
 }
 
 @keyframes slideIn {
@@ -1753,8 +1806,6 @@ body {
       
       <div class="pro-payment-grid" id="paymentMethodsGrid"></div>
       
-      <!-- Payment proof section removed - now using popup -->
-      
       <button onclick="window.processPayment()" class="btn-primary" style="width:100%; padding:16px; font-size:16px; margin-top:20px;">
         <i class="fas fa-lock"></i> Pay Now & Place Order
       </button>
@@ -1851,27 +1902,41 @@ body {
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
-  <!-- ===== ADMIN PAGE ===== -->
+  <!-- ===== ADMIN PAGE - FIXED WITH ALL FUNCTIONALITY ===== -->
   <div id="adminPage" class="page">
     <div class="delivery-page-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
       <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-cog" style="color:#667eea;"></i> Business Admin</h1>
       <p style="color:#64748b; margin-top:4px;">Manage orders, tokens & deliveries</p>
     </div>
     
+    <!-- Quick Actions -->
+    <div class="admin-quick-actions">
+      <button class="admin-quick-btn" onclick="filterPendingOrders()">
+        <i class="fas fa-clock"></i> Pending
+      </button>
+      <button class="admin-quick-btn" onclick="filterConfirmedOrders()">
+        <i class="fas fa-check-circle"></i> Confirmed
+      </button>
+      <button class="admin-quick-btn" onclick="filterAllOrders()">
+        <i class="fas fa-list"></i> All
+      </button>
+    </div>
+    
+    <!-- Token Management -->
     <div class="token-management">
       <div class="token-header">
         <h3 style="font-size:18px; font-weight:800; color:var(--dark-color);">
           <i class="fas fa-ticket-alt" style="color:#667eea;"></i> Order Tokens
         </h3>
         <button onclick="window.generateNewToken()" style="background:var(--success-gradient); color:white; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;">
-          <i class="fas fa-plus"></i> Generate Token
+          <i class="fas fa-plus"></i> Generate
         </button>
       </div>
       
       <div class="token-stats" id="tokenStats">
         <div class="stat-card" style="background:#f8fafc; padding:12px; border-radius:12px; text-align:center;">
           <div class="stat-number" id="totalTokensCount" style="font-size:24px; font-weight:900; color:#667eea;">0</div>
-          <div class="stat-label" style="font-size:12px; color:#64748b;">Total Tokens</div>
+          <div class="stat-label" style="font-size:12px; color:#64748b;">Total</div>
         </div>
         <div class="stat-card" style="background:#f8fafc; padding:12px; border-radius:12px; text-align:center;">
           <div class="stat-number" id="activeTokensCount" style="font-size:24px; font-weight:900; color:#10b981;">0</div>
@@ -1883,16 +1948,27 @@ body {
         </div>
       </div>
       
+      <!-- Search -->
       <div style="margin-bottom:16px;">
-        <input type="text" id="adminTokenSearch" placeholder="Search tokens, orders, customers..." 
+        <input type="text" id="adminTokenSearch" placeholder="Search by token, order ID, customer..." 
                style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;"
                onkeyup="window.searchAdminTokens()">
       </div>
       
+      <!-- Token List - Orders will appear here -->
       <div class="token-list" id="tokenList"></div>
     </div>
     
-    <div id="adminContent"></div>
+    <!-- Admin Actions -->
+    <div style="margin:16px; display:flex; gap:12px;">
+      <button onclick="window.logoutAdmin()" style="flex:1; padding:12px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+      <button onclick="window.sendNotificationToAll()" style="flex:1; padding:12px; background:var(--warning-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+        <i class="fas fa-bell"></i> Send Alert
+      </button>
+    </div>
+    
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
@@ -2037,7 +2113,10 @@ let innerNotifications = [];
 let unreadNotifications = 0;
 let navigationHistory = [];
 
-// New variables for enhanced checkout
+// Filter state for admin
+let currentFilter = 'all';
+
+// Customer info
 let customerInfo = {
   name: '',
   phone: '',
@@ -2049,11 +2128,11 @@ let selectedPaymentMethod = 'cod';
 let paymentProof = null;
 let pendingOrder = null;
 
-// ===== PWA INSTALL VARIABLES =====
+// PWA Install
 let deferredPrompt = null;
 let installButtonShown = false;
 
-// ===== ATTACH ALL FUNCTIONS TO WINDOW =====
+// ===== ATTACH FUNCTIONS =====
 window.navigateTo = navigateTo;
 window.goBack = goBack;
 window.toggleNotificationDrawer = toggleNotificationDrawer;
@@ -2097,8 +2176,6 @@ window.getCurrentLocation = getCurrentLocation;
 window.selectPaymentMethod = selectPaymentMethod;
 window.processPayment = processPayment;
 window.completePaymentAndConfirmOrder = completePaymentAndConfirmOrder;
-
-// New functions
 window.zoomProductImage = zoomProductImage;
 window.closeProductZoom = closeProductZoom;
 window.toggleAddressEdit = toggleAddressEdit;
@@ -2111,8 +2188,11 @@ window.sendReceiptToWhatsApp = sendReceiptToWhatsApp;
 window.sendReceiptToEmail = sendReceiptToEmail;
 window.closeReceiptModal = closeReceiptModal;
 window.confirmOrder = confirmOrder;
+window.filterPendingOrders = filterPendingOrders;
+window.filterConfirmedOrders = filterConfirmedOrders;
+window.filterAllOrders = filterAllOrders;
 
-// ===== DATA ISOLATION SYSTEM =====
+// ===== DATA ISOLATION =====
 function getStorageKey(key) {
   const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
   return `business_${businessKey}_${key}`;
@@ -2136,14 +2216,13 @@ function generateAdminPassword(cardId) {
   return `business123_${idPart}`;
 }
 
-// ===== CUSTOMER DATA MANAGEMENT =====
+// ===== CUSTOMER INFO =====
 function loadCustomerInfo() {
   const saved = isolatedLocalStorage.getItem('customerInfo');
   if (saved) {
     try {
       customerInfo = JSON.parse(saved);
       
-      // Create address display with edit option
       const addressContainer = document.querySelector('.address-display-container');
       if (addressContainer) {
         addressContainer.innerHTML = `
@@ -2156,12 +2235,10 @@ function loadCustomerInfo() {
         `;
       }
       
-      // Fill form fields
       document.getElementById('customerName').value = customerInfo.name || '';
       document.getElementById('customerPhone').value = customerInfo.phone || '';
       document.getElementById('customerEmail').value = customerInfo.email || '';
       
-      // Hidden address field for form submission
       let addressField = document.getElementById('customerAddress');
       if (!addressField) {
         addressField = document.createElement('textarea');
@@ -2179,7 +2256,6 @@ function loadCustomerInfo() {
       console.error('Error loading customer info:', e);
     }
   } else {
-    // Initialize empty display
     const addressContainer = document.querySelector('.address-display-container');
     if (addressContainer) {
       addressContainer.innerHTML = `
@@ -2218,7 +2294,6 @@ function saveAddressEdit() {
   if (newAddress) {
     customerInfo.address = newAddress;
     
-    // Update hidden field
     let addressField = document.getElementById('customerAddress');
     if (!addressField) {
       addressField = document.createElement('textarea');
@@ -2229,7 +2304,7 @@ function saveAddressEdit() {
     addressField.value = newAddress;
     
     isolatedLocalStorage.setItem('customerInfo', JSON.stringify(customerInfo));
-    loadCustomerInfo(); // Refresh display
+    loadCustomerInfo();
     showNotification('✅ Address updated');
   }
 }
@@ -2307,7 +2382,6 @@ function getCurrentLocation() {
           if (data.display_name) {
             customerInfo.address = data.display_name;
             
-            // Update hidden field
             let addressField = document.getElementById('customerAddress');
             if (!addressField) {
               addressField = document.createElement('textarea');
@@ -2317,7 +2391,7 @@ function getCurrentLocation() {
             }
             addressField.value = data.display_name;
             
-            loadCustomerInfo(); // Refresh display
+            loadCustomerInfo();
             showNotification('✅ Location detected!');
           }
         })
@@ -2567,13 +2641,12 @@ function showPaymentDetails(method) {
   openModal('paymentDetailsModal');
 }
 
-// ===== NEW PAYMENT PROOF POPUP FUNCTIONS =====
+// ===== PAYMENT PROOF POPUP =====
 function showPaymentProofPopup(method) {
   selectedPaymentMethod = method;
   const popup = document.getElementById('paymentProofPopup');
   const instructions = document.getElementById('paymentInstructions');
   
-  // Clear previous
   document.getElementById('popupProofInput').value = '';
   document.getElementById('popupProofPreview').src = '';
   document.getElementById('popupProofPreview').classList.remove('show');
@@ -2581,7 +2654,6 @@ function showPaymentProofPopup(method) {
   document.getElementById('confirmPaymentBtn').disabled = true;
   paymentProof = null;
   
-  // Set instructions based on method
   if (method === 'jazzcash') {
     instructions.innerHTML = `
       <p><i class="fas fa-mobile-alt"></i> Open JazzCash app</p>
@@ -2630,7 +2702,6 @@ function handlePopupProofUpload(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     
-    // Validate
     if (!file.type.match('image.*')) {
       showNotification('❌ Please upload an image file');
       return;
@@ -2671,13 +2742,11 @@ async function processPayment() {
     return;
   }
   
-  // For non-COD, show popup instead of inline proof
   if (selectedPaymentMethod !== 'cod') {
     showPaymentProofPopup(selectedPaymentMethod);
     return;
   }
   
-  // For COD, process directly
   completeOrder();
 }
 
@@ -2737,13 +2806,9 @@ async function completeOrder() {
     created_at: new Date().toISOString()
   };
   
-  // Send to WhatsApp with proof
   await sendOrderWithProof(pendingOrder);
-  
-  // Save to database
   await saveOrderToDatabase(pendingOrder);
   
-  // Add to local orders
   orders.unshift(pendingOrder);
   orderTokens.unshift({
     id: token,
@@ -2754,19 +2819,18 @@ async function completeOrder() {
     date: pendingOrder.created_at
   });
   
-  // Clear cart
   cart = [];
   updateCartCount();
   isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
   
-  // Show confirmation
   showOrderConfirmation(pendingOrder);
-  
-  // Navigate to delivery page
   navigateTo('deliveryPage');
   
-  // Add notification
   addInnerNotification('Order Placed', `Order #${orderId} awaiting confirmation`, 'success');
+  
+  if (isAdminLoggedIn) {
+    loadAdminPanel();
+  }
 }
 
 async function sendOrderWithProof(order) {
@@ -2774,7 +2838,6 @@ async function sendOrderWithProof(order) {
     if (card.phone) {
       const phone = card.phone.replace(/\D/g, '');
       
-      // Create detailed message
       let message = `🛍️ *NEW ORDER WITH PAYMENT PROOF*\n\n`;
       message += `*Order ID:* ${order.orderId}\n`;
       message += `*Token:* ${order.token}\n`;
@@ -2791,7 +2854,6 @@ async function sendOrderWithProof(order) {
       message += `\n*Payment Method:* ${getPaymentMethodName(order.paymentMethod)}`;
       message += `\n*Status:* Pending Confirmation`;
       
-      // If we have proof file, we need to handle differently
       if (paymentProof) {
         message += `\n\n⚠️ *IMPORTANT:* Payment proof screenshot attached separately. Please check.`;
       }
@@ -2801,7 +2863,6 @@ async function sendOrderWithProof(order) {
       showNotification('📱 WhatsApp opened - please attach proof screenshot');
     }
     
-    // Send email
     if (card.email) {
       const subject = `New Order with Proof: ${order.orderId}`;
       let body = `NEW ORDER WITH PAYMENT PROOF\n\n`;
@@ -2876,7 +2937,7 @@ function closeDeliveryModal() {
   document.getElementById('deliveryStatusModal').style.display = 'none';
 }
 
-// ===== PRODUCT ZOOM FUNCTIONS =====
+// ===== PRODUCT ZOOM =====
 function zoomProductImage(imageUrl, event) {
   if (event) event.stopPropagation();
   if (imageUrl) {
@@ -2925,7 +2986,6 @@ function showReceipt(order) {
     </div>
   `;
   
-  // Store current order for receipt sending
   window.currentReceiptOrder = order;
   
   receiptModal.style.display = 'flex';
@@ -3490,18 +3550,25 @@ function renderTokenList() {
   const tokenList = document.getElementById('tokenList');
   if (!tokenList) return;
   
-  if (orderTokens.length === 0) {
+  let filteredTokens = orderTokens;
+  if (currentFilter === 'pending') {
+    filteredTokens = orderTokens.filter(t => t.status === 'pending_confirmation');
+  } else if (currentFilter === 'confirmed') {
+    filteredTokens = orderTokens.filter(t => ['confirmed', 'processing', 'shipped'].includes(t.status));
+  }
+  
+  if (filteredTokens.length === 0) {
     tokenList.innerHTML = `
       <div style="text-align:center; padding:40px;">
         <i class="fas fa-ticket-alt" style="font-size:48px; color:#cbd5e1; margin-bottom:16px;"></i>
-        <p style="color:#64748b;">No tokens generated yet</p>
+        <p style="color:#64748b;">No ${currentFilter !== 'all' ? currentFilter : ''} orders found</p>
       </div>
     `;
     return;
   }
   
   let html = '';
-  orderTokens.slice(0, 20).forEach(token => {
+  filteredTokens.slice(0, 20).forEach(token => {
     const date = new Date(token.date).toLocaleDateString();
     const statusColor = 
       token.status === 'delivered' ? '#10b981' : 
@@ -3511,6 +3578,8 @@ function renderTokenList() {
       token.status === 'processing' ? '#8b5cf6' :
       token.status === 'shipped' ? '#10b981' : '#64748b';
     
+    const statusText = token.status.replace('_', ' ');
+    
     html += `
       <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
         <div>
@@ -3518,12 +3587,14 @@ function renderTokenList() {
           <div style="font-size:11px; color:#64748b; margin-top:4px;">
             <i class="fas fa-box"></i> ${token.orderId} • ${date}
           </div>
-          ${token.customer ? `<div style="font-size:11px; color:#475569; margin-top:2px;">👤 ${token.customer}</div>` : ''}
+          <div style="font-size:11px; color:#475569; margin-top:2px;">
+            👤 ${token.customer || 'Customer'}
+          </div>
         </div>
         <div style="text-align:right;">
           <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
-          <span class="token-status" style="background: ${statusColor}10; color: ${statusColor};">
-            ${token.status.replace('_', ' ')}
+          <span class="token-status" style="background: ${statusColor}20; color: ${statusColor};">
+            ${statusText}
           </span>
         </div>
       </div>
@@ -3544,7 +3615,7 @@ function searchAdminTokens() {
   
   const tokenList = document.getElementById('tokenList');
   if (filtered.length === 0) {
-    tokenList.innerHTML = '<p style="text-align:center; padding:20px; color:#64748b;">No matching tokens found</p>';
+    tokenList.innerHTML = '<p style="text-align:center; padding:20px; color:#64748b;">No matching orders found</p>';
     return;
   }
   
@@ -3555,23 +3626,41 @@ function searchAdminTokens() {
       token.status === 'delivered' ? '#10b981' : 
       token.status === 'cancelled' ? '#ef4444' : 
       token.status === 'pending_confirmation' ? '#f59e0b' :
-      token.status === 'confirmed' ? '#3b82f6' : '#8b5cf6';
+      token.status === 'confirmed' ? '#3b82f6' : 
+      token.status === 'processing' ? '#8b5cf6' :
+      token.status === 'shipped' ? '#10b981' : '#64748b';
     
     html += `
       <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
         <div>
           <div class="token-code">${token.id}</div>
           <div style="font-size:11px; color:#64748b; margin-top:4px;">${token.orderId} • ${date}</div>
+          <div style="font-size:11px; color:#475569; margin-top:2px;">👤 ${token.customer || 'Customer'}</div>
         </div>
         <div style="text-align:right;">
           <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
-          <span class="token-status" style="background: ${statusColor}10; color: ${statusColor};">${token.status.replace('_', ' ')}</span>
+          <span class="token-status" style="background: ${statusColor}20; color: ${statusColor};">${token.status.replace('_', ' ')}</span>
         </div>
       </div>
     `;
   });
   
   tokenList.innerHTML = html;
+}
+
+function filterPendingOrders() {
+  currentFilter = 'pending';
+  renderTokenList();
+}
+
+function filterConfirmedOrders() {
+  currentFilter = 'confirmed';
+  renderTokenList();
+}
+
+function filterAllOrders() {
+  currentFilter = 'all';
+  renderTokenList();
 }
 
 async function viewOrderDetails(orderId) {
@@ -3597,7 +3686,6 @@ async function viewOrderDetails(orderId) {
   const locationLink = order.customer_location && order.customer_location.lat ? 
     `<a href="https://maps.google.com/?q=${order.customer_location.lat},${order.customer_location.lng}" target="_blank" style="color:#667eea;">📍 View on Map</a>` : '';
   
-  // Add confirm button if pending
   const confirmButton = order.status === 'pending_confirmation' && isAdminLoggedIn ? 
     `<button class="admin-confirm-btn" onclick="confirmOrder('${order.id}')">
        <i class="fas fa-check-circle"></i> Confirm Order & Generate Receipt
@@ -3669,7 +3757,7 @@ async function viewOrderDetails(orderId) {
     
     <div style="display:flex; gap:12px; margin-top:20px;">
       <select id="orderStatusSelect" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;">
-        <option value="pending_confirmation" ${order.status === 'pending_confirmation' ? 'selected' : ''}>⏳ Pending Confirmation</option>
+        <option value="pending_confirmation" ${order.status === 'pending_confirmation' ? 'selected' : ''}>⏳ Pending</option>
         <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>✅ Confirmed</option>
         <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>🔄 Processing</option>
         <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
@@ -3684,15 +3772,15 @@ async function viewOrderDetails(orderId) {
     <div style="margin-top:16px; background:#fef3c7; padding:16px; border-radius:12px;">
       <div style="display:flex; align-items:center; gap:8px; color:#92400e; margin-bottom:8px;">
         <i class="fas fa-truck"></i>
-        <span style="font-weight:700;">Delivery Update</span>
+        <span style="font-weight:700;">Status</span>
       </div>
       <div style="font-size:13px; color:#b45309;">
-        ${order.status === 'pending_confirmation' ? 'Order received, waiting for admin confirmation' :
-          order.status === 'confirmed' ? 'Order confirmed, preparing for dispatch' :
-          order.status === 'processing' ? 'Order is being processed' :
-          order.status === 'shipped' ? 'Order has been shipped' :
-          order.status === 'delivered' ? 'Order delivered successfully' :
-          order.status === 'cancelled' ? 'Order cancelled' : 'Status unknown'}
+        ${order.status === 'pending_confirmation' ? '⏳ Order received, waiting for admin confirmation' :
+          order.status === 'confirmed' ? '✅ Order confirmed, preparing for dispatch' :
+          order.status === 'processing' ? '🔄 Order is being processed' :
+          order.status === 'shipped' ? '🚚 Order has been shipped' :
+          order.status === 'delivered' ? '📦 Order delivered successfully' :
+          order.status === 'cancelled' ? '❌ Order cancelled' : 'Status unknown'}
       </div>
     </div>
   `;
@@ -3711,7 +3799,6 @@ async function updateOrderStatus(orderId) {
   if (!error) {
     showNotification('✅ Order status updated to ' + status);
     
-    // If confirmed, generate and show receipt
     if (status === 'confirmed') {
       const order = orders.find(o => o.id === orderId);
       if (order) {
@@ -3733,7 +3820,6 @@ async function updateOrderStatus(orderId) {
 function confirmOrder(orderId) {
   const order = orders.find(o => o.id === orderId);
   if (order) {
-    // Set status to confirmed
     supa
       .from('orders')
       .update({ status: 'confirmed', updated_at: new Date().toISOString() })
@@ -3984,7 +4070,6 @@ function createProductCard(product, index) {
     </div>
   `;
   
-  // Add zoom functionality on image click
   cardElement.querySelector('.product-image-container').onclick = (e) => {
     e.stopPropagation();
     if (product.image) {
@@ -3992,7 +4077,6 @@ function createProductCard(product, index) {
     }
   };
   
-  // Product card click for details
   cardElement.onclick = (e) => {
     if (!e.target.closest('button') && !e.target.closest('.badge-container')) {
       showProductModal(index);
@@ -4362,17 +4446,6 @@ function loadContactPage() {
 async function loadAdminPanel() {
   await loadOrdersFromDatabase();
   renderTokenList();
-  
-  document.getElementById('adminContent').innerHTML = `
-    <div style="margin:16px; display:flex; gap:12px;">
-      <button onclick="window.logoutAdmin()" style="flex:1; padding:12px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
-        <i class="fas fa-sign-out-alt"></i> Logout
-      </button>
-      <button onclick="window.sendNotificationToAll()" style="flex:1; padding:12px; background:var(--warning-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
-        <i class="fas fa-bell"></i> Send Alert
-      </button>
-    </div>
-  `;
 }
 
 async function sendNotificationToAll() {
@@ -4443,7 +4516,7 @@ function logoutAdmin() {
   navigateTo('homePage');
 }
 
-// ===== NAVIGATION WITH HASH ROUTING =====
+// ===== NAVIGATION =====
 let lastBackPress = 0;
 
 function initializeRouting() {
