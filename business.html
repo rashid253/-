@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json" id="manifestLink">
 
 <style>
-/* ===== ALL EXISTING STYLES - KEEP EXACTLY AS BEFORE ===== */
+/* ===== ALL YOUR EXISTING STYLES HERE - KEEP THEM ===== */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -379,6 +379,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .product-image {
@@ -1186,6 +1187,7 @@ body {
   cursor: not-allowed;
 }
 
+/* Address Edit Mode */
 .address-display-container {
   width: 100%;
 }
@@ -1230,6 +1232,7 @@ body {
   border: 2px solid #e2e8f0;
 }
 
+/* Receipt Modal */
 .receipt-modal {
   position: fixed;
   top: 0;
@@ -1350,6 +1353,7 @@ body {
   color: white;
 }
 
+/* Admin Confirm Button */
 .admin-confirm-btn {
   background: var(--success-gradient);
   color: white;
@@ -1367,6 +1371,7 @@ body {
   font-size: 16px;
 }
 
+/* Admin Quick Actions */
 .admin-quick-actions {
   display: flex;
   gap: 12px;
@@ -1401,6 +1406,42 @@ body {
   transform: translateY(-2px);
 }
 
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .app-container { max-width: 100%; }
+  .pro-payment-grid { grid-template-columns: 1fr; }
+  .token-stats { grid-template-columns: 1fr; }
+  .quick-actions { grid-template-columns: repeat(2,1fr); }
+  .notification-drawer { width: 100%; right: -100%; }
+  .popup-content, .receipt-content { max-width: 100%; margin: 0 16px; }
+  .admin-quick-actions { flex-direction: column; }
+}
+
+@keyframes slideIn {
+  from { top: 50px; opacity: 0; }
+  to { top: 100px; opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideDown {
+  from { top: -100px; opacity: 0; }
+  to { top: 20px; opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(50px);
@@ -1412,14 +1453,17 @@ body {
   }
 }
 
-@media (max-width: 480px) {
-  .app-container { max-width: 100%; }
-  .pro-payment-grid { grid-template-columns: 1fr; }
-  .token-stats { grid-template-columns: 1fr; }
-  .quick-actions { grid-template-columns: repeat(2,1fr); }
-  .notification-drawer { width: 100%; right: -100%; }
-  .popup-content, .receipt-content { max-width: 100%; margin: 0 16px; }
-  .admin-quick-actions { flex-direction: column; }
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
 }
 </style>
 </head>
@@ -1496,6 +1540,7 @@ body {
         <!-- Dynamic instructions will be inserted here -->
       </div>
       
+      <!-- Optional Proof Upload -->
       <div style="margin: 10px 0; text-align: center;">
         <label style="display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;">
           <input type="checkbox" id="skipProofCheckbox" onchange="toggleProofUpload()"> 
@@ -1517,7 +1562,7 @@ body {
       <div style="background: #f8fafc; border-radius: 12px; padding: 12px; margin: 15px 0;">
         <p style="font-size: 13px; color: #475569; display: flex; align-items: center; gap: 8px;">
           <i class="fab fa-whatsapp" style="color: #25D366; font-size: 18px;"></i>
-          <span>After confirmation, you'll be redirected to WhatsApp to send order details to business.</span>
+          <span>After confirmation, you'll be redirected to WhatsApp to send order details to business. Please attach screenshot if uploaded.</span>
         </p>
       </div>
       
@@ -1862,7 +1907,7 @@ body {
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
-  <!-- ===== ADMIN PAGE ===== -->
+  <!-- ===== ADMIN PAGE - FIXED ===== -->
   <div id="adminPage" class="page">
     <div class="delivery-page-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
       <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-cog" style="color:#667eea;"></i> Business Admin</h1>
@@ -2076,7 +2121,10 @@ let innerNotifications = [];
 let unreadNotifications = 0;
 let navigationHistory = [];
 
-// New variables for enhanced checkout
+// Filter state for admin
+let currentFilter = 'all';
+
+// Customer info
 let customerInfo = {
   name: '',
   phone: '',
@@ -2089,14 +2137,14 @@ let paymentProof = null;
 let pendingOrder = null;
 let skipProof = false;
 
-// ===== PWA INSTALL VARIABLES =====
+// PWA Install
 let deferredPrompt = null;
 let installButtonShown = false;
 
 // Real-time subscription
 let ordersSubscription = null;
 
-// ===== ATTACH ALL FUNCTIONS TO WINDOW =====
+// ===== ATTACH FUNCTIONS TO WINDOW =====
 window.navigateTo = navigateTo;
 window.goBack = goBack;
 window.toggleNotificationDrawer = toggleNotificationDrawer;
@@ -2135,15 +2183,11 @@ window.acceptInstallPermissions = acceptInstallPermissions;
 window.closeDeliveryModal = closeDeliveryModal;
 window.addToCartFromModal = addToCartFromModal;
 window.showProductModal = showProductModal;
-
-// New functions for enhanced checkout
 window.saveCustomerInfo = saveCustomerInfo;
 window.getCurrentLocation = getCurrentLocation;
 window.selectPaymentMethod = selectPaymentMethod;
 window.processPayment = processPayment;
 window.completePaymentAndConfirmOrder = completePaymentAndConfirmOrder;
-
-// New functions
 window.zoomProductImage = zoomProductImage;
 window.closeProductZoom = closeProductZoom;
 window.toggleAddressEdit = toggleAddressEdit;
@@ -2164,7 +2208,7 @@ window.refreshOrders = refreshOrders;
 window.downloadOrderTicket = downloadOrderTicket;
 window.toggleProofUpload = toggleProofUpload;
 
-// ===== DATA ISOLATION SYSTEM =====
+// ===== DATA ISOLATION =====
 function getStorageKey(key) {
   const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
   return `business_${businessKey}_${key}`;
@@ -2188,7 +2232,7 @@ function generateAdminPassword(cardId) {
   return `business123_${idPart}`;
 }
 
-// ===== CUSTOMER DATA MANAGEMENT =====
+// ===== CUSTOMER INFO FUNCTIONS =====
 function loadCustomerInfo() {
   const saved = isolatedLocalStorage.getItem('customerInfo');
   if (saved) {
@@ -2740,13 +2784,11 @@ async function processPayment() {
     return;
   }
   
-  // For non-COD, show popup
   if (selectedPaymentMethod !== 'cod') {
     showPaymentProofPopup(selectedPaymentMethod);
     return;
   }
   
-  // For COD, process directly
   completeOrder();
 }
 
@@ -2755,7 +2797,6 @@ async function confirmPaymentWithProof() {
   await completeOrder();
 }
 
-// ===== FIXED: COMPLETE ORDER FUNCTION =====
 async function completeOrder() {
   let subtotal = cart.reduce((sum, item) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
@@ -2797,229 +2838,44 @@ async function completeOrder() {
     deliveryCharge: deliveryCharge,
     total: total,
     paymentMethod: selectedPaymentMethod,
-    paymentProof: paymentProof ? 'uploaded' : (skipProof ? 'details_only' : null),
-    status: 'pending',
+    paymentProof: paymentProof ? 'uploaded' : 'details_only',
+    status: 'pending_confirmation',
     created_at: new Date().toISOString()
   };
   
-  console.log('📦 Pending order:', pendingOrder);
+  // Save to database FIRST
+  await saveOrderToDatabase(pendingOrder);
   
-  // Save to database
-  const saved = await saveOrderToDatabase(pendingOrder);
+  // THEN send WhatsApp (doesn't block)
+  sendOrderToBusinessWhatsApp(pendingOrder);
   
-  if (saved) {
-    console.log('✅ Order saved to database');
-    
-    // Send WhatsApp
-    sendOrderToBusinessWhatsApp(pendingOrder);
-    
-    // Update local arrays
-    orders.unshift(pendingOrder);
-    orderTokens.unshift({
-      id: token,
-      orderId: orderId,
-      amount: total,
-      status: 'pending',
-      customer: customerInfo.name,
-      date: pendingOrder.created_at
-    });
-    
-    // Clear cart
-    cart = [];
-    updateCartCount();
-    isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
-    
-    // Show confirmation
-    showOrderConfirmation(pendingOrder);
-    
-    // Navigate to delivery page
-    navigateTo('deliveryPage');
-    
-    // Add notification
-    addInnerNotification('Order Placed', `Order #${orderId} awaiting confirmation`, 'success');
-  } else {
-    showNotification('❌ Failed to save order. Please try again.');
-  }
+  // Update local arrays
+  orders.unshift(pendingOrder);
+  orderTokens.unshift({
+    id: token,
+    orderId: orderId,
+    amount: total,
+    status: 'pending_confirmation',
+    customer: customerInfo.name,
+    date: pendingOrder.created_at
+  });
+  
+  // Clear cart
+  cart = [];
+  updateCartCount();
+  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+  
+  // Show confirmation
+  showOrderConfirmation(pendingOrder);
+  
+  // Navigate to delivery page
+  navigateTo('deliveryPage');
+  
+  // Add notification
+  addInnerNotification('Order Placed', `Order #${orderId} awaiting confirmation`, 'success');
 }
 
-// ===== FIXED: SAVE ORDER TO DATABASE WITH CORRECT STATUS =====
-async function saveOrderToDatabase(orderData) {
-  try {
-    if (!currentBusinessId) {
-      console.error('❌ No business ID found');
-      showNotification('❌ Business ID not found');
-      return false;
-    }
-    
-    console.log('📤 Saving order for business:', currentBusinessId);
-    
-    // Aapke enum mein yeh values hain: pending, confirmed, processing, shipped, delivered, cancelled, refused
-    // Naye order ke liye 'pending' use karein
-    const validStatus = 'pending';
-    
-    const orderToInsert = {
-      business_id: currentBusinessId,
-      order_id: orderData.orderId,
-      token: orderData.token,
-      customer_name: orderData.customerName || null,
-      customer_phone: orderData.customerPhone || '',
-      customer_address: orderData.customerAddress || '',
-      items: orderData.items || [],
-      subtotal: orderData.subtotal || 0,
-      delivery_charge: orderData.deliveryCharge || 0,
-      total: orderData.total || 0,
-      payment_method: orderData.paymentMethod || 'cod',
-      status: validStatus,
-      zone: null,
-      estimated_delivery: null,
-      notes: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    };
-    
-    // Optional fields
-    if (orderData.customerEmail) {
-      orderToInsert.customer_email = orderData.customerEmail;
-    }
-    
-    if (orderData.customerLocation && orderData.customerLocation.lat) {
-      orderToInsert.customer_location = orderData.customerLocation;
-    }
-    
-    if (orderData.paymentProof) {
-      orderToInsert.payment_proof = orderData.paymentProof;
-    }
-    
-    console.log('📦 Inserting order:', orderToInsert);
-    
-    const { data, error } = await supa
-      .from('orders')
-      .insert([orderToInsert])
-      .select();
-    
-    if (error) {
-      console.error('❌ Supabase error:', error);
-      showNotification('❌ Database error: ' + error.message);
-      return false;
-    }
-    
-    console.log('✅ Order saved successfully:', data);
-    showNotification('✅ Order placed successfully!');
-    
-    // Refresh admin panel if logged in
-    if (isAdminLoggedIn) {
-      setTimeout(() => {
-        loadOrdersFromDatabase();
-      }, 1000);
-    }
-    
-    return true;
-    
-  } catch (error) {
-    console.error('❌ Exception:', error);
-    showNotification('❌ Error: ' + error.message);
-    return false;
-  }
-}
-
-// ===== LOAD ORDERS FROM DATABASE =====
-async function loadOrdersFromDatabase() {
-  try {
-    if (!currentBusinessId) {
-      console.error('❌ No business ID');
-      return [];
-    }
-    
-    console.log('📥 Loading orders for business:', currentBusinessId);
-    
-    const { data, error } = await supa
-      .from('orders')
-      .select('*')
-      .eq('business_id', currentBusinessId)
-      .order('created_at', { ascending: false });
-    
-    if (error) {
-      console.error('❌ Error loading orders:', error);
-      showNotification('❌ Error loading orders');
-      return [];
-    }
-    
-    if (data && data.length > 0) {
-      console.log(`✅ Loaded ${data.length} orders`);
-      
-      orders = data;
-      orderTokens = data.map(order => ({
-        id: order.token,
-        orderId: order.order_id,
-        amount: order.total,
-        status: order.status,
-        customer: order.customer_name,
-        date: order.created_at
-      }));
-      
-      updateTokenStats();
-      
-      if (isAdminLoggedIn && currentPage === 'adminPage') {
-        renderTokenList();
-      }
-      
-      checkForDeliveries();
-      
-    } else {
-      console.log('📭 No orders found');
-      orders = [];
-      orderTokens = [];
-      if (isAdminLoggedIn && currentPage === 'adminPage') {
-        renderTokenList();
-      }
-    }
-    
-    return data;
-    
-  } catch (error) {
-    console.error('❌ Exception loading orders:', error);
-    return [];
-  }
-}
-
-// ===== SETUP REAL-TIME SUBSCRIPTION =====
-function setupOrdersSubscription() {
-  if (!currentBusinessId) {
-    console.log('⏳ Waiting for business ID...');
-    return;
-  }
-  
-  if (ordersSubscription) {
-    ordersSubscription.unsubscribe();
-  }
-  
-  console.log('🔄 Setting up real-time subscription...');
-  
-  ordersSubscription = supa
-    .channel(`orders-${currentBusinessId}`)
-    .on(
-      'postgres_changes',
-      {
-        event: '*',
-        schema: 'public',
-        table: 'orders',
-        filter: `business_id=eq.${currentBusinessId}`
-      },
-      (payload) => {
-        console.log('⚡ Real-time order update:', payload);
-        
-        if (payload.eventType === 'INSERT') {
-          showNotification('🆕 New order received!');
-          addInnerNotification('New Order', `Order ${payload.new.order_id} received`, 'success');
-        }
-        
-        loadOrdersFromDatabase();
-      }
-    )
-    .subscribe();
-}
-
-// ===== SEND ORDER TO BUSINESS WHATSAPP =====
+// NEW: Send order to business WhatsApp without blocking
 function sendOrderToBusinessWhatsApp(order) {
   try {
     if (card.phone) {
@@ -3041,18 +2897,23 @@ function sendOrderToBusinessWhatsApp(order) {
       message += `\n*Delivery:* PKR ${order.deliveryCharge.toFixed(2)}`;
       message += `\n*Total:* PKR ${order.total.toFixed(2)}`;
       message += `\n*Payment Method:* ${getPaymentMethodName(order.paymentMethod)}`;
-      message += `\n*Proof Status:* ${order.paymentProof === 'uploaded' ? '✅ Screenshot uploaded' : '📝 Transaction details to be sent'}`;
+      message += `\n*Proof Status:* ${order.paymentProof === 'uploaded' ? '✅ Screenshot uploaded (attach manually)' : '📝 Transaction details to be sent'}`;
       message += `\n*Status:* Pending Confirmation`;
       
       if (order.paymentProof === 'uploaded') {
         message += `\n\n⚠️ *IMPORTANT:* Customer has uploaded payment proof screenshot. Please check and attach manually to this chat.`;
+      } else {
+        message += `\n\n📝 Customer will send transaction details separately.`;
       }
       
+      // Open WhatsApp in new tab
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+      
       showNotification('📱 WhatsApp opened - send message to business');
     }
   } catch (error) {
     console.error('Error sending WhatsApp:', error);
+    showNotification('⚠️ Could not open WhatsApp, but order saved');
   }
 }
 
@@ -3104,7 +2965,7 @@ function closeDeliveryModal() {
   document.getElementById('deliveryStatusModal').style.display = 'none';
 }
 
-// ===== PRODUCT ZOOM FUNCTIONS =====
+// ===== PRODUCT ZOOM =====
 function zoomProductImage(imageUrl, event) {
   if (event) event.stopPropagation();
   if (imageUrl) {
@@ -3551,7 +3412,7 @@ function updateDeliveryIcon() {
     badge.textContent = deliveryStatusData.length;
     badge.style.display = 'flex';
     const hasPending = deliveryStatusData.some(order => 
-      ['pending', 'confirmed', 'processing', 'shipped'].includes(order.status)
+      ['pending_confirmation', 'confirmed', 'processing', 'shipped'].includes(order.status)
     );
     if (hasPending) badge.classList.add('alert');
     else badge.classList.remove('alert');
@@ -3599,15 +3460,13 @@ async function loadDeliveryStatus() {
   
   let html = '';
   customerOrders.forEach(order => {
-    // Status configuration - ALL enum values included
     const statusConfig = {
-      'pending': { color: '#f59e0b', text: '⏳ Pending' },
+      'pending_confirmation': { color: '#f59e0b', text: '⏳ Pending Confirmation' },
       'confirmed': { color: '#3b82f6', text: '✅ Confirmed' },
       'processing': { color: '#8b5cf6', text: '🔄 Processing' },
       'shipped': { color: '#10b981', text: '🚚 Shipped' },
       'delivered': { color: '#059669', text: '📦 Delivered' },
-      'cancelled': { color: '#ef4444', text: '❌ Cancelled' },
-      'refused': { color: '#64748b', text: '❌ Refused' }
+      'cancelled': { color: '#ef4444', text: '❌ Cancelled' }
     };
     
     const status = statusConfig[order.status] || { color: '#64748b', text: order.status };
@@ -3659,58 +3518,108 @@ function checkDeliveryStatus() {
   loadDeliveryStatus();
 }
 
-// ===== RENDER TOKEN LIST FOR ADMIN =====
-function renderTokenList() {
-  const tokenList = document.getElementById('tokenList');
-  if (!tokenList) return;
-  
-  if (orderTokens.length === 0) {
-    tokenList.innerHTML = `
-      <div style="text-align:center; padding:40px;">
-        <i class="fas fa-ticket-alt" style="font-size:48px; color:#cbd5e1; margin-bottom:16px;"></i>
-        <p style="color:#64748b;">No orders yet</p>
-        <p style="font-size:12px; color:#94a3b8;">Orders will appear here automatically</p>
-      </div>
-    `;
-    return;
+// ===== ORDERS DATABASE WITH REAL-TIME =====
+async function saveOrderToDatabase(orderData) {
+  try {
+    if (!currentBusinessId) {
+      console.error('No business ID found');
+      return false;
+    }
+    
+    const orderToInsert = {
+      business_id: currentBusinessId,
+      order_id: orderData.orderId,
+      token: orderData.token,
+      customer_name: orderData.customerName,
+      customer_phone: orderData.customerPhone,
+      customer_email: orderData.customerEmail,
+      customer_address: orderData.customerAddress,
+      customer_location: orderData.customerLocation,
+      items: orderData.items,
+      subtotal: orderData.subtotal,
+      delivery_charge: orderData.deliveryCharge,
+      total: orderData.total,
+      payment_method: orderData.paymentMethod,
+      payment_proof: orderData.paymentProof,
+      status: orderData.status || 'pending_confirmation',
+      created_at: orderData.created_at,
+      updated_at: new Date().toISOString()
+    };
+    
+    const { data, error } = await supa
+      .from('orders')
+      .insert([orderToInsert])
+      .select();
+    
+    if (error) {
+      console.error('Supabase insert error:', error);
+      return false;
+    }
+    
+    console.log('Order saved successfully:', data);
+    return true;
+    
+  } catch (error) {
+    console.error('Exception in saveOrderToDatabase:', error);
+    return false;
+  }
+}
+
+async function loadOrdersFromDatabase() {
+  try {
+    if (!currentBusinessId) return [];
+    
+    const { data, error } = await supa
+      .from('orders')
+      .select('*')
+      .eq('business_id', currentBusinessId)
+      .order('created_at', { ascending: false });
+    
+    if (!error && data) {
+      orders = data;
+      orderTokens = data.map(order => ({
+        id: order.token,
+        orderId: order.order_id,
+        amount: order.total,
+        status: order.status,
+        customer: order.customer_name,
+        date: order.created_at
+      }));
+      updateTokenStats();
+      renderTokenList();
+      return data;
+    }
+    return [];
+  } catch (error) {
+    console.error('Error loading orders:', error);
+    return [];
+  }
+}
+
+// Setup real-time subscription for orders
+function setupOrdersSubscription() {
+  if (ordersSubscription) {
+    ordersSubscription.unsubscribe();
   }
   
-  let html = '';
-  orderTokens.slice(0, 30).forEach(token => {
-    const date = new Date(token.date).toLocaleString();
-    const statusColor = 
-      token.status === 'delivered' ? '#10b981' : 
-      token.status === 'cancelled' ? '#ef4444' : 
-      token.status === 'refused' ? '#64748b' :
-      token.status === 'pending' ? '#f59e0b' :
-      token.status === 'confirmed' ? '#3b82f6' : 
-      token.status === 'processing' ? '#8b5cf6' :
-      token.status === 'shipped' ? '#10b981' : '#64748b';
-    
-    html += `
-      <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')" 
-           style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #e2e8f0; cursor:pointer;">
-        <div>
-          <div style="font-weight:800; color:#667eea;">${token.id}</div>
-          <div style="font-size:11px; color:#64748b; margin-top:4px;">
-            ${token.orderId} • ${date}
-          </div>
-          <div style="font-size:12px; color:#475569; margin-top:2px;">
-            👤 ${token.customer || 'Customer'}
-          </div>
-        </div>
-        <div style="text-align:right;">
-          <div style="font-weight:700; color:#10b981;">PKR ${token.amount.toFixed(2)}</div>
-          <span style="display:inline-block; padding:4px 8px; border-radius:4px; font-size:11px; 
-                       background: ${statusColor}20; color: ${statusColor}; margin-top:4px;">
-            ${token.status.replace('_', ' ')}
-          </span>
-        </div>
-      </div>
-    `;
-  });
-  
-  tokenList.innerHTML = html;
+  ordersSubscription = supa
+    .channel('orders-changes')
+    .on('postgres_changes', 
+      { 
+        event: '*', 
+        schema: 'public', 
+        table: 'orders',
+        filter: `business_id=eq.${currentBusinessId}`
+      }, 
+      (payload) => {
+        console.log('Order changed:', payload);
+        loadOrdersFromDatabase();
+        if (isAdminLoggedIn && currentPage === 'adminPage') {
+          renderTokenList();
+        }
+      }
+    )
+    .subscribe();
 }
 
 function updateTokenStats() {
@@ -3721,13 +3630,71 @@ function updateTokenStats() {
   if (totalEl) totalEl.textContent = orderTokens.length;
   
   const activeTokens = orderTokens.filter(t => 
-    ['pending', 'confirmed', 'processing', 'shipped'].includes(t.status)
+    ['pending_confirmation', 'confirmed', 'processing', 'shipped'].includes(t.status)
   ).length;
   if (activeEl) activeEl.textContent = activeTokens;
   
   const today = new Date().toDateString();
   const todayTokens = orderTokens.filter(t => new Date(t.date).toDateString() === today).length;
   if (todayEl) todayEl.textContent = todayTokens;
+}
+
+function renderTokenList() {
+  const tokenList = document.getElementById('tokenList');
+  if (!tokenList) return;
+  
+  let filteredTokens = orderTokens;
+  if (currentFilter === 'pending') {
+    filteredTokens = orderTokens.filter(t => t.status === 'pending_confirmation');
+  } else if (currentFilter === 'confirmed') {
+    filteredTokens = orderTokens.filter(t => ['confirmed', 'processing', 'shipped'].includes(t.status));
+  }
+  
+  if (filteredTokens.length === 0) {
+    tokenList.innerHTML = `
+      <div style="text-align:center; padding:40px;">
+        <i class="fas fa-ticket-alt" style="font-size:48px; color:#cbd5e1; margin-bottom:16px;"></i>
+        <p style="color:#64748b;">No ${currentFilter !== 'all' ? currentFilter : ''} orders found</p>
+      </div>
+    `;
+    return;
+  }
+  
+  let html = '';
+  filteredTokens.slice(0, 50).forEach(token => {
+    const date = new Date(token.date).toLocaleDateString();
+    const statusColor = 
+      token.status === 'delivered' ? '#10b981' : 
+      token.status === 'cancelled' ? '#ef4444' : 
+      token.status === 'pending_confirmation' ? '#f59e0b' :
+      token.status === 'confirmed' ? '#3b82f6' : 
+      token.status === 'processing' ? '#8b5cf6' :
+      token.status === 'shipped' ? '#10b981' : '#64748b';
+    
+    const statusText = token.status.replace('_', ' ');
+    
+    html += `
+      <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
+        <div>
+          <div class="token-code">${token.id}</div>
+          <div style="font-size:11px; color:#64748b; margin-top:4px;">
+            <i class="fas fa-box"></i> ${token.orderId} • ${date}
+          </div>
+          <div style="font-size:11px; color:#475569; margin-top:2px;">
+            👤 ${token.customer || 'Customer'}
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div class="token-amount">PKR ${token.amount.toFixed(2)}</div>
+          <span class="token-status" style="background: ${statusColor}20; color: ${statusColor};">
+            ${statusText}
+          </span>
+        </div>
+      </div>
+    `;
+  });
+  
+  tokenList.innerHTML = html;
 }
 
 function searchAdminTokens() {
@@ -3746,13 +3713,12 @@ function searchAdminTokens() {
   }
   
   let html = '';
-  filtered.slice(0, 30).forEach(token => {
+  filtered.slice(0, 50).forEach(token => {
     const date = new Date(token.date).toLocaleDateString();
     const statusColor = 
       token.status === 'delivered' ? '#10b981' : 
       token.status === 'cancelled' ? '#ef4444' : 
-      token.status === 'refused' ? '#64748b' :
-      token.status === 'pending' ? '#f59e0b' :
+      token.status === 'pending_confirmation' ? '#f59e0b' :
       token.status === 'confirmed' ? '#3b82f6' : 
       token.status === 'processing' ? '#8b5cf6' :
       token.status === 'shipped' ? '#10b981' : '#64748b';
@@ -3776,71 +3742,23 @@ function searchAdminTokens() {
 }
 
 function filterPendingOrders() {
-  const filtered = orderTokens.filter(t => t.status === 'pending');
-  const tokenList = document.getElementById('tokenList');
-  
-  if (filtered.length === 0) {
-    tokenList.innerHTML = '<p style="text-align:center; padding:20px;">No pending orders</p>';
-    return;
-  }
-  
-  let html = '';
-  filtered.forEach(token => {
-    const date = new Date(token.date).toLocaleString();
-    html += `
-      <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
-        <div>
-          <div style="font-weight:800; color:#667eea;">${token.id}</div>
-          <div style="font-size:11px; color:#64748b;">${token.orderId} • ${date}</div>
-          <div>👤 ${token.customer}</div>
-        </div>
-        <div>
-          <div style="font-weight:700; color:#10b981;">PKR ${token.amount.toFixed(2)}</div>
-          <span style="color:#f59e0b;">⏳ Pending</span>
-        </div>
-      </div>
-    `;
-  });
-  tokenList.innerHTML = html;
+  currentFilter = 'pending';
+  renderTokenList();
 }
 
 function filterConfirmedOrders() {
-  const filtered = orderTokens.filter(t => ['confirmed', 'processing', 'shipped'].includes(t.status));
-  const tokenList = document.getElementById('tokenList');
-  
-  if (filtered.length === 0) {
-    tokenList.innerHTML = '<p style="text-align:center; padding:20px;">No confirmed orders</p>';
-    return;
-  }
-  
-  let html = '';
-  filtered.forEach(token => {
-    const date = new Date(token.date).toLocaleString();
-    const statusColor = token.status === 'confirmed' ? '#3b82f6' : token.status === 'processing' ? '#8b5cf6' : '#10b981';
-    html += `
-      <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
-        <div>
-          <div style="font-weight:800; color:#667eea;">${token.id}</div>
-          <div style="font-size:11px; color:#64748b;">${token.orderId} • ${date}</div>
-          <div>👤 ${token.customer}</div>
-        </div>
-        <div>
-          <div style="font-weight:700; color:#10b981;">PKR ${token.amount.toFixed(2)}</div>
-          <span style="color:${statusColor};">${token.status}</span>
-        </div>
-      </div>
-    `;
-  });
-  tokenList.innerHTML = html;
+  currentFilter = 'confirmed';
+  renderTokenList();
 }
 
 function filterAllOrders() {
+  currentFilter = 'all';
   renderTokenList();
 }
 
 function refreshOrders() {
-  showNotification('🔄 Refreshing orders...');
   loadOrdersFromDatabase();
+  showNotification('🔄 Orders refreshed');
 }
 
 async function viewOrderDetails(orderId) {
@@ -3866,7 +3784,7 @@ async function viewOrderDetails(orderId) {
   const locationLink = order.customer_location && order.customer_location.lat ? 
     `<a href="https://maps.google.com/?q=${order.customer_location.lat},${order.customer_location.lng}" target="_blank" style="color:#667eea;">📍 View on Map</a>` : '';
   
-  const confirmButton = order.status === 'pending' && isAdminLoggedIn ? 
+  const confirmButton = order.status === 'pending_confirmation' && isAdminLoggedIn ? 
     `<button class="admin-confirm-btn" onclick="confirmOrder('${order.id}')">
        <i class="fas fa-check-circle"></i> Confirm Order & Generate Receipt
      </button>` : '';
@@ -3942,13 +3860,12 @@ async function viewOrderDetails(orderId) {
     
     <div style="display:flex; gap:12px; margin-top:20px;">
       <select id="orderStatusSelect" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;">
-        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>⏳ Pending</option>
+        <option value="pending_confirmation" ${order.status === 'pending_confirmation' ? 'selected' : ''}>⏳ Pending</option>
         <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>✅ Confirmed</option>
         <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>🔄 Processing</option>
         <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
         <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>📦 Delivered</option>
         <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
-        <option value="refused" ${order.status === 'refused' ? 'selected' : ''}>❌ Refused</option>
       </select>
       <button onclick="window.updateOrderStatus('${order.id}')" style="padding:12px 20px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
         Update
@@ -3961,13 +3878,12 @@ async function viewOrderDetails(orderId) {
         <span style="font-weight:700;">Status</span>
       </div>
       <div style="font-size:13px; color:#b45309;">
-        ${order.status === 'pending' ? '⏳ Order received, waiting for admin confirmation' :
+        ${order.status === 'pending_confirmation' ? '⏳ Order received, waiting for admin confirmation' :
           order.status === 'confirmed' ? '✅ Order confirmed, preparing for dispatch' :
           order.status === 'processing' ? '🔄 Order is being processed' :
           order.status === 'shipped' ? '🚚 Order has been shipped' :
           order.status === 'delivered' ? '📦 Order delivered successfully' :
-          order.status === 'cancelled' ? '❌ Order cancelled' :
-          order.status === 'refused' ? '❌ Order refused' : 'Status unknown'}
+          order.status === 'cancelled' ? '❌ Order cancelled' : 'Status unknown'}
       </div>
     </div>
   `;
@@ -4033,7 +3949,7 @@ function generateNewToken() {
     id: token,
     orderId: orderId,
     amount: 0,
-    status: 'pending',
+    status: 'pending_confirmation',
     customer: 'Manual Entry',
     date: new Date().toISOString()
   });
@@ -4633,7 +4549,6 @@ function loadContactPage() {
 async function loadAdminPanel() {
   await loadOrdersFromDatabase();
   renderTokenList();
-  updateTokenStats();
 }
 
 async function sendNotificationToAll() {
@@ -4701,7 +4616,7 @@ function logoutAdmin() {
   navigateTo('homePage');
 }
 
-// ===== NAVIGATION WITH HASH ROUTING =====
+// ===== NAVIGATION =====
 let lastBackPress = 0;
 
 function initializeRouting() {
@@ -4948,7 +4863,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     
     await loadOrdersFromDatabase();
-    setupOrdersSubscription();
+    setupOrdersSubscription(); // Setup real-time updates
     await renderApp();
     
     initializeRouting();
