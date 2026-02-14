@@ -1130,7 +1130,7 @@ function resizeImage(file) {
   });
 }
 
-// ===== MAIN GENERATE (skip empty products) =====
+// ===== UPDATED GENERATE FUNCTION WITH AUTO BUSINESS CREATION =====
 async function generate() {
   if (!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value || !document.getElementById('businessName').value || !document.getElementById('address').value) {
     showSuccess('❌ Please fill all required fields (*)'); return;
@@ -1211,13 +1211,34 @@ async function generate() {
     };
     if(profileImageFile) cardData.profileImage = await resizeImage(profileImageFile);
     
+    // 🆕 STEP 1: CARD INSERT KAREIN
     const { data: inserted, error } = await supa.from('cards').insert({ id, data:JSON.stringify(cardData) }).select().single();
     if(error) throw error;
+    
+    // 🆕 STEP 2: BUSINESS RECORD BHI INSERT KAREIN (YEH BOHOT IMPORTANT HAI!)
+    const { error: bizError } = await supa
+      .from('businesses')
+      .insert({
+        id: id,  // YAHI ID USE KARO!
+        business_name: cardData.businessName || cardData.name || 'Business',
+        owner_name: cardData.name || 'Owner',
+        owner_phone: cardData.phone || '03000000000'
+      });
+    
+    // Agar business already exist karta hai to ignore karo
+    if (bizError && !bizError.message.includes('duplicate')) {
+      console.error('Business insert error:', bizError);
+      throw bizError;
+    }
+    
     localStorage.setItem('lastCardId', inserted.id);
     hideLoading(); showSuccess('✅ Card created! Redirecting...');
-    // CHANGED: redirect to business.html instead of card.html
     setTimeout(()=>{ location.href='business.html?id='+inserted.id; },2000);
-  } catch(e) { hideLoading(); showSuccess('❌ Error: '+e.message); }
+    
+  } catch(e) { 
+    hideLoading(); 
+    showSuccess('❌ Error: '+e.message); 
+  }
 }
 
 // ===== INIT =====
