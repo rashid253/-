@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json" id="manifestLink">
 
 <style>
-/* ===== ALL YOUR EXISTING STYLES HERE - KEEP COMPLETELY UNCHANGED ===== */
+/* ===== ALL EXISTING STYLES - KEEP EXACTLY AS BEFORE ===== */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -951,44 +951,6 @@ body {
   margin-top: 4px;
 }
 
-/* ===== PAYMENT PROOF UPLOAD ===== */
-.payment-proof-area {
-  background: #f8fafc;
-  border-radius: 16px;
-  padding: 20px;
-  margin: 16px 0;
-  text-align: center;
-}
-
-.proof-preview {
-  max-width: 200px;
-  max-height: 200px;
-  margin: 12px auto;
-  border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  display: none;
-}
-
-.proof-upload-btn {
-  background: white;
-  border: 2px dashed #667eea;
-  border-radius: 12px;
-  padding: 20px;
-  cursor: pointer;
-  margin-bottom: 12px;
-}
-
-.proof-upload-btn i {
-  font-size: 32px;
-  color: #667eea;
-  margin-bottom: 8px;
-}
-
-.proof-upload-btn span {
-  font-size: 14px;
-  color: #475569;
-}
-
 /* ===== NOTIFICATION ALERT ===== */
 .notification-alert {
   position: fixed;
@@ -1042,54 +1004,7 @@ body {
   cursor: pointer;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 480px) {
-  .app-container { max-width: 100%; }
-  .pro-payment-grid { grid-template-columns: 1fr; }
-  .token-stats { grid-template-columns: 1fr; }
-  .quick-actions { grid-template-columns: repeat(2,1fr); }
-  .notification-drawer { width: 100%; right: -100%; }
-}
-
-@keyframes slideIn {
-  from { top: 50px; opacity: 0; }
-  to { top: 100px; opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes slideDown {
-  from { top: -100px; opacity: 0; }
-  to { top: 20px; opacity: 1; }
-}
-
-@keyframes zoomIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
-}
-
-/* ===== NEW STYLES FOR ADDED FEATURES ===== */
+/* ===== NEW STYLES - KEEP AS BEFORE ===== */
 .product-zoom-overlay {
   position: fixed;
   top: 0;
@@ -1495,6 +1410,54 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+@keyframes slideIn {
+  from { top: 50px; opacity: 0; }
+  to { top: 100px; opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideDown {
+  from { top: -100px; opacity: 0; }
+  to { top: 20px; opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+@media (max-width: 480px) {
+  .app-container { max-width: 100%; }
+  .pro-payment-grid { grid-template-columns: 1fr; }
+  .token-stats { grid-template-columns: 1fr; }
+  .quick-actions { grid-template-columns: repeat(2,1fr); }
+  .notification-drawer { width: 100%; right: -100%; }
+  .popup-content, .receipt-content { max-width: 100%; margin: 0 16px; }
+  .admin-quick-actions { flex-direction: column; }
 }
 </style>
 </head>
@@ -2257,7 +2220,7 @@ const isolatedLocalStorage = {
   }
 };
 
-// ===== PASSWORD GENERATOR - USING UUID FIRST 6 CHARS =====
+// ===== PASSWORD GENERATOR =====
 function generateAdminPassword(cardId) {
   const idPart = cardId ? cardId.substring(0, 6).toLowerCase() : 'default';
   return `business123_${idPart}`;
@@ -2817,7 +2780,7 @@ async function processPayment() {
     return;
   }
   
-  // For non-COD, show popup instead of inline proof
+  // For non-COD, show popup
   if (selectedPaymentMethod !== 'cod') {
     showPaymentProofPopup(selectedPaymentMethod);
     return;
@@ -2832,7 +2795,7 @@ async function confirmPaymentWithProof() {
   await completeOrder();
 }
 
-// ===== FIXED: COMPLETE ORDER FUNCTION WITH DATABASE SAVE =====
+// ===== FIXED: COMPLETE ORDER FUNCTION =====
 async function completeOrder() {
   let subtotal = cart.reduce((sum, item) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
@@ -2881,13 +2844,13 @@ async function completeOrder() {
   
   console.log('📦 Pending order:', pendingOrder);
   
-  // Save to database FIRST
+  // Save to database
   const saved = await saveOrderToDatabase(pendingOrder);
   
   if (saved) {
     console.log('✅ Order saved to database');
     
-    // THEN send WhatsApp (doesn't block)
+    // Send WhatsApp
     sendOrderToBusinessWhatsApp(pendingOrder);
     
     // Update local arrays
@@ -2919,7 +2882,7 @@ async function completeOrder() {
   }
 }
 
-// ===== FIXED: SAVE ORDER TO DATABASE WITH ALL COLUMNS =====
+// ===== FIXED: SAVE ORDER TO DATABASE =====
 async function saveOrderToDatabase(orderData) {
   try {
     if (!currentBusinessId) {
@@ -2929,49 +2892,42 @@ async function saveOrderToDatabase(orderData) {
     }
     
     console.log('📤 Saving order for business:', currentBusinessId);
-    console.log('📦 Order data received:', orderData);
     
-    // COMPLETE ORDER OBJECT with ALL columns matching your table structure
+    // Create order object with ALL columns from your table
     const orderToInsert = {
-      business_id: currentBusinessId,                    // NOT NULL ✅
-      order_id: orderData.orderId,                       // NOT NULL ✅
-      token: orderData.token,                             // NOT NULL ✅
-      customer_name: orderData.customerName || 'Customer', // NULL allowed
-      customer_phone: orderData.customerPhone || '',      // NOT NULL ✅
-      customer_email: orderData.customerEmail || null,    // NULL allowed
-      customer_address: orderData.customerAddress || '',  // NOT NULL ✅
-      customer_location: orderData.customerLocation || null, // NULL allowed
-      items: orderData.items || [],                       // NOT NULL ✅
-      subtotal: orderData.subtotal || 0,                  // NOT NULL ✅
-      delivery_charge: orderData.deliveryCharge || 0,     // NULL allowed
-      discount_amount: 0,                                 // NULL allowed
-      tax_amount: 0,                                      // NULL allowed
-      total: orderData.total || 0,                         // NOT NULL ✅
-      payment_method: orderData.paymentMethod || 'cod',    // NOT NULL ✅
-      payment_status: 'pending',                           // NULL allowed
-      payment_proof: orderData.paymentProof || null,       // NULL allowed
-      status: 'pending',                                   // NOT NULL ✅ (default)
-      zone: null,                                          // NULL allowed
-      estimated_delivery: null,                            // NULL allowed
-      notes: null,                                          // NULL allowed
-      admin_notes: null,                                    // NULL allowed
-      tracking_number: null,                                // NULL allowed
-      courier_name: null,                                   // NULL allowed
-      created_at: new Date().toISOString(),                 // NOT NULL ✅
-      updated_at: new Date().toISOString(),                 // NULL allowed
-      delivered_at: null                                    // NULL allowed
+      business_id: currentBusinessId,
+      order_id: orderData.orderId,
+      token: orderData.token,
+      customer_name: orderData.customerName || 'Customer',
+      customer_phone: orderData.customerPhone || '',
+      customer_address: orderData.customerAddress || '',
+      items: orderData.items || [],
+      subtotal: orderData.subtotal || 0,
+      delivery_charge: orderData.deliveryCharge || 0,
+      total: orderData.total || 0,
+      payment_method: orderData.paymentMethod || 'cod',
+      status: 'pending',
+      zone: null,
+      estimated_delivery: null,
+      notes: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     };
     
-    // Ensure required fields have values
-    if (!orderToInsert.customer_phone) {
-      orderToInsert.customer_phone = orderData.phone || 'Not provided';
+    // Add optional fields if they exist
+    if (orderData.customerEmail) {
+      orderToInsert.customer_email = orderData.customerEmail;
     }
     
-    if (!orderToInsert.customer_address) {
-      orderToInsert.customer_address = orderData.address || 'Not provided';
+    if (orderData.customerLocation && orderData.customerLocation.lat) {
+      orderToInsert.customer_location = orderData.customerLocation;
     }
     
-    console.log('📦 Final insert data:', orderToInsert);
+    if (orderData.paymentProof) {
+      orderToInsert.payment_proof = orderData.paymentProof;
+    }
+    
+    console.log('📦 Inserting order:', orderToInsert);
     
     const { data, error } = await supa
       .from('orders')
@@ -2980,37 +2936,14 @@ async function saveOrderToDatabase(orderData) {
     
     if (error) {
       console.error('❌ Supabase error:', error);
-      
-      // Human readable error messages
-      let errorMsg = error.message;
-      if (error.message.includes('business_id')) {
-        errorMsg = 'Business ID is required';
-      } else if (error.message.includes('order_id')) {
-        errorMsg = 'Order ID is required';
-      } else if (error.message.includes('token')) {
-        errorMsg = 'Token is required';
-      } else if (error.message.includes('customer_phone')) {
-        errorMsg = 'Customer phone is required';
-      } else if (error.message.includes('customer_address')) {
-        errorMsg = 'Customer address is required';
-      } else if (error.message.includes('items')) {
-        errorMsg = 'Items are required';
-      } else if (error.message.includes('subtotal')) {
-        errorMsg = 'Subtotal is required';
-      } else if (error.message.includes('total')) {
-        errorMsg = 'Total is required';
-      } else if (error.message.includes('payment_method')) {
-        errorMsg = 'Payment method is required';
-      }
-      
-      showNotification('❌ ' + errorMsg);
+      showNotification('❌ Database error: ' + error.message);
       return false;
     }
     
     console.log('✅ Order saved successfully:', data);
     showNotification('✅ Order placed successfully!');
     
-    // Admin panel refresh agar logged in hai
+    // Refresh admin panel if logged in
     if (isAdminLoggedIn) {
       setTimeout(() => {
         loadOrdersFromDatabase();
@@ -3020,7 +2953,7 @@ async function saveOrderToDatabase(orderData) {
     return true;
     
   } catch (error) {
-    console.error('❌ Exception in saveOrderToDatabase:', error);
+    console.error('❌ Exception:', error);
     showNotification('❌ Error: ' + error.message);
     return false;
   }
@@ -3030,7 +2963,7 @@ async function saveOrderToDatabase(orderData) {
 async function loadOrdersFromDatabase() {
   try {
     if (!currentBusinessId) {
-      console.error('❌ No business ID for loading orders');
+      console.error('❌ No business ID');
       return [];
     }
     
@@ -5044,7 +4977,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     
     await loadOrdersFromDatabase();
-    setupOrdersSubscription(); // Setup real-time updates
+    setupOrdersSubscription();
     await renderApp();
     
     initializeRouting();
