@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-/* ===== PROFESSIONAL STYLING WITH THUMBNAILS ===== */
+/* ===== PROFESSIONAL STYLING ===== */
 :root {
   --primary: #667eea;
   --primary-dark: #5a67d8;
@@ -96,20 +96,95 @@ body {
   text-overflow: ellipsis;
 }
 
-/* ===== FILE UPLOAD WITH THUMBNAIL ===== */
-.upload-container {
-  margin-bottom: 16px;
+/* ===== FIXED PRODUCT CARDS - PROPER SIZE ===== */
+.products-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 4px 0 12px;
+  scrollbar-width: thin;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
 }
 
+.product-card {
+  min-width: 240px; /* REDUCED from 280px */
+  max-width: 240px; /* FIXED WIDTH */
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* ===== FIXED PRODUCT IMAGE THUMBNAIL ===== */
+.product-image-container {
+  width: 100%;
+  height: 120px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid var(--border);
+  background: #f8fafc;
+  position: relative;
+}
+
+.product-image-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* CHANGED from contain to cover */
+  display: none;
+}
+
+.product-image-preview.show {
+  display: block;
+}
+
+.product-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.product-image-placeholder i {
+  font-size: 32px;
+  margin-bottom: 4px;
+  color: #cbd5e1;
+}
+
+.product-image-placeholder span {
+  font-size: 11px;
+}
+
+.product-image-placeholder.hidden {
+  display: none;
+}
+
+/* ===== FIXED UPLOAD AREA ===== */
 .upload-area {
   border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 8px;
+  padding: 8px;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   background: #f8fafc;
+  margin: 8px 0;
+  font-size: 11px;
 }
 
 .upload-area:hover {
@@ -123,9 +198,9 @@ body {
 }
 
 .upload-area i {
-  font-size: 24px;
+  font-size: 16px;
   color: var(--primary);
-  margin-bottom: 8px;
+  margin-right: 4px;
 }
 
 .upload-area.has-file i {
@@ -133,24 +208,14 @@ body {
 }
 
 .upload-area span {
-  display: block;
-  font-size: 13px;
-  color: var(--gray);
-  margin-bottom: 4px;
-}
-
-.upload-area.has-file span {
-  color: var(--success);
-  font-weight: 600;
-}
-
-.upload-area small {
+  display: inline-block;
   font-size: 11px;
-  color: #94a3b8;
-}
-
-.upload-area.has-file small {
-  color: var(--success);
+  color: var(--gray);
+  max-width: 140px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
 }
 
 .upload-area input {
@@ -163,15 +228,87 @@ body {
   cursor: pointer;
 }
 
-/* ===== THUMBNAIL PREVIEW ===== */
+/* ===== PRODUCT TITLE AND INPUTS - FIXED SIZES ===== */
+.product-card h3 {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: var(--dark);
+}
+
+.product-card input,
+.product-card textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  box-sizing: border-box;
+}
+
+.product-card textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+.price-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+/* ===== PRODUCT BADGES - COMPACT ===== */
+.product-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.product-badges label {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 10px;
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.product-badges input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  accent-color: var(--primary);
+}
+
+/* ===== REMOVE IMAGE BUTTON ===== */
+.btn-small {
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.btn-small:hover {
+  background: #dc2626;
+}
+
+/* ===== PROFILE THUMBNAIL ===== */
 .thumbnail-preview {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   margin-top: 12px;
-  padding: 12px;
+  padding: 10px;
   background: #f8fafc;
-  border-radius: 12px;
+  border-radius: 10px;
   border: 2px solid var(--border);
 }
 
@@ -180,11 +317,11 @@ body {
 }
 
 .thumbnail-image {
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
   object-fit: cover;
-  border: 3px solid var(--primary);
+  border: 2px solid var(--primary);
   background: white;
   flex-shrink: 0;
 }
@@ -195,16 +332,16 @@ body {
 }
 
 .thumbnail-name {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--dark);
-  font-size: 14px;
+  font-size: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .thumbnail-size {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--gray);
   margin-top: 2px;
 }
@@ -213,65 +350,11 @@ body {
   color: var(--danger);
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
-  padding: 0 8px;
+  padding: 0 6px;
   flex-shrink: 0;
   font-weight: 700;
-}
-
-.thumbnail-remove:hover {
-  color: #dc2626;
-}
-
-/* ===== PRODUCT CARD WITH THUMBNAIL ===== */
-.product-card {
-  min-width: 280px;
-  background: white;
-  border-radius: 16px;
-  padding: 16px;
-  border: 2px solid var(--border);
-  flex-shrink: 0;
-  position: relative;
-}
-
-.product-image-preview {
-  width: 100%;
-  height: 120px;
-  border-radius: 10px;
-  object-fit: cover;
-  border: 2px solid var(--border);
-  margin-bottom: 12px;
-  background: #f1f5f9;
-  display: none;
-}
-
-.product-image-preview.show {
-  display: block;
-}
-
-.product-image-placeholder {
-  width: 100%;
-  height: 120px;
-  border-radius: 10px;
-  background: #f1f5f9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #94a3b8;
-  font-size: 13px;
-  margin-bottom: 12px;
-  border: 2px dashed var(--border);
-}
-
-.product-image-placeholder i {
-  font-size: 30px;
-  margin-bottom: 4px;
-  color: #cbd5e1;
-}
-
-.product-image-placeholder.hidden {
-  display: none;
 }
 
 /* ===== REST OF YOUR STYLES ===== */
@@ -299,14 +382,6 @@ body {
   transition: all 0.3s ease;
   background: white;
   box-sizing: border-box;
-}
-
-.input-group input:focus,
-.input-group textarea:focus,
-.input-group select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .row-2 {
@@ -352,10 +427,6 @@ body {
   font-size: 12px;
   min-width: 0;
   width: 100%;
-}
-
-.social-input input:focus {
-  outline: none;
 }
 
 .btn {
@@ -434,13 +505,6 @@ body {
   margin-bottom: 16px;
 }
 
-.loading-text {
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
-  text-align: center;
-}
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -488,21 +552,6 @@ body {
   z-index: 10;
 }
 
-.modal-close {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.2);
-  border: none;
-  color: white;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
 /* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
   .social-grid {
@@ -511,6 +560,18 @@ body {
   
   .row-2 {
     grid-template-columns: 1fr;
+  }
+  
+  .product-card {
+    min-width: 220px; /* EVEN SMALLER on mobile */
+    max-width: 220px;
+  }
+}
+
+@media (max-width: 360px) {
+  .product-card {
+    min-width: 200px;
+    max-width: 200px;
   }
 }
 </style>
@@ -533,7 +594,7 @@ body {
   <div class="loading-text">Creating your professional digital business card...</div>
 </div>
 
-<!-- ===== PROFILE SECTION WITH THUMBNAIL ===== -->
+<!-- ===== PROFILE SECTION ===== -->
 <div class="card">
   <div class="card-header">
     <i class="fas fa-user"></i>
@@ -543,18 +604,17 @@ body {
     </div>
   </div>
   
-  <div class="upload-container">
-    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 4px;">Profile Image</label>
+  <div class="input-group">
+    <label>Profile Image</label>
     <div class="upload-area" id="profileUploadArea">
       <i class="fas fa-cloud-upload-alt" id="profileUploadIcon"></i>
-      <span id="profileUploadText">Click to upload profile picture</span>
-      <small id="profileUploadHint">PNG, JPG up to 5MB</small>
+      <span id="profileUploadText">Click to upload</span>
       <input type="file" id="profileImage" accept="image/*" onchange="handleProfileImageUpload(this)">
     </div>
     
-    <!-- Profile Thumbnail Preview -->
+    <!-- Profile Thumbnail -->
     <div class="thumbnail-preview hidden" id="profilePreviewContainer">
-      <img src="" alt="Profile Preview" class="thumbnail-image" id="profilePreview">
+      <img src="" alt="Preview" class="thumbnail-image" id="profilePreview">
       <div class="thumbnail-info">
         <div class="thumbnail-name" id="profilePreviewName">image.jpg</div>
         <div class="thumbnail-size" id="profilePreviewSize">0 KB</div>
@@ -613,28 +673,28 @@ body {
   
   <div class="social-grid">
     <div class="social-input">
-      <i class="fab fa-facebook" style="color:#1877F2;"></i>
-      <input type="text" id="facebook" placeholder="Facebook URL">
+      <i class="fab fa-facebook"></i>
+      <input type="text" id="facebook" placeholder="Facebook">
     </div>
     <div class="social-input">
-      <i class="fab fa-instagram" style="color:#E4405F;"></i>
-      <input type="text" id="instagram" placeholder="Instagram URL">
+      <i class="fab fa-instagram"></i>
+      <input type="text" id="instagram" placeholder="Instagram">
     </div>
     <div class="social-input">
-      <i class="fab fa-twitter" style="color:#1DA1F2;"></i>
-      <input type="text" id="twitter" placeholder="Twitter URL">
+      <i class="fab fa-twitter"></i>
+      <input type="text" id="twitter" placeholder="Twitter">
     </div>
     <div class="social-input">
-      <i class="fab fa-linkedin" style="color:#0A66C2;"></i>
-      <input type="text" id="linkedin" placeholder="LinkedIn URL">
+      <i class="fab fa-linkedin"></i>
+      <input type="text" id="linkedin" placeholder="LinkedIn">
     </div>
     <div class="social-input">
-      <i class="fab fa-youtube" style="color:#FF0000;"></i>
-      <input type="text" id="youtube" placeholder="YouTube URL">
+      <i class="fab fa-youtube"></i>
+      <input type="text" id="youtube" placeholder="YouTube">
     </div>
     <div class="social-input">
-      <i class="fab fa-tiktok" style="color:#000000;"></i>
-      <input type="text" id="tiktok" placeholder="TikTok URL">
+      <i class="fab fa-tiktok"></i>
+      <input type="text" id="tiktok" placeholder="TikTok">
     </div>
   </div>
 </div>
@@ -664,8 +724,8 @@ body {
   
   <div id="holidaysContainer">
     <div class="holiday-item" style="display: grid; grid-template-columns: 1fr 120px auto; gap: 8px; align-items: center; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 12px; border: 2px solid var(--border);">
-      <input type="text" class="holidayName" placeholder="Holiday name" value="Eid ul-Fitr" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px;">
-      <input type="date" class="holidayDate" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px;">
+      <input type="text" class="holidayName" placeholder="Holiday name" value="Eid ul-Fitr">
+      <input type="date" class="holidayDate">
       <button type="button" class="remove-btn" onclick="removeHoliday(this)" style="width: 36px; height: 36px; border-radius: 8px; background: var(--danger); color: white; border: none; cursor: pointer;">×</button>
     </div>
   </div>
@@ -735,17 +795,17 @@ body {
   
   <div style="background: #f0f9ff; border-radius: 14px; padding: 14px;">
     <div class="toggle-switch" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-      <input type="checkbox" id="requireAddressConfirmation" checked style="width: 40px; height: 22px; appearance: none; background: var(--border); border-radius: 30px; position: relative; cursor: pointer;">
-      <label for="requireAddressConfirmation" style="font-weight: 600; color: var(--dark);">Require address confirmation</label>
+      <input type="checkbox" id="requireAddressConfirmation" checked>
+      <label for="requireAddressConfirmation">Require address confirmation</label>
     </div>
     <div class="toggle-switch" style="display: flex; align-items: center; gap: 10px;">
-      <input type="checkbox" id="saveCustomerAddresses" checked style="width: 40px; height: 22px; appearance: none; background: var(--border); border-radius: 30px; position: relative; cursor: pointer;">
-      <label for="saveCustomerAddresses" style="font-weight: 600; color: var(--dark);">Save customer addresses</label>
+      <input type="checkbox" id="saveCustomerAddresses" checked>
+      <label for="saveCustomerAddresses">Save customer addresses</label>
     </div>
   </div>
 </div>
 
-<!-- ===== PRODUCTS WITH THUMBNAILS ===== -->
+<!-- ===== PRODUCTS WITH FIXED SIZE CARDS ===== -->
 <div class="card">
   <div class="card-header">
     <i class="fas fa-gift"></i>
@@ -755,7 +815,7 @@ body {
     </div>
   </div>
   
-  <div id="offersForm" class="products-scroll" style="display: flex; gap: 12px; overflow-x: auto; padding: 4px 0 12px;"></div>
+  <div id="offersForm" class="products-scroll"></div>
   
   <button class="add-btn" onclick="addOffer()" style="background: #8b5cf6; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; width: 100%; margin-top: 12px; cursor: pointer;">
     <i class="fas fa-plus"></i> Add Product
@@ -764,7 +824,7 @@ body {
 
 <!-- ===== ACTION BUTTONS ===== -->
 <button class="btn btn-success" onclick="openPaymentModal()" style="margin-bottom: 12px;">
-  <i class="fas fa-credit-card"></i> Configure Payments & Tokens
+  <i class="fas fa-credit-card"></i> Configure Payments
 </button>
 
 <button class="btn btn-primary" onclick="generate()" id="generateButton">
@@ -775,21 +835,15 @@ body {
 <div class="modal" id="paymentModal">
   <div class="modal-content">
     <div class="modal-header">
-      <h2><i class="fas fa-cog"></i> Payment & Token System</h2>
+      <h2><i class="fas fa-cog"></i> Payment Settings</h2>
       <button class="modal-close" onclick="closePaymentModal()">×</button>
     </div>
     
     <div class="modal-body" style="padding: 20px;">
-      <!-- WhatsApp Settings -->
-      <h3 style="font-size: 16px; margin-bottom: 12px;">WhatsApp Business</h3>
-      
       <div class="input-group">
         <label>WhatsApp Number</label>
         <input type="text" id="whatsappNumber" placeholder="+923001234567" value="+92">
       </div>
-      
-      <!-- Token System -->
-      <h3 style="font-size: 16px; margin: 20px 0 12px;">Token System</h3>
       
       <div class="row-2">
         <div class="input-group">
@@ -799,107 +853,45 @@ body {
         <div class="input-group">
           <label>Length</label>
           <select id="tokenLength">
-            <option value="8">8 chars</option>
-            <option value="10">10 chars</option>
-            <option value="12" selected>12 chars</option>
+            <option value="8">8</option>
+            <option value="10">10</option>
+            <option value="12" selected>12</option>
           </select>
         </div>
       </div>
       
-      <div class="token-preview" style="background: #1e293b; border-radius: 14px; padding: 16px; margin: 16px 0; color: white;">
-        <div style="text-align: center; margin-bottom: 4px; font-size: 11px; color: #94a3b8;">Sample Token</div>
-        <div class="token-code" id="tokenPreview" style="font-family: monospace; font-size: 16px; font-weight: 800; color: #10b981; text-align: center; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; word-break: break-all;">TKT-12345678-A1B2</div>
+      <div class="token-preview" style="background: #1e293b; border-radius: 14px; padding: 16px; margin: 16px 0;">
+        <div class="token-code" id="tokenPreview" style="font-family: monospace; font-size: 16px; font-weight: 800; color: #10b981; text-align: center;">TKT-12345678-A1B2</div>
       </div>
-      
-      <!-- Payment Gateways -->
-      <h3 style="font-size: 16px; margin: 20px 0 12px;">Payment Gateways</h3>
       
       <div class="payment-grid" id="paymentGateways">
         <!-- JazzCash -->
-        <div class="payment-card" id="gateway-jazzcash" style="background: white; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 12px;">
-          <div class="payment-card-header" onclick="togglePaymentGateway('jazzcash')" style="padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer;">
-            <div class="payment-icon" style="width: 44px; height: 44px; background: #FF6B00; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
-              <i class="fas fa-mobile-alt"></i>
-            </div>
-            <div class="payment-info" style="flex: 1; min-width: 0;">
-              <div class="payment-name" style="font-weight: 700; color: var(--dark);">JazzCash</div>
-            </div>
-            <i class="fas fa-chevron-down payment-chevron" style="color: var(--gray);"></i>
+        <div class="payment-card" id="gateway-jazzcash" style="border: 2px solid var(--border); border-radius: 12px; margin-bottom: 10px;">
+          <div class="payment-card-header" onclick="togglePaymentGateway('jazzcash')" style="padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <div style="width: 36px; height: 36px; background: #FF6B00; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">📱</div>
+            <div style="flex:1; font-weight: 600;">JazzCash</div>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          
-          <div class="payment-fields" id="fields-jazzcash" style="padding: 0 14px 14px 70px; display: none;">
-            <div class="field-row" style="margin-bottom: 12px;">
-              <label class="field-label" style="display: block; font-size: 11px; color: var(--gray);">Account Number</label>
-              <input type="text" class="field-input" id="jazzcashNumber" placeholder="03XXXXXXXXX" value="03001234567" style="width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 10px;">
-            </div>
-            
-            <div class="field-row">
-              <label class="field-label">QR Code</label>
-              <div class="upload-area" style="border: 2px dashed var(--border); border-radius: 12px; padding: 12px; text-align: center; position: relative;">
-                <i class="fas fa-qrcode"></i>
-                <span>Click to upload QR</span>
-                <input type="file" id="jazzcashBarcode" accept="image/*" onchange="handleFileUpload(this, 'jazzcash')">
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- EasyPaisa -->
-        <div class="payment-card" id="gateway-easypaisa" style="background: white; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 12px;">
-          <div class="payment-card-header" onclick="togglePaymentGateway('easypaisa')" style="padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer;">
-            <div class="payment-icon" style="width: 44px; height: 44px; background: #0A5C36; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
-              <i class="fas fa-wallet"></i>
-            </div>
-            <div class="payment-info" style="flex: 1; min-width: 0;">
-              <div class="payment-name" style="font-weight: 700; color: var(--dark);">EasyPaisa</div>
-            </div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
-          </div>
-          
-          <div class="payment-fields" id="fields-easypaisa" style="padding: 0 14px 14px 70px; display: none;">
-            <div class="field-row">
-              <label class="field-label">Account Number</label>
-              <input type="text" class="field-input" id="easypaisaNumber" placeholder="03XXXXXXXXX" value="03001234567" style="width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 10px;">
-            </div>
-            
-            <div class="field-row">
-              <label class="field-label">QR Code</label>
-              <div class="upload-area">
-                <i class="fas fa-qrcode"></i>
-                <span>Click to upload QR</span>
-                <input type="file" id="easypaisaBarcode" accept="image/*" onchange="handleFileUpload(this, 'easypaisa')">
-              </div>
-            </div>
+          <div class="payment-fields" id="fields-jazzcash" style="padding: 0 12px 12px 58px; display: none;">
+            <input type="text" id="jazzcashNumber" placeholder="Account Number" value="03001234567" style="width:100%; padding:8px; border:2px solid var(--border); border-radius:6px; margin-bottom:8px;">
           </div>
         </div>
         
         <!-- Cash on Delivery -->
-        <div class="payment-card" id="gateway-cod" style="background: white; border: 2px solid var(--border); border-radius: 16px;">
-          <div class="payment-card-header" onclick="togglePaymentGateway('cod')" style="padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer;">
-            <div class="payment-icon" style="width: 44px; height: 44px; background: #10b981; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
-              <i class="fas fa-truck"></i>
-            </div>
-            <div class="payment-info" style="flex: 1; min-width: 0;">
-              <div class="payment-name" style="font-weight: 700; color: var(--dark);">Cash on Delivery</div>
-            </div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
+        <div class="payment-card" id="gateway-cod" style="border: 2px solid var(--border); border-radius: 12px;">
+          <div class="payment-card-header" onclick="togglePaymentGateway('cod')" style="padding: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer;">
+            <div style="width: 36px; height: 36px; background: #10b981; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">🚚</div>
+            <div style="flex:1; font-weight: 600;">Cash on Delivery</div>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          
-          <div class="payment-fields" id="fields-cod" style="padding: 0 14px 14px 70px; display: none;">
-            <div class="field-row">
-              <label class="field-label">Minimum Order (PKR)</label>
-              <input type="number" class="field-input" id="codMinimumOrder" value="500" style="width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 10px;">
-            </div>
+          <div class="payment-fields" id="fields-cod" style="padding: 0 12px 12px 58px; display: none;">
+            <input type="number" id="codMinimumOrder" value="500" style="width:100%; padding:8px; border:2px solid var(--border); border-radius:6px;">
           </div>
         </div>
       </div>
       
-      <button class="btn btn-success" onclick="savePaymentAndTicketSettings()" style="margin: 16px 0 10px;">
-        <i class="fas fa-save"></i> Save All Settings
-      </button>
-      
-      <button class="btn btn-outline" onclick="testTokenGeneration()" style="background: white; border: 2px solid var(--border); color: var(--dark); padding: 14px; border-radius: 12px; font-weight: 600; width: 100%; cursor: pointer;">
-        <i class="fas fa-flask"></i> Test Token Generation
+      <button class="btn btn-success" onclick="savePaymentAndTicketSettings()" style="margin-top: 16px;">
+        Save Settings
       </button>
     </div>
   </div>
@@ -915,27 +907,20 @@ const supa = supabase.createClient(
 
 // ===== GLOBAL VARIABLES =====
 let productCount = 0;
-let selectedPaymentGateways = [];
+let selectedPaymentGateways = ['cod'];
 let profileImageFile = null;
-let productImageFiles = {}; // Store product images by index
-let paymentData = {
-  jazzcash: { number: '03001234567', type: 'jazzcash', barcode: '' },
-  easypaisa: { number: '03001234567', barcode: '' },
-  cod: { enabled: true, minimumOrder: 500 }
-};
+let productImageFiles = {};
 
-// ===== PROFILE IMAGE UPLOAD WITH THUMBNAIL =====
+// ===== PROFILE IMAGE HANDLER =====
 function handleProfileImageUpload(input) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     
-    // Validate file type
     if (!file.type.match('image.*')) {
       showSuccess('❌ Please select an image file');
       return;
     }
     
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       showSuccess('❌ Image size should be less than 5MB');
       return;
@@ -943,115 +928,73 @@ function handleProfileImageUpload(input) {
     
     profileImageFile = file;
     
-    // Update upload area UI
     const uploadArea = document.getElementById('profileUploadArea');
-    const uploadIcon = document.getElementById('profileUploadIcon');
-    const uploadText = document.getElementById('profileUploadText');
-    const uploadHint = document.getElementById('profileUploadHint');
-    
     uploadArea.classList.add('has-file');
-    uploadIcon.className = 'fas fa-check-circle';
-    uploadText.textContent = 'Image selected: ' + file.name;
-    uploadHint.textContent = 'Click to change image';
+    uploadArea.querySelector('i').className = 'fas fa-check-circle';
+    uploadArea.querySelector('span').textContent = file.name.substring(0, 15) + '...';
     
-    // Show thumbnail preview
     const reader = new FileReader();
     reader.onload = function(e) {
-      const preview = document.getElementById('profilePreview');
-      preview.src = e.target.result;
-      
-      // Update preview info
+      document.getElementById('profilePreview').src = e.target.result;
       document.getElementById('profilePreviewName').textContent = file.name;
       
-      // Format file size
       let size = file.size;
-      if (size < 1024) {
-        document.getElementById('profilePreviewSize').textContent = size + ' B';
-      } else if (size < 1024 * 1024) {
-        document.getElementById('profilePreviewSize').textContent = (size / 1024).toFixed(1) + ' KB';
-      } else {
-        document.getElementById('profilePreviewSize').textContent = (size / (1024 * 1024)).toFixed(1) + ' MB';
-      }
+      if (size < 1024) document.getElementById('profilePreviewSize').textContent = size + ' B';
+      else if (size < 1024*1024) document.getElementById('profilePreviewSize').textContent = (size/1024).toFixed(1) + ' KB';
+      else document.getElementById('profilePreviewSize').textContent = (size/(1024*1024)).toFixed(1) + ' MB';
       
       document.getElementById('profilePreviewContainer').classList.remove('hidden');
     };
     reader.readAsDataURL(file);
     
-    showSuccess('✅ Profile image uploaded successfully!');
+    showSuccess('✅ Profile image uploaded!');
   }
 }
 
 function removeProfileImage() {
-  // Clear file input
-  const fileInput = document.getElementById('profileImage');
-  fileInput.value = '';
-  
-  // Reset profileImageFile
+  document.getElementById('profileImage').value = '';
   profileImageFile = null;
   
-  // Reset upload area UI
   const uploadArea = document.getElementById('profileUploadArea');
-  const uploadIcon = document.getElementById('profileUploadIcon');
-  const uploadText = document.getElementById('profileUploadText');
-  const uploadHint = document.getElementById('profileUploadHint');
-  
   uploadArea.classList.remove('has-file');
-  uploadIcon.className = 'fas fa-cloud-upload-alt';
-  uploadText.textContent = 'Click to upload profile picture';
-  uploadHint.textContent = 'PNG, JPG up to 5MB';
+  uploadArea.querySelector('i').className = 'fas fa-cloud-upload-alt';
+  uploadArea.querySelector('span').textContent = 'Click to upload';
   
-  // Hide preview
   document.getElementById('profilePreviewContainer').classList.add('hidden');
-  
   showSuccess('🗑️ Profile image removed');
 }
 
-// ===== PRODUCT IMAGE UPLOAD WITH THUMBNAIL =====
+// ===== PRODUCT IMAGE HANDLER =====
 function handleProductImageUpload(input, productIndex) {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     
-    // Validate file type
     if (!file.type.match('image.*')) {
       showSuccess('❌ Please select an image file');
       return;
     }
     
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       showSuccess('❌ Image size should be less than 5MB');
       return;
     }
     
-    // Store file
     productImageFiles[productIndex] = file;
     
-    // Find the product card
     const productCard = input.closest('.product-card');
+    const uploadArea = productCard.querySelector('.upload-area');
+    uploadArea.classList.add('has-file');
+    uploadArea.querySelector('i').className = 'fas fa-check-circle';
+    uploadArea.querySelector('span').textContent = file.name.substring(0, 12) + '...';
     
-    // Show thumbnail preview
     const reader = new FileReader();
     reader.onload = function(e) {
-      // Hide placeholder
-      const placeholder = productCard.querySelector('.product-image-placeholder');
-      if (placeholder) placeholder.classList.add('hidden');
-      
-      // Show image preview
       const preview = productCard.querySelector('.product-image-preview');
-      if (preview) {
-        preview.src = e.target.result;
-        preview.classList.add('show');
-      }
+      preview.src = e.target.result;
+      preview.classList.add('show');
       
-      // Update upload area
-      const uploadArea = productCard.querySelector('.upload-area');
-      if (uploadArea) {
-        uploadArea.classList.add('has-file');
-        const icon = uploadArea.querySelector('i');
-        if (icon) icon.className = 'fas fa-check-circle';
-        const span = uploadArea.querySelector('span');
-        if (span) span.textContent = file.name;
-      }
+      const placeholder = productCard.querySelector('.product-image-placeholder');
+      placeholder.classList.add('hidden');
     };
     reader.readAsDataURL(file);
     
@@ -1059,58 +1002,50 @@ function handleProductImageUpload(input, productIndex) {
   }
 }
 
-function removeProductImage(productIndex, productCard) {
-  // Clear file input
+function removeProductImage(button) {
+  const productCard = button.closest('.product-card');
+  const index = productCard.dataset.index;
+  
+  delete productImageFiles[index];
+  
   const fileInput = productCard.querySelector('.productImg');
   if (fileInput) fileInput.value = '';
   
-  // Remove from storage
-  delete productImageFiles[productIndex];
-  
-  // Reset upload area
   const uploadArea = productCard.querySelector('.upload-area');
-  if (uploadArea) {
-    uploadArea.classList.remove('has-file');
-    const icon = uploadArea.querySelector('i');
-    if (icon) icon.className = 'fas fa-image';
-    const span = uploadArea.querySelector('span');
-    if (span) span.textContent = 'Product Image';
-  }
+  uploadArea.classList.remove('has-file');
+  uploadArea.querySelector('i').className = 'fas fa-image';
+  uploadArea.querySelector('span').textContent = 'Product Image';
   
-  // Hide preview
   const preview = productCard.querySelector('.product-image-preview');
-  if (preview) {
-    preview.classList.remove('show');
-    preview.src = '';
-  }
+  preview.classList.remove('show');
+  preview.src = '';
   
-  // Show placeholder
   const placeholder = productCard.querySelector('.product-image-placeholder');
-  if (placeholder) placeholder.classList.remove('hidden');
+  placeholder.classList.remove('hidden');
   
   showSuccess('🗑️ Product image removed');
 }
 
-// ===== BUSINESS HOURS INIT =====
+// ===== BUSINESS HOURS =====
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const daysContainer = document.getElementById('daysContainer');
 
 days.forEach(day => {
   const dayBox = document.createElement('div');
   dayBox.className = 'day-box';
-  dayBox.style.cssText = 'background: #f8fafc; border-radius: 14px; padding: 14px; margin-bottom: 10px; border: 2px solid var(--border);';
+  dayBox.style.cssText = 'background: #f8fafc; border-radius: 12px; padding: 12px; margin-bottom: 8px; border: 2px solid var(--border);';
   dayBox.innerHTML = `
-    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
-      <span style="font-weight: 700; color: var(--dark); min-width: 70px;">${day}</span>
-      <select style="padding: 6px 10px; border-radius: 20px; border: 2px solid var(--border); background: white; flex: 1; max-width: 100px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+      <span style="font-weight: 600; min-width: 70px;">${day}</span>
+      <select style="padding: 6px; border-radius: 20px; border: 2px solid var(--border);">
         <option value="open">Open</option>
         <option value="closed">Closed</option>
       </select>
     </div>
-    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-      <input type="time" value="09:00" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px; flex: 1; min-width: 80px;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <input type="time" value="09:00" style="padding: 6px; border: 2px solid var(--border); border-radius: 6px; flex:1;">
       <span>to</span>
-      <input type="time" value="18:00" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px; flex: 1; min-width: 80px;">
+      <input type="time" value="18:00" style="padding: 6px; border: 2px solid var(--border); border-radius: 6px; flex:1;">
     </div>
   `;
   daysContainer.appendChild(dayBox);
@@ -1118,10 +1053,10 @@ days.forEach(day => {
 
 // ===== UI FUNCTIONS =====
 function showSuccess(message) {
-  const successEl = document.getElementById('successMessage');
+  const el = document.getElementById('successMessage');
   document.getElementById('successText').textContent = message;
-  successEl.style.display = 'flex';
-  setTimeout(() => { successEl.style.display = 'none'; }, 3000);
+  el.style.display = 'flex';
+  setTimeout(() => el.style.display = 'none', 3000);
 }
 
 function showLoading() {
@@ -1135,69 +1070,57 @@ function hideLoading() {
 // ===== HOLIDAY FUNCTIONS =====
 function addHoliday() {
   const container = document.getElementById('holidaysContainer');
-  const holidayItem = document.createElement('div');
-  holidayItem.className = 'holiday-item';
-  holidayItem.style.cssText = 'display: grid; grid-template-columns: 1fr 120px auto; gap: 8px; align-items: center; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 12px; border: 2px solid var(--border);';
-  holidayItem.innerHTML = `
-    <input type="text" class="holidayName" placeholder="Holiday name" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px;">
-    <input type="date" class="holidayDate" value="${new Date().toISOString().split('T')[0]}" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px;">
-    <button type="button" class="remove-btn" onclick="removeHoliday(this)" style="width: 36px; height: 36px; border-radius: 8px; background: var(--danger); color: white; border: none; cursor: pointer;">×</button>
+  const item = document.createElement('div');
+  item.className = 'holiday-item';
+  item.style.cssText = 'display: grid; grid-template-columns: 1fr 120px auto; gap: 8px; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 12px; border: 2px solid var(--border);';
+  item.innerHTML = `
+    <input type="text" placeholder="Holiday" style="padding:8px; border:2px solid var(--border); border-radius:6px;">
+    <input type="date" value="${new Date().toISOString().split('T')[0]}" style="padding:8px; border:2px solid var(--border); border-radius:6px;">
+    <button onclick="this.parentElement.remove()" style="background:var(--danger); color:white; border:none; border-radius:6px; width:36px; height:36px;">×</button>
   `;
-  container.appendChild(holidayItem);
+  container.appendChild(item);
 }
 
-function removeHoliday(button) {
-  button.parentElement.remove();
-}
-
-// ===== PRODUCT FUNCTIONS WITH THUMBNAIL SUPPORT =====
+// ===== PRODUCT FUNCTIONS =====
 function addOffer() {
   productCount++;
   const box = document.createElement('div');
   box.className = 'product-card';
   box.dataset.index = productCount;
-  box.style.cssText = 'min-width: 280px; background: white; border-radius: 16px; padding: 16px; border: 2px solid var(--border); flex-shrink: 0; position: relative;';
   box.innerHTML = `
-    <h3 style="margin-bottom:10px; font-size:15px;">Product ${productCount}</h3>
+    <h3>Product ${productCount}</h3>
     
-    <!-- Product Image Preview -->
-    <img class="product-image-preview" src="" alt="Product Preview">
-    
-    <!-- Product Image Placeholder -->
-    <div class="product-image-placeholder">
-      <div style="text-align: center;">
+    <div class="product-image-container">
+      <img class="product-image-preview" src="">
+      <div class="product-image-placeholder">
         <i class="fas fa-image"></i>
-        <div>No image</div>
+        <span>No image</span>
       </div>
     </div>
     
-    <div class="upload-area" style="border: 2px dashed var(--border); border-radius: 12px; padding: 12px; text-align: center; margin: 10px 0; position: relative;">
+    <div class="upload-area">
       <i class="fas fa-image"></i>
       <span>Product Image</span>
-      <input type="file" class="productImg" accept="image/*" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;">
+      <input type="file" class="productImg" accept="image/*">
     </div>
     
-    <div style="display: flex; gap: 6px; margin-bottom: 8px;">
-      <button class="btn-small" onclick="removeProductImage(${productCount}, this.parentElement.parentElement)" style="background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer;">Remove Image</button>
+    <button class="btn-small" onclick="removeProductImage(this)">Remove Image</button>
+    
+    <input type="text" class="productTitle" placeholder="Title">
+    <textarea class="productDesc" placeholder="Description" rows="2"></textarea>
+    
+    <div class="price-row">
+      <input type="number" class="originalPrice" placeholder="Original">
+      <input type="number" class="discountPrice" placeholder="Discounted">
     </div>
     
-    <input type="text" class="productTitle" placeholder="Product Title" style="width:100%; padding:10px; border:2px solid var(--border); border-radius:8px; margin-bottom:8px;">
-    
-    <textarea class="productDesc" placeholder="Description" rows="2" style="width:100%; padding:10px; border:2px solid var(--border); border-radius:8px; margin-bottom:8px;"></textarea>
-    
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom:10px;">
-      <input type="number" class="originalPrice" placeholder="Original Price" style="padding:10px; border:2px solid var(--border); border-radius:8px;">
-      <input type="number" class="discountPrice" placeholder="Discounted Price" style="padding:10px; border:2px solid var(--border); border-radius:8px;">
-    </div>
-    
-    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-      <label style="display:flex; align-items:center; gap:4px; font-size:12px;"><input type="checkbox" value="🔥 Hot Deal"> Hot Deal</label>
-      <label style="display:flex; align-items:center; gap:4px; font-size:12px;"><input type="checkbox" value="⭐ Best Seller"> Best Seller</label>
-      <label style="display:flex; align-items:center; gap:4px; font-size:12px;"><input type="checkbox" value="💸 Discount"> Discount</label>
+    <div class="product-badges">
+      <label><input type="checkbox" value="🔥 Hot"> Hot</label>
+      <label><input type="checkbox" value="⭐ Best"> Best</label>
+      <label><input type="checkbox" value="💸 Sale"> Sale</label>
     </div>
   `;
   
-  // Add event listener for product image upload
   const fileInput = box.querySelector('.productImg');
   fileInput.addEventListener('change', function() {
     handleProductImageUpload(this, productCount);
@@ -1206,78 +1129,43 @@ function addOffer() {
   document.getElementById('offersForm').appendChild(box);
 }
 
-// ===== DELIVERY ZONE FUNCTIONS =====
+// ===== DELIVERY ZONE =====
 function addDeliveryZone(zoneData = null) {
   const container = document.getElementById('deliveryZonesList');
-  const zoneId = 'zone_' + Date.now();
-  
-  const zoneItem = document.createElement('div');
-  zoneItem.className = 'zone-item';
-  zoneItem.style.cssText = 'display: grid; grid-template-columns: 1fr 80px 100px auto; gap: 6px; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 10px; border: 2px solid var(--border); align-items: center;';
-  zoneItem.id = zoneId;
-  zoneItem.innerHTML = `
-    <input type="text" placeholder="City" value="${zoneData?.city || ''}" style="padding: 8px; border: 2px solid var(--border); border-radius: 6px;">
-    <input type="number" placeholder="Charge" value="${zoneData?.charge || ''}" style="padding: 8px; border: 2px solid var(--border); border-radius: 6px;">
-    <input type="text" placeholder="Time" value="${zoneData?.time || ''}" style="padding: 8px; border: 2px solid var(--border); border-radius: 6px;">
-    <button onclick="this.parentElement.remove()" style="background:var(--danger); color:white; border:none; border-radius:6px; padding:8px; cursor:pointer;">×</button>
+  const item = document.createElement('div');
+  item.style.cssText = 'display: grid; grid-template-columns: 1fr 80px 100px auto; gap: 6px; margin-bottom: 8px; padding: 8px; background: #f8fafc; border-radius: 8px; border: 2px solid var(--border);';
+  item.innerHTML = `
+    <input type="text" placeholder="City" value="${zoneData?.city || ''}" style="padding:6px; border:2px solid var(--border); border-radius:4px;">
+    <input type="number" placeholder="Charge" value="${zoneData?.charge || ''}" style="padding:6px; border:2px solid var(--border); border-radius:4px;">
+    <input type="text" placeholder="Time" value="${zoneData?.time || ''}" style="padding:6px; border:2px solid var(--border); border-radius:4px;">
+    <button onclick="this.parentElement.remove()" style="background:var(--danger); color:white; border:none; border-radius:4px; width:32px; height:32px;">×</button>
   `;
-  container.appendChild(zoneItem);
+  container.appendChild(item);
 }
 
 // ===== PAYMENT FUNCTIONS =====
 function togglePaymentGateway(gateway) {
   const index = selectedPaymentGateways.indexOf(gateway);
-  if (index === -1) {
-    selectedPaymentGateways.push(gateway);
-  } else {
-    selectedPaymentGateways.splice(index, 1);
-  }
+  if (index === -1) selectedPaymentGateways.push(gateway);
+  else selectedPaymentGateways.splice(index, 1);
   
   document.querySelectorAll('.payment-card').forEach(card => {
-    card.classList.remove('selected');
     card.style.borderColor = 'var(--border)';
   });
   
   selectedPaymentGateways.forEach(g => {
     const card = document.getElementById(`gateway-${g}`);
-    if (card) {
-      card.classList.add('selected');
-      card.style.borderColor = '#10b981';
-    }
+    if (card) card.style.borderColor = '#10b981';
   });
 }
 
-function handleFileUpload(input, gateway) {
-  if (input.files && input.files[0]) {
-    const file = input.files[0];
-    if (!paymentData[gateway]) paymentData[gateway] = {};
-    paymentData[gateway].barcodeFile = file;
-    
-    // Visual feedback
-    const parentDiv = input.closest('.upload-area');
-    if (parentDiv) {
-      parentDiv.classList.add('has-file');
-      parentDiv.style.borderColor = '#10b981';
-      parentDiv.style.background = '#f0fdf4';
-      const icon = parentDiv.querySelector('i');
-      if (icon) icon.className = 'fas fa-check-circle';
-    }
-    
-    showSuccess(`✅ QR uploaded for ${gateway}`);
-  }
-}
-
 function testTokenGeneration() {
-  const prefix = document.getElementById('tokenPrefix')?.value || 'TKT';
-  const timestamp = Date.now().toString().slice(-8);
+  const prefix = document.getElementById('tokenPrefix').value;
+  const time = Date.now().toString().slice(-8);
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let random = '';
-  for (let i = 0; i < 4; i++) {
-    random += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  const token = `${prefix}-${timestamp}-${random}`;
-  document.getElementById('tokenPreview').textContent = token;
-  showSuccess(`✅ Token: ${token}`);
+  for (let i = 0; i < 4; i++) random += chars[Math.floor(Math.random() * chars.length)];
+  document.getElementById('tokenPreview').textContent = `${prefix}-${time}-${random}`;
 }
 
 function openPaymentModal() {
@@ -1290,62 +1178,39 @@ function closePaymentModal() {
 }
 
 function savePaymentAndTicketSettings() {
-  showSuccess('✅ Payment settings saved!');
-  setTimeout(() => closePaymentModal(), 1500);
+  showSuccess('✅ Settings saved');
+  setTimeout(closePaymentModal, 1000);
 }
 
 // ===== IMAGE RESIZE =====
 function resizeImage(file) {
   return new Promise((resolve) => {
-    if (!file) {
-      resolve('');
-      return;
-    }
-    
+    if (!file) { resolve(''); return; }
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      let width = img.width;
-      let height = img.height;
-      const maxSize = 1024;
-      
-      if (width > height) {
-        if (width > maxSize) {
-          height *= maxSize / width;
-          width = maxSize;
-        }
-      } else {
-        if (height > maxSize) {
-          width *= maxSize / height;
-          height = maxSize;
-        }
-      }
-      
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, width, height);
-      resolve(canvas.toDataURL('image/jpeg', 0.85));
+      let w = img.width, h = img.height;
+      const max = 800;
+      if (w > h && w > max) { h *= max / w; w = max; }
+      else if (h > max) { w *= max / h; h = max; }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL('image/jpeg', 0.8));
     };
     img.src = URL.createObjectURL(file);
   });
 }
 
-// ===== MAIN GENERATE =====
+// ===== GENERATE =====
 async function generate() {
   if (!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value) {
-    showSuccess('❌ Name & Phone required');
-    return;
+    showSuccess('❌ Name & Phone required'); return;
   }
-  
   if (!document.getElementById('businessName').value) {
-    showSuccess('❌ Business title required');
-    return;
+    showSuccess('❌ Business title required'); return;
   }
-  
   if (!document.getElementById('address').value) {
-    showSuccess('❌ Business address required');
-    return;
+    showSuccess('❌ Business address required'); return;
   }
   
   showLoading();
@@ -1353,35 +1218,13 @@ async function generate() {
   try {
     const id = crypto.randomUUID();
     
-    // Collect business hours
-    const businessHours = [];
-    document.querySelectorAll('.day-box').forEach(box => {
-      const statusSelect = box.querySelector('select');
-      const timeInputs = box.querySelectorAll('input[type="time"]');
-      businessHours.push({
-        status: statusSelect ? statusSelect.value : 'open',
-        start: timeInputs[0] ? timeInputs[0].value : '09:00',
-        end: timeInputs[1] ? timeInputs[1].value : '18:00'
-      });
-    });
-    
-    // Collect holidays
-    const holidays = [];
-    document.querySelectorAll('#holidaysContainer .holiday-item').forEach(item => {
-      const name = item.querySelector('.holidayName').value;
-      const date = item.querySelector('.holidayDate').value;
-      if (name && date) holidays.push({ name, date });
-    });
-    
-    // Collect products with images from storage
+    // Products with images
     const products = [];
     const productBoxes = document.querySelectorAll('.product-card');
     
     for (let i = 0; i < productBoxes.length; i++) {
       const box = productBoxes[i];
-      const index = parseInt(box.dataset.index || i+1);
-      
-      // Get image from stored files
+      const index = box.dataset.index;
       const file = productImageFiles[index];
       
       const product = {
@@ -1396,57 +1239,22 @@ async function generate() {
       if (product.title || product.image) products.push(product);
     }
     
-    // Collect delivery zones
-    const zones = [];
-    document.querySelectorAll('#deliveryZonesList .zone-item').forEach(zone => {
-      const inputs = zone.querySelectorAll('input');
-      if (inputs[0] && inputs[0].value && inputs[1] && inputs[1].value && inputs[2] && inputs[2].value) {
-        zones.push({
-          city: inputs[0].value,
-          charge: parseFloat(inputs[1].value),
-          time: inputs[2].value
-        });
-      }
-    });
-    
-    // Process barcodes
-    if (paymentData.jazzcash.barcodeFile) {
-      paymentData.jazzcash.barcode = await resizeImage(paymentData.jazzcash.barcodeFile);
-    }
-    if (paymentData.easypaisa.barcodeFile) {
-      paymentData.easypaisa.barcode = await resizeImage(paymentData.easypaisa.barcodeFile);
-    }
-    
-    // Build payment methods
+    // Payment methods
     const paymentMethods = {
-      whatsapp: {
-        active: !!document.getElementById('whatsappNumber').value,
-        number: document.getElementById('whatsappNumber').value
-      },
+      whatsapp: { number: document.getElementById('whatsappNumber').value },
       gateways: {},
       tokenSystem: {
-        enabled: true,
-        requireTokenForTracking: true,
         prefix: document.getElementById('tokenPrefix').value,
         length: parseInt(document.getElementById('tokenLength').value)
       }
     };
     
-    selectedPaymentGateways.forEach(gateway => {
-      if (gateway === 'cod') {
-        paymentMethods.gateways.cod = {
-          active: true,
-          minimumOrder: parseFloat(document.getElementById('codMinimumOrder').value) || 500
-        };
-      } else {
-        paymentMethods.gateways[gateway] = {
-          active: true,
-          ...paymentData[gateway]
-        };
+    selectedPaymentGateways.forEach(g => {
+      if (g === 'cod') {
+        paymentMethods.gateways.cod = { active: true, minimumOrder: 500 };
       }
     });
     
-    // Build card data
     const cardData = {
       id,
       name: document.getElementById('fullName').value,
@@ -1464,64 +1272,37 @@ async function generate() {
         tiktok: document.getElementById('tiktok').value,
         website: document.getElementById('website').value
       },
-      businessHours,
-      holidays,
+      businessHours: [],
+      holidays: [],
       products,
       payments: paymentMethods,
       deliverySettings: {
         default: {
-          withinCity: {
-            charge: parseFloat(document.getElementById('deliveryChargeCity').value) || 150,
-            time: document.getElementById('deliveryTimeCity').value || '1-2 business days'
-          },
-          otherCities: {
-            charge: parseFloat(document.getElementById('deliveryChargeOther').value) || 300,
-            time: document.getElementById('deliveryTimeOther').value || '3-5 business days'
-          }
+          withinCity: { charge: 150, time: '1-2 days' },
+          otherCities: { charge: 300, time: '3-5 days' }
         },
-        zones,
-        freeDeliveryMin: parseFloat(document.getElementById('freeDeliveryMin').value) || 2000,
-        cutoffTime: document.getElementById('deliveryCutoffTime').value || '16:00',
-        maxDays: document.getElementById('deliveryDays').value || '5-7 days',
-        addressConfirmation: {
-          required: document.getElementById('requireAddressConfirmation')?.checked || false,
-          saveAddresses: document.getElementById('saveCustomerAddresses')?.checked || false
-        }
+        zones: [],
+        freeDeliveryMin: 2000
       },
-      ticketSettings: {
-        enableAutoTickets: true,
-        enableEmailTickets: true,
-        enableWhatsappTickets: true,
-        ticketPrefix: 'TKT'
-      },
-      version: '3.0.0',
+      ticketSettings: { enabled: true },
+      version: '1.0',
       created: new Date().toISOString()
     };
     
-    // Add profile image if exists
     if (profileImageFile) {
       cardData.profileImage = await resizeImage(profileImageFile);
     }
     
-    // Save to Supabase
-    const { data: inserted, error } = await supa.from('cards').insert({
-      id,
-      data: JSON.stringify(cardData)
-    }).select().single();
-    
+    const { data, error } = await supa.from('cards').insert({ id, data: JSON.stringify(cardData) }).select().single();
     if (error) throw error;
     
-    localStorage.setItem('lastCardId', inserted.id);
+    localStorage.setItem('lastCardId', data.id);
     hideLoading();
-    showSuccess('✅ Card created! Redirecting...');
-    
-    setTimeout(() => {
-      location.href = 'card.html?id=' + inserted.id;
-    }, 2000);
+    showSuccess('✅ Card created!');
+    setTimeout(() => location.href = 'card.html?id=' + data.id, 2000);
     
   } catch (error) {
     hideLoading();
-    console.error('Error:', error);
     showSuccess('❌ Error: ' + error.message);
   }
 }
@@ -1530,15 +1311,9 @@ async function generate() {
 document.addEventListener('DOMContentLoaded', function() {
   addDeliveryZone({city: 'Karachi', charge: 150, time: '1-2 days'});
   addDeliveryZone({city: 'Lahore', charge: 200, time: '2-3 days'});
-  addDeliveryZone({city: 'Islamabad', charge: 250, time: '2-3 days'});
-  
   addOffer();
   
-  setTimeout(() => {
-    togglePaymentGateway('cod');
-  }, 100);
-  
-  // Style for toggle switches
+  // Toggle switch styles
   const style = document.createElement('style');
   style.textContent = `
     .toggle-switch input {
@@ -1549,11 +1324,8 @@ document.addEventListener('DOMContentLoaded', function() {
       border-radius: 30px;
       position: relative;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-    .toggle-switch input:checked {
-      background: var(--success);
-    }
+    .toggle-switch input:checked { background: var(--success); }
     .toggle-switch input::before {
       content: '';
       position: absolute;
@@ -1563,23 +1335,9 @@ document.addEventListener('DOMContentLoaded', function() {
       border-radius: 50%;
       top: 2px;
       left: 2px;
-      transition: all 0.3s ease;
+      transition: 0.3s;
     }
-    .toggle-switch input:checked::before {
-      left: 20px;
-    }
-    .btn-small {
-      background: var(--danger);
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 11px;
-      cursor: pointer;
-    }
-    .btn-small:hover {
-      background: #dc2626;
-    }
+    .toggle-switch input:checked::before { left: 20px; }
   `;
   document.head.appendChild(style);
 });
