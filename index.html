@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-/* ===== PROFESSIONAL STYLING WITH FIXED OVERFLOW ===== */
+/* ===== PROFESSIONAL STYLING WITH THUMBNAILS ===== */
 :root {
   --primary: #667eea;
   --primary-dark: #5a67d8;
@@ -42,7 +42,7 @@ body {
   width: 100%;
 }
 
-/* ===== FIXED CARDS - NO OVERFLOW ===== */
+/* ===== CARDS ===== */
 .card {
   background: white;
   border-radius: 20px;
@@ -96,7 +96,185 @@ body {
   text-overflow: ellipsis;
 }
 
-/* ===== FIXED INPUT GROUPS ===== */
+/* ===== FILE UPLOAD WITH THUMBNAIL ===== */
+.upload-container {
+  margin-bottom: 16px;
+}
+
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  background: #f8fafc;
+}
+
+.upload-area:hover {
+  border-color: var(--primary);
+  background: #f1f5f9;
+}
+
+.upload-area.has-file {
+  border-color: var(--success);
+  background: #f0fdf4;
+}
+
+.upload-area i {
+  font-size: 24px;
+  color: var(--primary);
+  margin-bottom: 8px;
+}
+
+.upload-area.has-file i {
+  color: var(--success);
+}
+
+.upload-area span {
+  display: block;
+  font-size: 13px;
+  color: var(--gray);
+  margin-bottom: 4px;
+}
+
+.upload-area.has-file span {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.upload-area small {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.upload-area.has-file small {
+  color: var(--success);
+}
+
+.upload-area input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* ===== THUMBNAIL PREVIEW ===== */
+.thumbnail-preview {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+}
+
+.thumbnail-preview.hidden {
+  display: none;
+}
+
+.thumbnail-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 3px solid var(--primary);
+  background: white;
+  flex-shrink: 0;
+}
+
+.thumbnail-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.thumbnail-name {
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.thumbnail-size {
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 2px;
+}
+
+.thumbnail-remove {
+  color: var(--danger);
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0 8px;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.thumbnail-remove:hover {
+  color: #dc2626;
+}
+
+/* ===== PRODUCT CARD WITH THUMBNAIL ===== */
+.product-card {
+  min-width: 280px;
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.product-image-preview {
+  width: 100%;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 2px solid var(--border);
+  margin-bottom: 12px;
+  background: #f1f5f9;
+  display: none;
+}
+
+.product-image-preview.show {
+  display: block;
+}
+
+.product-image-placeholder {
+  width: 100%;
+  height: 120px;
+  border-radius: 10px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 13px;
+  margin-bottom: 12px;
+  border: 2px dashed var(--border);
+}
+
+.product-image-placeholder i {
+  font-size: 30px;
+  margin-bottom: 4px;
+  color: #cbd5e1;
+}
+
+.product-image-placeholder.hidden {
+  display: none;
+}
+
+/* ===== REST OF YOUR STYLES ===== */
 .input-group {
   margin-bottom: 16px;
   width: 100%;
@@ -131,13 +309,6 @@ body {
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.input-hint {
-  font-size: 11px;
-  color: var(--gray);
-  margin-top: 4px;
-}
-
-/* ===== FIXED GRID LAYOUTS ===== */
 .row-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -145,7 +316,6 @@ body {
   width: 100%;
 }
 
-/* ===== FIXED SOCIAL GRID ===== */
 .social-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -188,306 +358,94 @@ body {
   outline: none;
 }
 
-/* ===== FIXED BUSINESS HOURS ===== */
-.day-box {
-  background: #f8fafc;
-  border-radius: 14px;
-  padding: 14px;
-  margin-bottom: 10px;
-  border: 2px solid var(--border);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.day-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.day-name {
-  font-weight: 700;
-  color: var(--dark);
-  min-width: 70px;
-  font-size: 14px;
-}
-
-.day-status {
-  padding: 6px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  border: 2px solid var(--border);
-  background: white;
-  flex: 1;
-  max-width: 100px;
-}
-
-.day-time {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.day-time input {
-  padding: 8px 10px;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 12px;
-  flex: 1;
-  min-width: 80px;
-}
-
-/* ===== FIXED HOLIDAYS ===== */
-.holiday-item {
-  display: grid;
-  grid-template-columns: 1fr 120px auto;
-  gap: 8px;
-  align-items: center;
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 2px solid var(--border);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.holiday-item input {
-  padding: 8px 10px;
-  border: 2px solid var(--border);
-  border-radius: 8px;
-  font-size: 12px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.remove-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  background: var(--danger);
-  color: white;
+.btn {
+  padding: 14px 20px;
   border: none;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.add-btn {
-  background: var(--primary);
-  color: white;
-  border: none;
-  padding: 12px;
   border-radius: 12px;
-  font-weight: 600;
   font-size: 14px;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 8px;
-}
-
-/* ===== FIXED DELIVERY ZONES ===== */
-.zone-item {
-  display: grid;
-  grid-template-columns: 1fr 80px 100px auto;
-  gap: 6px;
-  margin-bottom: 10px;
-  padding: 10px;
-  background: #f8fafc;
-  border-radius: 10px;
-  border: 2px solid var(--border);
-  align-items: center;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.zone-item input {
-  padding: 8px;
-  border: 2px solid var(--border);
-  border-radius: 6px;
-  font-size: 12px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* ===== FIXED PRODUCTS ===== */
-.products-scroll {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  padding: 4px 0 12px;
-  scrollbar-width: thin;
-  width: 100%;
-}
-
-.product-card {
-  min-width: 260px;
-  background: white;
-  border-radius: 16px;
-  padding: 16px;
-  border: 2px solid var(--border);
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
-
-.product-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 12px 0;
-}
-
-.product-badge {
-  background: #f1f5f9;
-  padding: 4px 8px;
-  border-radius: 20px;
-  font-size: 11px;
   font-weight: 600;
-  color: var(--dark);
-}
-
-/* ===== FIXED FILE UPLOAD ===== */
-.file-upload {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 12px;
-  text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
   box-sizing: border-box;
 }
 
-.file-upload:hover {
-  border-color: var(--primary);
-  background: #f8fafc;
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
 }
 
-.file-upload i {
-  font-size: 20px;
-  color: var(--primary);
-  margin-bottom: 4px;
+.btn-success {
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
 }
 
-.file-upload span {
-  display: block;
-  font-size: 12px;
-  color: var(--gray);
+.success-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--success), #059669);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 40px;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+  z-index: 4000;
+  font-weight: 600;
+  font-size: 13px;
+  display: none;
+  align-items: center;
+  gap: 8px;
   white-space: nowrap;
+  max-width: 90%;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.file-upload small {
-  font-size: 10px;
-  color: #94a3b8;
-}
-
-.file-upload input {
-  position: absolute;
+.loading-overlay {
+  display: none;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.preview-image {
-  max-width: 60px;
-  max-height: 60px;
-  border-radius: 6px;
-  margin-top: 8px;
-  border: 2px solid var(--border);
-  display: none;
-}
-
-/* ===== FIXED TOGGLE SWITCH ===== */
-.toggle-switch {
-  display: flex;
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(10px);
+  z-index: 3000;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-
-.toggle-switch input {
-  width: 40px;
-  height: 22px;
-  appearance: none;
-  background: var(--border);
-  border-radius: 30px;
-  position: relative;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.toggle-switch input:checked {
-  background: var(--success);
-}
-
-.toggle-switch input::before {
-  content: '';
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  background: white;
-  border-radius: 50%;
-  top: 2px;
-  left: 2px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.toggle-switch input:checked::before {
-  left: 20px;
-}
-
-.toggle-switch label {
-  font-weight: 600;
-  color: var(--dark);
-  cursor: pointer;
-  font-size: 13px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ===== FIXED TOKEN PREVIEW ===== */
-.token-preview {
-  background: linear-gradient(135deg, #1e293b, #0f172a);
-  border-radius: 14px;
-  padding: 16px;
-  margin: 16px 0;
-  color: white;
-  width: 100%;
+  flex-direction: column;
+  padding: 20px;
   box-sizing: border-box;
 }
 
-.token-code {
-  font-family: 'Courier New', monospace;
-  font-size: 16px;
-  font-weight: 800;
-  color: var(--success);
-  letter-spacing: 1px;
-  text-align: center;
-  padding: 10px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 10px;
-  margin: 8px 0;
-  word-break: break-all;
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255,255,255,0.2);
+  border-top: 4px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
 }
 
-/* ===== FIXED MODAL - CRITICAL FIX ===== */
+.loading-text {
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -530,18 +488,6 @@ body {
   z-index: 10;
 }
 
-.modal-header h2 {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .modal-close {
   width: 36px;
   height: 36px;
@@ -554,275 +500,11 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
   flex-shrink: 0;
 }
 
-.modal-body {
-  padding: 20px;
-  overflow-y: auto;
-  max-height: calc(85vh - 70px);
-}
-
-/* ===== FIXED PAYMENT GATEWAYS ===== */
-.payment-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  width: 100%;
-}
-
-.payment-card {
-  background: white;
-  border: 2px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.payment-card.selected {
-  border-color: var(--success);
-  box-shadow: 0 5px 15px rgba(16, 185, 129, 0.1);
-}
-
-.payment-card-header {
-  padding: 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  background: white;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.payment-card-header:hover {
-  background: #f8fafc;
-}
-
-.payment-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  color: white;
-  flex-shrink: 0;
-}
-
-.payment-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.payment-name {
-  font-weight: 700;
-  color: var(--dark);
-  font-size: 14px;
-  margin-bottom: 2px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.payment-badge {
-  background: var(--success);
-  color: white;
-  padding: 2px 6px;
-  border-radius: 20px;
-  font-size: 9px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.payment-desc {
-  font-size: 11px;
-  color: var(--gray);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.payment-chevron {
-  color: var(--gray);
-  transition: transform 0.3s ease;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
-.payment-card.selected .payment-chevron {
-  transform: rotate(180deg);
-  color: var(--success);
-}
-
-/* ===== FIXED PAYMENT FIELDS ===== */
-.payment-fields {
-  padding: 0 14px 14px 70px;
-  display: none;
-  animation: slideDown 0.3s ease;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.payment-card.selected .payment-fields {
-  display: block;
-}
-
-.field-row {
-  margin-bottom: 12px;
-  width: 100%;
-}
-
-.field-label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--gray);
-  margin-bottom: 4px;
-}
-
-.field-input,
-.field-select {
-  width: 100%;
-  padding: 10px 12px;
-  border: 2px solid var(--border);
-  border-radius: 10px;
-  font-size: 13px;
-  transition: all 0.3s ease;
-  background: white;
-  box-sizing: border-box;
-}
-
-.field-input:focus,
-.field-select:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-}
-
-/* ===== FIXED WHATSAPP PREVIEW ===== */
-.whatsapp-preview-box {
-  background: #f0f9ff;
-  border-radius: 14px;
-  padding: 14px;
-  margin: 16px 0;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.preview-message {
-  background: white;
-  border-radius: 10px;
-  padding: 12px;
-  font-size: 12px;
-  font-family: monospace;
-  white-space: pre-wrap;
-  word-break: break-word;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-/* ===== FIXED BUTTONS ===== */
-.btn {
-  padding: 14px 20px;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-}
-
-.btn-success {
-  background: linear-gradient(135deg, var(--success), #059669);
-  color: white;
-}
-
-.btn-outline {
-  background: white;
-  border: 2px solid var(--border);
-  color: var(--dark);
-}
-
-/* ===== FIXED LOADING ===== */
-.loading-overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-  backdrop-filter: blur(10px);
-  z-index: 3000;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255,255,255,0.2);
-  border-top: 4px solid white;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
-}
-
-.loading-text {
-  color: white;
-  font-size: 15px;
-  font-weight: 600;
-  text-align: center;
-}
-
-/* ===== FIXED SUCCESS MESSAGE ===== */
-.success-message {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--success), #059669);
-  color: white;
-  padding: 12px 20px;
-  border-radius: 40px;
-  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-  z-index: 4000;
-  font-weight: 600;
-  font-size: 13px;
-  display: none;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-  max-width: 90%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ===== RESPONSIVE FIXES ===== */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
-  .container { padding: 0; }
-  
   .social-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -830,54 +512,6 @@ body {
   .row-2 {
     grid-template-columns: 1fr;
   }
-  
-  .holiday-item {
-    grid-template-columns: 1fr;
-  }
-  
-  .zone-item {
-    grid-template-columns: 1fr;
-  }
-  
-  .payment-fields {
-    padding-left: 14px;
-  }
-  
-  .day-time {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .modal-content {
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 360px) {
-  .card-header h2 {
-    font-size: 16px;
-  }
-  
-  .payment-name {
-    font-size: 13px;
-  }
-  
-  .payment-icon {
-    width: 38px;
-    height: 38px;
-    font-size: 18px;
-  }
-}
-
-/* ===== ANIMATIONS ===== */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 </style>
 
@@ -899,7 +533,7 @@ body {
   <div class="loading-text">Creating your professional digital business card...</div>
 </div>
 
-<!-- ===== PROFILE SECTION ===== -->
+<!-- ===== PROFILE SECTION WITH THUMBNAIL ===== -->
 <div class="card">
   <div class="card-header">
     <i class="fas fa-user"></i>
@@ -909,13 +543,23 @@ body {
     </div>
   </div>
   
-  <div class="input-group">
-    <label>Profile Image</label>
-    <div class="file-upload">
-      <i class="fas fa-cloud-upload-alt"></i>
-      <span>Click to upload profile picture</span>
-      <small>PNG, JPG up to 5MB</small>
-      <input type="file" id="profileImage" accept="image/*">
+  <div class="upload-container">
+    <label style="display: block; font-size: 13px; font-weight: 600; color: var(--dark); margin-bottom: 4px;">Profile Image</label>
+    <div class="upload-area" id="profileUploadArea">
+      <i class="fas fa-cloud-upload-alt" id="profileUploadIcon"></i>
+      <span id="profileUploadText">Click to upload profile picture</span>
+      <small id="profileUploadHint">PNG, JPG up to 5MB</small>
+      <input type="file" id="profileImage" accept="image/*" onchange="handleProfileImageUpload(this)">
+    </div>
+    
+    <!-- Profile Thumbnail Preview -->
+    <div class="thumbnail-preview hidden" id="profilePreviewContainer">
+      <img src="" alt="Profile Preview" class="thumbnail-image" id="profilePreview">
+      <div class="thumbnail-info">
+        <div class="thumbnail-name" id="profilePreviewName">image.jpg</div>
+        <div class="thumbnail-size" id="profilePreviewSize">0 KB</div>
+      </div>
+      <button class="thumbnail-remove" onclick="removeProfileImage()">×</button>
     </div>
   </div>
   
@@ -1019,14 +663,14 @@ body {
   </div>
   
   <div id="holidaysContainer">
-    <div class="holiday-item">
-      <input type="text" class="holidayName" placeholder="Holiday name" value="Eid ul-Fitr">
-      <input type="date" class="holidayDate">
-      <button type="button" class="remove-btn" onclick="removeHoliday(this)">×</button>
+    <div class="holiday-item" style="display: grid; grid-template-columns: 1fr 120px auto; gap: 8px; align-items: center; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 12px; border: 2px solid var(--border);">
+      <input type="text" class="holidayName" placeholder="Holiday name" value="Eid ul-Fitr" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px;">
+      <input type="date" class="holidayDate" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px;">
+      <button type="button" class="remove-btn" onclick="removeHoliday(this)" style="width: 36px; height: 36px; border-radius: 8px; background: var(--danger); color: white; border: none; cursor: pointer;">×</button>
     </div>
   </div>
   
-  <button class="add-btn" onclick="addHoliday()">
+  <button class="add-btn" onclick="addHoliday()" style="background: var(--primary); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; width: 100%; margin-top: 8px; cursor: pointer;">
     <i class="fas fa-plus"></i> Add Holiday
   </button>
 </div>
@@ -1085,23 +729,23 @@ body {
   
   <div id="deliveryZonesList"></div>
   
-  <button class="add-btn" onclick="addDeliveryZone()" style="background: #8b5cf6; margin-bottom: 16px;">
+  <button class="add-btn" onclick="addDeliveryZone()" style="background: #8b5cf6; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; width: 100%; margin-bottom: 16px; cursor: pointer;">
     <i class="fas fa-plus"></i> Add Zone
   </button>
   
   <div style="background: #f0f9ff; border-radius: 14px; padding: 14px;">
-    <div class="toggle-switch">
-      <input type="checkbox" id="requireAddressConfirmation" checked>
-      <label for="requireAddressConfirmation">Require address confirmation</label>
+    <div class="toggle-switch" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+      <input type="checkbox" id="requireAddressConfirmation" checked style="width: 40px; height: 22px; appearance: none; background: var(--border); border-radius: 30px; position: relative; cursor: pointer;">
+      <label for="requireAddressConfirmation" style="font-weight: 600; color: var(--dark);">Require address confirmation</label>
     </div>
-    <div class="toggle-switch">
-      <input type="checkbox" id="saveCustomerAddresses" checked>
-      <label for="saveCustomerAddresses">Save customer addresses</label>
+    <div class="toggle-switch" style="display: flex; align-items: center; gap: 10px;">
+      <input type="checkbox" id="saveCustomerAddresses" checked style="width: 40px; height: 22px; appearance: none; background: var(--border); border-radius: 30px; position: relative; cursor: pointer;">
+      <label for="saveCustomerAddresses" style="font-weight: 600; color: var(--dark);">Save customer addresses</label>
     </div>
   </div>
 </div>
 
-<!-- ===== PRODUCTS ===== -->
+<!-- ===== PRODUCTS WITH THUMBNAILS ===== -->
 <div class="card">
   <div class="card-header">
     <i class="fas fa-gift"></i>
@@ -1111,9 +755,9 @@ body {
     </div>
   </div>
   
-  <div id="offersForm" class="products-scroll"></div>
+  <div id="offersForm" class="products-scroll" style="display: flex; gap: 12px; overflow-x: auto; padding: 4px 0 12px;"></div>
   
-  <button class="add-btn" onclick="addOffer()" style="background: #8b5cf6; margin-top: 12px;">
+  <button class="add-btn" onclick="addOffer()" style="background: #8b5cf6; color: white; border: none; padding: 12px; border-radius: 12px; font-weight: 600; width: 100%; margin-top: 12px; cursor: pointer;">
     <i class="fas fa-plus"></i> Add Product
   </button>
 </div>
@@ -1127,7 +771,7 @@ body {
   <i class="fas fa-magic"></i> Generate Digital Card
 </button>
 
-<!-- ===== FIXED PAYMENT MODAL - NO OVERFLOW ===== -->
+<!-- ===== PAYMENT MODAL ===== -->
 <div class="modal" id="paymentModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -1135,54 +779,19 @@ body {
       <button class="modal-close" onclick="closePaymentModal()">×</button>
     </div>
     
-    <div class="modal-body">
+    <div class="modal-body" style="padding: 20px;">
       <!-- WhatsApp Settings -->
-      <h3 style="font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-        <i class="fab fa-whatsapp" style="color: #25D366;"></i> WhatsApp Business
-      </h3>
+      <h3 style="font-size: 16px; margin-bottom: 12px;">WhatsApp Business</h3>
       
       <div class="input-group">
         <label>WhatsApp Number</label>
         <input type="text" id="whatsappNumber" placeholder="+923001234567" value="+92">
-        <div class="input-hint">Orders will be sent to this number</div>
-      </div>
-      
-      <div class="whatsapp-preview-box">
-        <h4 style="display: flex; align-items: center; gap: 6px; color: #25D366; margin-bottom: 8px; font-size: 13px;">
-          <i class="fab fa-whatsapp"></i> Order Preview
-        </h4>
-        <div class="preview-message" id="whatsappPreview">
-🎉 *NEW ORDER CONFIRMED* - TOKEN: TKT-123456-A7F2
-
-*Order ID:* ORD-12345678
-*Token:* TKT-123456-A7F2
-*Customer:* [Customer Name]
-*Phone:* [Customer Phone]
-*Address:* [Full Address]
-
-*ITEMS:*
-• Product 1 (Qty: 1) - PKR 1,000
-
-*Total:* PKR 1,150
-        </div>
       </div>
       
       <!-- Token System -->
-      <h3 style="font-size: 16px; margin: 20px 0 12px; display: flex; align-items: center; gap: 6px;">
-        <i class="fas fa-ticket-alt" style="color: #667eea;"></i> Token System
-      </h3>
+      <h3 style="font-size: 16px; margin: 20px 0 12px;">Token System</h3>
       
-      <div class="toggle-switch">
-        <input type="checkbox" id="enableTokenSystem" checked>
-        <label for="enableTokenSystem">Enable token generation</label>
-      </div>
-      
-      <div class="toggle-switch">
-        <input type="checkbox" id="requireTokenForTracking" checked>
-        <label for="requireTokenForTracking">Require token for tracking</label>
-      </div>
-      
-      <div class="row-2" style="margin-top: 12px;">
+      <div class="row-2">
         <div class="input-group">
           <label>Token Prefix</label>
           <input type="text" id="tokenPrefix" value="TKT">
@@ -1197,194 +806,99 @@ body {
         </div>
       </div>
       
-      <div class="token-preview">
+      <div class="token-preview" style="background: #1e293b; border-radius: 14px; padding: 16px; margin: 16px 0; color: white;">
         <div style="text-align: center; margin-bottom: 4px; font-size: 11px; color: #94a3b8;">Sample Token</div>
-        <div class="token-code" id="tokenPreview">TKT-12345678-A1B2</div>
+        <div class="token-code" id="tokenPreview" style="font-family: monospace; font-size: 16px; font-weight: 800; color: #10b981; text-align: center; padding: 10px; background: rgba(255,255,255,0.1); border-radius: 10px; word-break: break-all;">TKT-12345678-A1B2</div>
       </div>
       
       <!-- Payment Gateways -->
-      <h3 style="font-size: 16px; margin: 20px 0 12px; display: flex; align-items: center; gap: 6px;">
-        <i class="fas fa-credit-card" style="color: #667eea;"></i> Payment Gateways
-        <span style="background: var(--success); color: white; padding: 2px 6px; border-radius: 20px; font-size: 10px;">Multiple</span>
-      </h3>
+      <h3 style="font-size: 16px; margin: 20px 0 12px;">Payment Gateways</h3>
       
       <div class="payment-grid" id="paymentGateways">
         <!-- JazzCash -->
-        <div class="payment-card" id="gateway-jazzcash">
-          <div class="payment-card-header" onclick="togglePaymentGateway('jazzcash')">
-            <div class="payment-icon" style="background: #FF6B00;">
+        <div class="payment-card" id="gateway-jazzcash" style="background: white; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 12px;">
+          <div class="payment-card-header" onclick="togglePaymentGateway('jazzcash')" style="padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <div class="payment-icon" style="width: 44px; height: 44px; background: #FF6B00; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
               <i class="fas fa-mobile-alt"></i>
             </div>
-            <div class="payment-info">
-              <div class="payment-name">
-                JazzCash
-                <span class="payment-badge" id="jazzcash-badge" style="display: none;">Active</span>
-              </div>
-              <div class="payment-desc">Mobile wallet payments</div>
+            <div class="payment-info" style="flex: 1; min-width: 0;">
+              <div class="payment-name" style="font-weight: 700; color: var(--dark);">JazzCash</div>
             </div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
+            <i class="fas fa-chevron-down payment-chevron" style="color: var(--gray);"></i>
           </div>
           
-          <div class="payment-fields" id="fields-jazzcash">
-            <div class="field-row">
-              <label class="field-label">Account Number</label>
-              <input type="text" class="field-input" id="jazzcashNumber" placeholder="03XXXXXXXXX" value="03001234567" onchange="updatePaymentData('jazzcash', 'number', this.value)">
-            </div>
-            
-            <div class="field-row">
-              <label class="field-label">Account Type</label>
-              <select class="field-select" id="jazzcashType" onchange="updatePaymentData('jazzcash', 'type', this.value)">
-                <option value="jazzcash">JazzCash Account</option>
-                <option value="easypaisa">EasyPaisa Account</option>
-              </select>
+          <div class="payment-fields" id="fields-jazzcash" style="padding: 0 14px 14px 70px; display: none;">
+            <div class="field-row" style="margin-bottom: 12px;">
+              <label class="field-label" style="display: block; font-size: 11px; color: var(--gray);">Account Number</label>
+              <input type="text" class="field-input" id="jazzcashNumber" placeholder="03XXXXXXXXX" value="03001234567" style="width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 10px;">
             </div>
             
             <div class="field-row">
               <label class="field-label">QR Code</label>
-              <div class="file-upload">
+              <div class="upload-area" style="border: 2px dashed var(--border); border-radius: 12px; padding: 12px; text-align: center; position: relative;">
                 <i class="fas fa-qrcode"></i>
                 <span>Click to upload QR</span>
                 <input type="file" id="jazzcashBarcode" accept="image/*" onchange="handleFileUpload(this, 'jazzcash')">
               </div>
-              <img id="jazzcash-preview" class="preview-image">
             </div>
           </div>
         </div>
         
         <!-- EasyPaisa -->
-        <div class="payment-card" id="gateway-easypaisa">
-          <div class="payment-card-header" onclick="togglePaymentGateway('easypaisa')">
-            <div class="payment-icon" style="background: #0A5C36;">
+        <div class="payment-card" id="gateway-easypaisa" style="background: white; border: 2px solid var(--border); border-radius: 16px; margin-bottom: 12px;">
+          <div class="payment-card-header" onclick="togglePaymentGateway('easypaisa')" style="padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <div class="payment-icon" style="width: 44px; height: 44px; background: #0A5C36; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
               <i class="fas fa-wallet"></i>
             </div>
-            <div class="payment-info">
-              <div class="payment-name">
-                EasyPaisa
-                <span class="payment-badge" id="easypaisa-badge" style="display: none;">Active</span>
-              </div>
-              <div class="payment-desc">Mobile account payments</div>
+            <div class="payment-info" style="flex: 1; min-width: 0;">
+              <div class="payment-name" style="font-weight: 700; color: var(--dark);">EasyPaisa</div>
             </div>
             <i class="fas fa-chevron-down payment-chevron"></i>
           </div>
           
-          <div class="payment-fields" id="fields-easypaisa">
+          <div class="payment-fields" id="fields-easypaisa" style="padding: 0 14px 14px 70px; display: none;">
             <div class="field-row">
               <label class="field-label">Account Number</label>
-              <input type="text" class="field-input" id="easypaisaNumber" placeholder="03XXXXXXXXX" value="03001234567" onchange="updatePaymentData('easypaisa', 'number', this.value)">
+              <input type="text" class="field-input" id="easypaisaNumber" placeholder="03XXXXXXXXX" value="03001234567" style="width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 10px;">
             </div>
             
             <div class="field-row">
               <label class="field-label">QR Code</label>
-              <div class="file-upload">
+              <div class="upload-area">
                 <i class="fas fa-qrcode"></i>
                 <span>Click to upload QR</span>
                 <input type="file" id="easypaisaBarcode" accept="image/*" onchange="handleFileUpload(this, 'easypaisa')">
               </div>
-              <img id="easypaisa-preview" class="preview-image">
-            </div>
-          </div>
-        </div>
-        
-        <!-- Bank Transfer -->
-        <div class="payment-card" id="gateway-bank">
-          <div class="payment-card-header" onclick="togglePaymentGateway('bank')">
-            <div class="payment-icon" style="background: #2563eb;">
-              <i class="fas fa-university"></i>
-            </div>
-            <div class="payment-info">
-              <div class="payment-name">
-                Bank Transfer
-                <span class="payment-badge" id="bank-badge" style="display: none;">Active</span>
-              </div>
-              <div class="payment-desc">Direct bank deposit</div>
-            </div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
-          </div>
-          
-          <div class="payment-fields" id="fields-bank">
-            <div class="field-row">
-              <label class="field-label">Bank Name</label>
-              <select class="field-select" id="bankName" onchange="updatePaymentData('bank', 'bankName', this.value)">
-                <option value="HBL">Habib Bank Limited (HBL)</option>
-                <option value="UBL">United Bank Limited (UBL)</option>
-                <option value="MCB">MCB Bank Limited</option>
-                <option value="Meezan">Meezan Bank</option>
-              </select>
-            </div>
-            
-            <div class="field-row">
-              <label class="field-label">Account Title</label>
-              <input type="text" class="field-input" id="accountTitle" value="Business Account" onchange="updatePaymentData('bank', 'accountTitle', this.value)">
-            </div>
-            
-            <div class="field-row">
-              <label class="field-label">Account Number</label>
-              <input type="text" class="field-input" id="accountNumber" value="1234567890" onchange="updatePaymentData('bank', 'accountNumber', this.value)">
             </div>
           </div>
         </div>
         
         <!-- Cash on Delivery -->
-        <div class="payment-card" id="gateway-cod">
-          <div class="payment-card-header" onclick="togglePaymentGateway('cod')">
-            <div class="payment-icon" style="background: #10b981;">
+        <div class="payment-card" id="gateway-cod" style="background: white; border: 2px solid var(--border); border-radius: 16px;">
+          <div class="payment-card-header" onclick="togglePaymentGateway('cod')" style="padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer;">
+            <div class="payment-icon" style="width: 44px; height: 44px; background: #10b981; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;">
               <i class="fas fa-truck"></i>
             </div>
-            <div class="payment-info">
-              <div class="payment-name">
-                Cash on Delivery
-                <span class="payment-badge" id="cod-badge" style="display: none;">Active</span>
-              </div>
-              <div class="payment-desc">Pay when order arrives</div>
+            <div class="payment-info" style="flex: 1; min-width: 0;">
+              <div class="payment-name" style="font-weight: 700; color: var(--dark);">Cash on Delivery</div>
             </div>
             <i class="fas fa-chevron-down payment-chevron"></i>
           </div>
           
-          <div class="payment-fields" id="fields-cod">
-            <div class="toggle-switch">
-              <input type="checkbox" id="codEnabled" checked onchange="updatePaymentData('cod', 'enabled', this.checked)">
-              <label for="codEnabled">Enable COD</label>
-            </div>
-            
+          <div class="payment-fields" id="fields-cod" style="padding: 0 14px 14px 70px; display: none;">
             <div class="field-row">
               <label class="field-label">Minimum Order (PKR)</label>
-              <input type="number" class="field-input" id="codMinimumOrder" value="500" onchange="updatePaymentData('cod', 'minimumOrder', this.value)">
+              <input type="number" class="field-input" id="codMinimumOrder" value="500" style="width: 100%; padding: 10px; border: 2px solid var(--border); border-radius: 10px;">
             </div>
           </div>
         </div>
       </div>
       
-      <!-- Ticket System -->
-      <h3 style="font-size: 16px; margin: 20px 0 12px; display: flex; align-items: center; gap: 6px;">
-        <i class="fas fa-ticket-alt" style="color: #0ea5e9;"></i> Ticket System
-      </h3>
-      
-      <div class="toggle-switch">
-        <input type="checkbox" id="enableAutoTickets" checked onchange="updateTicketSetting('enableAutoTickets', this.checked)">
-        <label for="enableAutoTickets">Generate order tickets</label>
-      </div>
-      
-      <div class="toggle-switch">
-        <input type="checkbox" id="enableEmailTickets" checked onchange="updateTicketSetting('enableEmailTickets', this.checked)">
-        <label for="enableEmailTickets">Send email tickets</label>
-      </div>
-      
-      <div class="toggle-switch">
-        <input type="checkbox" id="enableWhatsappTickets" checked onchange="updateTicketSetting('enableWhatsappTickets', this.checked)">
-        <label for="enableWhatsappTickets">Send WhatsApp tickets</label>
-      </div>
-      
-      <div class="field-row" style="margin-top: 12px;">
-        <label class="field-label">Ticket Prefix</label>
-        <input type="text" class="field-input" id="ticketPrefix" value="TKT" onchange="updateTicketSetting('ticketPrefix', this.value)">
-      </div>
-      
-      <!-- Action Buttons -->
       <button class="btn btn-success" onclick="savePaymentAndTicketSettings()" style="margin: 16px 0 10px;">
         <i class="fas fa-save"></i> Save All Settings
       </button>
       
-      <button class="btn btn-outline" onclick="testTokenGeneration()">
+      <button class="btn btn-outline" onclick="testTokenGeneration()" style="background: white; border: 2px solid var(--border); color: var(--dark); padding: 14px; border-radius: 12px; font-weight: 600; width: 100%; cursor: pointer;">
         <i class="fas fa-flask"></i> Test Token Generation
       </button>
     </div>
@@ -1402,18 +916,180 @@ const supa = supabase.createClient(
 // ===== GLOBAL VARIABLES =====
 let productCount = 0;
 let selectedPaymentGateways = [];
+let profileImageFile = null;
+let productImageFiles = {}; // Store product images by index
 let paymentData = {
   jazzcash: { number: '03001234567', type: 'jazzcash', barcode: '' },
   easypaisa: { number: '03001234567', barcode: '' },
-  bank: { bankName: 'HBL', accountTitle: 'Business Account', accountNumber: '1234567890' },
   cod: { enabled: true, minimumOrder: 500 }
 };
-let ticketSettings = {
-  enableAutoTickets: true,
-  enableEmailTickets: true,
-  enableWhatsappTickets: true,
-  ticketPrefix: 'TKT'
-};
+
+// ===== PROFILE IMAGE UPLOAD WITH THUMBNAIL =====
+function handleProfileImageUpload(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    
+    // Validate file type
+    if (!file.type.match('image.*')) {
+      showSuccess('❌ Please select an image file');
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      showSuccess('❌ Image size should be less than 5MB');
+      return;
+    }
+    
+    profileImageFile = file;
+    
+    // Update upload area UI
+    const uploadArea = document.getElementById('profileUploadArea');
+    const uploadIcon = document.getElementById('profileUploadIcon');
+    const uploadText = document.getElementById('profileUploadText');
+    const uploadHint = document.getElementById('profileUploadHint');
+    
+    uploadArea.classList.add('has-file');
+    uploadIcon.className = 'fas fa-check-circle';
+    uploadText.textContent = 'Image selected: ' + file.name;
+    uploadHint.textContent = 'Click to change image';
+    
+    // Show thumbnail preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('profilePreview');
+      preview.src = e.target.result;
+      
+      // Update preview info
+      document.getElementById('profilePreviewName').textContent = file.name;
+      
+      // Format file size
+      let size = file.size;
+      if (size < 1024) {
+        document.getElementById('profilePreviewSize').textContent = size + ' B';
+      } else if (size < 1024 * 1024) {
+        document.getElementById('profilePreviewSize').textContent = (size / 1024).toFixed(1) + ' KB';
+      } else {
+        document.getElementById('profilePreviewSize').textContent = (size / (1024 * 1024)).toFixed(1) + ' MB';
+      }
+      
+      document.getElementById('profilePreviewContainer').classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+    
+    showSuccess('✅ Profile image uploaded successfully!');
+  }
+}
+
+function removeProfileImage() {
+  // Clear file input
+  const fileInput = document.getElementById('profileImage');
+  fileInput.value = '';
+  
+  // Reset profileImageFile
+  profileImageFile = null;
+  
+  // Reset upload area UI
+  const uploadArea = document.getElementById('profileUploadArea');
+  const uploadIcon = document.getElementById('profileUploadIcon');
+  const uploadText = document.getElementById('profileUploadText');
+  const uploadHint = document.getElementById('profileUploadHint');
+  
+  uploadArea.classList.remove('has-file');
+  uploadIcon.className = 'fas fa-cloud-upload-alt';
+  uploadText.textContent = 'Click to upload profile picture';
+  uploadHint.textContent = 'PNG, JPG up to 5MB';
+  
+  // Hide preview
+  document.getElementById('profilePreviewContainer').classList.add('hidden');
+  
+  showSuccess('🗑️ Profile image removed');
+}
+
+// ===== PRODUCT IMAGE UPLOAD WITH THUMBNAIL =====
+function handleProductImageUpload(input, productIndex) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    
+    // Validate file type
+    if (!file.type.match('image.*')) {
+      showSuccess('❌ Please select an image file');
+      return;
+    }
+    
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      showSuccess('❌ Image size should be less than 5MB');
+      return;
+    }
+    
+    // Store file
+    productImageFiles[productIndex] = file;
+    
+    // Find the product card
+    const productCard = input.closest('.product-card');
+    
+    // Show thumbnail preview
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      // Hide placeholder
+      const placeholder = productCard.querySelector('.product-image-placeholder');
+      if (placeholder) placeholder.classList.add('hidden');
+      
+      // Show image preview
+      const preview = productCard.querySelector('.product-image-preview');
+      if (preview) {
+        preview.src = e.target.result;
+        preview.classList.add('show');
+      }
+      
+      // Update upload area
+      const uploadArea = productCard.querySelector('.upload-area');
+      if (uploadArea) {
+        uploadArea.classList.add('has-file');
+        const icon = uploadArea.querySelector('i');
+        if (icon) icon.className = 'fas fa-check-circle';
+        const span = uploadArea.querySelector('span');
+        if (span) span.textContent = file.name;
+      }
+    };
+    reader.readAsDataURL(file);
+    
+    showSuccess('✅ Product image uploaded!');
+  }
+}
+
+function removeProductImage(productIndex, productCard) {
+  // Clear file input
+  const fileInput = productCard.querySelector('.productImg');
+  if (fileInput) fileInput.value = '';
+  
+  // Remove from storage
+  delete productImageFiles[productIndex];
+  
+  // Reset upload area
+  const uploadArea = productCard.querySelector('.upload-area');
+  if (uploadArea) {
+    uploadArea.classList.remove('has-file');
+    const icon = uploadArea.querySelector('i');
+    if (icon) icon.className = 'fas fa-image';
+    const span = uploadArea.querySelector('span');
+    if (span) span.textContent = 'Product Image';
+  }
+  
+  // Hide preview
+  const preview = productCard.querySelector('.product-image-preview');
+  if (preview) {
+    preview.classList.remove('show');
+    preview.src = '';
+  }
+  
+  // Show placeholder
+  const placeholder = productCard.querySelector('.product-image-placeholder');
+  if (placeholder) placeholder.classList.remove('hidden');
+  
+  showSuccess('🗑️ Product image removed');
+}
 
 // ===== BUSINESS HOURS INIT =====
 const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
@@ -1422,18 +1098,19 @@ const daysContainer = document.getElementById('daysContainer');
 days.forEach(day => {
   const dayBox = document.createElement('div');
   dayBox.className = 'day-box';
+  dayBox.style.cssText = 'background: #f8fafc; border-radius: 14px; padding: 14px; margin-bottom: 10px; border: 2px solid var(--border);';
   dayBox.innerHTML = `
-    <div class="day-header">
-      <span class="day-name">${day}</span>
-      <select class="day-status" style="padding:6px 10px; border-radius:20px; border:2px solid var(--border); background:white;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap;">
+      <span style="font-weight: 700; color: var(--dark); min-width: 70px;">${day}</span>
+      <select style="padding: 6px 10px; border-radius: 20px; border: 2px solid var(--border); background: white; flex: 1; max-width: 100px;">
         <option value="open">Open</option>
         <option value="closed">Closed</option>
       </select>
     </div>
-    <div class="day-time">
-      <input type="time" class="day-start" value="09:00">
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+      <input type="time" value="09:00" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px; flex: 1; min-width: 80px;">
       <span>to</span>
-      <input type="time" class="day-end" value="18:00">
+      <input type="time" value="18:00" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px; flex: 1; min-width: 80px;">
     </div>
   `;
   daysContainer.appendChild(dayBox);
@@ -1460,10 +1137,11 @@ function addHoliday() {
   const container = document.getElementById('holidaysContainer');
   const holidayItem = document.createElement('div');
   holidayItem.className = 'holiday-item';
+  holidayItem.style.cssText = 'display: grid; grid-template-columns: 1fr 120px auto; gap: 8px; align-items: center; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 12px; border: 2px solid var(--border);';
   holidayItem.innerHTML = `
-    <input type="text" class="holidayName" placeholder="Holiday name">
-    <input type="date" class="holidayDate" value="${new Date().toISOString().split('T')[0]}">
-    <button type="button" class="remove-btn" onclick="removeHoliday(this)">×</button>
+    <input type="text" class="holidayName" placeholder="Holiday name" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px;">
+    <input type="date" class="holidayDate" value="${new Date().toISOString().split('T')[0]}" style="padding: 8px 10px; border: 2px solid var(--border); border-radius: 8px;">
+    <button type="button" class="remove-btn" onclick="removeHoliday(this)" style="width: 36px; height: 36px; border-radius: 8px; background: var(--danger); color: white; border: none; cursor: pointer;">×</button>
   `;
   container.appendChild(holidayItem);
 }
@@ -1472,18 +1150,35 @@ function removeHoliday(button) {
   button.parentElement.remove();
 }
 
-// ===== PRODUCT FUNCTIONS =====
+// ===== PRODUCT FUNCTIONS WITH THUMBNAIL SUPPORT =====
 function addOffer() {
   productCount++;
   const box = document.createElement('div');
   box.className = 'product-card';
+  box.dataset.index = productCount;
+  box.style.cssText = 'min-width: 280px; background: white; border-radius: 16px; padding: 16px; border: 2px solid var(--border); flex-shrink: 0; position: relative;';
   box.innerHTML = `
     <h3 style="margin-bottom:10px; font-size:15px;">Product ${productCount}</h3>
     
-    <div class="file-upload" style="margin-bottom:10px;">
+    <!-- Product Image Preview -->
+    <img class="product-image-preview" src="" alt="Product Preview">
+    
+    <!-- Product Image Placeholder -->
+    <div class="product-image-placeholder">
+      <div style="text-align: center;">
+        <i class="fas fa-image"></i>
+        <div>No image</div>
+      </div>
+    </div>
+    
+    <div class="upload-area" style="border: 2px dashed var(--border); border-radius: 12px; padding: 12px; text-align: center; margin: 10px 0; position: relative;">
       <i class="fas fa-image"></i>
       <span>Product Image</span>
-      <input type="file" class="productImg" accept="image/*">
+      <input type="file" class="productImg" accept="image/*" style="position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; cursor:pointer;">
+    </div>
+    
+    <div style="display: flex; gap: 6px; margin-bottom: 8px;">
+      <button class="btn-small" onclick="removeProductImage(${productCount}, this.parentElement.parentElement)" style="background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; cursor: pointer;">Remove Image</button>
     </div>
     
     <input type="text" class="productTitle" placeholder="Product Title" style="width:100%; padding:10px; border:2px solid var(--border); border-radius:8px; margin-bottom:8px;">
@@ -1495,12 +1190,19 @@ function addOffer() {
       <input type="number" class="discountPrice" placeholder="Discounted Price" style="padding:10px; border:2px solid var(--border); border-radius:8px;">
     </div>
     
-    <div class="product-badges">
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
       <label style="display:flex; align-items:center; gap:4px; font-size:12px;"><input type="checkbox" value="🔥 Hot Deal"> Hot Deal</label>
       <label style="display:flex; align-items:center; gap:4px; font-size:12px;"><input type="checkbox" value="⭐ Best Seller"> Best Seller</label>
       <label style="display:flex; align-items:center; gap:4px; font-size:12px;"><input type="checkbox" value="💸 Discount"> Discount</label>
     </div>
   `;
+  
+  // Add event listener for product image upload
+  const fileInput = box.querySelector('.productImg');
+  fileInput.addEventListener('change', function() {
+    handleProductImageUpload(this, productCount);
+  });
+  
   document.getElementById('offersForm').appendChild(box);
 }
 
@@ -1511,12 +1213,13 @@ function addDeliveryZone(zoneData = null) {
   
   const zoneItem = document.createElement('div');
   zoneItem.className = 'zone-item';
+  zoneItem.style.cssText = 'display: grid; grid-template-columns: 1fr 80px 100px auto; gap: 6px; margin-bottom: 10px; padding: 10px; background: #f8fafc; border-radius: 10px; border: 2px solid var(--border); align-items: center;';
   zoneItem.id = zoneId;
   zoneItem.innerHTML = `
-    <input type="text" placeholder="City" value="${zoneData?.city || ''}">
-    <input type="number" placeholder="Charge" value="${zoneData?.charge || ''}">
-    <input type="text" placeholder="Time" value="${zoneData?.time || ''}">
-    <button onclick="this.parentElement.remove()" style="background:var(--danger); color:white; border:none; border-radius:6px; padding:8px;">×</button>
+    <input type="text" placeholder="City" value="${zoneData?.city || ''}" style="padding: 8px; border: 2px solid var(--border); border-radius: 6px;">
+    <input type="number" placeholder="Charge" value="${zoneData?.charge || ''}" style="padding: 8px; border: 2px solid var(--border); border-radius: 6px;">
+    <input type="text" placeholder="Time" value="${zoneData?.time || ''}" style="padding: 8px; border: 2px solid var(--border); border-radius: 6px;">
+    <button onclick="this.parentElement.remove()" style="background:var(--danger); color:white; border:none; border-radius:6px; padding:8px; cursor:pointer;">×</button>
   `;
   container.appendChild(zoneItem);
 }
@@ -1532,28 +1235,16 @@ function togglePaymentGateway(gateway) {
   
   document.querySelectorAll('.payment-card').forEach(card => {
     card.classList.remove('selected');
+    card.style.borderColor = 'var(--border)';
   });
   
   selectedPaymentGateways.forEach(g => {
     const card = document.getElementById(`gateway-${g}`);
     if (card) {
       card.classList.add('selected');
-      const badge = document.getElementById(`${g}-badge`);
-      if (badge) badge.style.display = 'inline-block';
+      card.style.borderColor = '#10b981';
     }
   });
-  
-  ['jazzcash', 'easypaisa', 'bank', 'cod'].forEach(g => {
-    if (!selectedPaymentGateways.includes(g)) {
-      const badge = document.getElementById(`${g}-badge`);
-      if (badge) badge.style.display = 'none';
-    }
-  });
-}
-
-function updatePaymentData(gateway, field, value) {
-  if (!paymentData[gateway]) paymentData[gateway] = {};
-  paymentData[gateway][field] = value;
 }
 
 function handleFileUpload(input, gateway) {
@@ -1562,22 +1253,18 @@ function handleFileUpload(input, gateway) {
     if (!paymentData[gateway]) paymentData[gateway] = {};
     paymentData[gateway].barcodeFile = file;
     
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const preview = document.getElementById(`${gateway}-preview`);
-      if (preview) {
-        preview.src = e.target.result;
-        preview.style.display = 'block';
-      }
-    };
-    reader.readAsDataURL(file);
+    // Visual feedback
+    const parentDiv = input.closest('.upload-area');
+    if (parentDiv) {
+      parentDiv.classList.add('has-file');
+      parentDiv.style.borderColor = '#10b981';
+      parentDiv.style.background = '#f0fdf4';
+      const icon = parentDiv.querySelector('i');
+      if (icon) icon.className = 'fas fa-check-circle';
+    }
     
     showSuccess(`✅ QR uploaded for ${gateway}`);
   }
-}
-
-function updateTicketSetting(setting, value) {
-  ticketSettings[setting] = value;
 }
 
 function testTokenGeneration() {
@@ -1669,10 +1356,12 @@ async function generate() {
     // Collect business hours
     const businessHours = [];
     document.querySelectorAll('.day-box').forEach(box => {
+      const statusSelect = box.querySelector('select');
+      const timeInputs = box.querySelectorAll('input[type="time"]');
       businessHours.push({
-        status: box.querySelector('.day-status').value,
-        start: box.querySelector('.day-start').value,
-        end: box.querySelector('.day-end').value
+        status: statusSelect ? statusSelect.value : 'open',
+        start: timeInputs[0] ? timeInputs[0].value : '09:00',
+        end: timeInputs[1] ? timeInputs[1].value : '18:00'
       });
     });
     
@@ -1684,13 +1373,16 @@ async function generate() {
       if (name && date) holidays.push({ name, date });
     });
     
-    // Collect products
+    // Collect products with images from storage
     const products = [];
     const productBoxes = document.querySelectorAll('.product-card');
     
     for (let i = 0; i < productBoxes.length; i++) {
       const box = productBoxes[i];
-      const file = box.querySelector('.productImg').files[0];
+      const index = parseInt(box.dataset.index || i+1);
+      
+      // Get image from stored files
+      const file = productImageFiles[index];
       
       const product = {
         title: box.querySelector('.productTitle').value || '',
@@ -1708,7 +1400,7 @@ async function generate() {
     const zones = [];
     document.querySelectorAll('#deliveryZonesList .zone-item').forEach(zone => {
       const inputs = zone.querySelectorAll('input');
-      if (inputs[0].value && inputs[1].value && inputs[2].value) {
+      if (inputs[0] && inputs[0].value && inputs[1] && inputs[1].value && inputs[2] && inputs[2].value) {
         zones.push({
           city: inputs[0].value,
           charge: parseFloat(inputs[1].value),
@@ -1733,8 +1425,8 @@ async function generate() {
       },
       gateways: {},
       tokenSystem: {
-        enabled: document.getElementById('enableTokenSystem').checked,
-        requireTokenForTracking: document.getElementById('requireTokenForTracking').checked,
+        enabled: true,
+        requireTokenForTracking: true,
         prefix: document.getElementById('tokenPrefix').value,
         length: parseInt(document.getElementById('tokenLength').value)
       }
@@ -1743,8 +1435,8 @@ async function generate() {
     selectedPaymentGateways.forEach(gateway => {
       if (gateway === 'cod') {
         paymentMethods.gateways.cod = {
-          active: document.getElementById('codEnabled').checked,
-          minimumOrder: parseFloat(document.getElementById('codMinimumOrder').value)
+          active: true,
+          minimumOrder: parseFloat(document.getElementById('codMinimumOrder').value) || 500
         };
       } else {
         paymentMethods.gateways[gateway] = {
@@ -1779,31 +1471,36 @@ async function generate() {
       deliverySettings: {
         default: {
           withinCity: {
-            charge: parseFloat(document.getElementById('deliveryChargeCity').value),
-            time: document.getElementById('deliveryTimeCity').value
+            charge: parseFloat(document.getElementById('deliveryChargeCity').value) || 150,
+            time: document.getElementById('deliveryTimeCity').value || '1-2 business days'
           },
           otherCities: {
-            charge: parseFloat(document.getElementById('deliveryChargeOther').value),
-            time: document.getElementById('deliveryTimeOther').value
+            charge: parseFloat(document.getElementById('deliveryChargeOther').value) || 300,
+            time: document.getElementById('deliveryTimeOther').value || '3-5 business days'
           }
         },
         zones,
-        freeDeliveryMin: parseFloat(document.getElementById('freeDeliveryMin').value),
-        cutoffTime: document.getElementById('deliveryCutoffTime').value,
-        maxDays: document.getElementById('deliveryDays').value,
+        freeDeliveryMin: parseFloat(document.getElementById('freeDeliveryMin').value) || 2000,
+        cutoffTime: document.getElementById('deliveryCutoffTime').value || '16:00',
+        maxDays: document.getElementById('deliveryDays').value || '5-7 days',
         addressConfirmation: {
-          required: document.getElementById('requireAddressConfirmation').checked,
-          saveAddresses: document.getElementById('saveCustomerAddresses').checked
+          required: document.getElementById('requireAddressConfirmation')?.checked || false,
+          saveAddresses: document.getElementById('saveCustomerAddresses')?.checked || false
         }
       },
-      ticketSettings,
+      ticketSettings: {
+        enableAutoTickets: true,
+        enableEmailTickets: true,
+        enableWhatsappTickets: true,
+        ticketPrefix: 'TKT'
+      },
       version: '3.0.0',
       created: new Date().toISOString()
     };
     
-    // Add profile image
-    if (document.getElementById('profileImage').files[0]) {
-      cardData.profileImage = await resizeImage(document.getElementById('profileImage').files[0]);
+    // Add profile image if exists
+    if (profileImageFile) {
+      cardData.profileImage = await resizeImage(profileImageFile);
     }
     
     // Save to Supabase
@@ -1841,28 +1538,50 @@ document.addEventListener('DOMContentLoaded', function() {
     togglePaymentGateway('cod');
   }, 100);
   
-  document.getElementById('businessName').addEventListener('input', function(e) {
-    const preview = document.getElementById('whatsappPreview');
-    if (preview) {
-      preview.innerHTML = `🎉 *NEW ORDER CONFIRMED* - TOKEN: TKT-123456-A7F2
-
-*Order ID:* ORD-12345678
-*Token:* TKT-123456-A7F2
-*Customer:* [Customer Name]
-*Phone:* [Customer Phone]
-*Address:* [Full Address]
-
-*ITEMS:*
-• Product 1 (Qty: 1) - PKR 1,000
-
-*Total:* PKR 1,150
-
-Thank you for your order from ${e.target.value}! 🛍️`;
+  // Style for toggle switches
+  const style = document.createElement('style');
+  style.textContent = `
+    .toggle-switch input {
+      appearance: none;
+      width: 40px;
+      height: 22px;
+      background: var(--border);
+      border-radius: 30px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
-  });
-  
-  document.getElementById('tokenPrefix').addEventListener('input', testTokenGeneration);
-  document.getElementById('tokenLength').addEventListener('change', testTokenGeneration);
+    .toggle-switch input:checked {
+      background: var(--success);
+    }
+    .toggle-switch input::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s ease;
+    }
+    .toggle-switch input:checked::before {
+      left: 20px;
+    }
+    .btn-small {
+      background: var(--danger);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .btn-small:hover {
+      background: #dc2626;
+    }
+  `;
+  document.head.appendChild(style);
 });
 </script>
 </body>
