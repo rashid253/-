@@ -1004,7 +1004,7 @@ body {
   cursor: pointer;
 }
 
-/* ===== NEW STYLES - KEEP AS BEFORE ===== */
+/* ===== NEW STYLES ===== */
 .product-zoom-overlay {
   position: fixed;
   top: 0;
@@ -1410,44 +1410,6 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
-}
-
-@keyframes slideIn {
-  from { top: 50px; opacity: 0; }
-  to { top: 100px; opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
-
-@keyframes slideDown {
-  from { top: -100px; opacity: 0; }
-  to { top: 20px; opacity: 1; }
-}
-
-@keyframes zoomIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 10px;
 }
 
 @media (max-width: 480px) {
@@ -2233,7 +2195,6 @@ function loadCustomerInfo() {
     try {
       customerInfo = JSON.parse(saved);
       
-      // Create address display with edit option
       const addressContainer = document.querySelector('.address-display-container');
       if (addressContainer) {
         addressContainer.innerHTML = `
@@ -2267,7 +2228,6 @@ function loadCustomerInfo() {
       console.error('Error loading customer info:', e);
     }
   } else {
-    // Initialize empty display
     const addressContainer = document.querySelector('.address-display-container');
     if (addressContainer) {
       addressContainer.innerHTML = `
@@ -2882,7 +2842,7 @@ async function completeOrder() {
   }
 }
 
-// ===== FIXED: SAVE ORDER TO DATABASE =====
+// ===== FIXED: SAVE ORDER TO DATABASE WITH CORRECT STATUS =====
 async function saveOrderToDatabase(orderData) {
   try {
     if (!currentBusinessId) {
@@ -2893,12 +2853,15 @@ async function saveOrderToDatabase(orderData) {
     
     console.log('📤 Saving order for business:', currentBusinessId);
     
-    // Create order object with ALL columns from your table
+    // Aapke enum mein yeh values hain: pending, confirmed, processing, shipped, delivered, cancelled, refused
+    // Naye order ke liye 'pending' use karein
+    const validStatus = 'pending';
+    
     const orderToInsert = {
       business_id: currentBusinessId,
       order_id: orderData.orderId,
       token: orderData.token,
-      customer_name: orderData.customerName || 'Customer',
+      customer_name: orderData.customerName || null,
       customer_phone: orderData.customerPhone || '',
       customer_address: orderData.customerAddress || '',
       items: orderData.items || [],
@@ -2906,7 +2869,7 @@ async function saveOrderToDatabase(orderData) {
       delivery_charge: orderData.deliveryCharge || 0,
       total: orderData.total || 0,
       payment_method: orderData.paymentMethod || 'cod',
-      status: 'pending',
+      status: validStatus,
       zone: null,
       estimated_delivery: null,
       notes: null,
@@ -2914,7 +2877,7 @@ async function saveOrderToDatabase(orderData) {
       updated_at: new Date().toISOString()
     };
     
-    // Add optional fields if they exist
+    // Optional fields
     if (orderData.customerEmail) {
       orderToInsert.customer_email = orderData.customerEmail;
     }
@@ -3636,13 +3599,15 @@ async function loadDeliveryStatus() {
   
   let html = '';
   customerOrders.forEach(order => {
+    // Status configuration - ALL enum values included
     const statusConfig = {
       'pending': { color: '#f59e0b', text: '⏳ Pending' },
       'confirmed': { color: '#3b82f6', text: '✅ Confirmed' },
       'processing': { color: '#8b5cf6', text: '🔄 Processing' },
       'shipped': { color: '#10b981', text: '🚚 Shipped' },
       'delivered': { color: '#059669', text: '📦 Delivered' },
-      'cancelled': { color: '#ef4444', text: '❌ Cancelled' }
+      'cancelled': { color: '#ef4444', text: '❌ Cancelled' },
+      'refused': { color: '#64748b', text: '❌ Refused' }
     };
     
     const status = statusConfig[order.status] || { color: '#64748b', text: order.status };
@@ -3716,6 +3681,7 @@ function renderTokenList() {
     const statusColor = 
       token.status === 'delivered' ? '#10b981' : 
       token.status === 'cancelled' ? '#ef4444' : 
+      token.status === 'refused' ? '#64748b' :
       token.status === 'pending' ? '#f59e0b' :
       token.status === 'confirmed' ? '#3b82f6' : 
       token.status === 'processing' ? '#8b5cf6' :
@@ -3785,8 +3751,11 @@ function searchAdminTokens() {
     const statusColor = 
       token.status === 'delivered' ? '#10b981' : 
       token.status === 'cancelled' ? '#ef4444' : 
+      token.status === 'refused' ? '#64748b' :
       token.status === 'pending' ? '#f59e0b' :
-      token.status === 'confirmed' ? '#3b82f6' : '#8b5cf6';
+      token.status === 'confirmed' ? '#3b82f6' : 
+      token.status === 'processing' ? '#8b5cf6' :
+      token.status === 'shipped' ? '#10b981' : '#64748b';
     
     html += `
       <div class="token-item" onclick="window.viewOrderDetails('${token.orderId}')">
@@ -3979,6 +3948,7 @@ async function viewOrderDetails(orderId) {
         <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
         <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>📦 Delivered</option>
         <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
+        <option value="refused" ${order.status === 'refused' ? 'selected' : ''}>❌ Refused</option>
       </select>
       <button onclick="window.updateOrderStatus('${order.id}')" style="padding:12px 20px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
         Update
@@ -3996,7 +3966,8 @@ async function viewOrderDetails(orderId) {
           order.status === 'processing' ? '🔄 Order is being processed' :
           order.status === 'shipped' ? '🚚 Order has been shipped' :
           order.status === 'delivered' ? '📦 Order delivered successfully' :
-          order.status === 'cancelled' ? '❌ Order cancelled' : 'Status unknown'}
+          order.status === 'cancelled' ? '❌ Order cancelled' :
+          order.status === 'refused' ? '❌ Order refused' : 'Status unknown'}
       </div>
     </div>
   `;
