@@ -11,9 +11,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap">
 <link rel="manifest" href="manifest.json" id="manifestLink">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 <style>
-/* ===== ALL EXISTING STYLES - KEEP EXACTLY AS BEFORE ===== */
+/* ===== ALL EXISTING STYLES - KEEP AS BEFORE ===== */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -379,6 +380,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 }
 
 .product-image {
@@ -1350,6 +1352,11 @@ body {
   color: white;
 }
 
+.receipt-btn-image {
+  background: #8b5cf6;
+  color: white;
+}
+
 .admin-confirm-btn {
   background: var(--success-gradient);
   color: white;
@@ -1401,6 +1408,31 @@ body {
   transform: translateY(-2px);
 }
 
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-pending { background: #fef3c7; color: #92400e; }
+.status-confirmed { background: #dbeafe; color: #1e40af; }
+.status-processing { background: #ede9fe; color: #5b21b6; }
+.status-shipped { background: #d1fae5; color: #065f46; }
+.status-delivered { background: #10b981; color: white; }
+.status-cancelled { background: #fee2e2; color: #b91c1c; }
+.status-refused { background: #e2e8f0; color: #475569; }
+
+.truck-icon-fixed {
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.truck-icon-fixed:hover {
+  transform: scale(1.1);
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(50px);
@@ -1442,7 +1474,7 @@ body {
         <div class="delivery-badge" id="notificationBadge" style="display:none;">!</div>
       </div>
       
-      <div class="header-icon-btn" id="deliveryStatusBtn" onclick="window.checkDeliveryStatus()" title="Delivery Status">
+      <div class="header-icon-btn truck-icon-fixed" id="deliveryStatusBtn" onclick="window.checkDeliveryStatus()" title="Delivery Status">
         <i class="fas fa-truck" id="deliveryIcon"></i>
         <div class="delivery-badge" id="deliveryBadge" style="display:none;"></div>
       </div>
@@ -1493,7 +1525,7 @@ body {
       </div>
       
       <div class="payment-instructions" id="paymentInstructions">
-        <!-- Dynamic instructions will be inserted here -->
+        <!-- Dynamic instructions -->
       </div>
       
       <div style="margin: 10px 0; text-align: center;">
@@ -1514,19 +1546,12 @@ body {
         <img id="popupProofPreview" class="popup-preview" src="" alt="Preview">
       </div>
       
-      <div style="background: #f8fafc; border-radius: 12px; padding: 12px; margin: 15px 0;">
-        <p style="font-size: 13px; color: #475569; display: flex; align-items: center; gap: 8px;">
-          <i class="fab fa-whatsapp" style="color: #25D366; font-size: 18px;"></i>
-          <span>After confirmation, you'll be redirected to WhatsApp to send order details to business.</span>
-        </p>
-      </div>
-      
       <div class="popup-buttons">
         <button class="popup-btn popup-btn-secondary" onclick="closePaymentProofPopup()">
           <i class="fas fa-times"></i> Cancel
         </button>
         <button class="popup-btn popup-btn-primary" id="confirmPaymentBtn" onclick="confirmPaymentWithProof()">
-          <i class="fas fa-check"></i> Confirm & Send to WhatsApp
+          <i class="fas fa-check"></i> Confirm & Send
         </button>
       </div>
     </div>
@@ -1542,7 +1567,7 @@ body {
       </div>
       
       <div class="receipt-details" id="receiptDetails">
-        <!-- Dynamic receipt content -->
+        <!-- Receipt content -->
       </div>
       
       <div class="receipt-actions">
@@ -1553,7 +1578,10 @@ body {
           <i class="fas fa-envelope"></i> Email
         </button>
         <button class="receipt-btn receipt-btn-download" onclick="downloadReceipt()">
-          <i class="fas fa-download"></i> Save
+          <i class="fas fa-download"></i> Text
+        </button>
+        <button class="receipt-btn receipt-btn-image" onclick="downloadReceiptAsImage()">
+          <i class="fas fa-image"></i> Image
         </button>
       </div>
       
@@ -1623,9 +1651,9 @@ body {
           <p style="font-size:11px; opacity:0.9;">Browse products</p>
         </div>
         <div class="action-card" onclick="window.navigateTo('cartPage')">
-          <div class="action-icon"><i class="fas fa-shopping-cart" style="font-size:24px; position:relative;" id="cartIcon">
-            <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
-          </i></div>
+          <div class="action-icon" id="cartIcon">
+            <i class="fas fa-shopping-cart" style="font-size:24px;"></i>
+          </div>
           <h3 style="font-size:14px; margin-top:8px;">My Cart</h3>
           <p style="font-size:11px; opacity:0.9;"><span id="cartCountMini">0</span> items</p>
         </div>
@@ -1806,7 +1834,7 @@ body {
         <div class="contact-icon" style="width:48px; height:48px; background:#667eea; border-radius:12px; display:flex; align-items:center; justify-content:center; color:white; font-size:20px;"><i class="fas fa-address-card"></i></div>
         <div class="contact-details">
           <div class="contact-label" style="font-size:14px; color:#64748b;">Save Business Contact</div>
-          <div class="contact-value" style="font-size:16px; font-weight:700; color:var(--dark-color);">Tap to save to phonebook</div>
+          <div class="contact-value" style="font-size:16px; font-weight:700; color:var(--dark-color);">Tap to save</div>
         </div>
       </div>
       
@@ -1918,7 +1946,7 @@ body {
                onkeyup="window.searchAdminTokens()">
       </div>
       
-      <!-- Token List - Orders will appear here -->
+      <!-- Token List -->
       <div class="token-list" id="tokenList"></div>
     </div>
     
@@ -1968,7 +1996,9 @@ body {
   <!-- ===== BOTTOM NAVIGATION ===== -->
   <div class="bottom-nav">
     <div class="nav-item active" onclick="window.navigateTo('homePage')">
-      <div class="nav-icon"><i class="fas fa-home"></i></div>
+      <div class="nav-icon">
+        <i class="fas fa-home"></i>
+      </div>
       <div class="nav-label">Home</div>
     </div>
     <div class="nav-item" onclick="window.navigateTo('productsPage')">
@@ -1976,7 +2006,10 @@ body {
       <div class="nav-label">Products</div>
     </div>
     <div class="nav-item" onclick="window.navigateTo('cartPage')">
-      <div class="nav-icon"><i class="fas fa-shopping-cart"></i></div>
+      <div class="nav-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+      </div>
       <div class="nav-label">Cart</div>
     </div>
     <div class="nav-item" onclick="window.navigateTo('aboutPage')">
@@ -2021,6 +2054,16 @@ body {
       <button onclick="window.completePaymentAndConfirmOrder()" style="width:100%; padding:18px; background:var(--success-gradient); color:white; border:none; border-radius:var(--border-radius-md); font-size:17px; font-weight:800; cursor:pointer; margin-top:25px;">
         <i class="fas fa-check-circle"></i> Confirm Payment
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== BARCODE MODAL ===== -->
+<div class="modal-overlay" id="barcodeModal">
+  <div class="modal-content" style="max-width:300px;">
+    <button class="close-btn" onclick="closeModal('barcodeModal')">×</button>
+    <div style="padding:20px; text-align:center;">
+      <img id="barcodeImage" src="" style="width:100%; border-radius:10px;">
     </div>
   </div>
 </div>
@@ -2076,7 +2119,7 @@ let innerNotifications = [];
 let unreadNotifications = 0;
 let navigationHistory = [];
 
-// New variables for enhanced checkout
+// Customer info
 let customerInfo = {
   name: '',
   phone: '',
@@ -2089,14 +2132,14 @@ let paymentProof = null;
 let pendingOrder = null;
 let skipProof = false;
 
-// ===== PWA INSTALL VARIABLES =====
+// PWA Install
 let deferredPrompt = null;
 let installButtonShown = false;
 
 // Real-time subscription
 let ordersSubscription = null;
 
-// ===== ATTACH ALL FUNCTIONS TO WINDOW =====
+// ===== ATTACH FUNCTIONS =====
 window.navigateTo = navigateTo;
 window.goBack = goBack;
 window.toggleNotificationDrawer = toggleNotificationDrawer;
@@ -2135,15 +2178,11 @@ window.acceptInstallPermissions = acceptInstallPermissions;
 window.closeDeliveryModal = closeDeliveryModal;
 window.addToCartFromModal = addToCartFromModal;
 window.showProductModal = showProductModal;
-
-// New functions for enhanced checkout
 window.saveCustomerInfo = saveCustomerInfo;
 window.getCurrentLocation = getCurrentLocation;
 window.selectPaymentMethod = selectPaymentMethod;
 window.processPayment = processPayment;
 window.completePaymentAndConfirmOrder = completePaymentAndConfirmOrder;
-
-// New functions
 window.zoomProductImage = zoomProductImage;
 window.closeProductZoom = closeProductZoom;
 window.toggleAddressEdit = toggleAddressEdit;
@@ -2155,6 +2194,7 @@ window.confirmPaymentWithProof = confirmPaymentWithProof;
 window.sendReceiptToWhatsApp = sendReceiptToWhatsApp;
 window.sendReceiptToEmail = sendReceiptToEmail;
 window.downloadReceipt = downloadReceipt;
+window.downloadReceiptAsImage = downloadReceiptAsImage;
 window.closeReceiptModal = closeReceiptModal;
 window.confirmOrder = confirmOrder;
 window.filterPendingOrders = filterPendingOrders;
@@ -2163,8 +2203,9 @@ window.filterAllOrders = filterAllOrders;
 window.refreshOrders = refreshOrders;
 window.downloadOrderTicket = downloadOrderTicket;
 window.toggleProofUpload = toggleProofUpload;
+window.showBarcode = showBarcode;
 
-// ===== DATA ISOLATION SYSTEM =====
+// ===== DATA ISOLATION =====
 function getStorageKey(key) {
   const businessKey = currentBusinessId ? currentBusinessId.substring(0, 8) : 'default';
   return `business_${businessKey}_${key}`;
@@ -2188,7 +2229,158 @@ function generateAdminPassword(cardId) {
   return `business123_${idPart}`;
 }
 
-// ===== CUSTOMER DATA MANAGEMENT =====
+// ===== FIXED: SAVE CONTACT =====
+function saveBusinessToContacts() {
+  if (!card.name || !card.phone) {
+    showNotification('❌ Business information incomplete');
+    return;
+  }
+  
+  const contact = `BEGIN:VCARD
+VERSION:3.0
+FN:${card.businessName || card.name}
+TEL:${card.phone}
+EMAIL:${card.email || ''}
+ADR:${card.address || ''}
+NOTE:Digital Business Card
+END:VCARD`;
+  
+  const blob = new Blob([contact], { type: 'text/vcard' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${card.businessName || 'business'}.vcf`;
+  a.click();
+  
+  showNotification('✅ Contact file downloaded! Save to phone');
+}
+
+// ===== FIXED: CHECK DELIVERY STATUS =====
+function checkDeliveryStatus() {
+  if (!customerInfo.phone) {
+    showNotification('Please add your phone number first');
+    navigateTo('customerInfoPage');
+    return;
+  }
+  navigateTo('deliveryPage');
+  loadDeliveryStatus();
+}
+
+// ===== FIXED: UPDATE CART COUNT =====
+function updateCartCount() {
+  const count = cart.length;
+  
+  const cartBadge = document.getElementById('cartBadge');
+  if (cartBadge) {
+    if (count > 0) {
+      cartBadge.textContent = count > 99 ? '99+' : count;
+      cartBadge.style.display = 'flex';
+    } else {
+      cartBadge.style.display = 'none';
+    }
+  }
+  
+  const cartIcon = document.getElementById('cartIcon');
+  if (cartIcon) {
+    if (count > 0) {
+      cartIcon.innerHTML = `<i class="fas fa-shopping-cart" style="font-size:24px;"></i><span class="cart-badge" style="display:flex; position:absolute; top:-8px; right:-8px;">${count}</span>`;
+    } else {
+      cartIcon.innerHTML = `<i class="fas fa-shopping-cart" style="font-size:24px;"></i>`;
+    }
+  }
+  
+  const cartCountMini = document.getElementById('cartCountMini');
+  if (cartCountMini) cartCountMini.textContent = count;
+  
+  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// ===== FIXED: SHOW BARCODE =====
+function showBarcode(barcodeUrl) {
+  const modal = document.getElementById('barcodeModal');
+  const img = document.getElementById('barcodeImage');
+  img.src = barcodeUrl;
+  openModal('barcodeModal');
+}
+
+// ===== FIXED: SELECT PAYMENT METHOD WITH BARCODE =====
+function selectPaymentMethod(method) {
+  selectedPaymentMethod = method;
+  
+  document.querySelectorAll('.pro-payment-card').forEach(card => {
+    card.classList.remove('selected');
+  });
+  
+  const selectedCards = document.querySelectorAll(`.pro-payment-card[onclick*="${method}"]`);
+  selectedCards.forEach(card => card.classList.add('selected'));
+  
+  // Show barcode if available
+  if (method === 'jazzcash' && card.payments?.gateways?.jazzcash?.barcode) {
+    showBarcode(card.payments.gateways.jazzcash.barcode);
+  } else if (method === 'easypaisa' && card.payments?.gateways?.easypaisa?.barcode) {
+    showBarcode(card.payments.gateways.easypaisa.barcode);
+  }
+}
+
+// ===== FIXED: DOWNLOAD RECEIPT AS IMAGE =====
+function downloadReceiptAsImage() {
+  const receiptElement = document.querySelector('.order-ticket');
+  if (!receiptElement) {
+    showNotification('❌ Receipt not found');
+    return;
+  }
+  
+  html2canvas(receiptElement).then(canvas => {
+    const link = document.createElement('a');
+    link.download = 'receipt.png';
+    link.href = canvas.toDataURL();
+    link.click();
+    showNotification('✅ Receipt downloaded as image');
+  }).catch(err => {
+    console.error('Error:', err);
+    showNotification('❌ Could not create image');
+  });
+}
+
+// ===== FIXED: UPDATE ORDER STATUS WITH OPTIONS =====
+async function updateOrderStatus(orderId) {
+  const status = document.getElementById('orderStatusSelect').value;
+  
+  const { error } = await supa
+    .from('orders')
+    .update({ status: status, updated_at: new Date().toISOString() })
+    .eq('id', orderId);
+  
+  if (!error) {
+    showNotification('✅ Order status updated to ' + status);
+    
+    if (status === 'confirmed') {
+      const order = orders.find(o => o.id === orderId);
+      if (order) {
+        showReceipt(order);
+      }
+    }
+    
+    closeModal('orderConfirmationModal');
+    await loadOrdersFromDatabase();
+    
+    // Ask to notify customer
+    setTimeout(() => {
+      if (confirm('Send notification to customer via WhatsApp?')) {
+        const order = orders.find(o => o.id === orderId);
+        if (order && order.customer_phone) {
+          const message = `Your order #${order.order_id} status has been updated to: ${status}`;
+          window.open(`https://wa.me/${order.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+      }
+    }, 1000);
+    
+  } else {
+    showNotification('❌ Error updating order');
+  }
+}
+
+// ===== CUSTOMER INFO FUNCTIONS =====
 function loadCustomerInfo() {
   const saved = isolatedLocalStorage.getItem('customerInfo');
   if (saved) {
@@ -2500,17 +2692,6 @@ function loadPaymentPage() {
   paymentGrid.innerHTML = methodsHtml;
 }
 
-function selectPaymentMethod(method) {
-  selectedPaymentMethod = method;
-  
-  document.querySelectorAll('.pro-payment-card').forEach(card => {
-    card.classList.remove('selected');
-  });
-  
-  const selectedCards = document.querySelectorAll(`.pro-payment-card[onclick*="${method}"]`);
-  selectedCards.forEach(card => card.classList.add('selected'));
-}
-
 function showPaymentDetails(method) {
   const detailsModal = document.getElementById('paymentDetailsModal');
   const title = document.getElementById('paymentMethodTitle');
@@ -2634,7 +2815,6 @@ function showPaymentProofPopup(method) {
   const popup = document.getElementById('paymentProofPopup');
   const instructions = document.getElementById('paymentInstructions');
   
-  // Reset
   document.getElementById('skipProofCheckbox').checked = false;
   skipProof = false;
   document.getElementById('proofUploadSection').style.display = 'block';
@@ -2645,45 +2825,44 @@ function showPaymentProofPopup(method) {
   document.getElementById('confirmPaymentBtn').disabled = true;
   paymentProof = null;
   
-  // Set instructions based on method
   if (method === 'jazzcash') {
     instructions.innerHTML = `
-      <p><i class="fas fa-mobile-alt"></i> Please complete payment via JazzCash</p>
+      <p><i class="fas fa-mobile-alt"></i> Complete payment via JazzCash</p>
       <p><i class="fas fa-arrow-right"></i> Send to: <strong>${card.payments?.gateways?.jazzcash?.number || '03001234567'}</strong></p>
       <p><i class="fas fa-info-circle"></i> After payment, you can:</p>
-      <p>✅ Upload screenshot (recommended) OR</p>
-      <p>✅ Send transaction details via WhatsApp</p>
+      <p>✅ Upload screenshot OR</p>
+      <p>✅ Send transaction ID via WhatsApp</p>
     `;
   } else if (method === 'easypaisa') {
     instructions.innerHTML = `
       <p><i class="fas fa-wallet"></i> Complete payment via EasyPaisa</p>
       <p><i class="fas fa-arrow-right"></i> Send to: <strong>${card.payments?.gateways?.easypaisa?.number || '03001234567'}</strong></p>
-      <p><i class="fas fa-info-circle"></i> After payment, you can:</p>
-      <p>✅ Upload screenshot (recommended) OR</p>
-      <p>✅ Send transaction ID via WhatsApp</p>
+      <p><i class="fas fa-info-circle"></i> After payment:</p>
+      <p>✅ Upload screenshot OR</p>
+      <p>✅ Send transaction ID</p>
     `;
   } else if (method === 'bank') {
     instructions.innerHTML = `
-      <p><i class="fas fa-university"></i> Complete bank transfer:</p>
+      <p><i class="fas fa-university"></i> Complete bank transfer</p>
       <p><strong>${card.payments?.gateways?.bank?.bankName || 'HBL'}</strong></p>
       <p>Account: ${card.payments?.gateways?.bank?.accountNumber || '1234567890'}</p>
       <p><i class="fas fa-info-circle"></i> After transfer:</p>
       <p>✅ Upload screenshot OR</p>
-      <p>✅ Send transaction reference via WhatsApp</p>
+      <p>✅ Send reference number</p>
     `;
   } else if (method === 'card') {
     instructions.innerHTML = `
       <p><i class="fas fa-credit-card"></i> Complete card payment</p>
       <p><i class="fas fa-info-circle"></i> After payment:</p>
       <p>✅ Upload confirmation screenshot OR</p>
-      <p>✅ Send last 4 digits of card + transaction ID</p>
+      <p>✅ Send transaction ID</p>
     `;
   } else if (method === 'crypto') {
     instructions.innerHTML = `
-      <p><i class="fab fa-bitcoin"></i> Send crypto to address above</p>
+      <p><i class="fab fa-bitcoin"></i> Send crypto</p>
       <p><i class="fas fa-info-circle"></i> After sending:</p>
-      <p>✅ Upload transaction screenshot OR</p>
-      <p>✅ Send transaction hash via WhatsApp</p>
+      <p>✅ Upload screenshot OR</p>
+      <p>✅ Send transaction hash</p>
     `;
   }
   
@@ -2740,13 +2919,11 @@ async function processPayment() {
     return;
   }
   
-  // For non-COD, show popup
   if (selectedPaymentMethod !== 'cod') {
     showPaymentProofPopup(selectedPaymentMethod);
     return;
   }
   
-  // For COD, process directly
   completeOrder();
 }
 
@@ -2755,7 +2932,7 @@ async function confirmPaymentWithProof() {
   await completeOrder();
 }
 
-// ===== FIXED: COMPLETE ORDER FUNCTION =====
+// ===== COMPLETE ORDER FUNCTION =====
 async function completeOrder() {
   let subtotal = cart.reduce((sum, item) => {
     const price = parseFloat(item.discountPrice || item.originalPrice || 0);
@@ -2804,16 +2981,13 @@ async function completeOrder() {
   
   console.log('📦 Pending order:', pendingOrder);
   
-  // Save to database
   const saved = await saveOrderToDatabase(pendingOrder);
   
   if (saved) {
     console.log('✅ Order saved to database');
     
-    // Send WhatsApp
     sendOrderToBusinessWhatsApp(pendingOrder);
     
-    // Update local arrays
     orders.unshift(pendingOrder);
     orderTokens.unshift({
       id: token,
@@ -2824,25 +2998,20 @@ async function completeOrder() {
       date: pendingOrder.created_at
     });
     
-    // Clear cart
     cart = [];
     updateCartCount();
     isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
     
-    // Show confirmation
     showOrderConfirmation(pendingOrder);
-    
-    // Navigate to delivery page
     navigateTo('deliveryPage');
     
-    // Add notification
     addInnerNotification('Order Placed', `Order #${orderId} awaiting confirmation`, 'success');
   } else {
     showNotification('❌ Failed to save order. Please try again.');
   }
 }
 
-// ===== FIXED: SAVE ORDER TO DATABASE WITH CORRECT STATUS =====
+// ===== SAVE ORDER TO DATABASE =====
 async function saveOrderToDatabase(orderData) {
   try {
     if (!currentBusinessId) {
@@ -2852,10 +3021,6 @@ async function saveOrderToDatabase(orderData) {
     }
     
     console.log('📤 Saving order for business:', currentBusinessId);
-    
-    // Aapke enum mein yeh values hain: pending, confirmed, processing, shipped, delivered, cancelled, refused
-    // Naye order ke liye 'pending' use karein
-    const validStatus = 'pending';
     
     const orderToInsert = {
       business_id: currentBusinessId,
@@ -2869,7 +3034,7 @@ async function saveOrderToDatabase(orderData) {
       delivery_charge: orderData.deliveryCharge || 0,
       total: orderData.total || 0,
       payment_method: orderData.paymentMethod || 'cod',
-      status: validStatus,
+      status: 'pending',
       zone: null,
       estimated_delivery: null,
       notes: null,
@@ -2877,7 +3042,6 @@ async function saveOrderToDatabase(orderData) {
       updated_at: new Date().toISOString()
     };
     
-    // Optional fields
     if (orderData.customerEmail) {
       orderToInsert.customer_email = orderData.customerEmail;
     }
@@ -2906,7 +3070,6 @@ async function saveOrderToDatabase(orderData) {
     console.log('✅ Order saved successfully:', data);
     showNotification('✅ Order placed successfully!');
     
-    // Refresh admin panel if logged in
     if (isAdminLoggedIn) {
       setTimeout(() => {
         loadOrdersFromDatabase();
@@ -3045,7 +3208,7 @@ function sendOrderToBusinessWhatsApp(order) {
       message += `\n*Status:* Pending Confirmation`;
       
       if (order.paymentProof === 'uploaded') {
-        message += `\n\n⚠️ *IMPORTANT:* Customer has uploaded payment proof screenshot. Please check and attach manually to this chat.`;
+        message += `\n\n⚠️ *IMPORTANT:* Customer has uploaded payment proof screenshot. Please check.`;
       }
       
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
@@ -3311,7 +3474,7 @@ function loadNotificationDrawer() {
   let html = '';
   innerNotifications.slice(0, 20).forEach(notif => {
     html += `
-      <div style="padding:16px; background:white; border-radius:12px; margin-bottom:8px; border-left:4px solid ${notif.read ? '#cbd5e1' : '#667eea'};">
+      <div class="notification-item" onclick="markNotificationRead('${notif.id}')" style="padding:16px; background:white; border-radius:12px; margin-bottom:8px; border-left:4px solid ${notif.read ? '#cbd5e1' : '#667eea'}; cursor:pointer;">
         <div style="display:flex; align-items:start; gap:12px;">
           <div style="font-size:20px;">${notif.type === 'success' ? '✅' : notif.type === 'error' ? '❌' : 'ℹ️'}</div>
           <div style="flex:1;">
@@ -3326,6 +3489,17 @@ function loadNotificationDrawer() {
   
   list.innerHTML = html;
   count.textContent = unreadNotifications > 9 ? '9+' : unreadNotifications;
+}
+
+function markNotificationRead(id) {
+  const notif = innerNotifications.find(n => n.id == id);
+  if (notif && !notif.read) {
+    notif.read = true;
+    unreadNotifications--;
+    isolatedLocalStorage.setItem('innerNotifications', JSON.stringify(innerNotifications));
+    updateNotificationBellCount();
+    loadNotificationDrawer();
+  }
 }
 
 function markAllNotificationsAsRead() {
@@ -3500,21 +3674,6 @@ function isPWAInstalled() {
   return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
 
-// ===== SAVE TO CONTACTS =====
-function saveBusinessToContacts() {
-  if (!card.name || !card.phone) {
-    showNotification('❌ Business information incomplete');
-    return;
-  }
-  
-  let contactInfo = `Business: ${card.name}\nPhone: ${card.phone}\n`;
-  if (card.email) contactInfo += `Email: ${card.email}\n`;
-  if (card.address) contactInfo += `Address: ${card.address}\n`;
-  
-  navigator.clipboard.writeText(contactInfo);
-  showNotification('📋 Business info copied! Paste in your contacts app');
-}
-
 // ===== SHARE BUSINESS =====
 function shareBusiness() {
   const businessName = card.businessName || card.name || "Business";
@@ -3599,7 +3758,6 @@ async function loadDeliveryStatus() {
   
   let html = '';
   customerOrders.forEach(order => {
-    // Status configuration - ALL enum values included
     const statusConfig = {
       'pending': { color: '#f59e0b', text: '⏳ Pending' },
       'confirmed': { color: '#3b82f6', text: '✅ Confirmed' },
@@ -3649,17 +3807,7 @@ async function loadDeliveryStatus() {
   content.innerHTML = html;
 }
 
-function checkDeliveryStatus() {
-  if (!customerInfo.phone) {
-    navigateTo('customerInfoPage');
-    showNotification('Please add your phone number to track orders');
-    return;
-  }
-  navigateTo('deliveryPage');
-  loadDeliveryStatus();
-}
-
-// ===== RENDER TOKEN LIST FOR ADMIN =====
+// ===== RENDER TOKEN LIST =====
 function renderTokenList() {
   const tokenList = document.getElementById('tokenList');
   if (!tokenList) return;
@@ -3667,9 +3815,8 @@ function renderTokenList() {
   if (orderTokens.length === 0) {
     tokenList.innerHTML = `
       <div style="text-align:center; padding:40px;">
-        <i class="fas fa-ticket-alt" style="font-size:48px; color:#cbd5e1; margin-bottom:16px;"></i>
-        <p style="color:#64748b;">No orders yet</p>
-        <p style="font-size:12px; color:#94a3b8;">Orders will appear here automatically</p>
+        <i class="fas fa-ticket-alt" style="font-size:48px; color:#cbd5e1;"></i>
+        <p style="color:#64748b; margin-top:16px;">No orders yet</p>
       </div>
     `;
     return;
@@ -3868,12 +4015,22 @@ async function viewOrderDetails(orderId) {
   
   const confirmButton = order.status === 'pending' && isAdminLoggedIn ? 
     `<button class="admin-confirm-btn" onclick="confirmOrder('${order.id}')">
-       <i class="fas fa-check-circle"></i> Confirm Order & Generate Receipt
+       <i class="fas fa-check-circle"></i> Confirm Order
      </button>` : '';
   
   const proofStatus = order.payment_proof === 'uploaded' ? 
     '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Proof Uploaded</span>' : 
     '<span style="color:#f59e0b;"><i class="fas fa-info-circle"></i> Proof Not Uploaded</span>';
+  
+  const statusColors = {
+    'pending': '#f59e0b',
+    'confirmed': '#3b82f6',
+    'processing': '#8b5cf6',
+    'shipped': '#10b981',
+    'delivered': '#059669',
+    'cancelled': '#ef4444',
+    'refused': '#64748b'
+  };
   
   content.innerHTML = `
     <div class="order-ticket">
@@ -3940,17 +4097,16 @@ async function viewOrderDetails(orderId) {
     
     ${confirmButton}
     
-    <div style="display:flex; gap:12px; margin-top:20px;">
-      <select id="orderStatusSelect" style="flex:1; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;">
-        <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>⏳ Pending</option>
-        <option value="confirmed" ${order.status === 'confirmed' ? 'selected' : ''}>✅ Confirmed</option>
-        <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>🔄 Processing</option>
-        <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>🚚 Shipped</option>
-        <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>📦 Delivered</option>
-        <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>❌ Cancelled</option>
-        <option value="refused" ${order.status === 'refused' ? 'selected' : ''}>❌ Refused</option>
+    <div style="display:flex; gap:12px; margin-top:20px; flex-wrap:wrap;">
+      <select id="orderStatusSelect" style="flex:2; padding:12px; border:2px solid #e2e8f0; border-radius:8px; font-size:14px;">
+        ${Object.keys(statusColors).map(status => `
+          <option value="${status}" ${order.status === status ? 'selected' : ''}>
+            ${status.toUpperCase()}
+          </option>
+        `).join('')}
       </select>
-      <button onclick="window.updateOrderStatus('${order.id}')" style="padding:12px 20px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer;">
+      <button onclick="window.updateOrderStatus('${order.id}')" 
+        style="flex:1; padding:12px; background:var(--success-gradient); color:white; border:none; border-radius:8px; font-weight:700;">
         Update
       </button>
     </div>
@@ -3962,12 +4118,12 @@ async function viewOrderDetails(orderId) {
       </div>
       <div style="font-size:13px; color:#b45309;">
         ${order.status === 'pending' ? '⏳ Order received, waiting for admin confirmation' :
-          order.status === 'confirmed' ? '✅ Order confirmed, preparing for dispatch' :
-          order.status === 'processing' ? '🔄 Order is being processed' :
-          order.status === 'shipped' ? '🚚 Order has been shipped' :
-          order.status === 'delivered' ? '📦 Order delivered successfully' :
+          order.status === 'confirmed' ? '✅ Order confirmed' :
+          order.status === 'processing' ? '🔄 Order being processed' :
+          order.status === 'shipped' ? '🚚 Order shipped' :
+          order.status === 'delivered' ? '📦 Order delivered' :
           order.status === 'cancelled' ? '❌ Order cancelled' :
-          order.status === 'refused' ? '❌ Order refused' : 'Status unknown'}
+          order.status === 'refused' ? '❌ Order refused' : ''}
       </div>
     </div>
   `;
@@ -3996,9 +4152,17 @@ async function updateOrderStatus(orderId) {
     closeModal('orderConfirmationModal');
     await loadOrdersFromDatabase();
     
-    if (status === 'delivered') {
-      checkForDeliveries();
-    }
+    // Ask to notify customer
+    setTimeout(() => {
+      const order = orders.find(o => o.id === orderId);
+      if (order && order.customer_phone) {
+        if (confirm('Send notification to customer via WhatsApp?')) {
+          const message = `Your order #${order.order_id} status has been updated to: ${status}`;
+          window.open(`https://wa.me/${order.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+      }
+    }, 1000);
+    
   } else {
     showNotification('❌ Error updating order');
   }
@@ -4044,27 +4208,6 @@ function generateNewToken() {
 }
 
 // ===== CART MANAGEMENT =====
-function updateCartCount() {
-  const count = cart.length;
-  const miniEl = document.getElementById('cartCountMini');
-  const cartBadge = document.getElementById('cartBadge');
-  
-  if (miniEl) miniEl.textContent = count;
-  
-  if (cartBadge) {
-    if (count > 0) {
-      cartBadge.textContent = count > 99 ? '99+' : count;
-      cartBadge.style.display = 'flex';
-    } else {
-      cartBadge.style.display = 'none';
-    }
-  }
-  
-  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
-  
-  if (currentPage === 'cartPage') loadCartPage();
-}
-
 function addToCart(productIndex) {
   const products = card.products || [];
   const product = products[productIndex];
@@ -4701,7 +4844,7 @@ function logoutAdmin() {
   navigateTo('homePage');
 }
 
-// ===== NAVIGATION WITH HASH ROUTING =====
+// ===== NAVIGATION =====
 let lastBackPress = 0;
 
 function initializeRouting() {
@@ -4944,7 +5087,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const hintEl = document.getElementById('passwordHint');
     if (hintEl) {
       const uuidFirst6 = card.id.substring(0, 6).toLowerCase();
-      hintEl.textContent = `Hint: Password is business123_${uuidFirst6}`;
+      hintEl.innerHTML = `
+        <div style="background:#f1f5f9; padding:10px; border-radius:8px;">
+          <small>Admin Password Hint:</small><br>
+          <code>business123_${uuidFirst6.substring(0,4)}***</code>
+        </div>
+      `;
     }
     
     await loadOrdersFromDatabase();
@@ -4997,252 +5145,6 @@ async function renderApp() {
 
 // ===== INTERVALS =====
 setInterval(checkForDeliveries, 30000);
-  // ===== MOBILE CONSOLE EXTENSION - YEH SAB SE END MEIN PASTE KAREIN =====
-(function() {
-    // Create mobile console button
-    const consoleBtn = document.createElement('button');
-    consoleBtn.innerHTML = '🐞 Debug';
-    consoleBtn.style.position = 'fixed';
-    consoleBtn.style.bottom = '80px';
-    consoleBtn.style.right = '10px';
-    consoleBtn.style.zIndex = '9999';
-    consoleBtn.style.background = '#667eea';
-    consoleBtn.style.color = 'white';
-    consoleBtn.style.border = 'none';
-    consoleBtn.style.borderRadius = '30px';
-    consoleBtn.style.padding = '10px 15px';
-    consoleBtn.style.fontSize = '14px';
-    consoleBtn.style.fontWeight = 'bold';
-    consoleBtn.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
-    document.body.appendChild(consoleBtn);
-    
-    // Create console panel
-    const consolePanel = document.createElement('div');
-    consolePanel.id = 'mobileConsole';
-    consolePanel.style.position = 'fixed';
-    consolePanel.style.top = '0';
-    consolePanel.style.left = '0';
-    consolePanel.style.width = '100%';
-    consolePanel.style.height = '100%';
-    consolePanel.style.background = '#1e293b';
-    consolePanel.style.color = '#10b981';
-    consolePanel.style.zIndex = '10000';
-    consolePanel.style.padding = '50px 20px 20px';
-    consolePanel.style.overflowY = 'auto';
-    consolePanel.style.fontFamily = 'monospace';
-    consolePanel.style.fontSize = '12px';
-    consolePanel.style.display = 'none';
-    
-    consolePanel.innerHTML = `
-        <div style="position:fixed; top:10px; right:10px; left:10px; display:flex; gap:10px; background:#0f172a; padding:10px; border-radius:10px; z-index:10001;">
-            <button id="closeConsole" style="flex:1; padding:10px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:bold;">✕ CLOSE</button>
-            <button id="testOrderBtn" style="flex:2; padding:10px; background:#10b981; color:white; border:none; border-radius:8px; font-weight:bold;">🔍 TEST ORDER</button>
-        </div>
-        <div style="margin-top:70px;">
-            <h3 style="color:white; margin-bottom:10px;">📋 BUSINESS INFO</h3>
-            <div id="businessInfo" style="background:#0f172a; padding:15px; border-radius:10px; margin-bottom:20px;"></div>
-            
-            <h3 style="color:white; margin-bottom:10px;">🛒 CART INFO</h3>
-            <div id="cartInfo" style="background:#0f172a; padding:15px; border-radius:10px; margin-bottom:20px;"></div>
-            
-            <h3 style="color:white; margin-bottom:10px;">📦 TEST RESULTS</h3>
-            <div id="testResult" style="background:#0f172a; padding:15px; border-radius:10px; min-height:100px;"></div>
-            
-            <h3 style="color:white; margin-bottom:10px;">🔧 QUICK ACTIONS</h3>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <button id="checkBusinessBtn" style="padding:15px; background:#3b82f6; color:white; border:none; border-radius:8px;">🏢 Check Business</button>
-                <button id="checkTableBtn" style="padding:15px; background:#8b5cf6; color:white; border:none; border-radius:8px;">📊 Check Table</button>
-                <button id="simpleTestBtn" style="padding:15px; background:#f59e0b; color:white; border:none; border-radius:8px;">✨ Simple Test</button>
-                <button id="fixOrderBtn" style="padding:15px; background:#10b981; color:white; border:none; border-radius:8px;">✅ Fix Order</button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(consolePanel);
-    
-    // Toggle console
-    consoleBtn.onclick = function() {
-        consolePanel.style.display = 'block';
-        updateConsoleInfo();
-    };
-    
-    document.getElementById('closeConsole').onclick = function() {
-        consolePanel.style.display = 'none';
-    };
-    
-    // Update info function
-    function updateConsoleInfo() {
-        const bizInfo = document.getElementById('businessInfo');
-        const cartInfo = document.getElementById('cartInfo');
-        
-        bizInfo.innerHTML = `
-            <div style="margin-bottom:5px;"><span style="color:#94a3b8;">Business ID:</span> <span style="color:#10b981;">${currentBusinessId || '❌ NOT SET'}</span></div>
-            <div style="margin-bottom:5px;"><span style="color:#94a3b8;">Business Phone:</span> <span style="color:#10b981;">${card?.phone || 'N/A'}</span></div>
-            <div style="margin-bottom:5px;"><span style="color:#94a3b8;">Admin Logged In:</span> <span style="color:#10b981;">${isAdminLoggedIn ? '✅ YES' : '❌ NO'}</span></div>
-        `;
-        
-        cartInfo.innerHTML = `
-            <div style="margin-bottom:5px;"><span style="color:#94a3b8;">Cart Items:</span> <span style="color:#10b981;">${cart.length}</span></div>
-            <div style="margin-bottom:5px;"><span style="color:#94a3b8;">Customer:</span> <span style="color:#10b981;">${customerInfo.name || 'Not set'}</span></div>
-            <div style="margin-bottom:5px;"><span style="color:#94a3b8;">Phone:</span> <span style="color:#10b981;">${customerInfo.phone || 'Not set'}</span></div>
-        `;
-    }
-    
-    // Check Business
-    document.getElementById('checkBusinessBtn').onclick = async function() {
-        const result = document.getElementById('testResult');
-        result.innerHTML = '⏳ Checking business...';
-        
-        try {
-            if (!currentBusinessId) {
-                result.innerHTML = '❌ Business ID not set';
-                return;
-            }
-            
-            const { data, error } = await supa
-                .from('businesses')
-                .select('id, business_name')
-                .eq('id', currentBusinessId);
-            
-            if (error) {
-                result.innerHTML = `❌ Error: ${error.message}`;
-            } else if (data && data.length > 0) {
-                result.innerHTML = `✅ Business found: ${data[0].business_name}<br>ID: ${data[0].id}`;
-            } else {
-                result.innerHTML = '❌ Business not found in database';
-            }
-        } catch(e) {
-            result.innerHTML = `❌ Exception: ${e.message}`;
-        }
-    };
-    
-    // Check Table
-    document.getElementById('checkTableBtn').onclick = async function() {
-        const result = document.getElementById('testResult');
-        result.innerHTML = '⏳ Checking orders table...';
-        
-        try {
-            const { data, error } = await supa
-                .from('orders')
-                .select('count')
-                .limit(1);
-            
-            if (error) {
-                result.innerHTML = `❌ Error: ${error.message}`;
-            } else {
-                result.innerHTML = '✅ Orders table is accessible';
-            }
-        } catch(e) {
-            result.innerHTML = `❌ Exception: ${e.message}`;
-        }
-    };
-    
-    // Simple Test
-    document.getElementById('simpleTestBtn').onclick = async function() {
-        const result = document.getElementById('testResult');
-        result.innerHTML = '⏳ Running simple test...';
-        
-        try {
-            if (!currentBusinessId) {
-                result.innerHTML = '❌ Business ID not set';
-                return;
-            }
-            
-            const testOrder = {
-                business_id: currentBusinessId,
-                order_id: 'TEST-' + Date.now(),
-                token: 'TKT-' + Date.now(),
-                customer_phone: '03001234567',
-                customer_address: 'Test Address',
-                items: [{title: 'Test', price: 100, quantity: 1}],
-                subtotal: 100,
-                total: 100,
-                payment_method: 'cod',
-                status: 'pending',
-                created_at: new Date().toISOString()
-            };
-            
-            const { error } = await supa
-                .from('orders')
-                .insert([testOrder]);
-            
-            if (error) {
-                result.innerHTML = `❌ Error: ${error.message}`;
-            } else {
-                result.innerHTML = '✅ Test order inserted successfully!';
-                updateConsoleInfo();
-            }
-        } catch(e) {
-            result.innerHTML = `❌ Exception: ${e.message}`;
-        }
-    };
-    
-    // Fix Order - This will try to save current cart
-    document.getElementById('fixOrderBtn').onclick = async function() {
-        const result = document.getElementById('testResult');
-        result.innerHTML = '⏳ Fixing order...';
-        
-        if (!customerInfo.name || !customerInfo.phone) {
-            result.innerHTML = '❌ Please fill customer info first';
-            return;
-        }
-        
-        if (cart.length === 0) {
-            result.innerHTML = '❌ Cart is empty';
-            return;
-        }
-        
-        try {
-            const orderData = {
-                orderId: 'ORD-' + Date.now(),
-                token: 'TKT-' + Date.now().toString().slice(-6) + '-' + Math.random().toString(36).substr(2, 4).toUpperCase(),
-                customerName: customerInfo.name,
-                customerPhone: customerInfo.phone,
-                customerAddress: customerInfo.address || 'Test Address',
-                items: cart.map(item => ({
-                    title: item.title,
-                    price: parseFloat(item.discountPrice || item.originalPrice || 0),
-                    quantity: item.quantity || 1
-                })),
-                subtotal: cart.reduce((sum, item) => sum + (parseFloat(item.discountPrice || item.originalPrice || 0) * (item.quantity || 1)), 0),
-                total: cart.reduce((sum, item) => sum + (parseFloat(item.discountPrice || item.originalPrice || 0) * (item.quantity || 1)), 0) + 150,
-                paymentMethod: 'cod'
-            };
-            
-            const orderToInsert = {
-                business_id: currentBusinessId,
-                order_id: orderData.orderId,
-                token: orderData.token,
-                customer_name: orderData.customerName,
-                customer_phone: orderData.customerPhone,
-                customer_address: orderData.customerAddress,
-                items: orderData.items,
-                subtotal: orderData.subtotal,
-                total: orderData.total,
-                payment_method: orderData.paymentMethod,
-                status: 'pending',
-                created_at: new Date().toISOString()
-            };
-            
-            const { error } = await supa
-                .from('orders')
-                .insert([orderToInsert]);
-            
-            if (error) {
-                result.innerHTML = `❌ Error: ${error.message}`;
-            } else {
-                result.innerHTML = '✅ Order fixed and saved!';
-                cart = [];
-                updateCartCount();
-            }
-        } catch(e) {
-            result.innerHTML = `❌ Exception: ${e.message}`;
-        }
-    };
-    
-    // Update info every 5 seconds
-    setInterval(updateConsoleInfo, 5000);
-})();
 </script>
 </body>
 </html>
