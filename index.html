@@ -7,7 +7,6 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2563eb">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
 <style>
 /* ===== PROFESSIONAL STYLING WITH THUMBNAILS ===== */
 :root {
@@ -574,7 +573,7 @@ body {
   flex-shrink: 0;
 }
 
-/* ===== PAYMENT GATEWAY CARDS (now with functional toggles) ===== */
+/* ===== PAYMENT GATEWAY CARDS ===== */
 .payment-grid {
   display: flex;
   flex-direction: column;
@@ -635,7 +634,7 @@ body {
 }
 
 .payment-fields {
-  padding: 0 20px 20px 78px; /* left space for icon */
+  padding: 0 20px 20px 78px;
   display: none;
 }
 
@@ -714,13 +713,30 @@ body {
   left: 22px;
 }
 
+/* enable/disable toggle inside payment card (for COD etc) */
+.gateway-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  background: #f1f5f9;
+  padding: 10px 15px;
+  border-radius: 40px;
+}
+.gateway-toggle span {
+  font-weight: 600;
+  font-size: 14px;
+}
+.gateway-toggle .toggle-switch {
+  margin: 0;
+}
+
 @media (max-width: 480px) {
   .social-grid { grid-template-columns: repeat(2, 1fr); }
   .row-2 { grid-template-columns: 1fr; }
   .product-card { min-width: 260px; width: 80vw; }
 }
 </style>
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -738,7 +754,7 @@ body {
   <div class="loading-text">Creating your professional digital business card...</div>
 </div>
 
-<!-- ===== PROFILE SECTION ===== (unchanged, keep compact) -->
+<!-- ===== PROFILE SECTION ===== -->
 <div class="card">
   <div class="card-header"><i class="fas fa-user"></i><div><h2>Profile Information</h2><p>Your personal and business details</p></div></div>
   <div class="upload-container">
@@ -796,7 +812,7 @@ body {
   <button class="add-btn" onclick="addHoliday()" style="background:var(--primary); color:white; border:none; padding:12px; border-radius:12px; font-weight:600; width:100%; margin-top:8px; cursor:pointer;"><i class="fas fa-plus"></i> Add Holiday</button>
 </div>
 
-<!-- ===== DELIVERY SETTINGS ===== (unchanged) -->
+<!-- ===== DELIVERY SETTINGS ===== -->
 <div class="card">
   <div class="card-header"><i class="fas fa-truck"></i><div><h2>Delivery Settings</h2><p>Configure delivery charges and zones</p></div></div>
   <h3 style="font-size:15px; margin:0 0 12px;">Default Delivery</h3>
@@ -823,7 +839,7 @@ body {
 <button class="btn btn-success" onclick="openPaymentModal()" style="margin-bottom:12px;"><i class="fas fa-credit-card"></i> Configure Payments & Tokens</button>
 <button class="btn btn-primary" onclick="generate()" id="generateButton"><i class="fas fa-magic"></i> Generate Digital Card</button>
 
-<!-- ===== PAYMENT MODAL – COMPLETELY REWORKED, FULLY FUNCTIONAL ===== -->
+<!-- ===== PAYMENT MODAL – with enable/disable toggle for COD and all gateways ===== -->
 <div class="modal" id="paymentModal">
   <div class="modal-content">
     <div class="modal-header">
@@ -844,8 +860,8 @@ body {
       </div>
       <div class="token-preview"><div style="text-align:center; margin-bottom:4px; font-size:11px;">Sample Token</div><div class="token-code" id="tokenPreview" style="font-family:monospace; font-size:16px; font-weight:800; color:#10b981; text-align:center; padding:10px; background:rgba(255,255,255,0.1); border-radius:10px; word-break:break-all;">TKT-12345678-A1B2</div></div>
       
-      <!-- PAYMENT GATEWAYS – full functional multi‑select, expanded fields, new options -->
-      <h3 style="font-size:16px; margin:20px 0 12px;">Payment Gateways (click to expand / toggle)</h3>
+      <!-- PAYMENT GATEWAYS – EACH NOW HAS ITS OWN ENABLE TOGGLE INSIDE -->
+      <h3 style="font-size:16px; margin:20px 0 12px;">Payment Gateways (click to expand)</h3>
       <div class="payment-grid" id="paymentGatewaysContainer">
         <!-- JazzCash -->
         <div class="payment-card" data-gateway="jazzcash">
@@ -855,6 +871,11 @@ body {
             <i class="fas fa-chevron-down payment-chevron"></i>
           </div>
           <div class="payment-fields">
+            <!-- enable toggle inside -->
+            <div class="gateway-toggle">
+              <span>Enable JazzCash</span>
+              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="jazzcash" checked></div>
+            </div>
             <div class="field-row"><label class="field-label">Account Number</label><input type="text" class="field-input" id="jazzcashNumber" placeholder="03XXXXXXXXX" value="03001234567"></div>
             <div class="field-row"><label class="field-label">QR Code</label><div class="upload-area" style="border:2px dashed var(--border); border-radius:12px; padding:12px;"><i class="fas fa-qrcode"></i><span>Click to upload QR</span><input type="file" id="jazzcashBarcode" accept="image/*" onchange="handleFileUpload(this, 'jazzcash')"></div></div>
           </div>
@@ -867,11 +888,15 @@ body {
             <i class="fas fa-chevron-down payment-chevron"></i>
           </div>
           <div class="payment-fields">
+            <div class="gateway-toggle">
+              <span>Enable EasyPaisa</span>
+              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="easypaisa" checked></div>
+            </div>
             <div class="field-row"><label class="field-label">Account Number</label><input type="text" class="field-input" id="easypaisaNumber" placeholder="03XXXXXXXXX" value="03001234567"></div>
             <div class="field-row"><label class="field-label">QR Code</label><div class="upload-area"><i class="fas fa-qrcode"></i><span>Click to upload QR</span><input type="file" id="easypaisaBarcode" accept="image/*" onchange="handleFileUpload(this, 'easypaisa')"></div></div>
           </div>
         </div>
-        <!-- Cash on Delivery -->
+        <!-- Cash on Delivery – now with explicit enable toggle -->
         <div class="payment-card" data-gateway="cod">
           <div class="payment-card-header">
             <div class="payment-icon" style="background:#10b981;"><i class="fas fa-truck"></i></div>
@@ -879,10 +904,14 @@ body {
             <i class="fas fa-chevron-down payment-chevron"></i>
           </div>
           <div class="payment-fields">
+            <div class="gateway-toggle">
+              <span>Enable Cash on Delivery</span>
+              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="cod" id="codEnableToggle" checked></div>
+            </div>
             <div class="field-row"><label class="field-label">Minimum Order (PKR)</label><input type="number" class="field-input" id="codMinimumOrder" value="500"></div>
           </div>
         </div>
-        <!-- NEW: Bank Transfer -->
+        <!-- Bank Transfer -->
         <div class="payment-card" data-gateway="bank">
           <div class="payment-card-header">
             <div class="payment-icon" style="background:#3b82f6;"><i class="fas fa-university"></i></div>
@@ -890,12 +919,16 @@ body {
             <i class="fas fa-chevron-down payment-chevron"></i>
           </div>
           <div class="payment-fields">
+            <div class="gateway-toggle">
+              <span>Enable Bank Transfer</span>
+              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="bank" checked></div>
+            </div>
             <div class="field-row"><label class="field-label">Bank Name</label><input type="text" class="field-input" id="bankName" placeholder="e.g., HBL" value="HBL"></div>
             <div class="field-row"><label class="field-label">Account Title</label><input type="text" class="field-input" id="bankAccountTitle" placeholder="John Doe" value="Business Name"></div>
             <div class="field-row"><label class="field-label">IBAN / Account No.</label><input type="text" class="field-input" id="bankIban" placeholder="PK12...." value="PK12ABCD123456"></div>
           </div>
         </div>
-        <!-- NEW: Credit / Debit Card (Stripe-like) -->
+        <!-- Credit / Debit Card -->
         <div class="payment-card" data-gateway="card">
           <div class="payment-card-header">
             <div class="payment-icon" style="background:#8b5cf6;"><i class="far fa-credit-card"></i></div>
@@ -903,11 +936,15 @@ body {
             <i class="fas fa-chevron-down payment-chevron"></i>
           </div>
           <div class="payment-fields">
+            <div class="gateway-toggle">
+              <span>Enable Card Payments</span>
+              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="card" checked></div>
+            </div>
             <div class="field-row"><label class="field-label">Processor</label><select class="field-input" id="cardProcessor"><option value="stripe">Stripe</option><option value="paypal">PayPal</option><option value="square">Square</option></select></div>
             <div class="field-row"><label class="field-label">API Public Key / Client ID</label><input type="text" class="field-input" id="cardApiKey" placeholder="pk_...." value="pk_test_123"></div>
           </div>
         </div>
-        <!-- NEW: Cryptocurrency -->
+        <!-- Cryptocurrency -->
         <div class="payment-card" data-gateway="crypto">
           <div class="payment-card-header">
             <div class="payment-icon" style="background:#f59e0b;"><i class="fab fa-bitcoin"></i></div>
@@ -915,6 +952,10 @@ body {
             <i class="fas fa-chevron-down payment-chevron"></i>
           </div>
           <div class="payment-fields">
+            <div class="gateway-toggle">
+              <span>Enable Crypto</span>
+              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="crypto" checked></div>
+            </div>
             <div class="field-row"><label class="field-label">BTC Address</label><input type="text" class="field-input" id="cryptoBtc" placeholder="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"></div>
             <div class="field-row"><label class="field-label">ETH Address</label><input type="text" class="field-input" id="cryptoEth" placeholder="0x...."></div>
             <div class="field-row"><label class="field-label">USDT (TRC20)</label><input type="text" class="field-input" id="cryptoUsdt" placeholder="T...."></div>
@@ -922,7 +963,7 @@ body {
         </div>
       </div>
       
-      <!-- selected gateways indicator (visual only) -->
+      <!-- selected gateways indicator (reads from enable toggles) -->
       <div style="background:#f1f5f9; border-radius:12px; padding:12px; margin:16px 0; font-size:13px;">
         <span style="font-weight:600;">Enabled gateways:</span> <span id="selectedGatewaysList">Cash on Delivery</span>
       </div>
@@ -944,56 +985,49 @@ let profileImageFile = null;
 let productImageFiles = {};
 // payment data store (extended)
 let paymentData = {
-  jazzcash: { number: '03001234567', barcode: '' },
-  easypaisa: { number: '03001234567', barcode: '' },
-  cod: { minimumOrder: 500 },
-  bank: { bankName: 'HBL', accountTitle: 'Business Name', iban: 'PK12ABCD123456' },
-  card: { processor: 'stripe', apiKey: 'pk_test_123' },
-  crypto: { btc: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', eth: '0x...', usdt: 'T...' }
+  jazzcash: { number: '03001234567', barcode: '', enabled: true },
+  easypaisa: { number: '03001234567', barcode: '', enabled: true },
+  cod: { minimumOrder: 500, enabled: true },
+  bank: { bankName: 'HBL', accountTitle: 'Business Name', iban: 'PK12ABCD123456', enabled: true },
+  card: { processor: 'stripe', apiKey: 'pk_test_123', enabled: true },
+  crypto: { btc: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', eth: '0x...', usdt: 'T...', enabled: true }
 };
-// store selected gateways (multiple allowed)
-let selectedGateways = ['cod']; // default
 
-// ===== INIT PAYMENT MODAL TOGGLES =====
+// ===== INIT PAYMENT MODAL =====
 function initPaymentModal() {
   const container = document.getElementById('paymentGatewaysContainer');
   if (!container) return;
   
-  // clear any previous listeners (simple reattach)
   container.querySelectorAll('.payment-card').forEach(card => {
     const header = card.querySelector('.payment-card-header');
     const gateway = card.dataset.gateway;
     
-    // expand/collapse on header click
+    // expand/collapse
     header.addEventListener('click', (e) => {
       e.stopPropagation();
       card.classList.toggle('expanded');
     });
     
-    // selection on card click (toggle selected class)
-    card.addEventListener('click', (e) => {
-      // if the click originated from an input/button, ignore selection toggle
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON' || e.target.closest('input') || e.target.closest('button') || e.target.closest('.upload-area')) return;
-      
-      // toggle selection
-      if (selectedGateways.includes(gateway)) {
-        selectedGateways = selectedGateways.filter(g => g !== gateway);
-        card.classList.remove('selected');
-      } else {
-        selectedGateways.push(gateway);
-        card.classList.add('selected');
-      }
-      updateSelectedGatewaysDisplay();
-    });
-    
-    // pre-select default (cod)
-    if (gateway === 'cod') {
-      selectedGateways.push('cod');
-      card.classList.add('selected');
+    // connect enable toggle to update display
+    const enableToggle = card.querySelector('.gateway-enable');
+    if (enableToggle) {
+      enableToggle.addEventListener('change', function(e) {
+        e.stopPropagation();
+        updateSelectedGatewaysDisplay();
+        // also update card selected style based on toggle
+        if (this.checked) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+      // set initial checked state from paymentData
+      enableToggle.checked = paymentData[gateway]?.enabled !== false; // default true
+      if (enableToggle.checked) card.classList.add('selected');
     }
   });
   
-  // also attach file upload handlers for jazzcash/easypaisa (already have onchange)
+  updateSelectedGatewaysDisplay();
 }
 
 function updateSelectedGatewaysDisplay() {
@@ -1001,8 +1035,14 @@ function updateSelectedGatewaysDisplay() {
     jazzcash: 'JazzCash', easypaisa: 'EasyPaisa', cod: 'Cash on Delivery',
     bank: 'Bank Transfer', card: 'Credit/Debit Card', crypto: 'Cryptocurrency'
   };
-  const list = selectedGateways.map(g => names[g] || g).join(', ');
-  document.getElementById('selectedGatewaysList').innerText = list || 'None';
+  const enabled = [];
+  document.querySelectorAll('.gateway-enable').forEach(toggle => {
+    if (toggle.checked) {
+      const g = toggle.dataset.gateway;
+      enabled.push(names[g] || g);
+    }
+  });
+  document.getElementById('selectedGatewaysList').innerText = enabled.join(', ') || 'None';
 }
 
 // ===== PROFILE, PRODUCT, HOLIDAY, DELIVERY ZONES (keep as before) =====
@@ -1144,18 +1184,17 @@ function testTokenGeneration() {
 function openPaymentModal() {
   document.getElementById('paymentModal').style.display='flex';
   testTokenGeneration();
-  // refresh selected visual from selectedGateways array
-  document.querySelectorAll('.payment-card').forEach(card => {
-    const g = card.dataset.gateway;
-    if (selectedGateways.includes(g)) card.classList.add('selected');
-    else card.classList.remove('selected');
+  // sync toggles with paymentData (already done in init, but recall)
+  document.querySelectorAll('.gateway-enable').forEach(t => {
+    const g = t.dataset.gateway;
+    t.checked = paymentData[g]?.enabled !== false;
   });
   updateSelectedGatewaysDisplay();
 }
 function closePaymentModal() { document.getElementById('paymentModal').style.display='none'; }
 
 function savePaymentAndTicketSettings() {
-  // gather all field values into paymentData (simple)
+  // gather all field values and enabled status
   paymentData.jazzcash.number = document.getElementById('jazzcashNumber')?.value || '';
   paymentData.easypaisa.number = document.getElementById('easypaisaNumber')?.value || '';
   paymentData.cod.minimumOrder = parseFloat(document.getElementById('codMinimumOrder')?.value) || 500;
@@ -1167,6 +1206,13 @@ function savePaymentAndTicketSettings() {
   paymentData.crypto.btc = document.getElementById('cryptoBtc')?.value || '';
   paymentData.crypto.eth = document.getElementById('cryptoEth')?.value || '';
   paymentData.crypto.usdt = document.getElementById('cryptoUsdt')?.value || '';
+  
+  // get enabled status from toggles
+  document.querySelectorAll('.gateway-enable').forEach(t => {
+    const g = t.dataset.gateway;
+    if (!paymentData[g]) paymentData[g] = {};
+    paymentData[g].enabled = t.checked;
+  });
   
   showSuccess('✅ Payment settings saved!');
   setTimeout(closePaymentModal, 1200);
@@ -1189,7 +1235,7 @@ function resizeImage(file) {
   });
 }
 
-// ===== MAIN GENERATE (unchanged except uses updated paymentData & selectedGateways) =====
+// ===== MAIN GENERATE =====
 async function generate() {
   if (!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value || !document.getElementById('businessName').value || !document.getElementById('address').value) {
     showSuccess('❌ Please fill all required fields (*)'); return;
@@ -1197,45 +1243,77 @@ async function generate() {
   showLoading();
   try {
     const id = crypto.randomUUID();
-    // businessHours, holidays, products, zones collection (same as before) – omitted for brevity but identical
-    // (keep from original) – we'll reuse existing logic from original code; here we keep it short.
-    // For brevity, I'll include the essential product & profile image processing.
-    // In final answer, the full function is present in original; I'm maintaining it.
-    // For now, mock a simple insert to demonstrate functionality.
-    
-    // Actually, we keep the original code's generate logic (copy from earlier). 
-    // Since this is a partial edit due to length, I assume the generate() from previous version is included.
-    // In this final answer, I'll embed a minimal version that works with the new payment fields.
-    // But for safety, I'll paste the core of generate from original.
-    
-    // ************* ORIGINAL GENERATE LOGIC (condensed) *************
-    const businessHours = []; document.querySelectorAll('.day-box').forEach(box => { let s=box.querySelector('select')?.value||'open', t=box.querySelectorAll('input[type="time"]'); businessHours.push({status:s, start:t[0]?.value||'09:00', end:t[1]?.value||'18:00'}); });
-    const holidays = []; document.querySelectorAll('#holidaysContainer .holiday-item').forEach(item => { let n=item.querySelector('.holidayName')?.value, d=item.querySelector('.holidayDate')?.value; if(n&&d) holidays.push({name:n,date:d}); });
-    const products = []; const productBoxes = document.querySelectorAll('.product-card'); for(let i=0;i<productBoxes.length;i++){ const box=productBoxes[i]; const idx=parseInt(box.dataset.index||i+1); const file=productImageFiles[idx]; products.push({ title:box.querySelector('.productTitle')?.value||'', desc:box.querySelector('.productDesc')?.value||'', originalPrice:parseFloat(box.querySelector('.originalPrice')?.value)||null, discountPrice:parseFloat(box.querySelector('.discountPrice')?.value)||null, badges:Array.from(box.querySelectorAll('input[type=checkbox]:checked')).map(cb=>cb.value), image:file?await resizeImage(file):'' }); }
-    const zones = []; document.querySelectorAll('#deliveryZonesList .zone-item').forEach(z=>{ let i=z.querySelectorAll('input'); if(i[0]?.value&&i[1]?.value&&i[2]?.value) zones.push({city:i[0].value,charge:parseFloat(i[1].value),time:i[2].value}); });
+    // business hours
+    const businessHours = []; 
+    document.querySelectorAll('.day-box').forEach(box => { 
+      let s=box.querySelector('select')?.value||'open'; 
+      let t=box.querySelectorAll('input[type="time"]'); 
+      businessHours.push({status:s, start:t[0]?.value||'09:00', end:t[1]?.value||'18:00'}); 
+    });
+    // holidays
+    const holidays = []; 
+    document.querySelectorAll('#holidaysContainer .holiday-item').forEach(item => { 
+      let n=item.querySelector('.holidayName')?.value; 
+      let d=item.querySelector('.holidayDate')?.value; 
+      if(n&&d) holidays.push({name:n,date:d}); 
+    });
+    // products
+    const products = []; 
+    const productBoxes = document.querySelectorAll('.product-card'); 
+    for(let i=0;i<productBoxes.length;i++){ 
+      const box=productBoxes[i]; 
+      const idx=parseInt(box.dataset.index||i+1); 
+      const file=productImageFiles[idx]; 
+      products.push({ 
+        title:box.querySelector('.productTitle')?.value||'', 
+        desc:box.querySelector('.productDesc')?.value||'', 
+        originalPrice:parseFloat(box.querySelector('.originalPrice')?.value)||null, 
+        discountPrice:parseFloat(box.querySelector('.discountPrice')?.value)||null, 
+        badges:Array.from(box.querySelectorAll('input[type=checkbox]:checked')).map(cb=>cb.value), 
+        image:file?await resizeImage(file):'' 
+      }); 
+    }
+    // zones
+    const zones = []; 
+    document.querySelectorAll('#deliveryZonesList .zone-item').forEach(z=>{ 
+      let i=z.querySelectorAll('input'); 
+      if(i[0]?.value&&i[1]?.value&&i[2]?.value) zones.push({city:i[0].value,charge:parseFloat(i[1].value),time:i[2].value}); 
+    });
+    // process barcode images
     if(paymentData.jazzcash.barcodeFile) paymentData.jazzcash.barcode = await resizeImage(paymentData.jazzcash.barcodeFile);
     if(paymentData.easypaisa.barcodeFile) paymentData.easypaisa.barcode = await resizeImage(paymentData.easypaisa.barcodeFile);
     
+    // build payment methods based on enabled toggles
     const paymentMethods = {
       whatsapp: { active:!!document.getElementById('whatsappNumber')?.value, number:document.getElementById('whatsappNumber')?.value },
       gateways: {},
       tokenSystem: { enabled:true, requireTokenForTracking:true, prefix:document.getElementById('tokenPrefix')?.value, length:parseInt(document.getElementById('tokenLength')?.value) }
     };
-    selectedGateways.forEach(g => {
-      if (g==='cod') paymentMethods.gateways.cod = { active:true, minimumOrder:paymentData.cod.minimumOrder };
-      else if (g==='jazzcash') paymentMethods.gateways.jazzcash = { active:true, number:paymentData.jazzcash.number, barcode:paymentData.jazzcash.barcode };
-      else if (g==='easypaisa') paymentMethods.gateways.easypaisa = { active:true, number:paymentData.easypaisa.number, barcode:paymentData.easypaisa.barcode };
-      else if (g==='bank') paymentMethods.gateways.bank = { active:true, ...paymentData.bank };
-      else if (g==='card') paymentMethods.gateways.card = { active:true, ...paymentData.card };
-      else if (g==='crypto') paymentMethods.gateways.crypto = { active:true, ...paymentData.crypto };
-    });
+    
+    // only include gateways that are enabled
+    if (paymentData.jazzcash.enabled) paymentMethods.gateways.jazzcash = { active:true, number:paymentData.jazzcash.number, barcode:paymentData.jazzcash.barcode };
+    if (paymentData.easypaisa.enabled) paymentMethods.gateways.easypaisa = { active:true, number:paymentData.easypaisa.number, barcode:paymentData.easypaisa.barcode };
+    if (paymentData.cod.enabled) paymentMethods.gateways.cod = { active:true, minimumOrder:paymentData.cod.minimumOrder };
+    if (paymentData.bank.enabled) paymentMethods.gateways.bank = { active:true, bankName:paymentData.bank.bankName, accountTitle:paymentData.bank.accountTitle, iban:paymentData.bank.iban };
+    if (paymentData.card.enabled) paymentMethods.gateways.card = { active:true, processor:paymentData.card.processor, apiKey:paymentData.card.apiKey };
+    if (paymentData.crypto.enabled) paymentMethods.gateways.crypto = { active:true, btc:paymentData.crypto.btc, eth:paymentData.crypto.eth, usdt:paymentData.crypto.usdt };
     
     const cardData = {
-      id, name:document.getElementById('fullName').value, phone:document.getElementById('phoneNumber').value, email:document.getElementById('email').value, address:document.getElementById('address').value, businessName:document.getElementById('businessName').value,
-      business:{ about:document.getElementById('businessAbout').value }, socialMedia:{ facebook:document.getElementById('facebook').value, instagram:document.getElementById('instagram').value, twitter:document.getElementById('twitter').value, linkedin:document.getElementById('linkedin').value, youtube:document.getElementById('youtube').value, tiktok:document.getElementById('tiktok').value, website:document.getElementById('website').value },
+      id, name:document.getElementById('fullName').value, phone:document.getElementById('phoneNumber').value, email:document.getElementById('email').value, 
+      address:document.getElementById('address').value, businessName:document.getElementById('businessName').value,
+      business:{ about:document.getElementById('businessAbout').value }, 
+      socialMedia:{ facebook:document.getElementById('facebook').value, instagram:document.getElementById('instagram').value, twitter:document.getElementById('twitter').value, linkedin:document.getElementById('linkedin').value, youtube:document.getElementById('youtube').value, tiktok:document.getElementById('tiktok').value, website:document.getElementById('website').value },
       businessHours, holidays, products, payments:paymentMethods,
-      deliverySettings:{ default:{ withinCity:{ charge:parseFloat(document.getElementById('deliveryChargeCity').value)||150, time:document.getElementById('deliveryTimeCity').value||'1-2 business days' }, otherCities:{ charge:parseFloat(document.getElementById('deliveryChargeOther').value)||300, time:document.getElementById('deliveryTimeOther').value||'3-5 business days' } }, zones, freeDeliveryMin:parseFloat(document.getElementById('freeDeliveryMin').value)||2000, cutoffTime:document.getElementById('deliveryCutoffTime').value||'16:00', maxDays:document.getElementById('deliveryDays').value||'5-7 days', addressConfirmation:{ required:document.getElementById('requireAddressConfirmation')?.checked||false, saveAddresses:document.getElementById('saveCustomerAddresses')?.checked||false } },
-      ticketSettings:{ enableAutoTickets:true, enableEmailTickets:true, enableWhatsappTickets:true, ticketPrefix:'TKT' }, version:'3.1.0', created:new Date().toISOString()
+      deliverySettings:{ 
+        default:{ withinCity:{ charge:parseFloat(document.getElementById('deliveryChargeCity').value)||150, time:document.getElementById('deliveryTimeCity').value||'1-2 business days' }, 
+                  otherCities:{ charge:parseFloat(document.getElementById('deliveryChargeOther').value)||300, time:document.getElementById('deliveryTimeOther').value||'3-5 business days' } }, 
+        zones, freeDeliveryMin:parseFloat(document.getElementById('freeDeliveryMin').value)||2000, 
+        cutoffTime:document.getElementById('deliveryCutoffTime').value||'16:00', 
+        maxDays:document.getElementById('deliveryDays').value||'5-7 days', 
+        addressConfirmation:{ required:document.getElementById('requireAddressConfirmation')?.checked||false, saveAddresses:document.getElementById('saveCustomerAddresses')?.checked||false } 
+      },
+      ticketSettings:{ enableAutoTickets:true, enableEmailTickets:true, enableWhatsappTickets:true, ticketPrefix:'TKT' }, 
+      version:'3.2.0', created:new Date().toISOString()
     };
     if(profileImageFile) cardData.profileImage = await resizeImage(profileImageFile);
     
@@ -1253,10 +1331,7 @@ document.addEventListener('DOMContentLoaded', function() {
   addDeliveryZone({city:'Lahore', charge:200, time:'2-3 days'});
   addDeliveryZone({city:'Islamabad', charge:250, time:'2-3 days'});
   addOffer();
-  initPaymentModal(); // setup payment cards
-  // ensure COD is selected by default
-  selectedGateways = ['cod'];
-  updateSelectedGatewaysDisplay();
+  initPaymentModal();
 });
 </script>
 </body>
