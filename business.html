@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest.json" id="manifestLink">
 
 <style>
-/* ===== ALL EXISTING STYLES ===== */
+/* ===== ALL YOUR EXISTING STYLES HERE - KEEP THEM ===== */
 :root {
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   --secondary-gradient: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -1005,9 +1005,7 @@ body {
   cursor: pointer;
 }
 
-/* ===== NEW STYLES FOR ADDED FEATURES ===== */
-
-/* Product Zoom Overlay */
+/* ===== NEW STYLES ===== */
 .product-zoom-overlay {
   position: fixed;
   top: 0;
@@ -1030,7 +1028,6 @@ body {
   animation: zoomIn 0.3s ease;
 }
 
-/* Payment Proof Popup */
 .payment-proof-popup {
   position: fixed;
   top: 0;
@@ -1351,6 +1348,11 @@ body {
   color: #475569;
 }
 
+.receipt-btn-download {
+  background: var(--primary-gradient);
+  color: white;
+}
+
 /* Admin Confirm Button */
 .admin-confirm-btn {
   background: var(--success-gradient);
@@ -1403,23 +1405,6 @@ body {
   background: #f8fafc;
   transform: translateY(-2px);
 }
-
-/* Order Status Badge */
-.status-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 30px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: capitalize;
-}
-
-.status-pending { background: #fef3c7; color: #92400e; }
-.status-confirmed { background: #dbeafe; color: #1e40af; }
-.status-processing { background: #ede9fe; color: #5b21b6; }
-.status-shipped { background: #d1fae5; color: #065f46; }
-.status-delivered { background: #10b981; color: white; }
-.status-cancelled { background: #fee2e2; color: #b91c1c; }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 480px) {
@@ -1547,7 +1532,7 @@ body {
   <div class="payment-proof-popup" id="paymentProofPopup">
     <div class="popup-content" onclick="event.stopPropagation()">
       <div class="popup-header">
-        <h3><i class="fas fa-receipt" style="color:#10b981;"></i> Payment Proof</h3>
+        <h3><i class="fas fa-receipt" style="color:#10b981;"></i> Payment Confirmation</h3>
         <button class="popup-close" onclick="closePaymentProofPopup()">×</button>
       </div>
       
@@ -1555,21 +1540,38 @@ body {
         <!-- Dynamic instructions will be inserted here -->
       </div>
       
-      <div class="popup-upload-area" id="popupUploadArea" onclick="document.getElementById('popupProofInput').click()">
-        <i class="fas fa-cloud-upload-alt"></i>
-        <div style="font-weight:600; margin-bottom:4px;">Click to upload screenshot</div>
-        <div style="font-size:12px; color:#94a3b8;">PNG, JPG up to 5MB</div>
-        <input type="file" id="popupProofInput" accept="image/*" style="display:none;" onchange="handlePopupProofUpload(this)">
+      <!-- Optional Proof Upload -->
+      <div style="margin: 10px 0; text-align: center;">
+        <label style="display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;">
+          <input type="checkbox" id="skipProofCheckbox" onchange="toggleProofUpload()"> 
+          <span style="font-size: 14px; color: var(--dark-color);">I don't have screenshot (send only transaction details)</span>
+        </label>
       </div>
       
-      <img id="popupProofPreview" class="popup-preview" src="" alt="Preview">
+      <div id="proofUploadSection">
+        <div class="popup-upload-area" id="popupUploadArea" onclick="document.getElementById('popupProofInput').click()">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <div style="font-weight:600; margin-bottom:4px;">Upload payment screenshot (optional)</div>
+          <div style="font-size:12px; color:#94a3b8;">PNG, JPG up to 5MB</div>
+          <input type="file" id="popupProofInput" accept="image/*" style="display:none;" onchange="handlePopupProofUpload(this)">
+        </div>
+        
+        <img id="popupProofPreview" class="popup-preview" src="" alt="Preview">
+      </div>
+      
+      <div style="background: #f8fafc; border-radius: 12px; padding: 12px; margin: 15px 0;">
+        <p style="font-size: 13px; color: #475569; display: flex; align-items: center; gap: 8px;">
+          <i class="fab fa-whatsapp" style="color: #25D366; font-size: 18px;"></i>
+          <span>After confirmation, you'll be redirected to WhatsApp to send order details to business. Please attach screenshot if uploaded.</span>
+        </p>
+      </div>
       
       <div class="popup-buttons">
         <button class="popup-btn popup-btn-secondary" onclick="closePaymentProofPopup()">
           <i class="fas fa-times"></i> Cancel
         </button>
-        <button class="popup-btn popup-btn-primary" id="confirmPaymentBtn" onclick="confirmPaymentWithProof()" disabled>
-          <i class="fas fa-check"></i> Confirm Payment
+        <button class="popup-btn popup-btn-primary" id="confirmPaymentBtn" onclick="confirmPaymentWithProof()">
+          <i class="fas fa-check"></i> Confirm & Send to WhatsApp
         </button>
       </div>
     </div>
@@ -1594,6 +1596,9 @@ body {
         </button>
         <button class="receipt-btn receipt-btn-email" onclick="sendReceiptToEmail()">
           <i class="fas fa-envelope"></i> Email
+        </button>
+        <button class="receipt-btn receipt-btn-download" onclick="downloadReceipt()">
+          <i class="fas fa-download"></i> Save
         </button>
       </div>
       
@@ -1902,7 +1907,7 @@ body {
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
 
-  <!-- ===== ADMIN PAGE - FIXED WITH ALL FUNCTIONALITY ===== -->
+  <!-- ===== ADMIN PAGE - FIXED ===== -->
   <div id="adminPage" class="page">
     <div class="delivery-page-header" style="padding:20px; background:white; border-bottom:1px solid #e2e8f0;">
       <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-cog" style="color:#667eea;"></i> Business Admin</h1>
@@ -1919,6 +1924,9 @@ body {
       </button>
       <button class="admin-quick-btn" onclick="filterAllOrders()">
         <i class="fas fa-list"></i> All
+      </button>
+      <button class="admin-quick-btn" onclick="refreshOrders()">
+        <i class="fas fa-sync-alt"></i> Refresh
       </button>
     </div>
     
@@ -2127,12 +2135,16 @@ let customerInfo = {
 let selectedPaymentMethod = 'cod';
 let paymentProof = null;
 let pendingOrder = null;
+let skipProof = false;
 
 // PWA Install
 let deferredPrompt = null;
 let installButtonShown = false;
 
-// ===== ATTACH FUNCTIONS =====
+// Real-time subscription
+let ordersSubscription = null;
+
+// ===== ATTACH FUNCTIONS TO WINDOW =====
 window.navigateTo = navigateTo;
 window.goBack = goBack;
 window.toggleNotificationDrawer = toggleNotificationDrawer;
@@ -2186,11 +2198,15 @@ window.handlePopupProofUpload = handlePopupProofUpload;
 window.confirmPaymentWithProof = confirmPaymentWithProof;
 window.sendReceiptToWhatsApp = sendReceiptToWhatsApp;
 window.sendReceiptToEmail = sendReceiptToEmail;
+window.downloadReceipt = downloadReceipt;
 window.closeReceiptModal = closeReceiptModal;
 window.confirmOrder = confirmOrder;
 window.filterPendingOrders = filterPendingOrders;
 window.filterConfirmedOrders = filterConfirmedOrders;
 window.filterAllOrders = filterAllOrders;
+window.refreshOrders = refreshOrders;
+window.downloadOrderTicket = downloadOrderTicket;
+window.toggleProofUpload = toggleProofUpload;
 
 // ===== DATA ISOLATION =====
 function getStorageKey(key) {
@@ -2216,7 +2232,7 @@ function generateAdminPassword(cardId) {
   return `business123_${idPart}`;
 }
 
-// ===== CUSTOMER INFO =====
+// ===== CUSTOMER INFO FUNCTIONS =====
 function loadCustomerInfo() {
   const saved = isolatedLocalStorage.getItem('customerInfo');
   if (saved) {
@@ -2641,12 +2657,31 @@ function showPaymentDetails(method) {
   openModal('paymentDetailsModal');
 }
 
-// ===== PAYMENT PROOF POPUP =====
+// ===== PAYMENT PROOF POPUP FUNCTIONS =====
+function toggleProofUpload() {
+  skipProof = document.getElementById('skipProofCheckbox').checked;
+  const uploadSection = document.getElementById('proofUploadSection');
+  const confirmBtn = document.getElementById('confirmPaymentBtn');
+  
+  if (skipProof) {
+    uploadSection.style.display = 'none';
+    confirmBtn.disabled = false;
+    paymentProof = null;
+  } else {
+    uploadSection.style.display = 'block';
+    confirmBtn.disabled = !paymentProof;
+  }
+}
+
 function showPaymentProofPopup(method) {
   selectedPaymentMethod = method;
   const popup = document.getElementById('paymentProofPopup');
   const instructions = document.getElementById('paymentInstructions');
   
+  // Reset
+  document.getElementById('skipProofCheckbox').checked = false;
+  skipProof = false;
+  document.getElementById('proofUploadSection').style.display = 'block';
   document.getElementById('popupProofInput').value = '';
   document.getElementById('popupProofPreview').src = '';
   document.getElementById('popupProofPreview').classList.remove('show');
@@ -2654,38 +2689,45 @@ function showPaymentProofPopup(method) {
   document.getElementById('confirmPaymentBtn').disabled = true;
   paymentProof = null;
   
+  // Set instructions based on method
   if (method === 'jazzcash') {
     instructions.innerHTML = `
-      <p><i class="fas fa-mobile-alt"></i> Open JazzCash app</p>
-      <p><i class="fas fa-arrow-right"></i> Send payment to: <strong>${card.payments?.gateways?.jazzcash?.number || '03001234567'}</strong></p>
-      <p><i class="fas fa-camera"></i> Take screenshot of transaction</p>
-      <p><i class="fas fa-upload"></i> Upload screenshot below</p>
+      <p><i class="fas fa-mobile-alt"></i> Please complete payment via JazzCash</p>
+      <p><i class="fas fa-arrow-right"></i> Send to: <strong>${card.payments?.gateways?.jazzcash?.number || '03001234567'}</strong></p>
+      <p><i class="fas fa-info-circle"></i> After payment, you can:</p>
+      <p>✅ Upload screenshot (recommended) OR</p>
+      <p>✅ Send transaction details via WhatsApp</p>
     `;
   } else if (method === 'easypaisa') {
     instructions.innerHTML = `
-      <p><i class="fas fa-wallet"></i> Open EasyPaisa app</p>
+      <p><i class="fas fa-wallet"></i> Complete payment via EasyPaisa</p>
       <p><i class="fas fa-arrow-right"></i> Send to: <strong>${card.payments?.gateways?.easypaisa?.number || '03001234567'}</strong></p>
-      <p><i class="fas fa-camera"></i> Take screenshot</p>
-      <p><i class="fas fa-upload"></i> Upload proof</p>
+      <p><i class="fas fa-info-circle"></i> After payment, you can:</p>
+      <p>✅ Upload screenshot (recommended) OR</p>
+      <p>✅ Send transaction ID via WhatsApp</p>
     `;
   } else if (method === 'bank') {
     instructions.innerHTML = `
-      <p><i class="fas fa-university"></i> Transfer to:</p>
+      <p><i class="fas fa-university"></i> Complete bank transfer:</p>
       <p><strong>${card.payments?.gateways?.bank?.bankName || 'HBL'}</strong></p>
       <p>Account: ${card.payments?.gateways?.bank?.accountNumber || '1234567890'}</p>
-      <p><i class="fas fa-camera"></i> Upload transaction screenshot</p>
+      <p><i class="fas fa-info-circle"></i> After transfer:</p>
+      <p>✅ Upload screenshot OR</p>
+      <p>✅ Send transaction reference via WhatsApp</p>
     `;
   } else if (method === 'card') {
     instructions.innerHTML = `
-      <p><i class="fas fa-credit-card"></i> Pay with card</p>
-      <p><i class="fas fa-camera"></i> Take screenshot of payment confirmation</p>
-      <p><i class="fas fa-upload"></i> Upload proof below</p>
+      <p><i class="fas fa-credit-card"></i> Complete card payment</p>
+      <p><i class="fas fa-info-circle"></i> After payment:</p>
+      <p>✅ Upload confirmation screenshot OR</p>
+      <p>✅ Send last 4 digits of card + transaction ID</p>
     `;
   } else if (method === 'crypto') {
     instructions.innerHTML = `
       <p><i class="fab fa-bitcoin"></i> Send crypto to address above</p>
-      <p><i class="fas fa-camera"></i> Screenshot transaction</p>
-      <p><i class="fas fa-upload"></i> Upload proof</p>
+      <p><i class="fas fa-info-circle"></i> After sending:</p>
+      <p>✅ Upload transaction screenshot OR</p>
+      <p>✅ Send transaction hash via WhatsApp</p>
     `;
   }
   
@@ -2751,11 +2793,6 @@ async function processPayment() {
 }
 
 async function confirmPaymentWithProof() {
-  if (!paymentProof) {
-    showNotification('❌ Please upload payment proof');
-    return;
-  }
-  
   closePaymentProofPopup();
   await completeOrder();
 }
@@ -2801,14 +2838,18 @@ async function completeOrder() {
     deliveryCharge: deliveryCharge,
     total: total,
     paymentMethod: selectedPaymentMethod,
-    paymentProof: paymentProof ? 'uploaded' : null,
+    paymentProof: paymentProof ? 'uploaded' : 'details_only',
     status: 'pending_confirmation',
     created_at: new Date().toISOString()
   };
   
-  await sendOrderWithProof(pendingOrder);
+  // Save to database FIRST
   await saveOrderToDatabase(pendingOrder);
   
+  // THEN send WhatsApp (doesn't block)
+  sendOrderToBusinessWhatsApp(pendingOrder);
+  
+  // Update local arrays
   orders.unshift(pendingOrder);
   orderTokens.unshift({
     id: token,
@@ -2819,26 +2860,28 @@ async function completeOrder() {
     date: pendingOrder.created_at
   });
   
+  // Clear cart
   cart = [];
   updateCartCount();
   isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
   
+  // Show confirmation
   showOrderConfirmation(pendingOrder);
+  
+  // Navigate to delivery page
   navigateTo('deliveryPage');
   
+  // Add notification
   addInnerNotification('Order Placed', `Order #${orderId} awaiting confirmation`, 'success');
-  
-  if (isAdminLoggedIn) {
-    loadAdminPanel();
-  }
 }
 
-async function sendOrderWithProof(order) {
+// NEW: Send order to business WhatsApp without blocking
+function sendOrderToBusinessWhatsApp(order) {
   try {
     if (card.phone) {
       const phone = card.phone.replace(/\D/g, '');
       
-      let message = `🛍️ *NEW ORDER WITH PAYMENT PROOF*\n\n`;
+      let message = `🛍️ *NEW ORDER RECEIVED*\n\n`;
       message += `*Order ID:* ${order.orderId}\n`;
       message += `*Token:* ${order.token}\n`;
       message += `*Customer:* ${order.customerName}\n`;
@@ -2850,42 +2893,27 @@ async function sendOrderWithProof(order) {
         message += `• ${item.title} x${item.quantity} - PKR ${(item.price * item.quantity).toFixed(2)}\n`;
       });
       
+      message += `\n*Subtotal:* PKR ${order.subtotal.toFixed(2)}`;
+      message += `\n*Delivery:* PKR ${order.deliveryCharge.toFixed(2)}`;
       message += `\n*Total:* PKR ${order.total.toFixed(2)}`;
       message += `\n*Payment Method:* ${getPaymentMethodName(order.paymentMethod)}`;
+      message += `\n*Proof Status:* ${order.paymentProof === 'uploaded' ? '✅ Screenshot uploaded (attach manually)' : '📝 Transaction details to be sent'}`;
       message += `\n*Status:* Pending Confirmation`;
       
-      if (paymentProof) {
-        message += `\n\n⚠️ *IMPORTANT:* Payment proof screenshot attached separately. Please check.`;
+      if (order.paymentProof === 'uploaded') {
+        message += `\n\n⚠️ *IMPORTANT:* Customer has uploaded payment proof screenshot. Please check and attach manually to this chat.`;
+      } else {
+        message += `\n\n📝 Customer will send transaction details separately.`;
       }
       
+      // Open WhatsApp in new tab
       window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
       
-      showNotification('📱 WhatsApp opened - please attach proof screenshot');
+      showNotification('📱 WhatsApp opened - send message to business');
     }
-    
-    if (card.email) {
-      const subject = `New Order with Proof: ${order.orderId}`;
-      let body = `NEW ORDER WITH PAYMENT PROOF\n\n`;
-      body += `Order ID: ${order.orderId}\n`;
-      body += `Token: ${order.token}\n`;
-      body += `Customer: ${order.customerName}\n`;
-      body += `Phone: ${order.customerPhone}\n`;
-      body += `Address: ${order.customerAddress}\n`;
-      body += `\nItems:\n`;
-      
-      order.items.forEach(item => {
-        body += `- ${item.title} x${item.quantity}: PKR ${(item.price * item.quantity).toFixed(2)}\n`;
-      });
-      
-      body += `\nTotal: PKR ${order.total.toFixed(2)}`;
-      body += `\nPayment Method: ${getPaymentMethodName(order.paymentMethod)}`;
-      body += `\nPayment Proof: Attached separately`;
-      
-      window.open(`mailto:${card.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
-    }
-    
   } catch (error) {
-    console.error('Error sending notifications:', error);
+    console.error('Error sending WhatsApp:', error);
+    showNotification('⚠️ Could not open WhatsApp, but order saved');
   }
 }
 
@@ -2997,7 +3025,10 @@ function closeReceiptModal() {
 
 function sendReceiptToWhatsApp() {
   const order = window.currentReceiptOrder;
-  if (!order || !order.customer_phone) return;
+  if (!order || !order.customer_phone) {
+    showNotification('❌ No phone number available');
+    return;
+  }
   
   const phone = order.customer_phone.replace(/\D/g, '');
   
@@ -3044,9 +3075,41 @@ function sendReceiptToEmail() {
   body += `\nPayment Method: ${getPaymentMethodName(order.payment_method)}`;
   body += `\n\nThank you for your order!`;
   
-  window.open(`mailto:${order.customer_email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
+  window.open(`mailto:${order.customer_email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
   
   closeReceiptModal();
+}
+
+function downloadReceipt() {
+  const order = window.currentReceiptOrder;
+  if (!order) return;
+  
+  const receiptText = `ORDER CONFIRMATION RECEIPT
+========================
+Order ID: ${order.order_id}
+Token: ${order.token}
+Date: ${new Date().toLocaleString()}
+Customer: ${order.customer_name}
+Phone: ${order.customer_phone}
+Email: ${order.customer_email || 'N/A'}
+
+ITEMS:
+${order.items.map(item => `- ${item.title} x${item.quantity}: PKR ${(item.price * item.quantity).toFixed(2)}`).join('\n')}
+
+Subtotal: PKR ${order.subtotal.toFixed(2)}
+Delivery: PKR ${order.delivery_charge.toFixed(2)}
+Total: PKR ${order.total.toFixed(2)}
+Payment Method: ${getPaymentMethodName(order.payment_method)}
+
+Thank you for your order!`;
+  
+  const blob = new Blob([receiptText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `receipt-${order.order_id}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ===== NOTIFICATION SYSTEM =====
@@ -3333,7 +3396,7 @@ async function checkForDeliveries() {
   if (!customerInfo.phone) return;
   
   const customerOrders = orders.filter(order => 
-    order.customerPhone === customerInfo.phone
+    order.customer_phone === customerInfo.phone || order.customerPhone === customerInfo.phone
   );
   
   deliveryStatusData = customerOrders;
@@ -3377,7 +3440,9 @@ async function loadDeliveryStatus() {
     return;
   }
   
-  const customerOrders = orders.filter(order => order.customerPhone === customerInfo.phone);
+  const customerOrders = orders.filter(order => 
+    order.customer_phone === customerInfo.phone || order.customerPhone === customerInfo.phone
+  );
   
   if (customerOrders.length === 0) {
     content.innerHTML = `
@@ -3419,7 +3484,7 @@ async function loadDeliveryStatus() {
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
           <span>Order ID:</span>
-          <span style="font-size:13px;">${order.orderId}</span>
+          <span style="font-size:13px;">${order.order_id}</span>
         </div>
         <div style="margin:12px 0; padding:12px 0; border-top:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;">
           ${order.items.map(item => `
@@ -3434,7 +3499,7 @@ async function loadDeliveryStatus() {
           <span style="color:#10b981;">PKR ${order.total.toFixed(2)}</span>
         </div>
         <div style="margin-top:12px; font-size:11px; color:#64748b;">
-          <i class="fas fa-credit-card"></i> ${getPaymentMethodName(order.paymentMethod)}
+          <i class="fas fa-credit-card"></i> ${getPaymentMethodName(order.payment_method)}
         </div>
       </div>
     `;
@@ -3453,7 +3518,7 @@ function checkDeliveryStatus() {
   loadDeliveryStatus();
 }
 
-// ===== ORDERS DATABASE =====
+// ===== ORDERS DATABASE WITH REAL-TIME =====
 async function saveOrderToDatabase(orderData) {
   try {
     if (!currentBusinessId) {
@@ -3475,6 +3540,7 @@ async function saveOrderToDatabase(orderData) {
       delivery_charge: orderData.deliveryCharge,
       total: orderData.total,
       payment_method: orderData.paymentMethod,
+      payment_proof: orderData.paymentProof,
       status: orderData.status || 'pending_confirmation',
       created_at: orderData.created_at,
       updated_at: new Date().toISOString()
@@ -3490,6 +3556,7 @@ async function saveOrderToDatabase(orderData) {
       return false;
     }
     
+    console.log('Order saved successfully:', data);
     return true;
     
   } catch (error) {
@@ -3527,6 +3594,32 @@ async function loadOrdersFromDatabase() {
     console.error('Error loading orders:', error);
     return [];
   }
+}
+
+// Setup real-time subscription for orders
+function setupOrdersSubscription() {
+  if (ordersSubscription) {
+    ordersSubscription.unsubscribe();
+  }
+  
+  ordersSubscription = supa
+    .channel('orders-changes')
+    .on('postgres_changes', 
+      { 
+        event: '*', 
+        schema: 'public', 
+        table: 'orders',
+        filter: `business_id=eq.${currentBusinessId}`
+      }, 
+      (payload) => {
+        console.log('Order changed:', payload);
+        loadOrdersFromDatabase();
+        if (isAdminLoggedIn && currentPage === 'adminPage') {
+          renderTokenList();
+        }
+      }
+    )
+    .subscribe();
 }
 
 function updateTokenStats() {
@@ -3568,7 +3661,7 @@ function renderTokenList() {
   }
   
   let html = '';
-  filteredTokens.slice(0, 20).forEach(token => {
+  filteredTokens.slice(0, 50).forEach(token => {
     const date = new Date(token.date).toLocaleDateString();
     const statusColor = 
       token.status === 'delivered' ? '#10b981' : 
@@ -3620,7 +3713,7 @@ function searchAdminTokens() {
   }
   
   let html = '';
-  filtered.slice(0, 20).forEach(token => {
+  filtered.slice(0, 50).forEach(token => {
     const date = new Date(token.date).toLocaleDateString();
     const statusColor = 
       token.status === 'delivered' ? '#10b981' : 
@@ -3663,6 +3756,11 @@ function filterAllOrders() {
   renderTokenList();
 }
 
+function refreshOrders() {
+  loadOrdersFromDatabase();
+  showNotification('🔄 Orders refreshed');
+}
+
 async function viewOrderDetails(orderId) {
   const order = orders.find(o => o.order_id === orderId);
   if (!order) return;
@@ -3691,6 +3789,10 @@ async function viewOrderDetails(orderId) {
        <i class="fas fa-check-circle"></i> Confirm Order & Generate Receipt
      </button>` : '';
   
+  const proofStatus = order.payment_proof === 'uploaded' ? 
+    '<span style="color:#10b981;"><i class="fas fa-check-circle"></i> Proof Uploaded</span>' : 
+    '<span style="color:#f59e0b;"><i class="fas fa-info-circle"></i> Proof Not Uploaded</span>';
+  
   content.innerHTML = `
     <div class="order-ticket">
       <div class="ticket-header">
@@ -3700,6 +3802,7 @@ async function viewOrderDetails(orderId) {
       <div class="ticket-body">
         <div style="text-align:center; margin-bottom:20px;">
           <h3 style="color:white; margin-top:12px;">Order Details</h3>
+          <div style="font-size:12px; margin-top:8px;">${proofStatus}</div>
         </div>
         
         <div class="ticket-row">
@@ -4453,11 +4556,8 @@ async function sendNotificationToAll() {
   const body = prompt('Notification Message:', 'Check out our latest products!');
   
   if (title && body) {
-    const { error } = await supa.from('notifications').insert([{ title, body }]);
-    if (!error) {
-      showNotification('✅ Notification sent to all users!');
-      addInnerNotification('Notification Sent', `"${title}" sent to all users`, 'success');
-    }
+    showNotification('✅ Notification feature coming soon!');
+    addInnerNotification('Notification', `"${title}"`, 'info');
   }
 }
 
@@ -4696,7 +4796,7 @@ function makeCall() {
 function sendEmail() {
   if (card.email) {
     const subject = encodeURIComponent(`Inquiry - ${card.businessName || 'Business'}`);
-    window.open(`mailto:${card.email}?subject=${subject}`);
+    window.open(`mailto:${card.email}?subject=${subject}`, '_blank');
   }
 }
 
@@ -4763,6 +4863,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     
     await loadOrdersFromDatabase();
+    setupOrdersSubscription(); // Setup real-time updates
     await renderApp();
     
     initializeRouting();
