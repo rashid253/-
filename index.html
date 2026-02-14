@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Digital Business Card · Professional Suite</title>
+  <title>Digital Business Card · Complete Suite</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
@@ -29,7 +29,6 @@
       margin: 0 auto;
     }
 
-    /* cards + consistent spacing */
     .card {
       background: rgba(255, 255, 255, 0.98);
       backdrop-filter: blur(2px);
@@ -74,7 +73,6 @@
       color: #475569;
     }
 
-    /* inputs — never overflow */
     .input-group {
       margin-bottom: 18px;
       width: 100%;
@@ -113,7 +111,6 @@
       min-height: 80px;
     }
 
-    /* file upload – refined */
     .file-upload {
       border: 2px dashed #cbd5e1;
       border-radius: 24px;
@@ -164,7 +161,6 @@
       object-fit: cover;
     }
 
-    /* social grid – no overflow */
     .social-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -199,7 +195,6 @@
       outline: none;
     }
 
-    /* business hours – no overflow */
     .day-box {
       background: #f8fafc;
       border-radius: 24px;
@@ -247,7 +242,6 @@
       flex: 1 1 110px;
     }
 
-    /* holidays & zones */
     .holiday-item {
       display: flex;
       flex-wrap: wrap;
@@ -296,7 +290,6 @@
       margin-top: 16px;
     }
 
-    /* zone item */
     .zone-item {
       display: flex;
       flex-wrap: wrap;
@@ -327,7 +320,6 @@
       cursor: pointer;
     }
 
-    /* product cards inside scroll – now they never overflow */
     .products-scroll {
       display: flex;
       gap: 16px;
@@ -363,7 +355,6 @@
       font-size: 0.8rem;
     }
 
-    /* buttons */
     .btn {
       padding: 16px 24px;
       border: none;
@@ -390,7 +381,6 @@
       color: white;
     }
 
-    /* modal — FIXED: never goes outside */
     .modal {
       display: none;
       position: fixed;
@@ -423,6 +413,9 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
     .modal-header h2 {
@@ -451,7 +444,6 @@
       padding: 24px;
     }
 
-    /* payment cards inside modal — perfectly contained */
     .payment-grid {
       display: flex;
       flex-direction: column;
@@ -527,7 +519,6 @@
       color: #10b981;
     }
 
-    /* payment fields – padded well */
     .payment-fields {
       padding: 0 20px 24px 86px;
       display: none;
@@ -665,7 +656,7 @@
       white-space: nowrap;
       max-width: 90vw;
     }
-    /* small screens tweaks */
+
     @media (max-width: 420px) {
       .payment-fields { padding-left: 20px; }
       .day-time input { flex: 1 1 100%; }
@@ -678,176 +669,739 @@
 <div class="container">
 
 <div class="success-message" id="successMessage"><i class="fas fa-check-circle"></i> <span id="successText">Success</span></div>
-<div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner"></div><div class="loading-text">Creating professional card...</div></div>
+<div class="loading-overlay" id="loadingOverlay"><div class="loading-spinner"></div><div class="loading-text">Creating your professional digital business card...</div></div>
 
-<!-- PROFILE CARD (exactly same structure, safe) -->
+<!-- PROFILE SECTION -->
 <div class="card">
-  <div class="card-header"><i class="fas fa-user"></i><div><h2>Profile Information</h2><p>Personal & business details</p></div></div>
-  <div class="input-group"><label>Profile image</label><div class="file-upload"><i class="fas fa-cloud-upload-alt"></i><span>Click to upload</span><small>PNG, JPG up to 5MB</small><input type="file" id="profileImage" accept="image/*"></div></div>
-  <div class="input-group"><label>Full name *</label><input type="text" id="fullName" placeholder="Enter full name"></div>
-  <div class="input-group"><label>Phone *</label><input type="tel" id="phoneNumber" placeholder="03XXXXXXXXX"></div>
-  <div class="input-group"><label>Email</label><input type="email" id="email" placeholder="your@email.com"></div>
-  <div class="input-group"><label>Business address *</label><textarea id="address" rows="2" placeholder="Complete address"></textarea></div>
+  <div class="card-header"><i class="fas fa-user"></i><div><h2>Profile Information</h2><p>Your personal and business details</p></div></div>
+  <div class="input-group"><label>Profile Image</label><div class="file-upload"><i class="fas fa-cloud-upload-alt"></i><span>Click to upload profile picture</span><small>PNG, JPG up to 5MB</small><input type="file" id="profileImage" accept="image/*"></div></div>
+  <div class="input-group"><label>Full Name <span style="color:#ef4444;">*</span></label><input type="text" id="fullName" placeholder="Enter your full name"></div>
+  <div class="input-group"><label>Phone Number <span style="color:#ef4444;">*</span></label><input type="tel" id="phoneNumber" placeholder="03XXXXXXXXX"></div>
+  <div class="input-group"><label>Email Address</label><input type="email" id="email" placeholder="your@email.com"></div>
+  <div class="input-group"><label>Business Address <span style="color:#ef4444;">*</span></label><textarea id="address" rows="2" placeholder="Complete business address"></textarea></div>
 </div>
 
 <!-- BUSINESS DETAILS -->
 <div class="card">
-  <div class="card-header"><i class="fas fa-building"></i><div><h2>Business details</h2><p>Your identity</p></div></div>
-  <div class="input-group"><label>Business title *</label><input type="text" id="businessName" placeholder="Your business name"></div>
-  <div class="input-group"><label>About business</label><textarea id="businessAbout" rows="2" placeholder="Describe..."></textarea></div>
-  <div class="input-group"><label>Website</label><input type="url" id="website" placeholder="https://..."></div>
-  <h3 style="margin:20px 0 12px; font-size:1rem;">Social links</h3>
+  <div class="card-header"><i class="fas fa-building"></i><div><h2>Business Details</h2><p>Your business identity</p></div></div>
+  <div class="input-group"><label>Business Title <span style="color:#ef4444;">*</span></label><input type="text" id="businessName" placeholder="Your business name"></div>
+  <div class="input-group"><label>About Business</label><textarea id="businessAbout" rows="3" placeholder="Describe your business..."></textarea></div>
+  <div class="input-group"><label>Website URL</label><input type="url" id="website" placeholder="https://yourwebsite.com"></div>
+  
+  <h3 style="font-size:1rem; margin:20px 0 12px;">Social Media Links</h3>
   <div class="social-grid">
-    <div class="social-input"><i class="fab fa-facebook" style="color:#1877F2;"></i><input type="text" id="facebook" placeholder="Facebook"></div>
-    <div class="social-input"><i class="fab fa-instagram" style="color:#E4405F;"></i><input type="text" id="instagram" placeholder="Instagram"></div>
-    <div class="social-input"><i class="fab fa-twitter" style="color:#1DA1F2;"></i><input type="text" id="twitter" placeholder="Twitter"></div>
-    <div class="social-input"><i class="fab fa-linkedin" style="color:#0A66C2;"></i><input type="text" id="linkedin" placeholder="LinkedIn"></div>
-    <div class="social-input"><i class="fab fa-youtube" style="color:#FF0000;"></i><input type="text" id="youtube" placeholder="YouTube"></div>
-    <div class="social-input"><i class="fab fa-tiktok"></i><input type="text" id="tiktok" placeholder="TikTok"></div>
+    <div class="social-input"><i class="fab fa-facebook" style="color:#1877F2;"></i><input type="text" id="facebook" placeholder="Facebook URL"></div>
+    <div class="social-input"><i class="fab fa-instagram" style="color:#E4405F;"></i><input type="text" id="instagram" placeholder="Instagram URL"></div>
+    <div class="social-input"><i class="fab fa-twitter" style="color:#1DA1F2;"></i><input type="text" id="twitter" placeholder="Twitter URL"></div>
+    <div class="social-input"><i class="fab fa-linkedin" style="color:#0A66C2;"></i><input type="text" id="linkedin" placeholder="LinkedIn URL"></div>
+    <div class="social-input"><i class="fab fa-youtube" style="color:#FF0000;"></i><input type="text" id="youtube" placeholder="YouTube URL"></div>
+    <div class="social-input"><i class="fab fa-tiktok"></i><input type="text" id="tiktok" placeholder="TikTok URL"></div>
   </div>
 </div>
 
 <!-- BUSINESS HOURS -->
-<div class="card"><div class="card-header"><i class="fas fa-clock"></i><div><h2>Business hours</h2><p>Working days</p></div></div><div id="daysContainer"></div></div>
+<div class="card">
+  <div class="card-header"><i class="fas fa-clock"></i><div><h2>Business Hours</h2><p>Set your working days and times</p></div></div>
+  <div id="daysContainer"></div>
+</div>
 
-<!-- HOLIDAYS -->
-<div class="card"><div class="card-header"><i class="fas fa-calendar-times"></i><div><h2>Special holidays</h2><p>Closed days</p></div></div><div id="holidaysContainer"><div class="holiday-item"><input type="text" class="holidayName" placeholder="Holiday name" value="Eid"><input type="date" class="holidayDate"><button class="remove-btn" onclick="removeHoliday(this)">×</button></div></div><button class="add-btn" onclick="addHoliday()"><i class="fas fa-plus"></i> Add Holiday</button></div>
+<!-- SPECIAL HOLIDAYS -->
+<div class="card">
+  <div class="card-header"><i class="fas fa-calendar-times"></i><div><h2>Special Holidays</h2><p>Days when business is closed</p></div></div>
+  <div id="holidaysContainer">
+    <div class="holiday-item">
+      <input type="text" class="holidayName" placeholder="Holiday name" value="Eid ul-Fitr">
+      <input type="date" class="holidayDate" value="2026-04-10">
+      <button type="button" class="remove-btn" onclick="removeHoliday(this)">×</button>
+    </div>
+  </div>
+  <button class="add-btn" onclick="addHoliday()"><i class="fas fa-plus"></i> Add Holiday</button>
+</div>
 
 <!-- DELIVERY SETTINGS -->
 <div class="card">
-  <div class="card-header"><i class="fas fa-truck"></i><div><h2>Delivery settings</h2><p>Charges & zones</p></div></div>
-  <h3 style="font-size:1rem; margin-bottom:12px;">Default</h3>
+  <div class="card-header"><i class="fas fa-truck"></i><div><h2>Delivery Settings</h2><p>Configure delivery charges and zones</p></div></div>
+  
+  <h3 style="font-size:1rem; margin-bottom:16px;">Default Delivery</h3>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-    <div class="input-group"><label>Within city (PKR)</label><input type="number" id="deliveryChargeCity" value="150"></div>
-    <div class="input-group"><label>Other cities (PKR)</label><input type="number" id="deliveryChargeOther" value="300"></div>
+    <div class="input-group"><label>Within City (PKR)</label><input type="number" id="deliveryChargeCity" value="150"></div>
+    <div class="input-group"><label>Other Cities (PKR)</label><input type="number" id="deliveryChargeOther" value="300"></div>
   </div>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-    <div class="input-group"><label>City time</label><input type="text" id="deliveryTimeCity" value="1-2 days"></div>
-    <div class="input-group"><label>Other time</label><input type="text" id="deliveryTimeOther" value="3-5 days"></div>
+    <div class="input-group"><label>Within City Time</label><input type="text" id="deliveryTimeCity" value="1-2 business days"></div>
+    <div class="input-group"><label>Other Cities Time</label><input type="text" id="deliveryTimeOther" value="3-5 business days"></div>
   </div>
-  <div class="input-group"><label>Free min (PKR)</label><input type="number" id="freeDeliveryMin" value="2000"></div>
+  <div class="input-group"><label>Free Delivery Minimum (PKR)</label><input type="number" id="freeDeliveryMin" value="2000"></div>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-    <div class="input-group"><label>Cutoff time</label><input type="time" id="deliveryCutoffTime" value="16:00"></div>
-    <div class="input-group"><label>Max days</label><input type="text" id="deliveryDays" value="5-7 days"></div>
+    <div class="input-group"><label>Cutoff Time</label><input type="time" id="deliveryCutoffTime" value="16:00"></div>
+    <div class="input-group"><label>Max Delivery Days</label><input type="text" id="deliveryDays" value="5-7 days"></div>
   </div>
-  <h3 style="margin:20px 0 12px;">Specific zones</h3>
+  
+  <h3 style="font-size:1rem; margin:24px 0 16px;">Specific Zones</h3>
   <div id="deliveryZonesList"></div>
-  <button class="add-btn" onclick="addDeliveryZone()" style="background:#8b5cf6"><i class="fas fa-plus"></i> Add zone</button>
+  <button class="add-btn" onclick="addDeliveryZone()" style="background:#8b5cf6"><i class="fas fa-plus"></i> Add Zone</button>
+  
   <div style="margin-top:20px; background:#f0f9ff; border-radius:20px; padding:16px;">
     <div class="toggle-switch"><input type="checkbox" id="requireAddressConfirmation" checked><label>Require address confirmation</label></div>
     <div class="toggle-switch"><input type="checkbox" id="saveCustomerAddresses" checked><label>Save customer addresses</label></div>
   </div>
 </div>
 
-<!-- PRODUCTS -->
-<div class="card"><div class="card-header"><i class="fas fa-gift"></i><div><h2>Products & offers</h2></div></div><div id="offersForm" class="products-scroll"></div><button class="add-btn" onclick="addOffer()" style="background:#8b5cf6"><i class="fas fa-plus"></i> Add product</button></div>
+<!-- PRODUCTS & OFFERS -->
+<div class="card">
+  <div class="card-header"><i class="fas fa-gift"></i><div><h2>Products & Offers</h2><p>Add your products to sell</p></div></div>
+  <div id="offersForm" class="products-scroll"></div>
+  <button class="add-btn" onclick="addOffer()" style="background:#8b5cf6; margin-top:16px;"><i class="fas fa-plus"></i> Add Product</button>
+</div>
 
-<!-- ACTION BUTTONS (inside container, no overflow) -->
-<button class="btn btn-success" onclick="openPaymentModal()"><i class="fas fa-credit-card"></i> Configure payments & tokens</button>
-<button class="btn btn-primary" onclick="generate()"><i class="fas fa-magic"></i> Generate digital card</button>
+<!-- ACTION BUTTONS -->
+<button class="btn btn-success" onclick="openPaymentModal()"><i class="fas fa-credit-card"></i> Configure Payments & Tokens</button>
+<button class="btn btn-primary" onclick="generate()"><i class="fas fa-magic"></i> Generate Digital Card</button>
 
-<!-- PAYMENT MODAL – completely safe, scrolls inside -->
+<!-- PAYMENT MODAL - COMPLETE -->
 <div class="modal" id="paymentModal">
   <div class="modal-content">
-    <div class="modal-header"><h2><i class="fas fa-cog"></i> Payment & Token</h2><button class="modal-close" onclick="closePaymentModal()">×</button></div>
+    <div class="modal-header"><h2><i class="fas fa-cog"></i> Payment & Token System</h2><button class="modal-close" onclick="closePaymentModal()">×</button></div>
     <div class="modal-body">
-      <h3 style="display:flex; gap:8px; margin-bottom:16px;"><i class="fab fa-whatsapp" style="color:#25D366;"></i> WhatsApp</h3>
-      <div class="input-group"><label>WhatsApp number</label><input type="text" id="whatsappNumber" placeholder="+92300..." value="+92"></div>
+      
+      <!-- WhatsApp Business -->
+      <h3 style="display:flex; gap:8px; margin-bottom:16px;"><i class="fab fa-whatsapp" style="color:#25D366;"></i> WhatsApp Business</h3>
+      <div class="input-group"><label>WhatsApp Number</label><input type="text" id="whatsappNumber" placeholder="+92XXXXXXXXXX" value="+92"></div>
+      <div class="input-hint" style="font-size:0.75rem; color:#64748b; margin-top:-10px; margin-bottom:16px;">Orders will be sent to this number</div>
+      
       <div style="background:#e6f7ff; border-radius:24px; padding:16px; margin:20px 0;">
-        <div style="background:white; border-radius:16px; padding:16px; font-family:monospace; font-size:0.85rem; white-space:pre-wrap;" id="whatsappPreview">🎉 *NEW ORDER* - TOKEN: TKT-123456-A7F2\n*Order ID:* ORD-12345678\n*Token:* TKT-123456-A7F2\n*Customer:* [Name]\n...</div>
+        <h4 style="display:flex; gap:8px; color:#25D366; margin-bottom:12px;"><i class="fab fa-whatsapp"></i> Order Preview</h4>
+        <div style="background:white; border-radius:16px; padding:16px; font-family:monospace; font-size:0.85rem; white-space:pre-wrap; border:1px solid #bae6fd;" id="whatsappPreview">
+🎉 *NEW ORDER CONFIRMED* - TOKEN: TKT-123456-A7F2
+
+*Order ID:* ORD-12345678
+*Token:* TKT-123456-A7F2
+*Customer:* [Customer Name]
+*Phone:* [Customer Phone]
+*Address:* [Full Address]
+
+*ITEMS:*
+• Product 1 (Qty: 1) - PKR 1,000
+
+*Total:* PKR 1,150
+        </div>
       </div>
-      <h3 style="margin:24px 0 12px;"><i class="fas fa-ticket-alt"></i> Token system</h3>
+      
+      <!-- Token System -->
+      <h3 style="margin:24px 0 12px;"><i class="fas fa-ticket-alt" style="color:#667eea;"></i> Token System</h3>
       <div class="toggle-switch"><input type="checkbox" id="enableTokenSystem" checked><label>Enable token generation</label></div>
       <div class="toggle-switch"><input type="checkbox" id="requireTokenForTracking" checked><label>Require token for tracking</label></div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <div class="input-group"><label>Prefix</label><input type="text" id="tokenPrefix" value="TKT"></div>
-        <div class="input-group"><label>Length</label><select id="tokenLength"><option value="8">8</option><option value="10">10</option><option value="12" selected>12</option></select></div>
+      
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px;">
+        <div class="input-group"><label>Token Prefix</label><input type="text" id="tokenPrefix" value="TKT"></div>
+        <div class="input-group"><label>Length</label>
+          <select id="tokenLength">
+            <option value="8">8 chars</option>
+            <option value="10">10 chars</option>
+            <option value="12" selected>12 chars</option>
+          </select>
+        </div>
       </div>
-      <div class="token-preview"><div class="token-code" id="tokenPreview">TKT-87654321-X9Y2</div></div>
-
-      <h3 style="margin:28px 0 12px;"><i class="fas fa-credit-card"></i> Payment gateways (multi)</h3>
+      
+      <div class="token-preview">
+        <div style="text-align:center; margin-bottom:8px; font-size:0.75rem; color:#94a3b8;">Sample Token</div>
+        <div class="token-code" id="tokenPreview">TKT-12345678-A1B2</div>
+        <div class="token-format" style="display:flex; justify-content:space-between; font-size:0.7rem; color:#94a3b8; margin-top:8px;">
+          <span>Prefix</span><span>Timestamp</span><span>Random</span>
+        </div>
+      </div>
+      
+      <!-- Payment Gateways - COMPLETE with all fields -->
+      <h3 style="margin:28px 0 12px;"><i class="fas fa-credit-card" style="color:#667eea;"></i> Payment Gateways <span style="background:#10b981; color:white; padding:4px 8px; border-radius:30px; font-size:0.6rem; margin-left:8px;">Multiple Select</span></h3>
+      
       <div class="payment-grid" id="paymentGateways">
-        <!-- JAZZCASH -->
-        <div class="payment-card" id="gateway-jazzcash"><div class="payment-card-header" onclick="togglePaymentGateway('jazzcash')"><div class="payment-icon" style="background:#FF6B00;"><i class="fas fa-mobile-alt"></i></div><div class="payment-info"><div class="payment-name">JazzCash <span class="payment-badge" id="jazzcash-badge" style="display:none;">Active</span></div><div class="payment-desc">Mobile wallet</div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields" id="fields-jazzcash"><div class="field-row"><label class="field-label">Account number</label><input class="field-input" id="jazzcashNumber" value="03001234567"></div><div class="field-row"><label>Account type</label><select class="field-select" id="jazzcashType"><option value="jazzcash">JazzCash</option><option value="easypaisa">EasyPaisa</option></select></div><div class="field-row"><label>QR code</label><div class="file-upload"><i class="fas fa-qrcode"></i><span>Upload QR</span><input type="file" id="jazzcashBarcode" accept="image/*" onchange="handleFileUpload(this,'jazzcash')"></div><img id="jazzcash-preview" class="preview-image"></div></div></div>
-        <!-- EASYPAISA -->
-        <div class="payment-card" id="gateway-easypaisa"><div class="payment-card-header" onclick="togglePaymentGateway('easypaisa')"><div class="payment-icon" style="background:#0A5C36;"><i class="fas fa-wallet"></i></div><div class="payment-info"><div class="payment-name">EasyPaisa <span class="payment-badge" id="easypaisa-badge" style="display:none;">Active</span></div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields" id="fields-easypaisa"><div class="field-row"><label>Account number</label><input class="field-input" id="easypaisaNumber" value="03001234567"></div><div class="field-row"><label>QR code</label><div class="file-upload"><i class="fas fa-qrcode"></i><input type="file" id="easypaisaBarcode" accept="image/*" onchange="handleFileUpload(this,'easypaisa')"></div><img id="easypaisa-preview" class="preview-image"></div></div></div>
-        <!-- BANK -->
-        <div class="payment-card" id="gateway-bank"><div class="payment-card-header" onclick="togglePaymentGateway('bank')"><div class="payment-icon" style="background:#2563eb;"><i class="fas fa-university"></i></div><div class="payment-info"><div class="payment-name">Bank Transfer <span class="payment-badge" id="bank-badge" style="display:none;">Active</span></div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields" id="fields-bank"><div class="field-row"><label>Bank</label><select class="field-select" id="bankName"><option value="HBL">HBL</option><option value="UBL">UBL</option></select></div><div class="field-row"><label>Account title</label><input class="field-input" id="accountTitle" value="Business Account"></div><div class="field-row"><label>Account number</label><input class="field-input" id="accountNumber" value="1234567890"></div><div class="field-row"><label>IBAN</label><input class="field-input" id="ibanNumber" value="PK36..."></div></div></div>
-        <!-- CARD -->
-        <div class="payment-card" id="gateway-card"><div class="payment-card-header" onclick="togglePaymentGateway('card')"><div class="payment-icon" style="background:#8b5cf6;"><i class="fas fa-credit-card"></i></div><div class="payment-info"><div class="payment-name">Card <span class="payment-badge" id="card-badge" style="display:none;">Active</span></div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields" id="fields-card"><div class="field-row"><label>Processor</label><select class="field-select" id="cardProcessor"><option value="stripe">Stripe</option></select></div><div class="field-row"><label>Merchant ID</label><input class="field-input" id="merchantId" value="pk_test_xxx"></div></div></div>
-        <!-- COD -->
-        <div class="payment-card" id="gateway-cod"><div class="payment-card-header" onclick="togglePaymentGateway('cod')"><div class="payment-icon" style="background:#10b981;"><i class="fas fa-truck"></i></div><div class="payment-info"><div class="payment-name">Cash on delivery <span class="payment-badge" id="cod-badge" style="display:none;">Active</span></div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields" id="fields-cod"><div class="toggle-switch"><input type="checkbox" id="codEnabled" checked><label>Enable COD</label></div><div class="field-row"><label>Min order (PKR)</label><input class="field-input" id="codMinimumOrder" value="500"></div></div></div>
-        <!-- CRYPTO -->
-        <div class="payment-card" id="gateway-crypto"><div class="payment-card-header" onclick="togglePaymentGateway('crypto')"><div class="payment-icon" style="background:#f7931a;"><i class="fab fa-bitcoin"></i></div><div class="payment-info"><div class="payment-name">Crypto <span class="payment-badge" id="crypto-badge" style="display:none;">Active</span></div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields" id="fields-crypto"><div class="field-row"><label>Wallet</label><input class="field-input" id="cryptoWalletAddress" value="0x742d..."></div><div class="field-row"><label>Network</label><select class="field-select" id="cryptoNetwork"><option>ERC20</option></select></div><div class="field-row"><label>QR</label><div class="file-upload"><i class="fas fa-qrcode"></i><input type="file" id="cryptoBarcode" onchange="handleFileUpload(this,'crypto')"></div><img id="crypto-preview" class="preview-image"></div></div></div>
+        <!-- JazzCash -->
+        <div class="payment-card" id="gateway-jazzcash">
+          <div class="payment-card-header" onclick="togglePaymentGateway('jazzcash')">
+            <div class="payment-icon" style="background:#FF6B00;"><i class="fas fa-mobile-alt"></i></div>
+            <div class="payment-info"><div class="payment-name">JazzCash <span class="payment-badge" id="jazzcash-badge" style="display:none;">Active</span></div><div class="payment-desc">Mobile wallet payments</div></div>
+            <i class="fas fa-chevron-down payment-chevron"></i>
+          </div>
+          <div class="payment-fields" id="fields-jazzcash">
+            <div class="field-row"><label class="field-label">Account Number</label><input class="field-input" id="jazzcashNumber" value="03001234567"></div>
+            <div class="field-row"><label class="field-label">Account Type</label>
+              <select class="field-select" id="jazzcashType">
+                <option value="jazzcash">JazzCash Account</option>
+                <option value="easypaisa">EasyPaisa Account</option>
+              </select>
+            </div>
+            <div class="field-row"><label class="field-label">QR Code (Optional)</label>
+              <div class="file-upload"><i class="fas fa-qrcode"></i><span>Click to upload QR code</span><small>PNG, JPG</small><input type="file" id="jazzcashBarcode" accept="image/*" onchange="handleFileUpload(this,'jazzcash')"></div>
+              <img id="jazzcash-preview" class="preview-image">
+            </div>
+          </div>
+        </div>
+        
+        <!-- EasyPaisa -->
+        <div class="payment-card" id="gateway-easypaisa">
+          <div class="payment-card-header" onclick="togglePaymentGateway('easypaisa')">
+            <div class="payment-icon" style="background:#0A5C36;"><i class="fas fa-wallet"></i></div>
+            <div class="payment-info"><div class="payment-name">EasyPaisa <span class="payment-badge" id="easypaisa-badge" style="display:none;">Active</span></div><div class="payment-desc">Mobile account payments</div></div>
+            <i class="fas fa-chevron-down payment-chevron"></i>
+          </div>
+          <div class="payment-fields" id="fields-easypaisa">
+            <div class="field-row"><label class="field-label">Account Number</label><input class="field-input" id="easypaisaNumber" value="03001234567"></div>
+            <div class="field-row"><label class="field-label">QR Code (Optional)</label>
+              <div class="file-upload"><i class="fas fa-qrcode"></i><span>Click to upload QR code</span><input type="file" id="easypaisaBarcode" accept="image/*" onchange="handleFileUpload(this,'easypaisa')"></div>
+              <img id="easypaisa-preview" class="preview-image">
+            </div>
+          </div>
+        </div>
+        
+        <!-- Bank Transfer -->
+        <div class="payment-card" id="gateway-bank">
+          <div class="payment-card-header" onclick="togglePaymentGateway('bank')">
+            <div class="payment-icon" style="background:#2563eb;"><i class="fas fa-university"></i></div>
+            <div class="payment-info"><div class="payment-name">Bank Transfer <span class="payment-badge" id="bank-badge" style="display:none;">Active</span></div><div class="payment-desc">Direct bank deposit</div></div>
+            <i class="fas fa-chevron-down payment-chevron"></i>
+          </div>
+          <div class="payment-fields" id="fields-bank">
+            <div class="field-row"><label class="field-label">Bank Name</label>
+              <select class="field-select" id="bankName">
+                <option value="HBL">Habib Bank Limited (HBL)</option>
+                <option value="UBL">United Bank Limited (UBL)</option>
+                <option value="MCB">MCB Bank Limited</option>
+                <option value="Meezan">Meezan Bank</option>
+                <option value="Alfalah">Bank Alfalah</option>
+                <option value="Other">Other Bank</option>
+              </select>
+            </div>
+            <div class="field-row"><label class="field-label">Account Title</label><input class="field-input" id="accountTitle" value="Business Account"></div>
+            <div class="field-row"><label class="field-label">Account Number</label><input class="field-input" id="accountNumber" value="1234567890"></div>
+            <div class="field-row"><label class="field-label">IBAN (Optional)</label><input class="field-input" id="ibanNumber" value="PK36HBL001234567890"></div>
+          </div>
+        </div>
+        
+        <!-- Card Payment -->
+        <div class="payment-card" id="gateway-card">
+          <div class="payment-card-header" onclick="togglePaymentGateway('card')">
+            <div class="payment-icon" style="background:#8b5cf6;"><i class="fas fa-credit-card"></i></div>
+            <div class="payment-info"><div class="payment-name">Card Payment <span class="payment-badge" id="card-badge" style="display:none;">Active</span></div><div class="payment-desc">Visa / Mastercard</div></div>
+            <i class="fas fa-chevron-down payment-chevron"></i>
+          </div>
+          <div class="payment-fields" id="fields-card">
+            <div class="field-row"><label class="field-label">Processor</label>
+              <select class="field-select" id="cardProcessor">
+                <option value="stripe">Stripe</option>
+                <option value="paypal">PayPal</option>
+                <option value="razorpay">Razorpay</option>
+              </select>
+            </div>
+            <div class="field-row"><label class="field-label">Merchant ID / Key</label><input class="field-input" id="merchantId" value="pk_test_xxxxxxxxxxxx"></div>
+            <div class="field-row"><label class="field-label">Webhook Secret</label><input class="field-input" id="webhookSecret" placeholder="whsec_..."></div>
+          </div>
+        </div>
+        
+        <!-- Cash on Delivery -->
+        <div class="payment-card" id="gateway-cod">
+          <div class="payment-card-header" onclick="togglePaymentGateway('cod')">
+            <div class="payment-icon" style="background:#10b981;"><i class="fas fa-truck"></i></div>
+            <div class="payment-info"><div class="payment-name">Cash on Delivery <span class="payment-badge" id="cod-badge" style="display:none;">Active</span></div><div class="payment-desc">Pay when order arrives</div></div>
+            <i class="fas fa-chevron-down payment-chevron"></i>
+          </div>
+          <div class="payment-fields" id="fields-cod">
+            <div class="toggle-switch"><input type="checkbox" id="codEnabled" checked><label>Enable COD</label></div>
+            <div class="field-row"><label class="field-label">Minimum Order (PKR)</label><input class="field-input" id="codMinimumOrder" value="500"></div>
+          </div>
+        </div>
+        
+        <!-- Cryptocurrency -->
+        <div class="payment-card" id="gateway-crypto">
+          <div class="payment-card-header" onclick="togglePaymentGateway('crypto')">
+            <div class="payment-icon" style="background:#f7931a;"><i class="fab fa-bitcoin"></i></div>
+            <div class="payment-info"><div class="payment-name">Cryptocurrency <span class="payment-badge" id="crypto-badge" style="display:none;">Active</span></div><div class="payment-desc">BTC, ETH, USDT</div></div>
+            <i class="fas fa-chevron-down payment-chevron"></i>
+          </div>
+          <div class="payment-fields" id="fields-crypto">
+            <div class="field-row"><label class="field-label">Wallet Address</label><input class="field-input" id="cryptoWalletAddress" value="0x742d35Cc6634C0532925a3b844Bc454e4438f44e"></div>
+            <div class="field-row"><label class="field-label">Network</label>
+              <select class="field-select" id="cryptoNetwork">
+                <option value="ERC20">Ethereum (ERC-20)</option>
+                <option value="BEP20">Binance (BEP-20)</option>
+                <option value="TRC20">Tron (TRC-20)</option>
+              </select>
+            </div>
+            <div class="field-row"><label class="field-label">QR Code (Optional)</label>
+              <div class="file-upload"><i class="fas fa-qrcode"></i><span>Click to upload QR code</span><input type="file" id="cryptoBarcode" accept="image/*" onchange="handleFileUpload(this,'crypto')"></div>
+              <img id="crypto-preview" class="preview-image">
+            </div>
+          </div>
+        </div>
       </div>
-      <button class="btn btn-success" onclick="savePaymentAndTicketSettings()" style="margin:20px 0;"><i class="fas fa-save"></i> Save all settings</button>
-      <button class="btn btn-outline" onclick="testTokenGeneration()"><i class="fas fa-flask"></i> Test token</button>
+      
+      <!-- Ticket System -->
+      <h3 style="margin:30px 0 16px;"><i class="fas fa-ticket-alt" style="color:#0ea5e9;"></i> Ticket System</h3>
+      <div class="toggle-switch"><input type="checkbox" id="enableAutoTickets" checked><label>Generate order tickets</label></div>
+      <div class="toggle-switch"><input type="checkbox" id="enableEmailTickets" checked><label>Send email tickets</label></div>
+      <div class="toggle-switch"><input type="checkbox" id="enableWhatsappTickets" checked><label>Send WhatsApp tickets</label></div>
+      
+      <div class="field-row"><label class="field-label">Ticket Prefix</label><input class="field-input" id="ticketPrefix" value="TKT"></div>
+      <div class="field-row"><label class="field-label">Admin Email</label><input class="field-input" id="adminEmail" placeholder="admin@yourbusiness.com"></div>
+      <div class="field-row"><label class="field-label">Webhook URL (Optional)</label><input class="field-input" id="webhookUrl" placeholder="https://yourdomain.com/webhook"></div>
+      
+      <!-- Modal Actions -->
+      <button class="btn btn-success" onclick="savePaymentAndTicketSettings()" style="margin:20px 0 12px;"><i class="fas fa-save"></i> Save All Settings</button>
+      <button class="btn btn-outline" onclick="testTokenGeneration()" style="background:white; border:2px solid #e2e8f0; color:#1e293b;"><i class="fas fa-flask"></i> Test Token Generation</button>
     </div>
   </div>
 </div>
 
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-  // dummy supabase (avoid crash)
-  const db = supabase.createClient('https://dfvnefbxgayxqgjjgtrr.supabase.co', 'sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE');
+  // Supabase client
+  const db = supabase.createClient(
+    "https://dfvnefbxgayxqgjjgtrr.supabase.co",
+    "sb_publishable_WypeFELCIlVDlqGY4PdWwA_snqoPUSE"
+  );
+
+  // Global variables
   let selectedPaymentGateways = [];
-  let paymentData = {}, ticketSettings = {};
-
-  // helpers
-  function showSuccess(m) { const e=document.getElementById('successMessage'); document.getElementById('successText').innerText=m; e.style.display='flex'; setTimeout(()=>e.style.display='none',2500); }
-  function showLoading() { document.getElementById('loadingOverlay').style.display='flex'; }
-  function hideLoading() { document.getElementById('loadingOverlay').style.display='none'; }
-
-  // business hours init
-  const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-  const dc = document.getElementById('daysContainer');
-  days.forEach(day=>{const d=document.createElement('div'); d.className='day-box'; d.innerHTML=`
-    <div class="day-header"><span class="day-name">${day}</span><select class="day-status"><option value="open" selected>Open</option><option value="closed">Closed</option></select></div>
-    <div class="day-time"><input type="time" class="day-start" value="09:00"><span>to</span><input type="time" class="day-end" value="18:00"></div>`; dc.appendChild(d);});
-
-  function addHoliday(){ const c=document.getElementById('holidaysContainer'), d=document.createElement('div'); d.className='holiday-item'; d.innerHTML='<input type="text" class="holidayName" placeholder="Holiday name"><input type="date" class="holidayDate"><button class="remove-btn" onclick="removeHoliday(this)">×</button>'; c.appendChild(d); }
-  window.removeHoliday = (btn)=>btn.parentElement.remove();
-
-  let productCount=0;
-  function addOffer(){productCount++; const b=document.createElement('div'); b.className='product-card'; b.innerHTML=`
-    <h4 style="margin-bottom:10px;">Product ${productCount}</h4>
-    <div class="file-upload"><i class="fas fa-image"></i><span>Product image</span><input type="file" class="productImg" accept="image/*"></div>
-    <input type="text" class="productTitle" placeholder="Title" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:20px; margin:8px 0;">
-    <textarea class="productDesc" placeholder="Description" rows="2" style="width:100%; padding:12px; border-radius:20px; border:2px solid #e2e8f0;"></textarea>
-    <div style="display:grid; gap:8px; grid-template-columns:1fr 1fr; margin:8px 0;">
-      <input type="number" class="originalPrice" placeholder="Original price">
-      <input type="number" class="discountPrice" placeholder="Discounted price">
-    </div>
-    <div class="product-badges"><label><input type="checkbox" value="Hot Deal"> 🔥 Hot</label><label><input type="checkbox" value="Best Seller"> ⭐ Best</label><label><input type="checkbox" value="Discount"> 💸 Sale</label></div>
-  `; document.getElementById('offersForm').appendChild(b);}
-
-  function addDeliveryZone(z){ const c=document.getElementById('deliveryZonesList'), id='zone_'+Date.now(), d=document.createElement('div'); d.className='zone-item'; d.innerHTML=`<input type="text" placeholder="City" value="${z?.city||''}"><input type="number" placeholder="Charge" value="${z?.charge||''}"><input type="text" placeholder="Time" value="${z?.time||''}"><button onclick="this.parentElement.remove()">×</button>`; c.appendChild(d);}
-  window.addDeliveryZone = ()=>addDeliveryZone({city:'',charge:'',time:''});
-
-  // payment modal
-  window.openPaymentModal = ()=>document.getElementById('paymentModal').style.display='flex';
-  window.closePaymentModal = ()=>document.getElementById('paymentModal').style.display='none';
-  window.togglePaymentGateway = (g)=>{
-    const idx = selectedPaymentGateways.indexOf(g);
-    idx===-1 ? selectedPaymentGateways.push(g) : selectedPaymentGateways.splice(idx,1);
-    document.querySelectorAll('.payment-card').forEach(c=>c.classList.remove('selected'));
-    selectedPaymentGateways.forEach(gw=>{ const card=document.getElementById(`gateway-${gw}`); if(card){ card.classList.add('selected'); document.getElementById(`${gw}-badge`).style.display='inline-block'; } });
-    ['jazzcash','easypaisa','bank','card','cod','crypto'].forEach(gw=>{if(!selectedPaymentGateways.includes(gw)){ let b=document.getElementById(`${gw}-badge`); if(b) b.style.display='none';}});
+  let paymentData = {
+    jazzcash: { number: '03001234567', type: 'jazzcash', barcode: '' },
+    easypaisa: { number: '03001234567', barcode: '' },
+    bank: { bankName: 'HBL', accountTitle: 'Business Account', accountNumber: '1234567890', iban: 'PK36HBL001234567890' },
+    card: { processor: 'stripe', merchantId: 'pk_test_xxxxxxxxxxxx', webhookSecret: '' },
+    cod: { enabled: true, minimumOrder: 500 },
+    crypto: { walletAddress: '0x742d35Cc6634C0532925a3b844Bc454e4438f44e', network: 'ERC20', barcode: '' }
   };
-  window.handleFileUpload = (input, gw)=>{ if(input.files?.[0]){ const r=new FileReader(); r.onload=(e)=>{let p=document.getElementById(gw+'-preview'); if(p){ p.src=e.target.result; p.style.display='block'; } }; r.readAsDataURL(input.files[0]); showSuccess('QR uploaded'); } };
-  window.testTokenGeneration = ()=>{ let p=document.getElementById('tokenPrefix')?.value||'TKT', ts=Date.now().toString().slice(-8), r=Math.random().toString(36).substring(2,6).toUpperCase(); document.getElementById('tokenPreview').innerText=`${p}-${ts}-${r}`; };
-  window.savePaymentAndTicketSettings = ()=>{ showSuccess('✅ Payment settings saved'); setTimeout(()=>closePaymentModal(),1200); };
+  let ticketSettings = {
+    enableAutoTickets: true,
+    enableEmailTickets: true,
+    enableWhatsappTickets: true,
+    ticketPrefix: 'TKT',
+    adminEmail: '',
+    webhookUrl: ''
+  };
+  let productCount = 0;
 
-  // initial data
-  setTimeout(()=>{ addDeliveryZone({city:'Karachi',charge:150,time:'1-2 days'}); addDeliveryZone({city:'Lahore',charge:200,time:'2-3 days'}); addOffer(); togglePaymentGateway('cod'); testTokenGeneration(); },100);
-
-  // generate (simplified)
-  window.generate = async function(){ 
-    if(!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value || !document.getElementById('businessName').value) 
-      return showSuccess('❌ Name, phone & business required');
-    showLoading();
-    setTimeout(()=>{ hideLoading(); showSuccess('✅ Digital card created! (demo)'); },1500);
+  // Utility functions
+  function showSuccess(message) {
+    const el = document.getElementById('successMessage');
+    document.getElementById('successText').textContent = message;
+    el.style.display = 'flex';
+    setTimeout(() => el.style.display = 'none', 2500);
   }
+
+  function showLoading() {
+    document.getElementById('loadingOverlay').style.display = 'flex';
+  }
+
+  function hideLoading() {
+    document.getElementById('loadingOverlay').style.display = 'none';
+  }
+
+  // Business hours initialization
+  const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  const daysContainer = document.getElementById('daysContainer');
+  days.forEach(day => {
+    const dayBox = document.createElement('div');
+    dayBox.className = 'day-box';
+    dayBox.innerHTML = `
+      <div class="day-header">
+        <span class="day-name">${day}</span>
+        <select class="day-status" style="padding:8px; border-radius:8px; border:2px solid #e2e8f0;">
+          <option value="open" selected>Open</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+      <div class="day-time">
+        <input type="time" class="day-start" value="09:00">
+        <span>to</span>
+        <input type="time" class="day-end" value="18:00">
+      </div>
+    `;
+    daysContainer.appendChild(dayBox);
+  });
+
+  // Holiday functions
+  window.addHoliday = function() {
+    const container = document.getElementById('holidaysContainer');
+    const item = document.createElement('div');
+    item.className = 'holiday-item';
+    item.innerHTML = `
+      <input type="text" class="holidayName" placeholder="Holiday name">
+      <input type="date" class="holidayDate" value="${new Date().toISOString().split('T')[0]}">
+      <button type="button" class="remove-btn" onclick="removeHoliday(this)">×</button>
+    `;
+    container.appendChild(item);
+  };
+
+  window.removeHoliday = function(btn) {
+    btn.parentElement.remove();
+  };
+
+  // Product functions
+  window.addOffer = function() {
+    productCount++;
+    const box = document.createElement('div');
+    box.className = 'product-card';
+    box.innerHTML = `
+      <h4 style="margin-bottom:12px;">Product ${productCount}</h4>
+      <div class="file-upload" style="margin-bottom:12px;">
+        <i class="fas fa-image"></i><span>Product Image</span>
+        <input type="file" class="productImg" accept="image/*">
+      </div>
+      <input type="text" class="productTitle" placeholder="Product Title" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:10px; margin-bottom:8px;">
+      <textarea class="productDesc" placeholder="Description" rows="2" style="width:100%; padding:12px; border:2px solid #e2e8f0; border-radius:10px; margin-bottom:8px;"></textarea>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+        <input type="number" class="originalPrice" placeholder="Original Price" style="padding:12px; border:2px solid #e2e8f0; border-radius:10px;">
+        <input type="number" class="discountPrice" placeholder="Discounted Price" style="padding:12px; border:2px solid #e2e8f0; border-radius:10px;">
+      </div>
+      <div class="product-badges">
+        <label><input type="checkbox" value="🔥 Hot Deal"> Hot Deal</label>
+        <label><input type="checkbox" value="⭐ Best Seller"> Best Seller</label>
+        <label><input type="checkbox" value="💸 Discount"> Discount</label>
+      </div>
+    `;
+    document.getElementById('offersForm').appendChild(box);
+  };
+
+  // Delivery zone functions
+  window.addDeliveryZone = function(zoneData) {
+    const container = document.getElementById('deliveryZonesList');
+    const zoneItem = document.createElement('div');
+    zoneItem.className = 'zone-item';
+    zoneItem.innerHTML = `
+      <input type="text" placeholder="City Name" value="${zoneData?.city || ''}">
+      <input type="number" placeholder="Charge" value="${zoneData?.charge || ''}">
+      <input type="text" placeholder="Delivery Time" value="${zoneData?.time || ''}">
+      <button onclick="this.parentElement.remove()">×</button>
+    `;
+    container.appendChild(zoneItem);
+  };
+
+  // Payment modal functions
+  window.openPaymentModal = function() {
+    document.getElementById('paymentModal').style.display = 'flex';
+    testTokenGeneration();
+  };
+
+  window.closePaymentModal = function() {
+    document.getElementById('paymentModal').style.display = 'none';
+  };
+
+  window.togglePaymentGateway = function(gateway) {
+    const index = selectedPaymentGateways.indexOf(gateway);
+    if (index === -1) {
+      selectedPaymentGateways.push(gateway);
+    } else {
+      selectedPaymentGateways.splice(index, 1);
+    }
+    
+    document.querySelectorAll('.payment-card').forEach(c => c.classList.remove('selected'));
+    
+    selectedPaymentGateways.forEach(g => {
+      const card = document.getElementById(`gateway-${g}`);
+      if (card) {
+        card.classList.add('selected');
+        const badge = document.getElementById(`${g}-badge`);
+        if (badge) badge.style.display = 'inline-block';
+      }
+    });
+    
+    ['jazzcash','easypaisa','bank','card','cod','crypto'].forEach(g => {
+      if (!selectedPaymentGateways.includes(g)) {
+        const badge = document.getElementById(`${g}-badge`);
+        if (badge) badge.style.display = 'none';
+      }
+    });
+  };
+
+  window.updatePaymentData = function(gateway, field, value) {
+    if (!paymentData[gateway]) paymentData[gateway] = {};
+    paymentData[gateway][field] = value;
+  };
+
+  window.handleFileUpload = function(input, gateway) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const preview = document.getElementById(`${gateway}-preview`);
+        if (preview) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        }
+        if (!paymentData[gateway]) paymentData[gateway] = {};
+        paymentData[gateway].barcodeFile = input.files[0];
+      };
+      reader.readAsDataURL(input.files[0]);
+      showSuccess(`QR uploaded for ${gateway}`);
+    }
+  };
+
+  window.updateTicketSetting = function(setting, value) {
+    ticketSettings[setting] = value;
+  };
+
+  window.testTokenGeneration = function() {
+    const prefix = document.getElementById('tokenPrefix')?.value || 'TKT';
+    const timestamp = Date.now().toString().slice(-8);
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let random = '';
+    for (let i = 0; i < 4; i++) {
+      random += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    document.getElementById('tokenPreview').textContent = `${prefix}-${timestamp}-${random}`;
+  };
+
+  window.savePaymentAndTicketSettings = function() {
+    showSuccess('✅ Payment settings saved successfully!');
+    setTimeout(() => closePaymentModal(), 1200);
+  };
+
+  // Image compression
+  async function resizeImage(file) {
+    return new Promise((resolve) => {
+      if (!file) { resolve(''); return; }
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxSize = 1024;
+        let width = img.width;
+        let height = img.height;
+        
+        if (width > height) {
+          if (width > maxSize) {
+            height *= maxSize / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width *= maxSize / height;
+            height = maxSize;
+          }
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  // Main generate function
+  window.generate = async function() {
+    // Validation
+    if (!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value) {
+      showSuccess('❌ Name & Phone are required');
+      return;
+    }
+    if (!document.getElementById('businessName').value) {
+      showSuccess('❌ Business title is required');
+      return;
+    }
+    if (!document.getElementById('address').value) {
+      showSuccess('❌ Business address is required');
+      return;
+    }
+
+    showLoading();
+
+    try {
+      const id = crypto.randomUUID();
+      
+      // Collect business hours
+      const businessHours = [];
+      document.querySelectorAll('.day-box').forEach(box => {
+        businessHours.push({
+          status: box.querySelector('.day-status').value,
+          start: box.querySelector('.day-start').value,
+          end: box.querySelector('.day-end').value
+        });
+      });
+
+      // Collect holidays
+      const holidays = [];
+      document.querySelectorAll('#holidaysContainer .holiday-item').forEach(item => {
+        const name = item.querySelector('.holidayName').value;
+        const date = item.querySelector('.holidayDate').value;
+        if (name && date) holidays.push({ name, date });
+      });
+
+      // Collect products
+      const products = [];
+      const productBoxes = document.querySelectorAll('.product-card');
+      
+      for (let i = 0; i < productBoxes.length; i++) {
+        const box = productBoxes[i];
+        const file = box.querySelector('.productImg').files[0];
+        
+        const product = {
+          title: box.querySelector('.productTitle').value || '',
+          desc: box.querySelector('.productDesc').value || '',
+          originalPrice: parseFloat(box.querySelector('.originalPrice').value) || null,
+          discountPrice: parseFloat(box.querySelector('.discountPrice').value) || null,
+          badges: Array.from(box.querySelectorAll('input[type=checkbox]:checked')).map(cb => cb.value),
+          image: file ? await resizeImage(file) : ''
+        };
+        
+        if (product.title || product.image) products.push(product);
+      }
+
+      // Collect delivery zones
+      const zones = [];
+      document.querySelectorAll('#deliveryZonesList .zone-item').forEach(zone => {
+        const inputs = zone.querySelectorAll('input');
+        zones.push({
+          city: inputs[0].value,
+          charge: parseFloat(inputs[1].value),
+          time: inputs[2].value
+        });
+      });
+
+      // Process barcode files
+      for (const gw of ['jazzcash', 'easypaisa', 'crypto']) {
+        if (paymentData[gw]?.barcodeFile) {
+          paymentData[gw].barcode = await resizeImage(paymentData[gw].barcodeFile);
+        }
+      }
+
+      // Build payment methods
+      const paymentMethods = {
+        whatsapp: {
+          active: !!document.getElementById('whatsappNumber').value,
+          number: document.getElementById('whatsappNumber').value
+        },
+        gateways: {},
+        tokenSystem: {
+          enabled: document.getElementById('enableTokenSystem').checked,
+          requireTokenForTracking: document.getElementById('requireTokenForTracking').checked,
+          prefix: document.getElementById('tokenPrefix').value,
+          length: parseInt(document.getElementById('tokenLength').value)
+        }
+      };
+
+      selectedPaymentGateways.forEach(gateway => {
+        if (gateway === 'cod') {
+          paymentMethods.gateways.cod = {
+            active: document.getElementById('codEnabled').checked,
+            minimumOrder: parseFloat(document.getElementById('codMinimumOrder').value)
+          };
+        } else {
+          paymentMethods.gateways[gateway] = {
+            active: true,
+            ...paymentData[gateway]
+          };
+        }
+      });
+
+      // Build complete card data
+      const cardData = {
+        id,
+        name: document.getElementById('fullName').value,
+        phone: document.getElementById('phoneNumber').value,
+        email: document.getElementById('email').value,
+        address: document.getElementById('address').value,
+        businessName: document.getElementById('businessName').value,
+        business: { about: document.getElementById('businessAbout').value },
+        socialMedia: {
+          facebook: document.getElementById('facebook').value,
+          instagram: document.getElementById('instagram').value,
+          twitter: document.getElementById('twitter').value,
+          linkedin: document.getElementById('linkedin').value,
+          youtube: document.getElementById('youtube').value,
+          tiktok: document.getElementById('tiktok').value,
+          website: document.getElementById('website').value
+        },
+        businessHours,
+        holidays,
+        products,
+        payments: paymentMethods,
+        deliverySettings: {
+          default: {
+            withinCity: {
+              charge: parseFloat(document.getElementById('deliveryChargeCity').value),
+              time: document.getElementById('deliveryTimeCity').value
+            },
+            otherCities: {
+              charge: parseFloat(document.getElementById('deliveryChargeOther').value),
+              time: document.getElementById('deliveryTimeOther').value
+            }
+          },
+          zones,
+          freeDeliveryMin: parseFloat(document.getElementById('freeDeliveryMin').value),
+          cutoffTime: document.getElementById('deliveryCutoffTime').value,
+          maxDays: document.getElementById('deliveryDays').value,
+          addressConfirmation: {
+            required: document.getElementById('requireAddressConfirmation').checked,
+            saveAddresses: document.getElementById('saveCustomerAddresses').checked
+          }
+        },
+        ticketSettings: {
+          enableAutoTickets: document.getElementById('enableAutoTickets').checked,
+          enableEmailTickets: document.getElementById('enableEmailTickets').checked,
+          enableWhatsappTickets: document.getElementById('enableWhatsappTickets').checked,
+          ticketPrefix: document.getElementById('ticketPrefix').value,
+          adminEmail: document.getElementById('adminEmail').value,
+          webhookUrl: document.getElementById('webhookUrl').value
+        },
+        version: '3.0.0',
+        created: new Date().toISOString()
+      };
+
+      // Add profile image
+      if (document.getElementById('profileImage').files[0]) {
+        cardData.profileImage = await resizeImage(document.getElementById('profileImage').files[0]);
+      }
+
+      // Save to Supabase
+      const { data: inserted, error } = await db.from('cards').insert({
+        id,
+        data: JSON.stringify(cardData)
+      }).select().single();
+
+      if (error) throw error;
+
+      localStorage.setItem('lastCardId', inserted.id);
+      hideLoading();
+      showSuccess('✅ Card created! Redirecting...');
+      
+      setTimeout(() => {
+        location.href = 'card.html?id=' + inserted.id;
+      }, 2000);
+
+    } catch (error) {
+      hideLoading();
+      console.error('Error:', error);
+      showSuccess('❌ Error: ' + error.message);
+    }
+  };
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add sample zones
+    addDeliveryZone({city: 'Karachi', charge: 150, time: '1-2 days'});
+    addDeliveryZone({city: 'Lahore', charge: 200, time: '2-3 days'});
+    addDeliveryZone({city: 'Islamabad', charge: 250, time: '2-3 days'});
+    
+    // Add first product
+    addOffer();
+    
+    // Select COD by default
+    setTimeout(() => {
+      togglePaymentGateway('cod');
+    }, 100);
+    
+    // Update WhatsApp preview
+    document.getElementById('businessName').addEventListener('input', function(e) {
+      const preview = document.getElementById('whatsappPreview');
+      if (preview) {
+        preview.innerHTML = `🎉 *NEW ORDER CONFIRMED* - TOKEN: TKT-123456-A7F2\n\n*Order ID:* ORD-12345678\n*Token:* TKT-123456-A7F2\n*Customer:* [Customer Name]\n*Phone:* [Customer Phone]\n*Address:* [Full Address]\n\n*ITEMS:*\n• Product 1 (Qty: 1) - PKR 1,000\n\n*Total:* PKR 1,150\n\nThank you for your order from ${e.target.value}! 🛍️`;
+      }
+    });
+    
+    // Token preview on change
+    document.getElementById('tokenPrefix').addEventListener('input', testTokenGeneration);
+    document.getElementById('tokenLength').addEventListener('change', testTokenGeneration);
+  });
 </script>
 </body>
 </html>
