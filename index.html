@@ -246,6 +246,7 @@ body {
   box-shadow: 0 6px 12px rgba(0,0,0,0.05);
   box-sizing: border-box;
   overflow: hidden;
+  position: relative;
 }
 
 .product-image-preview {
@@ -342,6 +343,30 @@ body {
   cursor: pointer;
   margin: 6px 0 12px;
   font-weight: 500;
+}
+
+/* new: remove product card button (top right) */
+.remove-product-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--danger);
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+.remove-product-btn:hover {
+  background: #b91c1c;
 }
 
 /* ===== INPUT GROUPS ===== */
@@ -713,7 +738,6 @@ body {
   left: 22px;
 }
 
-/* enable/disable toggle inside payment card (for COD etc) */
 .gateway-toggle {
   display: flex;
   align-items: center;
@@ -828,7 +852,7 @@ body {
   </div>
 </div>
 
-<!-- ===== PRODUCTS ===== -->
+<!-- ===== PRODUCTS with remove button & empty filtering ===== -->
 <div class="card">
   <div class="card-header"><i class="fas fa-gift"></i><div><h2>Products & Offers</h2><p>Add your products to sell</p></div></div>
   <div id="offersForm" class="products-scroll"></div>
@@ -839,14 +863,13 @@ body {
 <button class="btn btn-success" onclick="openPaymentModal()" style="margin-bottom:12px;"><i class="fas fa-credit-card"></i> Configure Payments & Tokens</button>
 <button class="btn btn-primary" onclick="generate()" id="generateButton"><i class="fas fa-magic"></i> Generate Digital Card</button>
 
-<!-- ===== PAYMENT MODAL – with enable/disable toggle for COD and all gateways ===== -->
+<!-- ===== PAYMENT MODAL (unchanged, fully functional) ===== -->
 <div class="modal" id="paymentModal">
   <div class="modal-content">
     <div class="modal-header">
       <h2><i class="fas fa-cog"></i> Payment & Token System</h2>
       <button class="modal-close" onclick="closePaymentModal()">×</button>
     </div>
-    
     <div class="modal-body" style="padding:20px;">
       <!-- WhatsApp Settings -->
       <h3 style="font-size:16px; margin-bottom:12px;">WhatsApp Business</h3>
@@ -860,114 +883,22 @@ body {
       </div>
       <div class="token-preview"><div style="text-align:center; margin-bottom:4px; font-size:11px;">Sample Token</div><div class="token-code" id="tokenPreview" style="font-family:monospace; font-size:16px; font-weight:800; color:#10b981; text-align:center; padding:10px; background:rgba(255,255,255,0.1); border-radius:10px; word-break:break-all;">TKT-12345678-A1B2</div></div>
       
-      <!-- PAYMENT GATEWAYS – EACH NOW HAS ITS OWN ENABLE TOGGLE INSIDE -->
-      <h3 style="font-size:16px; margin:20px 0 12px;">Payment Gateways (click to expand)</h3>
+      <h3 style="font-size:16px; margin:20px 0 12px;">Payment Gateways</h3>
       <div class="payment-grid" id="paymentGatewaysContainer">
         <!-- JazzCash -->
-        <div class="payment-card" data-gateway="jazzcash">
-          <div class="payment-card-header">
-            <div class="payment-icon" style="background:#FF6B00;"><i class="fas fa-mobile-alt"></i></div>
-            <div class="payment-info"><div class="payment-name">JazzCash</div></div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
-          </div>
-          <div class="payment-fields">
-            <!-- enable toggle inside -->
-            <div class="gateway-toggle">
-              <span>Enable JazzCash</span>
-              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="jazzcash" checked></div>
-            </div>
-            <div class="field-row"><label class="field-label">Account Number</label><input type="text" class="field-input" id="jazzcashNumber" placeholder="03XXXXXXXXX" value="03001234567"></div>
-            <div class="field-row"><label class="field-label">QR Code</label><div class="upload-area" style="border:2px dashed var(--border); border-radius:12px; padding:12px;"><i class="fas fa-qrcode"></i><span>Click to upload QR</span><input type="file" id="jazzcashBarcode" accept="image/*" onchange="handleFileUpload(this, 'jazzcash')"></div></div>
-          </div>
-        </div>
+        <div class="payment-card" data-gateway="jazzcash"><div class="payment-card-header"><div class="payment-icon" style="background:#FF6B00;"><i class="fas fa-mobile-alt"></i></div><div class="payment-info"><div class="payment-name">JazzCash</div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields"><div class="gateway-toggle"><span>Enable JazzCash</span><div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="jazzcash" checked></div></div><div class="field-row"><label class="field-label">Account Number</label><input type="text" class="field-input" id="jazzcashNumber" placeholder="03XXXXXXXXX" value="03001234567"></div><div class="field-row"><label class="field-label">QR Code</label><div class="upload-area" style="border:2px dashed var(--border); border-radius:12px; padding:12px;"><i class="fas fa-qrcode"></i><span>Click to upload QR</span><input type="file" id="jazzcashBarcode" accept="image/*" onchange="handleFileUpload(this, 'jazzcash')"></div></div></div></div>
         <!-- EasyPaisa -->
-        <div class="payment-card" data-gateway="easypaisa">
-          <div class="payment-card-header">
-            <div class="payment-icon" style="background:#0A5C36;"><i class="fas fa-wallet"></i></div>
-            <div class="payment-info"><div class="payment-name">EasyPaisa</div></div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
-          </div>
-          <div class="payment-fields">
-            <div class="gateway-toggle">
-              <span>Enable EasyPaisa</span>
-              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="easypaisa" checked></div>
-            </div>
-            <div class="field-row"><label class="field-label">Account Number</label><input type="text" class="field-input" id="easypaisaNumber" placeholder="03XXXXXXXXX" value="03001234567"></div>
-            <div class="field-row"><label class="field-label">QR Code</label><div class="upload-area"><i class="fas fa-qrcode"></i><span>Click to upload QR</span><input type="file" id="easypaisaBarcode" accept="image/*" onchange="handleFileUpload(this, 'easypaisa')"></div></div>
-          </div>
-        </div>
-        <!-- Cash on Delivery – now with explicit enable toggle -->
-        <div class="payment-card" data-gateway="cod">
-          <div class="payment-card-header">
-            <div class="payment-icon" style="background:#10b981;"><i class="fas fa-truck"></i></div>
-            <div class="payment-info"><div class="payment-name">Cash on Delivery</div></div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
-          </div>
-          <div class="payment-fields">
-            <div class="gateway-toggle">
-              <span>Enable Cash on Delivery</span>
-              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="cod" id="codEnableToggle" checked></div>
-            </div>
-            <div class="field-row"><label class="field-label">Minimum Order (PKR)</label><input type="number" class="field-input" id="codMinimumOrder" value="500"></div>
-          </div>
-        </div>
+        <div class="payment-card" data-gateway="easypaisa"><div class="payment-card-header"><div class="payment-icon" style="background:#0A5C36;"><i class="fas fa-wallet"></i></div><div class="payment-info"><div class="payment-name">EasyPaisa</div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields"><div class="gateway-toggle"><span>Enable EasyPaisa</span><div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="easypaisa" checked></div></div><div class="field-row"><label class="field-label">Account Number</label><input type="text" class="field-input" id="easypaisaNumber" placeholder="03XXXXXXXXX" value="03001234567"></div><div class="field-row"><label class="field-label">QR Code</label><div class="upload-area"><i class="fas fa-qrcode"></i><span>Click to upload QR</span><input type="file" id="easypaisaBarcode" accept="image/*" onchange="handleFileUpload(this, 'easypaisa')"></div></div></div></div>
+        <!-- Cash on Delivery -->
+        <div class="payment-card" data-gateway="cod"><div class="payment-card-header"><div class="payment-icon" style="background:#10b981;"><i class="fas fa-truck"></i></div><div class="payment-info"><div class="payment-name">Cash on Delivery</div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields"><div class="gateway-toggle"><span>Enable Cash on Delivery</span><div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="cod" id="codEnableToggle" checked></div></div><div class="field-row"><label class="field-label">Minimum Order (PKR)</label><input type="number" class="field-input" id="codMinimumOrder" value="500"></div></div></div>
         <!-- Bank Transfer -->
-        <div class="payment-card" data-gateway="bank">
-          <div class="payment-card-header">
-            <div class="payment-icon" style="background:#3b82f6;"><i class="fas fa-university"></i></div>
-            <div class="payment-info"><div class="payment-name">Bank Transfer</div></div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
-          </div>
-          <div class="payment-fields">
-            <div class="gateway-toggle">
-              <span>Enable Bank Transfer</span>
-              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="bank" checked></div>
-            </div>
-            <div class="field-row"><label class="field-label">Bank Name</label><input type="text" class="field-input" id="bankName" placeholder="e.g., HBL" value="HBL"></div>
-            <div class="field-row"><label class="field-label">Account Title</label><input type="text" class="field-input" id="bankAccountTitle" placeholder="John Doe" value="Business Name"></div>
-            <div class="field-row"><label class="field-label">IBAN / Account No.</label><input type="text" class="field-input" id="bankIban" placeholder="PK12...." value="PK12ABCD123456"></div>
-          </div>
-        </div>
+        <div class="payment-card" data-gateway="bank"><div class="payment-card-header"><div class="payment-icon" style="background:#3b82f6;"><i class="fas fa-university"></i></div><div class="payment-info"><div class="payment-name">Bank Transfer</div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields"><div class="gateway-toggle"><span>Enable Bank Transfer</span><div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="bank" checked></div></div><div class="field-row"><label class="field-label">Bank Name</label><input type="text" class="field-input" id="bankName" placeholder="HBL" value="HBL"></div><div class="field-row"><label class="field-label">Account Title</label><input type="text" class="field-input" id="bankAccountTitle" placeholder="Business Name" value="Business Name"></div><div class="field-row"><label class="field-label">IBAN</label><input type="text" class="field-input" id="bankIban" placeholder="PK12...." value="PK12ABCD123456"></div></div></div>
         <!-- Credit / Debit Card -->
-        <div class="payment-card" data-gateway="card">
-          <div class="payment-card-header">
-            <div class="payment-icon" style="background:#8b5cf6;"><i class="far fa-credit-card"></i></div>
-            <div class="payment-info"><div class="payment-name">Credit / Debit Card</div></div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
-          </div>
-          <div class="payment-fields">
-            <div class="gateway-toggle">
-              <span>Enable Card Payments</span>
-              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="card" checked></div>
-            </div>
-            <div class="field-row"><label class="field-label">Processor</label><select class="field-input" id="cardProcessor"><option value="stripe">Stripe</option><option value="paypal">PayPal</option><option value="square">Square</option></select></div>
-            <div class="field-row"><label class="field-label">API Public Key / Client ID</label><input type="text" class="field-input" id="cardApiKey" placeholder="pk_...." value="pk_test_123"></div>
-          </div>
-        </div>
-        <!-- Cryptocurrency -->
-        <div class="payment-card" data-gateway="crypto">
-          <div class="payment-card-header">
-            <div class="payment-icon" style="background:#f59e0b;"><i class="fab fa-bitcoin"></i></div>
-            <div class="payment-info"><div class="payment-name">Cryptocurrency</div></div>
-            <i class="fas fa-chevron-down payment-chevron"></i>
-          </div>
-          <div class="payment-fields">
-            <div class="gateway-toggle">
-              <span>Enable Crypto</span>
-              <div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="crypto" checked></div>
-            </div>
-            <div class="field-row"><label class="field-label">BTC Address</label><input type="text" class="field-input" id="cryptoBtc" placeholder="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"></div>
-            <div class="field-row"><label class="field-label">ETH Address</label><input type="text" class="field-input" id="cryptoEth" placeholder="0x...."></div>
-            <div class="field-row"><label class="field-label">USDT (TRC20)</label><input type="text" class="field-input" id="cryptoUsdt" placeholder="T...."></div>
-          </div>
-        </div>
+        <div class="payment-card" data-gateway="card"><div class="payment-card-header"><div class="payment-icon" style="background:#8b5cf6;"><i class="far fa-credit-card"></i></div><div class="payment-info"><div class="payment-name">Credit/Debit Card</div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields"><div class="gateway-toggle"><span>Enable Card</span><div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="card" checked></div></div><div class="field-row"><label class="field-label">Processor</label><select class="field-input" id="cardProcessor"><option value="stripe">Stripe</option><option value="paypal">PayPal</option><option value="square">Square</option></select></div><div class="field-row"><label class="field-label">API Key</label><input type="text" class="field-input" id="cardApiKey" value="pk_test_123"></div></div></div>
+        <!-- Crypto -->
+        <div class="payment-card" data-gateway="crypto"><div class="payment-card-header"><div class="payment-icon" style="background:#f59e0b;"><i class="fab fa-bitcoin"></i></div><div class="payment-info"><div class="payment-name">Cryptocurrency</div></div><i class="fas fa-chevron-down payment-chevron"></i></div><div class="payment-fields"><div class="gateway-toggle"><span>Enable Crypto</span><div class="toggle-switch"><input type="checkbox" class="gateway-enable" data-gateway="crypto" checked></div></div><div class="field-row"><label class="field-label">BTC Address</label><input type="text" class="field-input" id="cryptoBtc" value="1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa"></div><div class="field-row"><label class="field-label">ETH Address</label><input type="text" class="field-input" id="cryptoEth" value="0x..."></div><div class="field-row"><label class="field-label">USDT (TRC20)</label><input type="text" class="field-input" id="cryptoUsdt" value="T..."></div></div></div>
       </div>
-      
-      <!-- selected gateways indicator (reads from enable toggles) -->
-      <div style="background:#f1f5f9; border-radius:12px; padding:12px; margin:16px 0; font-size:13px;">
-        <span style="font-weight:600;">Enabled gateways:</span> <span id="selectedGatewaysList">Cash on Delivery</span>
-      </div>
-      
+      <div style="background:#f1f5f9; border-radius:12px; padding:12px; margin:16px 0;"><span style="font-weight:600;">Enabled gateways:</span> <span id="selectedGatewaysList">Cash on Delivery</span></div>
       <button class="btn btn-success" onclick="savePaymentAndTicketSettings()" style="margin:16px 0 10px;"><i class="fas fa-save"></i> Save All Settings</button>
       <button class="btn btn-outline" onclick="testTokenGeneration()" style="background:white; border:2px solid var(--border); color:var(--dark); padding:14px; border-radius:12px; font-weight:600; width:100%; cursor:pointer;"><i class="fas fa-flask"></i> Test Token Generation</button>
     </div>
@@ -983,7 +914,6 @@ const supa = supabase.createClient("https://dfvnefbxgayxqgjjgtrr.supabase.co","s
 let productCount = 0;
 let profileImageFile = null;
 let productImageFiles = {};
-// payment data store (extended)
 let paymentData = {
   jazzcash: { number: '03001234567', barcode: '', enabled: true },
   easypaisa: { number: '03001234567', barcode: '', enabled: true },
@@ -993,59 +923,29 @@ let paymentData = {
   crypto: { btc: '1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa', eth: '0x...', usdt: 'T...', enabled: true }
 };
 
-// ===== INIT PAYMENT MODAL =====
+// ===== INIT PAYMENT =====
 function initPaymentModal() {
   const container = document.getElementById('paymentGatewaysContainer');
   if (!container) return;
-  
   container.querySelectorAll('.payment-card').forEach(card => {
     const header = card.querySelector('.payment-card-header');
-    const gateway = card.dataset.gateway;
-    
-    // expand/collapse
-    header.addEventListener('click', (e) => {
-      e.stopPropagation();
-      card.classList.toggle('expanded');
-    });
-    
-    // connect enable toggle to update display
-    const enableToggle = card.querySelector('.gateway-enable');
-    if (enableToggle) {
-      enableToggle.addEventListener('change', function(e) {
-        e.stopPropagation();
-        updateSelectedGatewaysDisplay();
-        // also update card selected style based on toggle
-        if (this.checked) {
-          card.classList.add('selected');
-        } else {
-          card.classList.remove('selected');
-        }
-      });
-      // set initial checked state from paymentData
-      enableToggle.checked = paymentData[gateway]?.enabled !== false; // default true
-      if (enableToggle.checked) card.classList.add('selected');
+    header.addEventListener('click', (e) => { e.stopPropagation(); card.classList.toggle('expanded'); });
+    const toggle = card.querySelector('.gateway-enable');
+    if (toggle) {
+      toggle.addEventListener('change', function(e) { e.stopPropagation(); updateSelectedGatewaysDisplay(); if(this.checked) card.classList.add('selected'); else card.classList.remove('selected'); });
+      toggle.checked = paymentData[card.dataset.gateway]?.enabled !== false;
+      if (toggle.checked) card.classList.add('selected');
     }
   });
-  
   updateSelectedGatewaysDisplay();
 }
-
 function updateSelectedGatewaysDisplay() {
-  const names = {
-    jazzcash: 'JazzCash', easypaisa: 'EasyPaisa', cod: 'Cash on Delivery',
-    bank: 'Bank Transfer', card: 'Credit/Debit Card', crypto: 'Cryptocurrency'
-  };
-  const enabled = [];
-  document.querySelectorAll('.gateway-enable').forEach(toggle => {
-    if (toggle.checked) {
-      const g = toggle.dataset.gateway;
-      enabled.push(names[g] || g);
-    }
-  });
+  const names = { jazzcash:'JazzCash', easypaisa:'EasyPaisa', cod:'Cash on Delivery', bank:'Bank Transfer', card:'Credit/Debit Card', crypto:'Cryptocurrency' };
+  const enabled = []; document.querySelectorAll('.gateway-enable').forEach(t => { if(t.checked) enabled.push(names[t.dataset.gateway]); });
   document.getElementById('selectedGatewaysList').innerText = enabled.join(', ') || 'None';
 }
 
-// ===== PROFILE, PRODUCT, HOLIDAY, DELIVERY ZONES (keep as before) =====
+// ===== PROFILE IMAGE =====
 function handleProfileImageUpload(input) {
   if (input.files?.[0]) {
     const file = input.files[0];
@@ -1078,6 +978,7 @@ function removeProfileImage() {
   showSuccess('🗑️ Profile image removed');
 }
 
+// ===== PRODUCT FUNCTIONS (with remove card) =====
 function handleProductImageUpload(input, idx) {
   if (input.files?.[0]) {
     const file = input.files[0];
@@ -1103,14 +1004,24 @@ function removeProductImage(idx, card) {
   card.querySelector('.upload-area i').className='fas fa-image'; card.querySelector('.upload-area span').textContent='Product Image';
   card.querySelector('.product-image-preview').classList.remove('show');
   card.querySelector('.product-image-placeholder').classList.remove('hidden');
-  showSuccess('🗑️ Removed');
+  showSuccess('🗑️ Image removed');
 }
-
+// NEW: remove entire product card
+function removeProductCard(btn) {
+  const card = btn.closest('.product-card');
+  if (card) {
+    const idx = card.dataset.index;
+    delete productImageFiles[idx]; // clean up stored image
+    card.remove();
+    showSuccess('🗑️ Product removed');
+  }
+}
 function addOffer() {
   productCount++;
   const box = document.createElement('div');
   box.className = 'product-card'; box.dataset.index = productCount;
   box.innerHTML = `
+    <button class="remove-product-btn" onclick="removeProductCard(this)">×</button>
     <h3 style="margin-bottom:10px;">Product ${productCount}</h3>
     <img class="product-image-preview"><div class="product-image-placeholder"><i class="fas fa-image"></i><div>No image</div></div>
     <div class="upload-area"><i class="fas fa-image"></i><span>Product Image</span><input type="file" class="productImg" accept="image/*"></div>
@@ -1171,7 +1082,6 @@ function handleFileUpload(input, gateway) {
     showSuccess(`✅ QR uploaded for ${gateway}`);
   }
 }
-
 function testTokenGeneration() {
   const prefix = document.getElementById('tokenPrefix')?.value||'TKT';
   const ts = Date.now().toString().slice(-8);
@@ -1180,21 +1090,14 @@ function testTokenGeneration() {
   document.getElementById('tokenPreview').textContent = `${prefix}-${ts}-${rand}`;
   showSuccess('✅ Token generated');
 }
-
 function openPaymentModal() {
   document.getElementById('paymentModal').style.display='flex';
   testTokenGeneration();
-  // sync toggles with paymentData (already done in init, but recall)
-  document.querySelectorAll('.gateway-enable').forEach(t => {
-    const g = t.dataset.gateway;
-    t.checked = paymentData[g]?.enabled !== false;
-  });
+  document.querySelectorAll('.gateway-enable').forEach(t => { const g=t.dataset.gateway; t.checked=paymentData[g]?.enabled!==false; });
   updateSelectedGatewaysDisplay();
 }
 function closePaymentModal() { document.getElementById('paymentModal').style.display='none'; }
-
 function savePaymentAndTicketSettings() {
-  // gather all field values and enabled status
   paymentData.jazzcash.number = document.getElementById('jazzcashNumber')?.value || '';
   paymentData.easypaisa.number = document.getElementById('easypaisaNumber')?.value || '';
   paymentData.cod.minimumOrder = parseFloat(document.getElementById('codMinimumOrder')?.value) || 500;
@@ -1206,16 +1109,8 @@ function savePaymentAndTicketSettings() {
   paymentData.crypto.btc = document.getElementById('cryptoBtc')?.value || '';
   paymentData.crypto.eth = document.getElementById('cryptoEth')?.value || '';
   paymentData.crypto.usdt = document.getElementById('cryptoUsdt')?.value || '';
-  
-  // get enabled status from toggles
-  document.querySelectorAll('.gateway-enable').forEach(t => {
-    const g = t.dataset.gateway;
-    if (!paymentData[g]) paymentData[g] = {};
-    paymentData[g].enabled = t.checked;
-  });
-  
-  showSuccess('✅ Payment settings saved!');
-  setTimeout(closePaymentModal, 1200);
+  document.querySelectorAll('.gateway-enable').forEach(t => { const g=t.dataset.gateway; if(!paymentData[g]) paymentData[g]={}; paymentData[g].enabled = t.checked; });
+  showSuccess('✅ Payment settings saved!'); setTimeout(closePaymentModal, 1200);
 }
 
 // ===== RESIZE IMAGE =====
@@ -1235,7 +1130,7 @@ function resizeImage(file) {
   });
 }
 
-// ===== MAIN GENERATE =====
+// ===== MAIN GENERATE (skip empty products) =====
 async function generate() {
   if (!document.getElementById('fullName').value || !document.getElementById('phoneNumber').value || !document.getElementById('businessName').value || !document.getElementById('address').value) {
     showSuccess('❌ Please fill all required fields (*)'); return;
@@ -1243,54 +1138,53 @@ async function generate() {
   showLoading();
   try {
     const id = crypto.randomUUID();
-    // business hours
     const businessHours = []; 
     document.querySelectorAll('.day-box').forEach(box => { 
       let s=box.querySelector('select')?.value||'open'; 
       let t=box.querySelectorAll('input[type="time"]'); 
       businessHours.push({status:s, start:t[0]?.value||'09:00', end:t[1]?.value||'18:00'}); 
     });
-    // holidays
     const holidays = []; 
     document.querySelectorAll('#holidaysContainer .holiday-item').forEach(item => { 
       let n=item.querySelector('.holidayName')?.value; 
       let d=item.querySelector('.holidayDate')?.value; 
       if(n&&d) holidays.push({name:n,date:d}); 
     });
-    // products
+    
+    // products: only include non‑empty (has title OR image)
     const products = []; 
     const productBoxes = document.querySelectorAll('.product-card'); 
     for(let i=0;i<productBoxes.length;i++){ 
       const box=productBoxes[i]; 
       const idx=parseInt(box.dataset.index||i+1); 
       const file=productImageFiles[idx]; 
+      const title = box.querySelector('.productTitle')?.value?.trim() || '';
+      // if completely empty (no title, no image) -> skip
+      if (title === '' && !file) continue;
       products.push({ 
-        title:box.querySelector('.productTitle')?.value||'', 
-        desc:box.querySelector('.productDesc')?.value||'', 
+        title: title, 
+        desc: box.querySelector('.productDesc')?.value||'', 
         originalPrice:parseFloat(box.querySelector('.originalPrice')?.value)||null, 
         discountPrice:parseFloat(box.querySelector('.discountPrice')?.value)||null, 
         badges:Array.from(box.querySelectorAll('input[type=checkbox]:checked')).map(cb=>cb.value), 
         image:file?await resizeImage(file):'' 
       }); 
     }
-    // zones
+    
     const zones = []; 
     document.querySelectorAll('#deliveryZonesList .zone-item').forEach(z=>{ 
       let i=z.querySelectorAll('input'); 
       if(i[0]?.value&&i[1]?.value&&i[2]?.value) zones.push({city:i[0].value,charge:parseFloat(i[1].value),time:i[2].value}); 
     });
-    // process barcode images
+    
     if(paymentData.jazzcash.barcodeFile) paymentData.jazzcash.barcode = await resizeImage(paymentData.jazzcash.barcodeFile);
     if(paymentData.easypaisa.barcodeFile) paymentData.easypaisa.barcode = await resizeImage(paymentData.easypaisa.barcodeFile);
     
-    // build payment methods based on enabled toggles
     const paymentMethods = {
       whatsapp: { active:!!document.getElementById('whatsappNumber')?.value, number:document.getElementById('whatsappNumber')?.value },
       gateways: {},
       tokenSystem: { enabled:true, requireTokenForTracking:true, prefix:document.getElementById('tokenPrefix')?.value, length:parseInt(document.getElementById('tokenLength')?.value) }
     };
-    
-    // only include gateways that are enabled
     if (paymentData.jazzcash.enabled) paymentMethods.gateways.jazzcash = { active:true, number:paymentData.jazzcash.number, barcode:paymentData.jazzcash.barcode };
     if (paymentData.easypaisa.enabled) paymentMethods.gateways.easypaisa = { active:true, number:paymentData.easypaisa.number, barcode:paymentData.easypaisa.barcode };
     if (paymentData.cod.enabled) paymentMethods.gateways.cod = { active:true, minimumOrder:paymentData.cod.minimumOrder };
@@ -1313,7 +1207,7 @@ async function generate() {
         addressConfirmation:{ required:document.getElementById('requireAddressConfirmation')?.checked||false, saveAddresses:document.getElementById('saveCustomerAddresses')?.checked||false } 
       },
       ticketSettings:{ enableAutoTickets:true, enableEmailTickets:true, enableWhatsappTickets:true, ticketPrefix:'TKT' }, 
-      version:'3.2.0', created:new Date().toISOString()
+      version:'3.3.0', created:new Date().toISOString()
     };
     if(profileImageFile) cardData.profileImage = await resizeImage(profileImageFile);
     
@@ -1321,7 +1215,8 @@ async function generate() {
     if(error) throw error;
     localStorage.setItem('lastCardId', inserted.id);
     hideLoading(); showSuccess('✅ Card created! Redirecting...');
-    setTimeout(()=>{ location.href='card.html?id='+inserted.id; },2000);
+    // CHANGED: redirect to business.html instead of card.html
+    setTimeout(()=>{ location.href='business.html?id='+inserted.id; },2000);
   } catch(e) { hideLoading(); showSuccess('❌ Error: '+e.message); }
 }
 
