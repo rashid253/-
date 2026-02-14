@@ -2919,7 +2919,7 @@ async function completeOrder() {
   }
 }
 
-// ===== FIXED: SAVE ORDER TO DATABASE =====
+// ===== FIXED: SAVE ORDER TO DATABASE WITH ALL COLUMNS =====
 async function saveOrderToDatabase(orderData) {
   try {
     if (!currentBusinessId) {
@@ -2929,39 +2929,49 @@ async function saveOrderToDatabase(orderData) {
     }
     
     console.log('📤 Saving order for business:', currentBusinessId);
+    console.log('📦 Order data received:', orderData);
     
-    // IMPORTANT: Database schema ke according sahi columns use karein
+    // COMPLETE ORDER OBJECT with ALL columns matching your table structure
     const orderToInsert = {
-      business_id: currentBusinessId,
-      order_id: orderData.orderId,
-      token: orderData.token,
-      customer_name: orderData.customerName || 'Customer',
-      customer_phone: orderData.customerPhone || '',
-      customer_email: orderData.customerEmail || null,
-      customer_address: orderData.customerAddress || '',
-      customer_location: orderData.customerLocation || {},
-      items: orderData.items || [],
-      subtotal: orderData.subtotal || 0,
-      delivery_charge: orderData.deliveryCharge || 0,
-      discount_amount: 0,
-      tax_amount: 0,
-      total: orderData.total || 0,
-      payment_method: orderData.paymentMethod || 'cod',
-      payment_status: 'pending',
-      payment_proof: orderData.paymentProof || null,
-      status: 'pending',
-      zone: null,
-      estimated_delivery: null,
-      notes: null,
-      admin_notes: null,
-      tracking_number: null,
-      courier_name: null,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      delivered_at: null
+      business_id: currentBusinessId,                    // NOT NULL ✅
+      order_id: orderData.orderId,                       // NOT NULL ✅
+      token: orderData.token,                             // NOT NULL ✅
+      customer_name: orderData.customerName || 'Customer', // NULL allowed
+      customer_phone: orderData.customerPhone || '',      // NOT NULL ✅
+      customer_email: orderData.customerEmail || null,    // NULL allowed
+      customer_address: orderData.customerAddress || '',  // NOT NULL ✅
+      customer_location: orderData.customerLocation || null, // NULL allowed
+      items: orderData.items || [],                       // NOT NULL ✅
+      subtotal: orderData.subtotal || 0,                  // NOT NULL ✅
+      delivery_charge: orderData.deliveryCharge || 0,     // NULL allowed
+      discount_amount: 0,                                 // NULL allowed
+      tax_amount: 0,                                      // NULL allowed
+      total: orderData.total || 0,                         // NOT NULL ✅
+      payment_method: orderData.paymentMethod || 'cod',    // NOT NULL ✅
+      payment_status: 'pending',                           // NULL allowed
+      payment_proof: orderData.paymentProof || null,       // NULL allowed
+      status: 'pending',                                   // NOT NULL ✅ (default)
+      zone: null,                                          // NULL allowed
+      estimated_delivery: null,                            // NULL allowed
+      notes: null,                                          // NULL allowed
+      admin_notes: null,                                    // NULL allowed
+      tracking_number: null,                                // NULL allowed
+      courier_name: null,                                   // NULL allowed
+      created_at: new Date().toISOString(),                 // NOT NULL ✅
+      updated_at: new Date().toISOString(),                 // NULL allowed
+      delivered_at: null                                    // NULL allowed
     };
     
-    console.log('📦 Inserting order:', orderToInsert);
+    // Ensure required fields have values
+    if (!orderToInsert.customer_phone) {
+      orderToInsert.customer_phone = orderData.phone || 'Not provided';
+    }
+    
+    if (!orderToInsert.customer_address) {
+      orderToInsert.customer_address = orderData.address || 'Not provided';
+    }
+    
+    console.log('📦 Final insert data:', orderToInsert);
     
     const { data, error } = await supa
       .from('orders')
@@ -2970,7 +2980,30 @@ async function saveOrderToDatabase(orderData) {
     
     if (error) {
       console.error('❌ Supabase error:', error);
-      showNotification('❌ Database error: ' + error.message);
+      
+      // Human readable error messages
+      let errorMsg = error.message;
+      if (error.message.includes('business_id')) {
+        errorMsg = 'Business ID is required';
+      } else if (error.message.includes('order_id')) {
+        errorMsg = 'Order ID is required';
+      } else if (error.message.includes('token')) {
+        errorMsg = 'Token is required';
+      } else if (error.message.includes('customer_phone')) {
+        errorMsg = 'Customer phone is required';
+      } else if (error.message.includes('customer_address')) {
+        errorMsg = 'Customer address is required';
+      } else if (error.message.includes('items')) {
+        errorMsg = 'Items are required';
+      } else if (error.message.includes('subtotal')) {
+        errorMsg = 'Subtotal is required';
+      } else if (error.message.includes('total')) {
+        errorMsg = 'Total is required';
+      } else if (error.message.includes('payment_method')) {
+        errorMsg = 'Payment method is required';
+      }
+      
+      showNotification('❌ ' + errorMsg);
       return false;
     }
     
