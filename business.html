@@ -299,9 +299,6 @@ body {
 }
 
 .cart-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
   background: #ef4444;
   color: white;
   font-size: 11px;
@@ -314,7 +311,6 @@ body {
   justify-content: center;
   border: 2px solid white;
   box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-  z-index: 12;
   padding: 0 4px;
 }
 
@@ -1357,6 +1353,11 @@ body {
   color: white;
 }
 
+.receipt-btn-track {
+  background: #10b981;
+  color: white;
+}
+
 .admin-confirm-btn {
   background: var(--success-gradient);
   color: white;
@@ -1424,13 +1425,73 @@ body {
 .status-cancelled { background: #fee2e2; color: #b91c1c; }
 .status-refused { background: #e2e8f0; color: #475569; }
 
-.truck-icon-fixed {
+/* Payment Method Cards */
+.jazzcash-card, .easypaisa-card, .bank-card, .cod-card {
+  background: linear-gradient(135deg, #667eea10, #764ba210);
+  border: 2px solid #667eea30;
+  border-radius: 16px;
+  padding: 16px;
+  margin: 10px 0;
   cursor: pointer;
   transition: all 0.3s;
 }
 
+.jazzcash-card:hover, .easypaisa-card:hover {
+  transform: scale(1.02);
+  border-color: #667eea;
+}
+
+.jazzcash-header, .easypaisa-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.jazzcash-header i, .easypaisa-header i {
+  font-size: 32px;
+  color: #667eea;
+}
+
+.qr-preview {
+  width: 100px;
+  height: 100px;
+  margin: 10px auto;
+  border-radius: 10px;
+  border: 2px solid #e2e8f0;
+}
+
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0;
+  padding: 10px;
+  background: #f8fafc;
+  border-radius: 30px;
+}
+
+/* FIXED: Truck icon */
+.truck-icon-fixed {
+  cursor: pointer;
+  transition: all 0.3s;
+  color: white;
+}
+
 .truck-icon-fixed:hover {
   transform: scale(1.1);
+  color: #10b981;
+}
+
+/* Auto-notification toggle */
+.auto-notify-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border-radius: 30px;
+  margin: 15px 0;
 }
 
 @keyframes slideUp {
@@ -1528,6 +1589,12 @@ body {
         <!-- Dynamic instructions -->
       </div>
       
+      <!-- QR/Barcode Preview (will be shown inside popup) -->
+      <div id="barcodePreviewContainer" style="text-align:center; margin:15px 0; display:none;">
+        <img id="barcodePreviewImage" src="" style="max-width:200px; max-height:200px; border-radius:16px; border:3px solid #667eea; padding:10px; background:white;">
+        <p style="font-size:12px; color:#64748b; margin-top:5px;">Scan this QR code to pay</p>
+      </div>
+      
       <div style="margin: 10px 0; text-align: center;">
         <label style="display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer;">
           <input type="checkbox" id="skipProofCheckbox" onchange="toggleProofUpload()"> 
@@ -1582,6 +1649,9 @@ body {
         </button>
         <button class="receipt-btn receipt-btn-image" onclick="downloadReceiptAsImage()">
           <i class="fas fa-image"></i> Image
+        </button>
+        <button class="receipt-btn receipt-btn-track" onclick="navigateTo('deliveryPage')">
+          <i class="fas fa-truck"></i> Track
         </button>
       </div>
       
@@ -1653,6 +1723,7 @@ body {
         <div class="action-card" onclick="window.navigateTo('cartPage')">
           <div class="action-icon" id="cartIcon">
             <i class="fas fa-shopping-cart" style="font-size:24px;"></i>
+            <span class="cart-badge" id="cartCountBadge" style="display:none; margin-left:5px;">0</span>
           </div>
           <h3 style="font-size:14px; margin-top:8px;">My Cart</h3>
           <p style="font-size:11px; opacity:0.9;"><span id="cartCountMini">0</span> items</p>
@@ -1886,6 +1957,18 @@ body {
       <h1 style="font-size:24px; font-weight:800; color:var(--dark-color);"><i class="fas fa-truck" style="color:#10b981;"></i> My Orders</h1>
       <p style="color:#64748b; margin-top:4px;">Track your orders in real-time</p>
     </div>
+    
+    <!-- Auto Notification Toggle -->
+    <div class="auto-notify-toggle">
+      <span style="font-weight:600; color:var(--dark-color);">
+        <i class="fas fa-bell"></i> Auto Notifications
+      </span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="autoNotifyToggle" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+    
     <div id="deliveryContent" style="padding:16px;"></div>
     <div class="page-footer-spacer" style="height:20px;"></div>
   </div>
@@ -2058,16 +2141,6 @@ body {
   </div>
 </div>
 
-<!-- ===== BARCODE MODAL ===== -->
-<div class="modal-overlay" id="barcodeModal">
-  <div class="modal-content" style="max-width:300px;">
-    <button class="close-btn" onclick="closeModal('barcodeModal')">×</button>
-    <div style="padding:20px; text-align:center;">
-      <img id="barcodeImage" src="" style="width:100%; border-radius:10px;">
-    </div>
-  </div>
-</div>
-
 <!-- ===== PRODUCT MODAL ===== -->
 <div class="modal-overlay" id="productModal">
   <div class="modal-content">
@@ -2118,6 +2191,9 @@ let notificationPermission = false;
 let innerNotifications = [];
 let unreadNotifications = 0;
 let navigationHistory = [];
+
+// Auto notification setting
+let autoNotify = true;
 
 // Customer info
 let customerInfo = {
@@ -2203,7 +2279,6 @@ window.filterAllOrders = filterAllOrders;
 window.refreshOrders = refreshOrders;
 window.downloadOrderTicket = downloadOrderTicket;
 window.toggleProofUpload = toggleProofUpload;
-window.showBarcode = showBarcode;
 
 // ===== DATA ISOLATION =====
 function getStorageKey(key) {
@@ -2266,7 +2341,7 @@ function checkDeliveryStatus() {
   loadDeliveryStatus();
 }
 
-// ===== FIXED: UPDATE CART COUNT =====
+// ===== FIXED: UPDATE CART COUNT (removed circle) =====
 function updateCartCount() {
   const count = cart.length;
   
@@ -2280,12 +2355,13 @@ function updateCartCount() {
     }
   }
   
-  const cartIcon = document.getElementById('cartIcon');
-  if (cartIcon) {
+  const cartCountBadge = document.getElementById('cartCountBadge');
+  if (cartCountBadge) {
     if (count > 0) {
-      cartIcon.innerHTML = `<i class="fas fa-shopping-cart" style="font-size:24px;"></i><span class="cart-badge" style="display:flex; position:absolute; top:-8px; right:-8px;">${count}</span>`;
+      cartCountBadge.textContent = count;
+      cartCountBadge.style.display = 'inline-block';
     } else {
-      cartIcon.innerHTML = `<i class="fas fa-shopping-cart" style="font-size:24px;"></i>`;
+      cartCountBadge.style.display = 'none';
     }
   }
   
@@ -2295,15 +2371,7 @@ function updateCartCount() {
   isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
 }
 
-// ===== FIXED: SHOW BARCODE =====
-function showBarcode(barcodeUrl) {
-  const modal = document.getElementById('barcodeModal');
-  const img = document.getElementById('barcodeImage');
-  img.src = barcodeUrl;
-  openModal('barcodeModal');
-}
-
-// ===== FIXED: SELECT PAYMENT METHOD WITH BARCODE =====
+// ===== FIXED: SELECT PAYMENT METHOD WITH BARCODE IN POPUP =====
 function selectPaymentMethod(method) {
   selectedPaymentMethod = method;
   
@@ -2313,13 +2381,87 @@ function selectPaymentMethod(method) {
   
   const selectedCards = document.querySelectorAll(`.pro-payment-card[onclick*="${method}"]`);
   selectedCards.forEach(card => card.classList.add('selected'));
+}
+
+// ===== FIXED: SHOW PAYMENT PROOF POPUP WITH BARCODE =====
+function showPaymentProofPopup(method) {
+  selectedPaymentMethod = method;
+  const popup = document.getElementById('paymentProofPopup');
+  const instructions = document.getElementById('paymentInstructions');
+  const barcodeContainer = document.getElementById('barcodePreviewContainer');
+  const barcodeImage = document.getElementById('barcodePreviewImage');
   
-  // Show barcode if available
+  // Reset
+  document.getElementById('skipProofCheckbox').checked = false;
+  skipProof = false;
+  document.getElementById('proofUploadSection').style.display = 'block';
+  document.getElementById('popupProofInput').value = '';
+  document.getElementById('popupProofPreview').src = '';
+  document.getElementById('popupProofPreview').classList.remove('show');
+  document.getElementById('popupUploadArea').classList.remove('has-file');
+  document.getElementById('confirmPaymentBtn').disabled = true;
+  paymentProof = null;
+  
+  // Check for barcode
+  let barcodeUrl = null;
   if (method === 'jazzcash' && card.payments?.gateways?.jazzcash?.barcode) {
-    showBarcode(card.payments.gateways.jazzcash.barcode);
+    barcodeUrl = card.payments.gateways.jazzcash.barcode;
   } else if (method === 'easypaisa' && card.payments?.gateways?.easypaisa?.barcode) {
-    showBarcode(card.payments.gateways.easypaisa.barcode);
+    barcodeUrl = card.payments.gateways.easypaisa.barcode;
   }
+  
+  if (barcodeUrl) {
+    barcodeImage.src = barcodeUrl;
+    barcodeContainer.style.display = 'block';
+  } else {
+    barcodeContainer.style.display = 'none';
+  }
+  
+  if (method === 'jazzcash') {
+    instructions.innerHTML = `
+      <p><i class="fas fa-mobile-alt"></i> Complete payment via JazzCash</p>
+      <p><i class="fas fa-arrow-right"></i> Send to: <strong>${card.payments?.gateways?.jazzcash?.number || '03001234567'}</strong></p>
+      ${barcodeUrl ? '<p><i class="fas fa-qrcode"></i> Scan QR code above to pay</p>' : ''}
+      <p><i class="fas fa-info-circle"></i> After payment, you can:</p>
+      <p>✅ Upload screenshot OR</p>
+      <p>✅ Send transaction ID via WhatsApp</p>
+    `;
+  } else if (method === 'easypaisa') {
+    instructions.innerHTML = `
+      <p><i class="fas fa-wallet"></i> Complete payment via EasyPaisa</p>
+      <p><i class="fas fa-arrow-right"></i> Send to: <strong>${card.payments?.gateways?.easypaisa?.number || '03001234567'}</strong></p>
+      ${barcodeUrl ? '<p><i class="fas fa-qrcode"></i> Scan QR code above to pay</p>' : ''}
+      <p><i class="fas fa-info-circle"></i> After payment:</p>
+      <p>✅ Upload screenshot OR</p>
+      <p>✅ Send transaction ID</p>
+    `;
+  } else if (method === 'bank') {
+    instructions.innerHTML = `
+      <p><i class="fas fa-university"></i> Complete bank transfer</p>
+      <p><strong>${card.payments?.gateways?.bank?.bankName || 'HBL'}</strong></p>
+      <p>Account: ${card.payments?.gateways?.bank?.accountNumber || '1234567890'}</p>
+      <p><i class="fas fa-info-circle"></i> After transfer:</p>
+      <p>✅ Upload screenshot OR</p>
+      <p>✅ Send reference number</p>
+    `;
+  } else if (method === 'card') {
+    instructions.innerHTML = `
+      <p><i class="fas fa-credit-card"></i> Complete card payment</p>
+      <p><i class="fas fa-info-circle"></i> After payment:</p>
+      <p>✅ Upload confirmation screenshot OR</p>
+      <p>✅ Send transaction ID</p>
+    `;
+  } else if (method === 'crypto') {
+    instructions.innerHTML = `
+      <p><i class="fab fa-bitcoin"></i> Send crypto</p>
+      <p><i class="fas fa-info-circle"></i> After sending:</p>
+      <p>✅ Upload screenshot OR</p>
+      <p>✅ Send transaction hash</p>
+    `;
+  }
+  
+  popup.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
 
 // ===== FIXED: DOWNLOAD RECEIPT AS IMAGE =====
@@ -2342,7 +2484,7 @@ function downloadReceiptAsImage() {
   });
 }
 
-// ===== FIXED: UPDATE ORDER STATUS WITH OPTIONS =====
+// ===== FIXED: UPDATE ORDER STATUS WITH AUTO NOTIFY =====
 async function updateOrderStatus(orderId) {
   const status = document.getElementById('orderStatusSelect').value;
   
@@ -2364,23 +2506,22 @@ async function updateOrderStatus(orderId) {
     closeModal('orderConfirmationModal');
     await loadOrdersFromDatabase();
     
-    // Ask to notify customer
-    setTimeout(() => {
-      if (confirm('Send notification to customer via WhatsApp?')) {
-        const order = orders.find(o => o.id === orderId);
-        if (order && order.customer_phone) {
-          const message = `Your order #${order.order_id} status has been updated to: ${status}`;
-          window.open(`https://wa.me/${order.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
-        }
+    // Auto notify if enabled
+    const autoNotify = document.getElementById('autoNotifyToggle')?.checked || true;
+    if (autoNotify) {
+      const order = orders.find(o => o.id === orderId);
+      if (order && order.customer_phone) {
+        const message = `Your order #${order.order_id} status has been updated to: ${status}`;
+        window.open(`https://wa.me/${order.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
       }
-    }, 1000);
+    }
     
   } else {
     showNotification('❌ Error updating order');
   }
 }
 
-// ===== CUSTOMER INFO FUNCTIONS =====
+// ===== CUSTOMER INFO FUNCTIONS (keep existing) =====
 function loadCustomerInfo() {
   const saved = isolatedLocalStorage.getItem('customerInfo');
   if (saved) {
@@ -2808,66 +2949,6 @@ function toggleProofUpload() {
     uploadSection.style.display = 'block';
     confirmBtn.disabled = !paymentProof;
   }
-}
-
-function showPaymentProofPopup(method) {
-  selectedPaymentMethod = method;
-  const popup = document.getElementById('paymentProofPopup');
-  const instructions = document.getElementById('paymentInstructions');
-  
-  document.getElementById('skipProofCheckbox').checked = false;
-  skipProof = false;
-  document.getElementById('proofUploadSection').style.display = 'block';
-  document.getElementById('popupProofInput').value = '';
-  document.getElementById('popupProofPreview').src = '';
-  document.getElementById('popupProofPreview').classList.remove('show');
-  document.getElementById('popupUploadArea').classList.remove('has-file');
-  document.getElementById('confirmPaymentBtn').disabled = true;
-  paymentProof = null;
-  
-  if (method === 'jazzcash') {
-    instructions.innerHTML = `
-      <p><i class="fas fa-mobile-alt"></i> Complete payment via JazzCash</p>
-      <p><i class="fas fa-arrow-right"></i> Send to: <strong>${card.payments?.gateways?.jazzcash?.number || '03001234567'}</strong></p>
-      <p><i class="fas fa-info-circle"></i> After payment, you can:</p>
-      <p>✅ Upload screenshot OR</p>
-      <p>✅ Send transaction ID via WhatsApp</p>
-    `;
-  } else if (method === 'easypaisa') {
-    instructions.innerHTML = `
-      <p><i class="fas fa-wallet"></i> Complete payment via EasyPaisa</p>
-      <p><i class="fas fa-arrow-right"></i> Send to: <strong>${card.payments?.gateways?.easypaisa?.number || '03001234567'}</strong></p>
-      <p><i class="fas fa-info-circle"></i> After payment:</p>
-      <p>✅ Upload screenshot OR</p>
-      <p>✅ Send transaction ID</p>
-    `;
-  } else if (method === 'bank') {
-    instructions.innerHTML = `
-      <p><i class="fas fa-university"></i> Complete bank transfer</p>
-      <p><strong>${card.payments?.gateways?.bank?.bankName || 'HBL'}</strong></p>
-      <p>Account: ${card.payments?.gateways?.bank?.accountNumber || '1234567890'}</p>
-      <p><i class="fas fa-info-circle"></i> After transfer:</p>
-      <p>✅ Upload screenshot OR</p>
-      <p>✅ Send reference number</p>
-    `;
-  } else if (method === 'card') {
-    instructions.innerHTML = `
-      <p><i class="fas fa-credit-card"></i> Complete card payment</p>
-      <p><i class="fas fa-info-circle"></i> After payment:</p>
-      <p>✅ Upload confirmation screenshot OR</p>
-      <p>✅ Send transaction ID</p>
-    `;
-  } else if (method === 'crypto') {
-    instructions.innerHTML = `
-      <p><i class="fab fa-bitcoin"></i> Send crypto</p>
-      <p><i class="fas fa-info-circle"></i> After sending:</p>
-      <p>✅ Upload screenshot OR</p>
-      <p>✅ Send transaction hash</p>
-    `;
-  }
-  
-  popup.style.display = 'flex';
-  document.body.style.overflow = 'hidden';
 }
 
 function closePaymentProofPopup() {
@@ -4152,16 +4233,15 @@ async function updateOrderStatus(orderId) {
     closeModal('orderConfirmationModal');
     await loadOrdersFromDatabase();
     
-    // Ask to notify customer
-    setTimeout(() => {
+    // Auto notify if enabled
+    const autoNotify = document.getElementById('autoNotifyToggle')?.checked || true;
+    if (autoNotify) {
       const order = orders.find(o => o.id === orderId);
       if (order && order.customer_phone) {
-        if (confirm('Send notification to customer via WhatsApp?')) {
-          const message = `Your order #${order.order_id} status has been updated to: ${status}`;
-          window.open(`https://wa.me/${order.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
-        }
+        const message = `Your order #${order.order_id} status has been updated to: ${status}`;
+        window.open(`https://wa.me/${order.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
       }
-    }, 1000);
+    }
     
   } else {
     showNotification('❌ Error updating order');
