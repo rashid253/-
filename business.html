@@ -189,27 +189,6 @@ body {
   font-weight: 700;
 }
 
-/* Cart Badge - Bottom Navigation - FIXED POSITION */
-.cart-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ef4444;
-  color: white;
-  font-size: 11px;
-  font-weight: 900;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid white;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
-  padding: 0 4px;
-  z-index: 1001;
-}
-
 /* ===== FIXED HEADER ===== */
 .header-container {
   position: fixed;
@@ -317,6 +296,26 @@ body {
   border: 2px solid rgba(255,255,255,0.5);
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   z-index: 11;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  font-weight: 900;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+  padding: 0 4px;
+  z-index: 100;
 }
 
 /* ===== NOTIFICATION DRAWER ===== */
@@ -1320,21 +1319,25 @@ body {
 
 .receipt-actions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   margin-top: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .receipt-btn {
   flex: 1;
-  padding: 16px;
+  min-width: 70px;
+  padding: 12px 8px;
   border: none;
-  border-radius: 16px;
-  font-weight: 700;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 13px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
   transition: all 0.3s;
 }
 
@@ -1655,7 +1658,7 @@ body {
         <button class="receipt-btn receipt-btn-image" onclick="downloadReceiptAsImage()">
           <i class="fas fa-image"></i> Image
         </button>
-        <button class="receipt-btn receipt-btn-track" onclick="window.navigateTo('deliveryPage')">
+        <button class="receipt-btn receipt-btn-track" onclick="navigateTo('deliveryPage')">
           <i class="fas fa-truck"></i> Track
         </button>
       </div>
@@ -1726,9 +1729,8 @@ body {
           <p style="font-size:11px; opacity:0.9;">Browse products</p>
         </div>
         <div class="action-card" onclick="window.navigateTo('cartPage')">
-          <div class="action-icon">
+          <div class="action-icon" id="cartIcon">
             <i class="fas fa-shopping-cart" style="font-size:24px;"></i>
-            <!-- Header cart badge completely removed -->
           </div>
           <h3 style="font-size:14px; margin-top:8px;">My Cart</h3>
           <p style="font-size:11px; opacity:0.9;"><span id="cartCountMini">0</span> items</p>
@@ -2094,7 +2096,7 @@ body {
       <div class="nav-label">Products</div>
     </div>
     <div class="nav-item" onclick="window.navigateTo('cartPage')">
-      <div class="nav-icon">
+      <div class="nav-icon" style="position:relative;">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
       </div>
@@ -2346,26 +2348,35 @@ function checkDeliveryStatus() {
   loadDeliveryStatus();
 }
 
-// ===== FIXED: UPDATE CART COUNT (Header cart badge removed) =====
+// ===== FIXED: UPDATE CART COUNT (removed circle) =====
 function updateCartCount() {
   const count = cart.length;
   
-  // Bottom navigation cart badge
+  // FOOTER CART BADGE - YEH RHEGA
   const cartBadge = document.getElementById('cartBadge');
   if (cartBadge) {
     if (count > 0) {
       cartBadge.textContent = count > 99 ? '99+' : count;
       cartBadge.style.display = 'flex';
+      cartBadge.style.position = 'absolute';
+      cartBadge.style.top = '-5px';
+      cartBadge.style.right = '-10px';
     } else {
       cartBadge.style.display = 'none';
     }
   }
   
-  // Mini cart count in home page
+  // HOME PAGE CART ICON - BADGE HATAO
+  const cartIcon = document.getElementById('cartIcon');
+  if (cartIcon) {
+    cartIcon.innerHTML = `<i class="fas fa-shopping-cart" style="font-size:24px;"></i>`;
+  }
+  
+  // Cart count mini text (1 items) - YEH RHEGA
   const cartCountMini = document.getElementById('cartCountMini');
   if (cartCountMini) cartCountMini.textContent = count;
   
-  isolatedLocalStorage.setItem('cart', JSON.stringify(cart));
+  localStorage.setItem('cart', JSON.stringify(cart));
 }
 
 // ===== FIXED: SELECT PAYMENT METHOD WITH BARCODE IN POPUP =====
@@ -2461,159 +2472,47 @@ function showPaymentProofPopup(method) {
   document.body.style.overflow = 'hidden';
 }
 
-// ===== FIXED: DOWNLOAD ORDER TICKET AS IMAGE (NOT TEXT) =====
-function downloadOrderTicket(token) {
-  const order = orders.find(o => o.token === token);
-  if (!order) return;
-  
-  // Create a temporary div with the exact ticket design
-  const ticketDiv = document.createElement('div');
-  ticketDiv.style.width = '380px';
-  ticketDiv.style.padding = '24px';
-  ticketDiv.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-  ticketDiv.style.borderRadius = '24px';
-  ticketDiv.style.color = 'white';
-  ticketDiv.style.fontFamily = 'Poppins, sans-serif';
-  
-  const date = new Date(order.created_at).toLocaleString();
-  let itemsHtml = '';
-  if (order.items && Array.isArray(order.items)) {
-    order.items.forEach(item => {
-      itemsHtml += `
-        <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:13px;">
-          <span>${item.title} x${item.quantity}</span>
-          <span>PKR ${(item.price * item.quantity).toFixed(2)}</span>
-        </div>
-      `;
-    });
-  }
-  
-  ticketDiv.innerHTML = `
-    <div style="display:flex; justify-content:space-between; margin-bottom:20px; border-bottom:1px dashed rgba(255,255,255,0.3); padding-bottom:12px;">
-      <span style="font-size:18px; font-weight:900;">${order.token}</span>
-      <span style="font-size:12px; opacity:0.9;">${date}</span>
-    </div>
-    <div style="margin-bottom:20px; text-align:center;">
-      <i class="fas fa-check-circle" style="font-size:48px; color:#10b981;"></i>
-      <h3 style="color:white; margin-top:12px;">Order Ticket</h3>
-    </div>
-    <div style="margin-bottom:8px; display:flex; justify-content:space-between;">
-      <span>Order ID:</span>
-      <span style="font-weight:800;">${order.order_id}</span>
-    </div>
-    <div style="margin-bottom:8px; display:flex; justify-content:space-between;">
-      <span>Customer:</span>
-      <span>${order.customer_name}</span>
-    </div>
-    <div style="margin-bottom:8px; display:flex; justify-content:space-between;">
-      <span>Phone:</span>
-      <span>${order.customer_phone}</span>
-    </div>
-    <div style="margin:16px 0; padding:12px 0; border-top:2px dashed rgba(255,255,255,0.3); border-bottom:2px dashed rgba(255,255,255,0.3);">
-      ${itemsHtml}
-    </div>
-    <div style="margin-bottom:8px; display:flex; justify-content:space-between;">
-      <span>Subtotal:</span>
-      <span>PKR ${order.subtotal.toFixed(2)}</span>
-    </div>
-    <div style="margin-bottom:8px; display:flex; justify-content:space-between;">
-      <span>Delivery:</span>
-      <span>PKR ${order.delivery_charge.toFixed(2)}</span>
-    </div>
-    <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:18px; font-weight:800;">
-      <span>Total</span>
-      <span>PKR ${order.total.toFixed(2)}</span>
-    </div>
-    <div style="text-align:center; margin-top:20px; font-size:12px; opacity:0.9;">
-      <i class="fas fa-shield-alt"></i> Payment: ${getPaymentMethodName(order.payment_method)}
-    </div>
-  `;
-  
-  document.body.appendChild(ticketDiv);
-  
-  html2canvas(ticketDiv, { scale: 2 }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = `order-ticket-${token}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    
-    document.body.removeChild(ticketDiv);
-    showNotification('✅ Order ticket downloaded as image');
-  }).catch(err => {
-    console.error('Error:', err);
-    showNotification('❌ Could not create image');
-    document.body.removeChild(ticketDiv);
-  });
-}
-
 // ===== FIXED: DOWNLOAD RECEIPT AS IMAGE =====
 function downloadReceiptAsImage() {
-  const order = window.currentReceiptOrder;
-  if (!order) {
+  const receiptElement = document.querySelector('.order-ticket');
+  if (!receiptElement) {
     showNotification('❌ Receipt not found');
     return;
   }
   
-  // Create receipt element with exact design
-  const receiptDiv = document.createElement('div');
-  receiptDiv.style.width = '380px';
-  receiptDiv.style.padding = '24px';
-  receiptDiv.style.background = 'white';
-  receiptDiv.style.borderRadius = '32px';
-  receiptDiv.style.fontFamily = 'Poppins, sans-serif';
-  receiptDiv.style.boxShadow = '0 25px 50px -12px rgba(0,0,0,0.25)';
+  // Cloned element banayein taake styling na bigde
+  const clone = receiptElement.cloneNode(true);
+  clone.style.width = '350px';
+  clone.style.padding = '20px';
+  clone.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+  clone.style.borderRadius = '20px';
+  clone.style.color = 'white';
+  clone.style.margin = '0';
   
-  const date = new Date().toLocaleString();
+  // Temporary container
+  const container = document.createElement('div');
+  container.style.position = 'absolute';
+  container.style.left = '-9999px';
+  container.style.top = '0';
+  container.appendChild(clone);
+  document.body.appendChild(container);
   
-  receiptDiv.innerHTML = `
-    <div style="text-align:center; margin-bottom:24px;">
-      <i class="fas fa-check-circle" style="font-size:60px; color:#10b981; margin-bottom:12px;"></i>
-      <h2 style="font-size:24px; font-weight:800; color:#0f172a; margin-bottom:4px;">Order Confirmed!</h2>
-      <p style="color:#64748b; font-size:14px;">Your receipt is ready</p>
-    </div>
-    
-    <div style="background:#f8fafc; border-radius:20px; padding:20px; margin:20px 0;">
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed #e2e8f0;">
-        <span style="color:#64748b; font-size:14px;">Order ID</span>
-        <span style="font-weight:700; color:#0f172a; font-size:14px;">${order.order_id}</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed #e2e8f0;">
-        <span style="color:#64748b; font-size:14px;">Token</span>
-        <span style="font-weight:700; color:#667eea; font-size:14px;">${order.token}</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed #e2e8f0;">
-        <span style="color:#64748b; font-size:14px;">Date</span>
-        <span style="font-weight:700; color:#0f172a; font-size:14px;">${date}</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed #e2e8f0;">
-        <span style="color:#64748b; font-size:14px;">Customer</span>
-        <span style="font-weight:700; color:#0f172a; font-size:14px;">${order.customer_name}</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed #e2e8f0;">
-        <span style="color:#64748b; font-size:14px;">Items</span>
-        <span style="font-weight:700; color:#0f172a; font-size:14px;">${order.items.length}</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; padding-top:12px;">
-        <span style="color:#0f172a; font-size:16px; font-weight:800;">Total</span>
-        <span style="color:#10b981; font-size:18px; font-weight:900;">PKR ${order.total.toFixed(2)}</span>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(receiptDiv);
-  
-  html2canvas(receiptDiv, { scale: 2 }).then(canvas => {
+  html2canvas(clone, {
+    scale: 2,
+    backgroundColor: null,
+    allowTaint: true,
+    useCORS: true
+  }).then(canvas => {
     const link = document.createElement('a');
-    link.download = `receipt-${order.order_id}.png`;
+    link.download = 'receipt.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
-    
-    document.body.removeChild(receiptDiv);
+    document.body.removeChild(container);
     showNotification('✅ Receipt downloaded as image');
   }).catch(err => {
     console.error('Error:', err);
     showNotification('❌ Could not create image');
-    document.body.removeChild(receiptDiv);
+    document.body.removeChild(container);
   });
 }
 
@@ -4345,6 +4244,42 @@ async function viewOrderDetails(orderId) {
   openModal('orderConfirmationModal');
 }
 
+async function updateOrderStatus(orderId) {
+  const status = document.getElementById('orderStatusSelect').value;
+  
+  const { error } = await supa
+    .from('orders')
+    .update({ status: status, updated_at: new Date().toISOString() })
+    .eq('id', orderId);
+  
+  if (!error) {
+    showNotification('✅ Order status updated to ' + status);
+    
+    if (status === 'confirmed') {
+      const order = orders.find(o => o.id === orderId);
+      if (order) {
+        showReceipt(order);
+      }
+    }
+    
+    closeModal('orderConfirmationModal');
+    await loadOrdersFromDatabase();
+    
+    // Auto notify if enabled
+    const autoNotify = document.getElementById('autoNotifyToggle')?.checked || true;
+    if (autoNotify) {
+      const order = orders.find(o => o.id === orderId);
+      if (order && order.customer_phone) {
+        const message = `Your order #${order.order_id} status has been updated to: ${status}`;
+        window.open(`https://wa.me/${order.customer_phone.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+      }
+    }
+    
+  } else {
+    showNotification('❌ Error updating order');
+  }
+}
+
 function confirmOrder(orderId) {
   const order = orders.find(o => o.id === orderId);
   if (order) {
@@ -4768,7 +4703,7 @@ function showOrderConfirmation(orderData) {
     </div>
     
     <div style="display:flex; gap:12px; margin-top:20px;">
-      <button onclick="downloadOrderTicket('${orderData.token}')" style="flex:1; padding:14px; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
+      <button onclick="window.downloadOrderTicket('${orderData.token}')" style="flex:1; padding:14px; background:#f1f5f9; color:#475569; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
         <i class="fas fa-download"></i> Save Ticket
       </button>
       <button onclick="window.navigateTo('deliveryPage')" style="flex:1; padding:14px; background:var(--whatsapp-gradient); color:white; border:none; border-radius:12px; font-weight:700; cursor:pointer;">
@@ -4778,6 +4713,20 @@ function showOrderConfirmation(orderData) {
   `;
   
   openModal('orderConfirmationModal');
+}
+
+function downloadOrderTicket(token) {
+  const order = orders.find(o => o.token === token);
+  if (!order) return;
+  
+  const ticketText = `ORDER TICKET: ${order.token}\nDate: ${new Date(order.created_at).toLocaleString()}\nOrder ID: ${order.order_id}\nTotal: PKR ${order.total.toFixed(2)}\nPayment: ${getPaymentMethodName(order.payment_method)}\nStatus: ${order.status}`;
+  const blob = new Blob([ticketText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `order-${order.token}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ===== LOAD PAGES =====
